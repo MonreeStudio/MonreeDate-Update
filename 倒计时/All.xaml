@@ -11,7 +11,7 @@
     Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
     <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-        <RelativePanel>
+        <RelativePanel x:FieldModifier="Public">
             <TextBlock FontFamily="HYXuSTJ" FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
             <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
                 <AppBarButton CornerRadius="3" Click="AppBarButton_Click" Label="新建" Foreground="CornflowerBlue">

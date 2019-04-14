@@ -52,6 +52,7 @@ namespace 倒计时
           ("New", typeof(Add)),
           ("Calculator", typeof(Calculator)),
           ("Festival", typeof(Festival)),
+          ("Details",typeof(Details)),
         };
 
         private void MyNav_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
@@ -63,8 +64,15 @@ namespace 倒计时
             }
             else
             {
-                var item = _pages.FirstOrDefault(p => p.Tag.Equals(navItemTag));
-                _page = item.Page;
+                if (navItemTag == "Details")
+                {
+                    _page = typeof(Details);
+                }
+                else
+                {
+                    var item = _pages.FirstOrDefault(p => p.Tag.Equals(navItemTag));
+                    _page = item.Page;
+                }
             }
             // Get the page type before navigation so you can prevent duplicate
             // entries in the backstack.
@@ -180,8 +188,8 @@ namespace 倒计时
                     .OfType<NavigationViewItem>()
                     .First(n => n.Tag.Equals(item.Tag));
 
-               // MyNav.Header =
-                 //   ((NavigationViewItem)MyNav.SelectedItem)?.Content?.ToString();
+                // MyNav.Header =
+                //   ((NavigationViewItem)MyNav.SelectedItem)?.Content?.ToString();
             }
         }
     }

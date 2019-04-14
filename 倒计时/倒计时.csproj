@@ -129,6 +129,9 @@
       <DependentUpon>Calculator.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomData.cs" />
+    <Compile Include="Details.xaml.cs">
+      <DependentUpon>Details.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Festival.xaml.cs">
       <DependentUpon>Festival.xaml</DependentUpon>
     </Compile>
@@ -170,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Calculator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Details.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -75,7 +75,7 @@ namespace 倒计时
 
         private void MyGirdView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            
         }
 
         private void AppBarButton_Click_1(object sender, RoutedEventArgs e)

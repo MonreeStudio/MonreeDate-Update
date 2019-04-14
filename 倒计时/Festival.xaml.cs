@@ -52,5 +52,15 @@ namespace 倒计时
                 s2 = "已过" + days.ToString() + "天";
             return s2;
         }
+
+        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+           
+        }
+
+        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+           
+        }
     }
 }

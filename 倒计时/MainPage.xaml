@@ -25,7 +25,7 @@
                 <NavigationView.MenuItems>
                 <NavigationViewItem Foreground="DeepSkyBlue" Tag="All" Icon="List" Content="全部"/>
                 <NavigationViewItemSeparator  />
-                <NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>
+                <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
                 <NavigationViewItem Foreground="DeepSkyBlue" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
                 <NavigationViewItem Foreground="DeepSkyBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
@@ -37,6 +37,28 @@
                        x:FieldModifier="Public"/>
             </ScrollViewer>
         </NavigationView>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger
+                        MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MyNav.PaneDisplayMode" Value="Top"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MyNav.PaneDisplayMode" Value="Left"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
         <!--<VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
