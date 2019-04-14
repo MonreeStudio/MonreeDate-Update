@@ -6,7 +6,7 @@
 
 可能出现的问题：  
 1、缺少VS工作负载，无法打开解决方案。  
-（解决方法：打开Visual Studio Installer，在修改选项里的工作负载里安装“通用Windows平台开发”,安装。）  
+（解决方法：打开Visual Studio Installer，在修改选项里的工作负载里选择“通用Windows平台开发”,安装。）  
 
 2、缺少相关的NuGet包。  
 （解决方法：在VS中的“工具”-“Nuget包管理器”-“管理解决方案的Nuget程序包”-搜索并安装“Microsoft.UI.XAML”，安装完毕后重新生成解决方案。）  
