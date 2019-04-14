@@ -1,4 +1,5 @@
 请下载完整的解决方案到本地，解压后打开使用Visual Studio打开“倒计时.sln”，点击debug即可完成部署。  
+
 可能出现的问题：  
 1、缺少VS工作负载，无法打开解决方案。  
 （解决方法：打开Visual Studio Installer，在修改选项里的工作负载里安装“通用Windows平台开发”,安装。）  
