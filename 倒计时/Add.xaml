@@ -1,0 +1,55 @@
+﻿<Page
+    x:Class="倒计时.Add"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:倒计时"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Text="创建一个事件吧！"
+                   Grid.Row="0"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   FontSize="48"
+                   FontFamily="HYXuSTJ"
+                   Foreground="SkyBlue" />
+        <TextBox x:Name="AddEvent"
+                 PlaceholderText="事件"
+                 Grid.Row="1"
+                 CornerRadius="8"
+                 BorderBrush="SkyBlue"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Bottom"
+                 Height="Auto" Width="400" 
+                 BorderThickness="1"/>
+        <CalendarDatePicker Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            x:Name="Add_Picker"
+                            BorderThickness="1"
+                            Foreground="SkyBlue"
+                            BorderBrush="SkyBlue"
+                            CornerRadius="8"
+                            PlaceholderText="选择一个日期吧"
+                            DateChanged="Add_Picker_DateChanged"/>
+        <Button Content="确认添加"
+                Grid.Row="3"
+                CornerRadius="15"
+                HorizontalAlignment="Center"
+                BorderThickness="3"
+                BorderBrush="Azure"
+                Foreground="White"
+                Background="SkyBlue"
+                Height="50"
+                Width="100"
+                Click="Button_Click"/>
+    </Grid>
+</Page>
