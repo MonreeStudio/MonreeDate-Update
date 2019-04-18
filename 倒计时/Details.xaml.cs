@@ -28,22 +28,18 @@ namespace 倒计时
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            InitialText.Text = "我被初始化了吗？";
-        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.Parameter is string && !string.IsNullOrWhiteSpace((string)e.Parameter))
-            {
-                InitialText.Text = $"Hi, {e.Parameter.ToString()}";
-            }
-            else
-            {
-                InitialText.Text = "Hi!";
-            }
-            base.OnNavigatedTo(e);
+            //if (e.Parameter is string && !string.IsNullOrWhiteSpace((string)e.Parameter))
+            //{
+            //    InitialText.Text = $"Hi, {e.Parameter.ToString()}";
+            //}
+            //else
+            //{
+            //    InitialText.Text = "Hi!";
+            //}
+            //base.OnNavigatedTo(e);
         }
 
     }

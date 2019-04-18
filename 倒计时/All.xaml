@@ -30,7 +30,7 @@
         <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="SkyBlue" FontSize="30" FontFamily="HYXuSTJ" HorizontalTextAlignment="Center"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
         <TextBlock Height="60"/>
-        <GridView Margin="20,0,0,0" x:Name="MyGirdView" ItemsSource="{x:Bind ViewModel.CustomDatas}" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged">
+        <GridView Margin="20,0,0,0" x:Name="MyGirdView" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="local:CustomData">
                     <StackPanel x:Name="GridViewStackPanel" CornerRadius="10" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Height="240" Width="225">

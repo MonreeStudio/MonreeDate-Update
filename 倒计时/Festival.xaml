@@ -10,48 +10,48 @@
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <StackPanel>
-        <TextBlock Text="节日(此页面暂时为静态数据测试页面)" Margin="90,35,0,0" FontSize="20" Height="100" VerticalAlignment="Bottom" />
+        <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" FontSize="28" Foreground="Black" Height="100"/>
         <GridView Margin="20,0,0,0" ItemClick="GridView_ItemClick" SelectionChanged="GridView_SelectionChanged">
             <GridViewItem x:FieldModifier="Public">
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Width="220" Height="250">
-                    <TextBlock Text="Together" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date1" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName1" Text="2018/12/24" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                    <TextBlock x:Name="Name1" Text="Together" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date1" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName1" x:FieldModifier="Public" Text="2018/12/24" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                 </StackPanel>
             </GridViewItem>
             <GridViewItem >
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Width="220" Height="250">
-                    <TextBlock Text="青年晚报演唱会广州站" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                    <TextBlock  x:Name="Date2" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName2" Text="2017/10/7" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                    <TextBlock x:Name="Name2" Text="青年晚报演唱会广州站" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                    <TextBlock  x:Name="Date2" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName2" x:FieldModifier="Public" Text="2017/10/7" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                 </StackPanel>
             </GridViewItem>
             <GridViewItem >
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Width="220" Height="250">
-                    <TextBlock Text="许嵩深圳歌友会" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                    <TextBlock  x:Name="Date3" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName3" Text="2019/5/11" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                    <TextBlock x:Name="Name3" Text="许嵩深圳歌友会" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                    <TextBlock  x:Name="Date3" x:FieldModifier="Public"  HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName3" x:FieldModifier="Public"  Text="2019/5/11" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                 </StackPanel>
             </GridViewItem>
             <GridViewItem >
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Width="220" Height="250">
-                    <TextBlock Text="大学英语六级" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date4" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName4" Text="2019/6/15" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                    <TextBlock x:Name="Name4" Text="大学英语六级" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date4" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName4" x:FieldModifier="Public" Text="2019/6/15" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                 </StackPanel>
             </GridViewItem>
             <GridViewItem >
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Width="220" Height="250">
-                    <TextBlock Text="英语专业八级" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date5" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName5" Text="2020/3/23" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                    <TextBlock x:Name="Name5" Text="英语专业八级" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date5" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName5" x:FieldModifier="Public" Text="2020/3/23" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                 </StackPanel>
             </GridViewItem>
             <GridViewItem >
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="{ThemeResource CustomAcrylicBackgroundBrush}" Width="220" Height="250">
-                    <TextBlock Text="Meet" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date6" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName6" Text="2017/8/14" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                    <TextBlock x:Name="Name6" Text="Meet" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date6" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName6" x:FieldModifier="Public" Text="2017/8/14" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                 </StackPanel>
             </GridViewItem>
         </GridView>
@@ -108,5 +108,20 @@
                 </StackPanel>
             </ListViewItem>
         </ListView>-->
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger
+                        MinWindowWidth="{x:Bind MinMyNav}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FsTop.Margin" Value="20"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
     </StackPanel>
 </Page>

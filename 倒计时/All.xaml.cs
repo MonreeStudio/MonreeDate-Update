@@ -28,6 +28,8 @@ namespace 倒计时
         private string str1, str2, str3;
         public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static All Current;
+        public string Model_event;
+        public string Model_Date;
 
         public All()
         {
@@ -66,6 +68,7 @@ namespace 倒计时
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
+            
             Frame.Navigate(typeof(Add));
         }
 
@@ -82,6 +85,11 @@ namespace 倒计时
         private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Add));
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

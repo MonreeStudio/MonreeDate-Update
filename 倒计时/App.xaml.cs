@@ -27,6 +27,8 @@ namespace 倒计时
     /// </summary>
     sealed partial class App : Application
     {
+        public CustomDataViewModel ViewModel = new CustomDataViewModel();
+        public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
         
         private const string SelectedAppThemeKey = "SelectedAppTheme";
         /// <summary>
@@ -72,13 +74,14 @@ namespace 倒计时
                 ApplicationData.Current.LocalSettings.Values[SelectedAppThemeKey] = value.ToString();
             }
         }
-
+        
         public App()
         {
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-
+            
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
             {
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;

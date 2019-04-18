@@ -22,10 +22,13 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Festival : Page
     {
+        public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        public static Festival Current;
         public Festival()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            Current = this;
 
             Date1.Text = Calculator(StartName1.Text);
             Date2.Text = Calculator(StartName2.Text);
@@ -57,12 +60,12 @@ namespace 倒计时
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-           
+            Date1.Text = All.Current.TopText.Text;
         }
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Date1.Text = All.Current.TopText.Text;
+            
             //Frame.Navigate(typeof(Details));
         }
     }

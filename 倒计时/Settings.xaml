@@ -30,7 +30,7 @@
                    Grid.Column="0" 
                    VerticalAlignment="Top"/>
         <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
-                      Header="主页开启亚克力效果"
+                      Header="主页背景开启亚克力效果"
                       Grid.Row="1"
                       Grid.Column="0"
                       Margin="20,10,0,0"

@@ -22,30 +22,64 @@ namespace 倒计时
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
+    /// 
+
     public sealed partial class Add : Page
     {
+        public static Add Current;
         public string _PickDate;
+        public string _Date;
         public Add()
         {  
             this.InitializeComponent();
+            Current = this;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+        }
+
+        private string Calculator(string s1)
+        {
+            string str1 = s1;
+            string str2 = DateTime.Now.ToShortDateString().ToString();
+            string s2;
+            DateTime d1 = Convert.ToDateTime(str1);
+            DateTime d2 = Convert.ToDateTime(str2);
+            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
+            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
+            int days = (d4 - d3).Days;
+            if (days < 0)
+            {
+                days = -days;
+                s2 = "还有" + days.ToString() + "天";
+            }
+            else
+                s2 = "已过" + days.ToString() + "天";
+            return s2;
         }
 
         private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string Picker = Add_Picker.Date.ToString();
+           
             DateTime s1 = Convert.ToDateTime(Picker);
             _PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            _Date = Calculator(_PickDate);
+            //All.Current.Model_Date = _Date;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //All.Current.AllPageStackPanel.Background = new SolidColorBrush(Colors.Black);
-            //All.Current.TopText.Text = "为什么没有用啊？";
-
-            //MainPage.Current.MyNav.Header = "夏日";
-            string _event = AddEvent.Text;
-            Frame.Navigate(typeof(All), _event);
+            string _event = AddEvent.Text.Trim();
+            //All.Current.Model_event = _event;
+            if (_Date != null&&_event!="")
+            {
+                All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
+                Frame.Navigate(typeof(All));
+            }
+            else
+            {
+                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！");
+                await AboutDialog.ShowAsync();
+            }
         }
     }
 }
