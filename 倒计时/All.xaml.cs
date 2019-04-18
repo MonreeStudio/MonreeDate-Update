@@ -32,6 +32,7 @@ namespace 倒计时
         public All()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
             
             Today.Text= DateTime.Now.ToShortDateString().ToString();

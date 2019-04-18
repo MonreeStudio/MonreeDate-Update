@@ -15,7 +15,8 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        
-        
+
+        <TextBlock x:Name="InitialText" Text="初始文本" FontSize="50" Margin="20" Grid.Row="0"/>
+        <Button Content="点我" Width="200" Height="50" Grid.Row="1" HorizontalAlignment="Center" Click="Button_Click"/>
     </Grid>
 </Page>

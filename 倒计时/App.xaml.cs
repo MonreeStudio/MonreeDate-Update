@@ -27,6 +27,7 @@ namespace 倒计时
     /// </summary>
     sealed partial class App : Application
     {
+        
         private const string SelectedAppThemeKey = "SelectedAppTheme";
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，

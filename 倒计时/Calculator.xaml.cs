@@ -25,6 +25,7 @@ namespace 倒计时
         public Calculator()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         public class Str

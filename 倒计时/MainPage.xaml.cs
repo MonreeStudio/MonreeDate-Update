@@ -32,6 +32,7 @@ namespace 倒计时
 
         public MainPage()
         {
+
             this.InitializeComponent();
             Current = this;
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
@@ -184,9 +185,9 @@ namespace 倒计时
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
 
-                MyNav.SelectedItem = MyNav.MenuItems
-                    .OfType<NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.Tag));
+                //MyNav.SelectedItem = MyNav.MenuItems
+                //    .OfType<NavigationViewItem>()
+                //    .First(n => n.Tag.Equals(item.Tag));
 
                 // MyNav.Header =
                 //   ((NavigationViewItem)MyNav.SelectedItem)?.Content?.ToString();

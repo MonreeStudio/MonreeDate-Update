@@ -25,9 +25,12 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Settings : Page
     {
+        public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        
         public Settings()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += OnSettingsPageLoaded;
         }
 
@@ -38,16 +41,7 @@ namespace 倒计时
 
         private async void AboutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (All.Current != null)
-            {
-                All.Current.AllPageStackPanel.Background = new SolidColorBrush(Colors.SkyBlue);
-                All.Current.TopText.Text = "看看有没有用呢？";
-                MainPage.Current.MyNav.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
-            }
-            else
-            {
-                MainPage.Current.MyNav.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
-            }
+            Frame.Navigate(typeof(Details),AboutButton.Content);
             MessageDialog AboutDialog = new MessageDialog("emmmmm\n...........");
             await AboutDialog.ShowAsync();
         }
@@ -59,13 +53,16 @@ namespace 倒计时
             {
                 if (AllPageAcylic.IsOn == true)
                 {
-                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
-                    //All.current.AllFrame.Background = Windows.UI.Colors.BlanchedAlmond;
-                    //TestTb.Text = "现在是开着的噢。";
+                    AcrylicBrush myBrush = new AcrylicBrush();
+                    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
+                    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
+                    myBrush.TintOpacity = 0.8;
+                    All.Current.AllPageStackPanel.Background = myBrush;
                 }
                 else
                 {
-                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                    All.Current.AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
                 }
             }
             toggleSwitch.Toggled += AllPageAcylic_Toggled;
