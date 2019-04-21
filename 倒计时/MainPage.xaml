@@ -21,6 +21,7 @@
                         AlwaysShowHeader="True"
                         Foreground="CornflowerBlue"
                         x:FieldModifier="Public"
+                        Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
                         >
                 <NavigationView.MenuItems>
                 <NavigationViewItem Foreground="DeepSkyBlue" Tag="All" Icon="List" Content="全部"/>

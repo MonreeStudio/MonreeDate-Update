@@ -25,12 +25,16 @@ namespace 倒计时
         public Details()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            DetailsPickedDate.Text = All.Current.str1;
+            DetailsEvent.Text = All.Current.str3;
+            DetailsDate.Text = All.Current.str2;
         }
 
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+
             //if (e.Parameter is string && !string.IsNullOrWhiteSpace((string)e.Parameter))
             //{
             //    InitialText.Text = $"Hi, {e.Parameter.ToString()}";

@@ -15,11 +15,11 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="173*"/>
-            <ColumnDefinition Width="86*"/>
-            <ColumnDefinition Width="173*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="SettingsTopText"
                    Text="设置"
@@ -29,9 +29,46 @@
                    Grid.Row="0"
                    Grid.Column="0" 
                    VerticalAlignment="Top"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="20,10,0,0">
+        <PersonPicture x:Name="MyPersonPicture"
+                       Width="110"
+                       Height="110"
+                       ToolTipService.ToolTip="点击更换头像"
+                       Grid.Row="0" Grid.RowSpan="5" Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       ProfilePicture="Assets//老许2.jpg"
+                       Tapped="MyPersonPicture_Tapped"
+                       />
+            <StackPanel Margin="20,16,0,0">
+                <StackPanel Orientation="Horizontal">
+                <TextBlock Text="昵称：" FontSize="13" Foreground="Black"/>
+                    <TextBlock x:Name="PersonalNickName" x:FieldModifier="Public" Text="Bill夏昕" FontSize="13" Foreground="Black" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="性别：" FontSize="13" Foreground="Black"/>
+                    <TextBlock x:Name="PersonalSex" x:FieldModifier="Public" Text="男" FontSize="13" Foreground="Black"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="生日：" FontSize="13" Foreground="Black"/>
+                    <TextBlock x:Name="PersonalBirthday" x:FieldModifier="Public" Text="1999/7/8" FontSize="13" Foreground="Black"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="个性签名：" FontSize="13" Foreground="Black"/>
+                    <TextBlock x:Name="PersonalSign" x:FieldModifier="Public" Text="只与同好赏风雅。" FontSize="13" Foreground="Black"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <Button Content="编辑个人信息"
+                Height="40"
+                Grid.Row="1"
+                Grid.Column="1"
+                Foreground="White"
+                Background="SkyBlue"
+                BorderThickness="2"
+                Style="{StaticResource ButtonRevealStyle}" Click="Button_Click"/>
         <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
                       Header="主页背景开启亚克力效果"
-                      Grid.Row="1"
+                      Grid.Row="2"
                       Grid.Column="0"
                       Margin="20,10,0,0"
                       HorizontalAlignment="Left"
@@ -43,17 +80,18 @@
                       Toggled="AllPageAcylic_Toggled"
                       />
         <TextBlock x:Name="TestTb"
-                   Grid.Row="2"
+                   Grid.Row="3"
                    Grid.Column="0"
                    
                    HorizontalAlignment="Center"/>
         <Button x:Name="AboutButton"
                 Content="关于应用"
-                Grid.Row="2"
+                Grid.Row="5"
                 Grid.Column="1"
+                Margin="0,0,0,0"
                 Foreground="White"
                 Background="SkyBlue"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Left"
                 CornerRadius="15"
                 BorderThickness="3"
                 BorderBrush="Azure"
@@ -87,6 +125,55 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
+        <!--<Border  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                 Background="{ThemeResource CustomAcrylicInAppBrush}"
+                 Margin="20"
+                 CornerRadius="8"
+                 BorderThickness="1"
+                 BorderBrush="Azure">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="Azure">
+                    <Grid>
+                    <TextBlock Text="昵称" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Bill夏昕" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="Azure">
+                    <Grid>
+                        <TextBlock Text="性别" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="男" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0.5" BorderBrush="Azure">
+                    <Grid>
+                        <TextBlock Text="生日" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="1999/7/8" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0.5" BorderBrush="Azure">
+                    <Grid>
+                        <TextBlock Text="城市" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="广东 广州" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0.5" BorderBrush="Azure">
+                    <Grid>
+                        <TextBlock Text="个性签名" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="只与同好赏风雅。" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>-->
     </Grid>
 </Page>

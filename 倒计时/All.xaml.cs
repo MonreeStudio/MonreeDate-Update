@@ -25,7 +25,7 @@ namespace 倒计时
     public sealed partial class All : Page
     {
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
-        private string str1, str2, str3;
+        public string str1, str2, str3;
         public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static All Current;
         public string Model_event;
@@ -74,7 +74,11 @@ namespace 倒计时
 
         private void MyGirdView_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            var _item = (CustomData)e.ClickedItem;
+            str1 = _item.Str1;
+            str2 = _item.Str2;
+            str3 = _item.Str3;
+            Frame.Navigate(typeof(Details));
         }
 
         private void MyGirdView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,6 +93,7 @@ namespace 倒计时
 
         private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
+            
             Frame.Navigate(typeof(Add));
         }
 

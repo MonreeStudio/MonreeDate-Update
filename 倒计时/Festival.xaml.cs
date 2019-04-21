@@ -27,7 +27,7 @@ namespace 倒计时
         public Festival()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
 
             Date1.Text = Calculator(StartName1.Text);

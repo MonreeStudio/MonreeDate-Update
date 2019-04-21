@@ -22,10 +22,12 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Calculator : Page
     {
+        public static Calculator Current; 
         public Calculator()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            Current = this;
         }
 
         public class Str

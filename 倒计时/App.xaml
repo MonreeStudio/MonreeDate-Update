@@ -8,6 +8,8 @@
         <ResourceDictionary>
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush" BackgroundSource="HostBackdrop"
         TintOpacity="0.8" TintColor="SkyBlue" FallbackColor="SkyBlue" />
+            <AcrylicBrush x:Key="CustomAcrylicInAppBrush" BackgroundSource="HostBackdrop"
+        TintOpacity="0.9" TintColor="White" FallbackColor="White" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

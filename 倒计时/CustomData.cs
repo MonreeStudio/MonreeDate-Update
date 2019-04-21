@@ -9,6 +9,7 @@ namespace 倒计时
 {
     public class CustomData
     {
+        
         public string Str1 { get; set; }
         public string Str2 { get; set; }
         public string Str3 { get; set; }
@@ -17,6 +18,7 @@ namespace 倒计时
 
         public CustomData()
         {
+            
             this.Str1 = "string 1";
             this.Str2 = "string 2";
             this.Str3 = "string 3";
@@ -59,9 +61,9 @@ namespace 倒计时
             CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
             CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
             CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
+            //CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
+            //CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
+            //CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
         }
 
         public void AddData(CustomData data)

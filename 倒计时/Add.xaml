@@ -8,14 +8,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
-    <Grid>
+    <Grid x:Name="AddPageGird" x:FieldModifier="Public">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Text="创建一个事件吧！"
+        <TextBlock Text="创建一个日程吧！"
                    Grid.Row="0"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Bottom"
