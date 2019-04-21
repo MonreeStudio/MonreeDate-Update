@@ -1,19 +1,22 @@
+# Monree Date  
+  
+## 本地部署
 请下载完整的解决方案到本地，解压后打开使用Visual Studio打开“倒计时.sln”，点击debug即可完成部署。  
 
 因本UWP应用的目标版本和最低版本都是Windows10 1809版本（Build 17763）,所以部署前请确保Windows10版本已升级到1809或以上的版本，1803（Build 17134）及之前的版本将不受支持！  
 
 
 
-可能出现的问题：  
-1、缺少VS工作负载，无法打开解决方案。  
+## 可能出现的问题：  
+### 1.缺少VS工作负载，无法打开解决方案。  
 （解决方法：打开Visual Studio Installer，在修改选项里的工作负载里选择“通用Windows平台开发”,安装。）  
 
-2、缺少相关的NuGet包。  
+### 2.缺少相关的NuGet包。  
 （解决方法：在VS中的“工具”-“Nuget包管理器”-“管理解决方案的Nuget程序包”-搜索并安装“Microsoft.UI.XAML”，安装完毕后重新生成解决方案。）  
   
     
     
-以下为简单介绍：  
+## 以下为简单介绍：  
 
 代号：夏日（英文代号Monree Date）  
 
@@ -21,10 +24,11 @@
 
 语言：前台XAML + 后台C#  
 
-采用UWP平台最新的Fluent Design System（流畅设计体系），带来现代、美观、简洁的视觉效果。包括亚克力材质元素和背景、光标的光影效果、元素的深度效果，缩放以及动态效果还待加入。  
+设计：采用UWP平台最新的Fluent Design System（流畅设计体系），带来现代、美观、简洁的视觉效果。包括亚克力材质元素和背景、光标的光影效果、元素的深度效果，缩放以及动态效果还待加入。  
+[流畅设计体系Fluent Design System](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)
 
 
-预计实现功能：  
+### 预计实现功能：  
 
 1. 首页：今年已过天数以及进度条；已创建的日程信息（显示已过/还有XX天）；点击相关项显示具体内容；
 
