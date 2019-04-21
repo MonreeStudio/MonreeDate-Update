@@ -1,7 +1,7 @@
 # Monree Date  
   
 ## 本地部署
-请下载完整的解决方案到本地，解压后打开使用Visual Studio打开“倒计时.sln”，点击debug即可完成部署。  
+请下载完整的解决方案到本地，解压后打开使用Visual Studio打开“倒计时.sln”，点击Debug即可完成部署。  
 
 因本UWP应用的目标版本和最低版本都是Windows10 1809版本（Build 17763）,所以部署前请确保Windows10版本已升级到1809或以上的版本，1803（Build 17134）及之前的版本将不受支持！  
 
@@ -20,7 +20,7 @@
 
 代号：夏日（英文代号Monree Date）  
 
-平台:UWP
+平台: [UWP](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/universal-application-platform-guide)
 
 语言：前台XAML + 后台C#  
 
