@@ -39,5 +39,8 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
         </Grid>
+        <TextBlock Text="——夏日——" Margin="10" Grid.Row="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White">
+            
+        </TextBlock>
     </Grid>
 </Page>

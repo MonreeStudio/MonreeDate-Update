@@ -78,6 +78,7 @@ namespace 倒计时
             str1 = _item.Str1;
             str2 = _item.Str2;
             str3 = _item.Str3;
+            
             Frame.Navigate(typeof(Details));
         }
 

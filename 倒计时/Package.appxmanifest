@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="f2317ca5-6428-4fa5-b93e-4ddcb0453f1b"
-    Publisher="CN=kaika"
-    Version="1.0.0.0" />
+    Name="10912MonreeStudio.6397911AA70B0"
+    Publisher="CN=CA1BB48F-A548-4F00-8EF9-31E9C7536F64"
+    Version="1.0.3.0" />
 
-  <mp:PhoneIdentity PhoneProductId="f2317ca5-6428-4fa5-b93e-4ddcb0453f1b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="866ca99d-ca97-4149-b3df-e6ddc169c76b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>倒计时</DisplayName>
-    <PublisherDisplayName>kaika</PublisherDisplayName>
+    <DisplayName>夏日</DisplayName>
+    <PublisherDisplayName>Monree Studio</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,13 +32,18 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="倒计时.App">
       <uap:VisualElements
-        DisplayName="倒计时"
+        DisplayName="Monree Date"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="倒计时"
-        BackgroundColor="transparent">
+        BackgroundColor="transparent"
+        Description="简洁的日程App。">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="portrait"/>
+          <uap:Rotation Preference="landscapeFlipped"/>
+          <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>

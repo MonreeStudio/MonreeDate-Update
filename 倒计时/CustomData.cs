@@ -9,6 +9,7 @@ namespace 倒计时
 {
     public class CustomData
     {
+
         
         public string Str1 { get; set; }
         public string Str2 { get; set; }
@@ -50,20 +51,43 @@ namespace 倒计时
                 Str3 = d
             };
         }
+
+       static public string Calculator(string s1)
+        {
+            string str1 = s1;
+            string str2 = DateTime.Now.ToShortDateString().ToString();
+            string s2;
+            DateTime d1 = Convert.ToDateTime(str1);
+            DateTime d2 = Convert.ToDateTime(str2);
+            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
+            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
+            int days = (d4 - d3).Days;
+            if (days < 0)
+            {
+                days = -days;
+                s2 = "还有" + days.ToString() + "天";
+            }
+            else
+                s2 = "已过" + days.ToString() + "天";
+            return s2;
+        }
     }
 
     public class CustomDataViewModel
     {
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
-
+        public string Today = DateTime.Now.ToShortDateString().ToString();
         public CustomDataViewModel()
         {
-            CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            //CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            //CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
-            //CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX"});
+
+            CustomDatas.Add(new CustomData() { Str1 = "Together", Str2 = CustomData.Calculator("2018/12/24"), Str3 = "2018/12/24" });
+            CustomDatas.Add(new CustomData() { Str1 = "大学英语六级", Str2 = CustomData.Calculator("2019/6/15"), Str3 = "2019/6/15"});
+            CustomDatas.Add(new CustomData() { Str1 = "英语专业八级", Str2 = CustomData.Calculator("2020/3/23"), Str3 = "2020/3/23"});
+            CustomDatas.Add(new CustomData() { Str1 = "小异的生日", Str2 = CustomData.Calculator("2019/7/30"), Str3 = "2019/7/30"});
+            CustomDatas.Add(new CustomData() { Str1 = "许嵩深圳歌友会", Str2 = CustomData.Calculator("2019/5/11"), Str3 = "2019/5/11"});
+            CustomDatas.Add(new CustomData() { Str1 = "青年晚报演唱会广州站", Str2 = CustomData.Calculator("2017/10/7"), Str3 = "2017/10/7"});
+            CustomDatas.Add(new CustomData() { Str1 = "Meet", Str2 = CustomData.Calculator("2017/8/14"), Str3 = "2017/8/14" });
+
         }
 
         public void AddData(CustomData data)

@@ -37,15 +37,15 @@ namespace 倒计时
             Current = this;
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
-            //title.BackgroundColor = Colors.SkyBlue;
-            //title.ForegroundColor = Colors.Transparent;
-            //title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
-            //title.ButtonHoverBackgroundColor = Colors.White;
-            //title.ButtonPressedBackgroundColor = Colors.White;
-            //title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+            title.BackgroundColor = Colors.SkyBlue;
+            title.ForegroundColor = Colors.Transparent;
+            title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
+            title.ButtonHoverBackgroundColor = Colors.White;
+            title.ButtonPressedBackgroundColor = Colors.White;
+            title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
         }
 
-        
+
 
         private readonly List<(string Tag, Type Page)> _pages = new List<(string Tag, Type Page)>
         {

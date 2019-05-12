@@ -11,8 +11,8 @@
 
     <StackPanel>
         <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" FontSize="28" Foreground="Black" Height="100"/>
-        <GridView Margin="25,0,0,0" ItemClick="GridView_ItemClick" SelectionChanged="GridView_SelectionChanged">
-            <GridViewItem x:FieldModifier="Public">
+        <GridView Margin="25,0,0,0" ItemClick="GridView_ItemClick">
+            <GridViewItem x:FieldModifier="Public" >
                 <StackPanel CornerRadius="10" Margin="0,0,0,0" Background="Pink" Width="220" Height="250">
                     <TextBlock x:Name="Name1" Text="Together" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="20" Foreground="White"/>
                     <TextBlock x:Name="Date1" x:FieldModifier="Public" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontSize="25" Foreground="White"/>

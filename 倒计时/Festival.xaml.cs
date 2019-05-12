@@ -24,6 +24,7 @@ namespace 倒计时
     {
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static Festival Current;
+        string str1, str2, str3;
         public Festival()
         {
             this.InitializeComponent();
@@ -60,13 +61,12 @@ namespace 倒计时
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Date1.Text = All.Current.TopText.Text;
-        }
+            var _item = (CustomData)e.ClickedItem;
+            str1 = _item.Str1;
+            str2 = _item.Str2;
+            str3 = _item.Str3;
 
-        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-            //Frame.Navigate(typeof(Details));
+            Frame.Navigate(typeof(Details));
         }
     }
 }
