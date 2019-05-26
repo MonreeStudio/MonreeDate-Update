@@ -29,7 +29,7 @@
                    Grid.Row="0"
                    Grid.Column="0" 
                    VerticalAlignment="Top"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="20,10,0,0">
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="20,30,0,0">
         <PersonPicture x:Name="MyPersonPicture"
                        Width="110"
                        Height="110"

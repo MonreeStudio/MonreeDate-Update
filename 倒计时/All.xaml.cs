@@ -30,7 +30,7 @@ namespace 倒计时
         public static All Current;
         public string Model_event;
         public string Model_Date;
-
+        public CustomData SelectedItem;
         public All()
         {
             this.InitializeComponent();
@@ -66,6 +66,7 @@ namespace 倒计时
             return s2;
         }
 
+
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             
@@ -74,7 +75,9 @@ namespace 倒计时
 
         private void MyGirdView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            
             var _item = (CustomData)e.ClickedItem;
+            //SelectedItem = _item;
             str1 = _item.Str1;
             str2 = _item.Str2;
             str3 = _item.Str3;
@@ -94,8 +97,25 @@ namespace 倒计时
 
         private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            
-            Frame.Navigate(typeof(Add));
+            var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
+            SelectedItem = _item;
+            //string str = ((FrameworkElement)e.OriginalSource).DataContext.ToString();
+            //Copy.Text = str;
+            //menuFlyout.ShowAt(lvVerses, e.GetPosition(this.lvVerses));
+
+            //MenuFlyout myFlyout = new MenuFlyout();
+            //MenuFlyoutItem firstItem = new MenuFlyoutItem { Text = "删除日程" };
+            //myFlyout.Items.Add(firstItem);
+            ////if you only want to show in left or buttom 
+            ////myFlyout.Placement = FlyoutPlacementMode.Left;
+            //FrameworkElement senderElement = sender as FrameworkElement;
+            ////the code can show the flyout in your mouse click 
+            //myFlyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CustomDatas.Remove(SelectedItem);
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -104,7 +124,7 @@ namespace 倒计时
             //    .Where(p => p.IsSelected)
             //    .Select(t => t.Content.ToString())
             //    .ToArray();
-            var wid = MyGirdView.Width;
+            var wid = MyGridView.Width;
             TopText.Text = wid.ToString();
         }
 

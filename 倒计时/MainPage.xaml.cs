@@ -18,6 +18,7 @@ using Windows.UI;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.System;
+using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -29,13 +30,14 @@ namespace 倒计时
     public sealed partial class MainPage : Page
     {
         public static MainPage Current;
-
+        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public MainPage()
         {
 
             this.InitializeComponent();
             Current = this;
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             var title = ApplicationView.GetForCurrentView().TitleBar;
             title.BackgroundColor = Colors.SkyBlue;
             title.ForegroundColor = Colors.Transparent;
@@ -43,6 +45,8 @@ namespace 倒计时
             title.ButtonHoverBackgroundColor = Colors.White;
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+
+
         }
 
 

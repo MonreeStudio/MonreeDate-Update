@@ -29,7 +29,6 @@ namespace 倒计时
     {
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
-        
         private const string SelectedAppThemeKey = "SelectedAppTheme";
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
@@ -81,7 +80,6 @@ namespace 倒计时
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-            
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
             {
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
