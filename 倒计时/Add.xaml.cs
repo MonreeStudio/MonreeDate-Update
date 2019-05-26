@@ -74,6 +74,8 @@ namespace 倒计时
             {
                 All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
                 Frame.Navigate(typeof(All));
+                PopupNotice popupNotice = new PopupNotice("添加成功");
+                popupNotice.ShowAPopup();
             }
             else
             {

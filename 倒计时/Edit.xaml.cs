@@ -63,6 +63,8 @@ namespace 倒计时
                 Settings.Current.PersonalBirthday.Text = EditBirthday_Date;
                 Settings.Current.PersonalSex.Text = EditSex_Sex;
                 Frame.Navigate(typeof(Settings));
+                PopupNotice popupNotice = new PopupNotice("个人信息已更新");
+                popupNotice.ShowAPopup();
             }
             else
             {

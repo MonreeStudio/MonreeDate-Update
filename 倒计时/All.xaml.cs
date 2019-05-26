@@ -99,6 +99,10 @@ namespace 倒计时
         {
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
             SelectedItem = _item;
+            if (SelectedItem != null)
+                MyFlyout.IsEnabled = true;
+            else
+                MyFlyout.IsEnabled = false;
             //string str = ((FrameworkElement)e.OriginalSource).DataContext.ToString();
             //Copy.Text = str;
             //menuFlyout.ShowAt(lvVerses, e.GetPosition(this.lvVerses));
@@ -115,7 +119,14 @@ namespace 倒计时
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
+            int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);
+            int _end = ViewModel.CustomDatas.Count();
+            if (_start != _end) 
+            {
+                PopupNotice popupNotice = new PopupNotice("删除成功");
+                popupNotice.ShowAPopup();
+            }
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
