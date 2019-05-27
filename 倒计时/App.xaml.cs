@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -12,6 +13,7 @@ using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System.Profile;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -86,6 +88,66 @@ namespace 倒计时
             }
         }
 
+        static public string term(DateTime b, DateTime e)
+        {
+            if (b < e)
+            {
+                var t = new
+                {
+                    bm = b.Month,
+                    em = e.Month,
+                    bd = b.Day,
+                    ed = e.Day
+                };
+                int diffMonth = (e.Year - b.Year) * 12 + (t.em - t.bm),//相差月
+                    diffYear = diffMonth / 12;//相差年
+
+                int[] d = new int[3] { 0, 0, 0 };
+                if (diffYear > 0)
+                {
+                    if (t.em == t.bm && t.ed < t.bd)
+                    {
+                        d[0] = diffYear - 1;
+                    }
+                    else d[0] = diffYear;
+                }
+
+                if (t.ed >= t.bd)
+                {
+                    d[1] = diffMonth % 12;
+                    d[2] = t.ed - t.bd;
+                }
+                else//结束日 小于 开始日
+                {
+                    int dm = diffMonth - 1;
+                    d[1] = dm % 12;
+                    TimeSpan ts = e - b.AddMonths(dm);
+                    d[2] = ts.Days;
+                }
+                StringBuilder sb = new StringBuilder();
+
+                if (d.Sum() > 0)
+                {
+                    if (d[0] > 0) sb.Append($"{d[0]}年");
+                    if (d[1] > 0) sb.Append($"{d[1]}个月");
+                    if (d[2] > 0) sb.Append($"{d[2]}天");
+                }
+                else
+                {
+                    int[] time = new int[2] { 0, 0 };
+                    TimeSpan sj = e - b;
+                    time[0] = sj.Hours;
+                    time[1] = sj.Minutes % 60;
+                    if (time[0] > 0) sb.Append($"{time[0]}小时");
+                    if (time[1] > 0) sb.Append($"{time[1]}分钟");
+
+                    if (time.Sum() <= 0) sb.Append($"{sj.Seconds}秒");
+                }
+                return sb.ToString();
+            }
+            else throw new Exception("开始日期必须小于结束日期");
+        }
+
         public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
         {
             if (!typeof(TEnum).GetTypeInfo().IsEnum)
@@ -111,31 +173,7 @@ namespace 倒计时
                 this.BackGroundColor = "SkyBlue";
             }
 
-            static public CustomData DateCalculator(string D, string E)
-            {
-                string s1 = E;
-                string s2;
-                string d = D;
-                string str2 = DateTime.Now.ToShortDateString().ToString();
-                DateTime d1 = Convert.ToDateTime(d);
-                DateTime d2 = Convert.ToDateTime(str2);
-                DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-                DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-                int days = (d4 - d3).Days;
-                if (days < 0)
-                {
-                    days = Math.Abs(days);
-                    s2 = "已过" + days.ToString() + "天";
-                }
-                else
-                    s2 = "还有" + days.ToString() + "天";
-                return new CustomData()
-                {
-                    Str1 = s1,
-                    Str2 = s2,
-                    Str3 = d
-                };
-            }
+            
         }
 
         public class CustomDataViewModel
@@ -174,7 +212,7 @@ namespace 倒计时
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
+                rootFrame.Navigated += OnNavigated;
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: 从之前挂起的应用程序加载状态
@@ -182,7 +220,10 @@ namespace 倒计时
 
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackrequested;
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = rootFrame.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             }
+
 
             if (e.PrelaunchActivated == false)
             {
@@ -195,6 +236,22 @@ namespace 倒计时
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+            }
+        }
+
+        private void OnNavigated(object sender, NavigationEventArgs e)
+        {
+            //根据页面是否可以返回，在窗口显示返回按钮
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = ((Frame)sender).CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+        }
+
+        private void OnBackrequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;//这句一定要有，不然还会发生默认返回键操作
+                rootFrame.GoBack();
             }
         }
 

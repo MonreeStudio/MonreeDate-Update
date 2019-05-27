@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="PowderBlue">
+    Background="{ThemeResource CustomAcrylicBackgroundBrush}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -28,16 +28,19 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Grid.Row="1"/>
-        <Grid  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="Azure">
+        <Grid  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <TextBlock x:Name="DetailsDate"
                        Text="还有。。。"
                        FontSize="48"
-                       Foreground="PowderBlue"
+                       Foreground="SkyBlue"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"
+                       IsTapEnabled="True"
+                       Tapped="DetailsDate_Tapped"
+                       />
         </Grid>
         <TextBlock Text="——夏日——" Margin="10" Grid.Row="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White">
             

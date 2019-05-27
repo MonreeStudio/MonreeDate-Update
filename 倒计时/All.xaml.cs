@@ -25,7 +25,7 @@ namespace 倒计时
     public sealed partial class All : Page
     {
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
-        public string str1, str2, str3;
+        public string str1, str2, str3, str4;
         public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static All Current;
         public string Model_event;
@@ -50,7 +50,7 @@ namespace 倒计时
         {
             string str1 = s1;
             string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
+            string s2, s3;
             DateTime d1 = Convert.ToDateTime(str1);
             DateTime d2 = Convert.ToDateTime(str2);
             DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
@@ -58,11 +58,16 @@ namespace 倒计时
             int days = (d4 - d3).Days;
             if (days < 0)
             {
-                days = -days;
+                s3 = "还有" + App.term(Convert.ToDateTime(d4), Convert.ToDateTime(d3));
+                days = Math.Abs(days);
                 s2 = "还有" + days.ToString() + "天";
+
             }
             else
+            {
+                s3 = "已过" + App.term(Convert.ToDateTime(d3), Convert.ToDateTime(d4));
                 s2 = "已过" + days.ToString() + "天";
+            }
             return s2;
         }
 
@@ -81,7 +86,8 @@ namespace 倒计时
             str1 = _item.Str1;
             str2 = _item.Str2;
             str3 = _item.Str3;
-            
+            str4 = _item.Str3;
+
             Frame.Navigate(typeof(Details));
         }
 

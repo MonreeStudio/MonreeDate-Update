@@ -40,23 +40,39 @@ namespace 倒计时
         {
             try
             {
+                string t;
                 DateTime d1 = Convert.ToDateTime(Str.start);
                 DateTime d2 = Convert.ToDateTime(Str.end);
                 DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
                 DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
                 int days = (d4 - d3).Days;
-                
+                if (d4 > d3)
+                    t = App.term(d3, d4);
+                else
+                    t = App.term(d4, d3);
                 if (days < 0)
                     days=Math.Abs(days);
                 int week, week_date;
                 week = days / 7;
                 week_date = days % 7;
                 if (week_date == 0)
-                    SpanTime.Text = "相差" + days.ToString() + "天\n" 
-                                    + "相差" + week.ToString() + "周";
-                else
                     SpanTime.Text = "相差" + days.ToString() + "天\n"
-                                    + "相差" + week.ToString() + "周" + week_date.ToString() + "天";
+                                   + "相差" +t 
+                                    + "\n相差" + week.ToString() + "周";
+                else
+                {
+                    if ((days.ToString() + "天") == t)
+                    {
+                        SpanTime.Text = "相差" + t 
+                                          + "\n相差" + week.ToString() + "周" + week_date.ToString() + "天";
+                    }
+                    else
+                    {
+                        SpanTime.Text = "相差" + days.ToString() + "天\n"
+                                          + "相差" + t
+                                          + "\n相差" + week.ToString() + "周" + week_date.ToString() + "天";
+                    }
+                }
             } 
             catch
             {

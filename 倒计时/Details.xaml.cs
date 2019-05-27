@@ -46,5 +46,22 @@ namespace 倒计时
             //base.OnNavigatedTo(e);
         }
 
+        private void DetailsDate_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            DateTime d1 = Convert.ToDateTime(All.Current.str3);
+            DateTime d2 = DateTime.Now;
+            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
+            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
+
+            if (DetailsDate.Text == All.Current.str2)
+            {
+                if (d4 > d3)
+                    DetailsDate.Text = "已过" + App.term(d3, d4);
+                else
+                    DetailsDate.Text = "还有" + App.term(d4, d3);
+            }
+            else
+                DetailsDate.Text = All.Current.str2;
+        }
     }
 }
