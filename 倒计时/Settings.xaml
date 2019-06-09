@@ -24,7 +24,6 @@
         <TextBlock x:Name="SettingsTopText"
                    Text="设置"
                    FontSize="28"
-                   Foreground="Black"
                    Margin="90,30,0,0"
                    Grid.Row="0"
                    Grid.Column="0" 
@@ -41,20 +40,20 @@
                        />
             <StackPanel Margin="20,16,0,0">
                 <StackPanel Orientation="Horizontal">
-                <TextBlock Text="昵称：" FontSize="13" Foreground="Black"/>
-                    <TextBlock x:Name="PersonalNickName" x:FieldModifier="Public" Text="Bill夏昕" FontSize="13" Foreground="Black" />
+                <TextBlock Text="昵称：" FontSize="13"/>
+                    <TextBlock x:Name="PersonalNickName" x:FieldModifier="Public" Text="Bill夏昕" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="性别：" FontSize="13" Foreground="Black"/>
-                    <TextBlock x:Name="PersonalSex" x:FieldModifier="Public" Text="男" FontSize="13" Foreground="Black"/>
+                    <TextBlock Text="性别：" FontSize="13"/>
+                    <TextBlock x:Name="PersonalSex" x:FieldModifier="Public" Text="男" FontSize="13" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="生日：" FontSize="13" Foreground="Black"/>
-                    <TextBlock x:Name="PersonalBirthday" x:FieldModifier="Public" Text="1999/7/8" FontSize="13" Foreground="Black"/>
+                    <TextBlock Text="生日：" FontSize="13"/>
+                    <TextBlock x:Name="PersonalBirthday" x:FieldModifier="Public" Text="1999/7/8" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="个性签名：" FontSize="13" Foreground="Black"/>
-                    <TextBlock x:Name="PersonalSign" x:FieldModifier="Public" Text="只与同好赏风雅。" FontSize="13" Foreground="Black"/>
+                    <TextBlock Text="个性签名：" FontSize="13"/>
+                    <TextBlock x:Name="PersonalSign" x:FieldModifier="Public" Text="只与同好赏风雅。" FontSize="13"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

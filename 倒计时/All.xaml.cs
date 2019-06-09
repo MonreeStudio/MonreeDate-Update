@@ -1,10 +1,14 @@
-﻿using System;
+﻿using SQLite.Net.Platform.WinRT;
+using SQLitePCL;
+using SQLite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,7 +16,12 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using SQLite.Net;
+using SQLite.Net.Attributes;
+using SQLite.Net.Interop;
+using 夏日.Models;
 using static 倒计时.App;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -24,6 +33,7 @@ namespace 倒计时
     /// </summary>
     public sealed partial class All : Page
     {
+        private ApplicationDataContainer _appSettings;  
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public string str1, str2, str3, str4;
         public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
@@ -31,21 +41,40 @@ namespace 倒计时
         public string Model_event;
         public string Model_Date;
         public CustomData SelectedItem;
+        public String dbname;   
         public All()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            _appSettings = ApplicationData.Current.LocalSettings;
+            BindKeyList();
             Current = this;
-            
             Today.Text= DateTime.Now.ToShortDateString().ToString();
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+
+            dbname = "test.db";
+
             //Date1.Text = Calculator(StartName1.Text);
             //Date2.Text = Calculator(StartName2.Text);
             //Date3.Text = Calculator(StartName3.Text);
             //Date4.Text = Calculator(StartName4.Text);
+
+
         }
 
+        private async void readData()
+        {
+            
+        }
+
+        private void BindKeyList()
+        {
+            foreach (string key in _appSettings.Values.Keys)
+            {
+                MyGridView.Items.Add(key);
+            }
+        }
         private string Calculator(string s1)
         {
             string str1 = s1;
@@ -61,7 +90,6 @@ namespace 倒计时
                 s3 = "还有" + App.term(Convert.ToDateTime(d4), Convert.ToDateTime(d3));
                 days = Math.Abs(days);
                 s2 = "还有" + days.ToString() + "天";
-
             }
             else
             {
@@ -93,7 +121,11 @@ namespace 倒计时
 
         private void MyGirdView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            if (e.AddedItems.Count > 0)
+            {
+                string key = e.AddedItems[0].ToString();
+                
+            }
         }
 
         private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
@@ -123,10 +155,32 @@ namespace 倒计时
             //myFlyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
         }
 
+        private void MyGridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            //CustomData item = new CustomData(); // Get persisted item
+            //if (item != null)
+            //{
+            //   MyGridView.ScrollIntoView(item);
+            //    ConnectedAnimation animation =
+            //        ConnectedAnimationService.GetForCurrentView().GetAnimation("portrait");
+            //    if (animation != null)
+            //    {
+            //        await MyGridView.TryStartConnectedAnimationAsync(
+            //            animation, item, "GridViewStackPanel");
+            //    }
+            //}
+        }
+
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);
+            if (MyGridView.SelectedIndex > -1)
+            {
+                _appSettings.Values.Remove(MyGridView.SelectedItem.ToString());
+                MyGridView.Items.Clear();
+                BindKeyList();
+            }
             int _end = ViewModel.CustomDatas.Count();
             if (_start != _end) 
             {

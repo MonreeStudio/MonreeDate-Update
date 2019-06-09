@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Windows.ApplicationModel;
@@ -21,6 +22,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using SQLitePCL;
+using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Interop;
+using SQLite.Net.Attributes;
 
 namespace 倒计时
 {
@@ -32,6 +37,13 @@ namespace 倒计时
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
         private const string SelectedAppThemeKey = "SelectedAppTheme";
+
+        //SQLite
+        public string dbname;
+
+
+
+
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -86,6 +98,7 @@ namespace 倒计时
             {
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
             }
+            dbname = "test.db";
         }
 
         static public string term(DateTime b, DateTime e)

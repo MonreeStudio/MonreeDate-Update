@@ -4,13 +4,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLitePCL;
+using Windows.Storage;
 
 namespace 倒计时
 {
     public class CustomData
     {
 
-        
+        private ApplicationDataContainer _appSettings;
+
         public string Str1 { get; set; }
         public string Str2 { get; set; }
         public string Str3 { get; set; }
@@ -25,6 +28,7 @@ namespace 倒计时
             this.Str2 = "string 2";
             this.Str3 = "string 3";
             this.BackGroundColor = "SkyBlue";
+            _appSettings = ApplicationData.Current.LocalSettings;
         }
 
         static public CustomData DateCalculator(string D, string E)
@@ -82,9 +86,21 @@ namespace 倒计时
     {
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
         public string Today = DateTime.Now.ToShortDateString().ToString();
+
         public CustomDataViewModel()
         {
+            //SQLiteConnection _connection = new SQLiteConnection(App.DB_NAME);
+            //using (var statement = _connection.Prepare(App.SQL_CREATE_TABLE))
+            //{
+            //    statement.Step();
+            //}
 
+            //using (var statement = _connection.Prepare(App.SQL_INSERT))
+            //{
+            //    statement.Bind(1,CustomDatas.Add(new CustomData() { Str1 = "Together", Str2 = CustomData.Calculator("2018/12/24"), Str3 = "2018/12/24" }));
+            //    statement.Bind(2, value);
+            //    statement.Step();
+            //}
             CustomDatas.Add(new CustomData() { Str1 = "Together", Str2 = CustomData.Calculator("2018/12/24"), Str3 = "2018/12/24" });
             CustomDatas.Add(new CustomData() { Str1 = "大学英语六级", Str2 = CustomData.Calculator("2019/6/15"), Str3 = "2019/6/15"});
             CustomDatas.Add(new CustomData() { Str1 = "英语专业八级", Str2 = CustomData.Calculator("2020/3/23"), Str3 = "2020/3/23"});
@@ -92,7 +108,6 @@ namespace 倒计时
             CustomDatas.Add(new CustomData() { Str1 = "许嵩深圳歌友会", Str2 = CustomData.Calculator("2019/5/11"), Str3 = "2019/5/11"});
             CustomDatas.Add(new CustomData() { Str1 = "青年晚报演唱会广州站", Str2 = CustomData.Calculator("2017/10/7"), Str3 = "2017/10/7"});
             CustomDatas.Add(new CustomData() { Str1 = "Meet", Str2 = CustomData.Calculator("2017/8/14"), Str3 = "2017/8/14" });
-
         }
 
         public void AddData(CustomData data)

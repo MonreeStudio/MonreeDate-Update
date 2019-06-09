@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -26,7 +27,10 @@ namespace 倒计时
 
     public sealed partial class Add : Page
     {
+        private ApplicationDataContainer _appSettings;
+
         public static Add Current;
+        public string _Event;
         public string _PickDate;
         public string _Date;
         public Add()
@@ -34,6 +38,9 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            _appSettings = ApplicationData.Current.LocalSettings;
+
+            BindKeyList();
         }
 
         private string Calculator(string s1)
@@ -56,6 +63,23 @@ namespace 倒计时
             return s2;
         }
 
+        public void BindKeyList()
+        {
+            foreach(string key in _appSettings.Values.Values)
+            {
+                //// All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = key, Str2 = key, Str3 = key });
+                //if (_appSettings.Values[_Event].ToString()!=null)
+                //{
+                //    All.Current.ViewModel.CustomDatas.Add(new CustomData()
+                //    {
+                //        Str1 = _appSettings.Values[_Event].ToString(),
+                //        Str2 = _appSettings.Values[_Date].ToString(),
+                //        Str3 = _appSettings.Values[_PickDate].ToString()
+                //    });
+                //}
+
+            }
+        }
         private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string Picker = Add_Picker.Date.ToString();
@@ -69,10 +93,15 @@ namespace 倒计时
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             string _event = AddEvent.Text.Trim();
+            _Event = _event;
             //All.Current.Model_event = _event;
             if (_Date != null&&_event!="")
             {
-                All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
+                //All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
+                _appSettings.Values[_Event] = _event;
+                _appSettings.Values[_Date] = _Date;
+                _appSettings.Values[_PickDate] = _PickDate;
+                BindKeyList();
                 Frame.Navigate(typeof(All));
                 PopupNotice popupNotice = new PopupNotice("添加成功");
                 popupNotice.ShowAPopup();

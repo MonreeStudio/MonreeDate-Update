@@ -19,6 +19,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.System;
 using Windows.Storage;
+using Windows.Foundation.Metadata;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -45,8 +46,6 @@ namespace 倒计时
             title.ButtonHoverBackgroundColor = Colors.White;
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
-
-
         }
 
 
