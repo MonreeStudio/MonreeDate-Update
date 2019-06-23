@@ -73,7 +73,7 @@
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top"
                       x:Name="AllPageAcylic"
-                      IsOn="True"
+                      x:FieldModifier="public"
                       OnContent="开"
                       OffContent="关"
                       Toggled="AllPageAcylic_Toggled"

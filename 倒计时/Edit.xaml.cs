@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,12 +27,14 @@ namespace 倒计时
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public string EditBirthday_Date;
         public string EditSex_Sex;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Edit()
         {
             this.InitializeComponent();
             EditNickName.Text = Settings.Current.PersonalNickName.Text;
             EditSign.Text = Settings.Current.PersonalSign.Text;
             EditSex.Text = Settings.Current.PersonalSex.Text;
+            
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -62,6 +65,10 @@ namespace 倒计时
                 Settings.Current.PersonalSign.Text = EditSign.Text;
                 Settings.Current.PersonalBirthday.Text = EditBirthday_Date;
                 Settings.Current.PersonalSex.Text = EditSex_Sex;
+                localSettings.Values["NickName"] = EditNickName.Text;
+                localSettings.Values["Sign"] = EditSign.Text;
+                localSettings.Values["PersonalSex"] = EditSex_Sex;
+                localSettings.Values["BirthDay_Date"] = EditBirthday_Date;
                 Frame.Navigate(typeof(Settings));
                 PopupNotice popupNotice = new PopupNotice("个人信息已更新");
                 popupNotice.ShowAPopup();

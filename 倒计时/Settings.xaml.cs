@@ -39,6 +39,7 @@ namespace 倒计时
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         Compositor _compositor = Window.Current.Compositor;
         SpringVector3NaturalMotionAnimation _springAnimation;
+        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public Settings()
         {
@@ -46,11 +47,61 @@ namespace 倒计时
             Current = this;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += OnSettingsPageLoaded;
+
+            if (localSettings.Values["SetAllPageAcrylic"] != null)
+            {
+                if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
+                {
+                    AllPageAcylic.IsOn = true;
+                }
+                else
+                {
+                    AllPageAcylic.IsOn = false;
+                }
+            }
+
+            var _NickName = localSettings.Values["NickName"];
+            var _Sex = localSettings.Values["PersonalSex"];
+            var _sign = localSettings.Values["Sign"];
+            var _Birthday_date = localSettings.Values["BirthDay_Date"];
+            var _PersonPicture = localSettings.Values["PersonPicture"];
+            if (_NickName != null && _Sex != null && _sign != null && _Birthday_date != null && _PersonPicture != null)
+            {
+                PersonalSex.Text = _Sex.ToString();
+                PersonalNickName.Text = _NickName.ToString();
+                PersonalBirthday.Text = _Birthday_date.ToString();
+                PersonalSign.Text = _sign.ToString();
+                MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
+            }
+        }
+
+        public static object GetSetting(string name)
+        {
+            if (localSettings.Values.ContainsKey(name))
+            {
+                return localSettings.Values[name];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static void RemoveSetting(string name)
+        {
+            if (localSettings.Values.ContainsKey(name))
+            {
+                localSettings.Values.Remove(name);
+            }
+            else
+            {
+                //
+            }
         }
 
         private void OnSettingsPageLoaded(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private async void AboutButton_Click(object sender, RoutedEventArgs e)
@@ -60,8 +111,9 @@ namespace 倒计时
         }
 
         private void AllPageAcylic_Toggled(object sender, RoutedEventArgs e)
-        {
+        {         
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            
             if (toggleSwitch != null)
             {
                 if (AllPageAcylic.IsOn == true)
@@ -72,11 +124,13 @@ namespace 倒计时
                     myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
                     myBrush.TintOpacity = 0.8;
                     All.Current.AllPageStackPanel.Background = myBrush;
+                    localSettings.Values["SetAllPageAcrylic"] = true;
                     //Add.Current.AddPageGird.Background = myBrush;
                 }
                 else
                 {
                     All.Current.AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
+                    localSettings.Values["SetAllPageAcrylic"] = false;
                     //Add.Current.AddPageGird.Background = new SolidColorBrush(Colors.White);
                 }
             }
@@ -130,6 +184,7 @@ namespace 倒计时
                 {
                     await srcImage.SetSourceAsync(stream);
                     MyPersonPicture.ProfilePicture = srcImage;
+                    //localSettings.Values["PersonPicture"] = srcImage;
                 }
             }
             if (file != null)
@@ -155,6 +210,7 @@ namespace 倒计时
                         var bitmap = new BitmapImage();
                         await bitmap.SetSourceAsync(stream);
                         MyPersonPicture.ProfilePicture = bitmap;
+                        localSettings.Values["PersonPicture"] = bitmap;
                     }
                     catch (Exception ex)
                     {

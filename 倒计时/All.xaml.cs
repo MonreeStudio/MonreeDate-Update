@@ -23,6 +23,7 @@ using SQLite.Net.Attributes;
 using SQLite.Net.Interop;
 using 夏日.Models;
 using static 倒计时.App;
+using Windows.UI;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -46,6 +47,10 @@ namespace 倒计时
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            
+
             _appSettings = ApplicationData.Current.LocalSettings;
             BindKeyList();
             Current = this;
@@ -55,10 +60,22 @@ namespace 倒计时
 
             dbname = "test.db";
 
-            //Date1.Text = Calculator(StartName1.Text);
-            //Date2.Text = Calculator(StartName2.Text);
-            //Date3.Text = Calculator(StartName3.Text);
-            //Date4.Text = Calculator(StartName4.Text);
+            if (localSettings.Values["SetAllPageAcrylic"] != null)
+            {
+                if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
+                {
+                    AcrylicBrush myBrush = new AcrylicBrush();
+                    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
+                    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
+                    myBrush.TintOpacity = 0.8;
+                    AllPageStackPanel.Background = myBrush;
+                }
+                else
+                {
+                    AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
+                }
+            }
 
 
         }
