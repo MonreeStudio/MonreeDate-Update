@@ -64,14 +64,14 @@ namespace 倒计时
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
             var _Birthday_date = localSettings.Values["BirthDay_Date"];
-            var _PersonPicture = localSettings.Values["PersonPicture"];
-            if (_NickName != null && _Sex != null && _sign != null && _Birthday_date != null && _PersonPicture != null)
+            //var _PersonPicture = localSettings.Values["PersonPicture"];
+            if (_NickName != null && _Sex != null && _sign != null && _Birthday_date != null)
             {
                 PersonalSex.Text = _Sex.ToString();
                 PersonalNickName.Text = _NickName.ToString();
                 PersonalBirthday.Text = _Birthday_date.ToString();
                 PersonalSign.Text = _sign.ToString();
-                MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
+                //MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
             }
         }
 
