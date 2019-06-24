@@ -5,7 +5,7 @@
 P.S. 本应用尚未提供应用数据本地存储，每次启动应用将被初始化。  
 
 ## 应用本地部署  
-[安装包传送门](https://pan.baidu.com/s/1lLpfJMCBcnsaoauJ1kIGMQ) 提取码：  0i3v  
+[安装包传送门](https://pan.baidu.com/s/1VN_-DDYIXKm93hIlZgD1qw) 提取码：  r8xu  
 下载到本地后，先安装证书（文件后缀为.cer），将证书安装在“受信任的根证书安装机构”，之后打开安装包（文件后缀.msix）即可安装。  
 最近更新日期：2019.5.26  
 ## 解决方案本地部署
