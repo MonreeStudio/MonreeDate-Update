@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:FieldModifier="Public"
-    Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+    Background="White">
 
     <StackPanel>
         <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" FontSize="28" Height="100"/>
