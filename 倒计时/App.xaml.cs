@@ -99,6 +99,7 @@ namespace 倒计时
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
             }
             dbname = "test.db";
+            this.FocusVisualKind = FocusVisualKind.Reveal;
         }
 
         static public string term(DateTime b, DateTime e)

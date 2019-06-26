@@ -25,6 +25,7 @@
     <AppInstallerUpdateFrequency>3</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>Daily</AppInstallerCheckForUpdateFrequency>
     <PackageCertificateThumbprint>B2F920B5D80412D32B0BB098DE875451E440F934</PackageCertificateThumbprint>
+    <AppxPackageDir>C:\Users\kaika\Source\Repos\\倒计时\AppPackages\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>

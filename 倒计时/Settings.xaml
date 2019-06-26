@@ -74,6 +74,7 @@
                       VerticalAlignment="Top"
                       x:Name="AllPageAcylic"
                       x:FieldModifier="public"
+                      IsOn="True"
                       OnContent="开"
                       OffContent="关"
                       Toggled="AllPageAcylic_Toggled"

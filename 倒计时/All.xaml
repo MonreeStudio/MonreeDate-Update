@@ -14,7 +14,7 @@
         <RelativePanel x:FieldModifier="Public">
             <TextBlock FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
             <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
-                <AppBarButton CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" Foreground="CornflowerBlue">
+                <AppBarButton FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" Foreground="CornflowerBlue">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
                     </AppBarButton.Icon>
@@ -30,7 +30,7 @@
         <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="SkyBlue" FontSize="30" FontFamily="HYXuSTJ" HorizontalTextAlignment="Center"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
         <TextBlock Height="60"/>
-        <GridView Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">
+        <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue"  Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">
             <GridView.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem x:Name="MyFlyout" Text="删除日程" Click="MenuFlyoutItem_Click" IsEnabled="False"/>

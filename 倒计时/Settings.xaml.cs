@@ -73,6 +73,7 @@ namespace 倒计时
                 PersonalSign.Text = _sign.ToString();
                 //MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
             }
+
         }
 
         public static object GetSetting(string name)
