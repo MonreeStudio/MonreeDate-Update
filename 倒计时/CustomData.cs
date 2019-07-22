@@ -84,7 +84,14 @@ namespace 倒计时
                 s2 = "还有" + days.ToString() + "天";
             }
             else
-                s2 = "已过" + days.ToString() + "天";
+            {
+                if (days != 0)
+                    s2 = "已过" + days.ToString() + "天";
+                else
+                {
+                    s2 = "就在今天";
+                }
+             }
             return s2;
         }
     }

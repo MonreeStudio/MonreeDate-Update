@@ -55,8 +55,12 @@ namespace 倒计时
                 s2 = "还有" + days.ToString() + "天";
             }
             else
-                s2 = "已过" + days.ToString() + "天";
-            return s2;
+            {if (days != 0)
+                    s2 = "已过" + days.ToString() + "天";
+                else
+                    s2 = "就在今天";
+            }
+                return s2;
         }
 
         private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
@@ -76,8 +80,17 @@ namespace 倒计时
             //All.Current.Model_event = _event;
             if (_Date != null&&_event!="")
             {
-                All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
-                All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate });
+                try
+                {
+                    All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate });
+                }
+                catch
+                {
+                    MessageDialog AboutDialog = new MessageDialog("此日程已被添加，请勿重复添加~");
+                    await AboutDialog.ShowAsync();
+                    return;
+                }
                 Frame.Navigate(typeof(All));
                 PopupNotice popupNotice = new PopupNotice("添加成功");
                 popupNotice.ShowAPopup();

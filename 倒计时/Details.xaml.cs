@@ -58,7 +58,10 @@ namespace 倒计时
                 if (d4 > d3)
                     DetailsDate.Text = "已过" + App.term(d3, d4);
                 else
-                    DetailsDate.Text = "还有" + App.term(d4, d3);
+                {
+                    if (d4 < d3)
+                        DetailsDate.Text = "还有" + App.term(d4, d3);
+                }
             }
             else
                 DetailsDate.Text = All.Current.str2;

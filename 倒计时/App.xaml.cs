@@ -38,12 +38,6 @@ namespace 倒计时
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
         private const string SelectedAppThemeKey = "SelectedAppTheme";
 
-        //SQLite
-        public string dbname;
-
-
-
-
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -98,7 +92,6 @@ namespace 倒计时
             {
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
             }
-            dbname = "test.db";
             this.FocusVisualKind = FocusVisualKind.Reveal;
         }
 
@@ -159,7 +152,8 @@ namespace 倒计时
                 }
                 return sb.ToString();
             }
-            else throw new Exception("开始日期必须小于结束日期");
+            else
+                throw new Exception("开始日期必须小于结束日期");
         }
 
         public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
