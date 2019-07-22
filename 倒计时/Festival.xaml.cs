@@ -37,6 +37,14 @@ namespace 倒计时
             Date4.Text = Calculator(StartName4.Text);
             Date5.Text = Calculator(StartName5.Text);
             Date6.Text = Calculator(StartName6.Text);
+            Date7.Text = Calculator(StartName7.Text);
+            Date8.Text = Calculator(StartName8.Text);
+            Date9.Text = Calculator(StartName9.Text);
+            Date10.Text = Calculator(StartName10.Text);
+            Date11.Text = Calculator(StartName11.Text);
+            Date12.Text = Calculator(StartName12.Text);
+            Date13.Text = Calculator(StartName13.Text);
+            Date14.Text = Calculator(StartName14.Text);
         }
 
         private string Calculator(string s1)

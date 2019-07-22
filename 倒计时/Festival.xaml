@@ -17,46 +17,102 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
-            <ListViewItem x:FieldModifier="Public" Background="Pink" Height="130">
+            <ListViewItem Margin="2" x:FieldModifier="Public" Background="PaleVioletRed" Height="130">
                 <RelativePanel>
-                    <TextBlock x:Name="Name1" Text="Together" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Name1" Text="元旦" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
                     <TextBlock x:Name="Date1" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
-                    <TextBlock x:Name="StartName1" RelativePanel.Below="Name1" x:FieldModifier="Public" Text="2018/12/24"  FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="StartName1" RelativePanel.Below="Name1" x:FieldModifier="Public" Text="2019/1/1"  FontSize="20" Foreground="White"/>
                 </RelativePanel>
             </ListViewItem>
-            <ListViewItem Background="SkyBlue" Height="130">
+            <ListViewItem Margin="2" Background="OrangeRed" Height="130">
                 <RelativePanel>
-                    <TextBlock x:Name="Name2" Text="青年晚报演唱会广州站" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Name2" Text="春节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
                     <TextBlock  x:Name="Date2" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName2" x:FieldModifier="Public" RelativePanel.Below="Name2" Text="2017/10/7" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="StartName2" x:FieldModifier="Public" RelativePanel.Below="Name2" Text="2019/2/5" FontSize="20" Foreground="White"/>
                 </RelativePanel>
             </ListViewItem>
-            <ListViewItem Background="PowderBlue" Height="130">
+            <ListViewItem Margin="2" Background="LightPink" Height="130">
                 <RelativePanel>
-                    <TextBlock x:Name="Name3" Text="许嵩深圳歌友会" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Name3" Text="情人节❤" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
                     <TextBlock  x:Name="Date3" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"  FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName3"   x:FieldModifier="Public" RelativePanel.Below="Name3" Text="2019/5/11"  FontSize="20"  Foreground="White"/>
+                    <TextBlock x:Name="StartName3"   x:FieldModifier="Public" RelativePanel.Below="Name3" Text="2019/2/14"  FontSize="20"  Foreground="White"/>
                 </RelativePanel>
             </ListViewItem>
-             <ListViewItem Background="Moccasin" Height="130">
+            <ListViewItem Margin="2" Background="Gold" Height="130">
                <RelativePanel>
-                    <TextBlock x:Name="Name4" Text="大学英语六级" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Name4" Text="元宵节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
                     <TextBlock x:Name="Date4" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"  FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName4" x:FieldModifier="Public" RelativePanel.Below="Name4" Text="2019/6/15" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="StartName4" x:FieldModifier="Public" RelativePanel.Below="Name4" Text="2019/2/19" FontSize="20" Foreground="White"/>
                 </RelativePanel>
             </ListViewItem>
-            <ListViewItem Background="NavajoWhite" Height="130">
+            <ListViewItem Margin="2" Background="HotPink" Height="130">
                 <RelativePanel>
-                    <TextBlock x:Name="Name5" Text="英语专业八级" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Name5" Text="妇女节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
                     <TextBlock x:Name="Date5" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName5" x:FieldModifier="Public" RelativePanel.Below="Name5"  Text="2020/3/23" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="StartName5" x:FieldModifier="Public" RelativePanel.Below="Name5"  Text="2019/3/8" FontSize="20" Foreground="White"/>
                 </RelativePanel>
             </ListViewItem>
-            <ListViewItem Background="LightPink" Height="130">
+            <ListViewItem Margin="2" Background="LightGreen" Height="130">
                 <RelativePanel>
-                    <TextBlock x:Name="Name6" Text="Meet" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Name6" Text="清明节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
                     <TextBlock x:Name="Date6" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName6" x:FieldModifier="Public" RelativePanel.Below="Name6" Text="2017/8/14" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="StartName6" x:FieldModifier="Public" RelativePanel.Below="Name6" Text="2019/4/4" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="Gold" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name7" Text="劳动节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date7" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName7" x:FieldModifier="Public" RelativePanel.Below="Name7" Text="2019/5/1" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="Orange" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name8" Text="儿童节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date8" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName8" x:FieldModifier="Public" RelativePanel.Below="Name8" Text="2019/6/1" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="ForestGreen" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name9" Text="端午节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date9" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName9" x:FieldModifier="Public" RelativePanel.Below="Name9" Text="2019/6/7" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="LightPink" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name10" Text="七夕❤" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date10" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName10" x:FieldModifier="Public" RelativePanel.Below="Name10" Text="2019/8/7" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="MediumPurple" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name11" Text="中秋节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date11" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName11" x:FieldModifier="Public" RelativePanel.Below="Name11" Text="2019/9/13" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="OrangeRed" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name12" Text="国庆节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date12" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName12" x:FieldModifier="Public" RelativePanel.Below="Name12" Text="2019/10/1" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="DarkOrange" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name13" Text="重阳节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date13" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName13" x:FieldModifier="Public" RelativePanel.Below="Name13" Text="2019/10/7" FontSize="20" Foreground="White"/>
+                </RelativePanel>
+            </ListViewItem>
+            <ListViewItem Margin="2" Background="Crimson" Height="130">
+                <RelativePanel>
+                    <TextBlock x:Name="Name14" Text="圣诞节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="Date14" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
+                    <TextBlock x:Name="StartName14" x:FieldModifier="Public" RelativePanel.Below="Name14" Text="2019/12/25" FontSize="20" Foreground="White"/>
                 </RelativePanel>
             </ListViewItem>
         </ListView>
