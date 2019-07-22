@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using 夏日.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -76,6 +77,7 @@ namespace 倒计时
             if (_Date != null&&_event!="")
             {
                 All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
+                All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate });
                 Frame.Navigate(typeof(All));
                 PopupNotice popupNotice = new PopupNotice("添加成功");
                 popupNotice.ShowAPopup();

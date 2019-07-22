@@ -10,7 +10,7 @@ namespace 夏日.Models
 {
     class DataTemple
     {
-        [PrimaryKey,AutoIncrement]
+        [PrimaryKey]
         public string Schedule_name { get; set; }
         public string CalculatedDate { get; set; }
         public string Date { get; set; }

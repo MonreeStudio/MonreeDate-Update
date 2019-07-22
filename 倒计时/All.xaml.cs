@@ -34,6 +34,8 @@ namespace 倒计时
     /// </summary>
     public sealed partial class All : Page
     {
+        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        public SQLite.Net.SQLiteConnection conn;
         private ApplicationDataContainer _appSettings;  
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public string str1, str2, str3, str4;
@@ -42,15 +44,21 @@ namespace 倒计时
         public string Model_event;
         public string Model_Date;
         public CustomData SelectedItem;
-        public String dbname;   
+        public String dbname;
+        public int _index;
         public All()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
-
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            this.InitializeComponent();
+            //建立数据库连接   
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            //以下等效上面的建表   
+            //conn.CreateTable(typeof(DataTemple));  
             
-
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             _appSettings = ApplicationData.Current.LocalSettings;
             BindKeyList();
             Current = this;
@@ -58,7 +66,13 @@ namespace 倒计时
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
 
-            dbname = "test.db";
+            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+            foreach (var item in datalist)
+            {
+                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date });
+            }
+
+
 
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
@@ -192,6 +206,7 @@ namespace 倒计时
         {
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);
+            conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
             if (MyGridView.SelectedIndex > -1)
             {
                 _appSettings.Values.Remove(MyGridView.SelectedItem.ToString());
