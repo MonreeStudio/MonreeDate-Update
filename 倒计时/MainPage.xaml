@@ -24,14 +24,14 @@
                         Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
                         >
                 <NavigationView.MenuItems>
-                <NavigationViewItem Foreground="DeepSkyBlue" Tag="All" Icon="Home" Content="首页"/>
+                <NavigationViewItem Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
                 <NavigationViewItemSeparator  />
                 <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
-                <NavigationViewItem Foreground="DeepSkyBlue" Tag="New" Icon="Add" Content="新建"/>
+                <NavigationViewItem Foreground="CornflowerBlue" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Foreground="DeepSkyBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
+                <NavigationViewItem Foreground="CornflowerBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Foreground="DeepSkyBlue" Tag="Festival" Icon="CalendarDay" Content="节日"/>
+                <NavigationViewItem Foreground="CornflowerBlue" Tag="Festival" Icon="CalendarDay" Content="节日"/>
             </NavigationView.MenuItems>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Frame x:Name="ContentFrame"

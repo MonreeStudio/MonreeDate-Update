@@ -202,6 +202,11 @@ namespace 倒计时
             //}
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            AbbFlyout.Hide();
+        }
+
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             int _start = ViewModel.CustomDatas.Count();

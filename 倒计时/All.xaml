@@ -23,11 +23,21 @@
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
                     </AppBarButton.Icon>
+                    <AppBarButton.Flyout>
+                            <Flyout x:Name="AbbFlyout">
+                                <StackPanel Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                    <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="10">
+                                    功能开发中，敬请期待~
+                                    </TextBlock>
+                                <Button Content="好的呢" Background="CornflowerBlue" BorderThickness="0" Foreground="White" Margin="10" Click="Button_Click"/>
+                            </StackPanel>
+                            </Flyout>
+                    </AppBarButton.Flyout>
                 </AppBarButton>
             </CommandBar>
         </RelativePanel>
         <TextBlock Height="10"/>
-        <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="SkyBlue" FontSize="30" FontFamily="HYXuSTJ" HorizontalTextAlignment="Center"/>
+        <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="CornflowerBlue" FontSize="30" FontFamily="HYXuSTJ" HorizontalTextAlignment="Center"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
         <TextBlock Height="60"/>
         <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue"  Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">

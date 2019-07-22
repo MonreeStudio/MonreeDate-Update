@@ -21,12 +21,12 @@
                    VerticalAlignment="Bottom"
                    FontSize="48"
                    FontFamily="HYXuSTJ"
-                   Foreground="SkyBlue" />
+                   Foreground="CornflowerBlue" />
         <TextBox x:Name="AddEvent"
-                 PlaceholderText="事件"
+                 PlaceholderText="日程名称"
                  Grid.Row="1"
                  CornerRadius="8"
-                 BorderBrush="SkyBlue"
+                 BorderBrush="CornflowerBlue"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Bottom"
                  Height="Auto" Width="400" 
@@ -35,10 +35,10 @@
                             HorizontalAlignment="Center"
                             x:Name="Add_Picker"
                             BorderThickness="1"
-                            Foreground="SkyBlue"
-                            BorderBrush="SkyBlue"
+                            Foreground="CornflowerBlue"
+                            BorderBrush="CornflowerBlue"
                             CornerRadius="8"
-                            PlaceholderText="选择一个日期吧"
+                            PlaceholderText="选择一个日期"
                             DateChanged="Add_Picker_DateChanged"/>
         <Button Content="确认添加"
                 Grid.Row="3"
@@ -47,7 +47,7 @@
                 BorderThickness="3"
                 BorderBrush="Azure"
                 Foreground="White"
-                Background="SkyBlue"
+                Background="CornflowerBlue"
                 Height="50"
                 Width="100"
                 Click="Button_Click"/>
