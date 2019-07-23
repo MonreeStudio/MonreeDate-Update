@@ -78,7 +78,7 @@ namespace 倒计时
 
             foreach (var item in datalist)
             {
-                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date });
+                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date });
             }
 
             if (localSettings.Values["SetAllPageAcrylic"] != null)
