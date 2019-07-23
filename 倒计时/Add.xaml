@@ -20,7 +20,7 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Bottom"
                    FontSize="48"
-                   FontFamily="HYXuSTJ"
+                   FontFamily="FZShuTi"
                    Foreground="CornflowerBlue" />
         <TextBox x:Name="AddEvent"
                  PlaceholderText="日程名称"

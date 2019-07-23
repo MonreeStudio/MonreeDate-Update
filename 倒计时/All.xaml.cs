@@ -46,6 +46,7 @@ namespace 倒计时
         public CustomData SelectedItem;
         public String dbname;
         public int _index;
+        private double percentage;
         public All()
         {
             this.InitializeComponent();
@@ -63,16 +64,22 @@ namespace 倒计时
             BindKeyList();
             Current = this;
             Today.Text= DateTime.Now.ToShortDateString().ToString();
+            percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+            percentage = (int)percentage;
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
 
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+
+            if (datalist.Count() == 0)
+                NewTB.Visibility = Visibility.Visible;
+            else
+                NewTB.Visibility = Visibility.Collapsed;
+
             foreach (var item in datalist)
             {
                 ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date });
             }
-
-
 
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
@@ -94,10 +101,7 @@ namespace 倒计时
 
         }
 
-        private async void readData()
-        {
-            
-        }
+        
 
         private void BindKeyList()
         {
@@ -223,6 +227,12 @@ namespace 倒计时
             {
                 PopupNotice popupNotice = new PopupNotice("删除成功");
                 popupNotice.ShowAPopup();
+            }
+
+            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+            if (datalist.Count() == 0)
+            {
+                NewTB.Visibility = Visibility.Visible;
             }
         }
 

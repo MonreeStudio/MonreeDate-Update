@@ -36,25 +36,25 @@
                        ToolTipService.ToolTip="点击更换头像"
                        Grid.Row="0" Grid.RowSpan="5" Grid.Column="0"
                        HorizontalAlignment="Left"
-                       ProfilePicture="Assets//老许2.jpg"
+                       ProfilePicture="Assets//默认头像.png"
                        Tapped="MyPersonPicture_Tapped"
                        />
             <StackPanel Margin="20,16,0,0">
                 <StackPanel Orientation="Horizontal">
                 <TextBlock Text="昵称：" FontSize="13"/>
-                    <TextBlock x:Name="PersonalNickName" x:FieldModifier="Public" Text="Bill夏昕" FontSize="13"/>
+                    <TextBlock x:Name="PersonalNickName" x:FieldModifier="Public" Text="游客" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="性别：" FontSize="13"/>
-                    <TextBlock x:Name="PersonalSex" x:FieldModifier="Public" Text="男" FontSize="13" />
+                    <TextBlock x:Name="PersonalSex" x:FieldModifier="Public" Text="未选择" FontSize="13" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="生日：" FontSize="13"/>
-                    <TextBlock x:Name="PersonalBirthday" x:FieldModifier="Public" Text="1999/7/8" FontSize="13"/>
+                    <TextBlock x:Name="PersonalBirthday" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="个性签名：" FontSize="13"/>
-                    <TextBlock x:Name="PersonalSign" x:FieldModifier="Public" Text="只与同好赏风雅。" FontSize="13"/>
+                    <TextBlock x:Name="PersonalSign" x:FieldModifier="Public" Text="这个人好懒，什么也没写……" FontSize="13"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
@@ -83,8 +83,27 @@
         <TextBlock x:Name="TestTb"
                    Grid.Row="3"
                    Grid.Column="0"
-                   
                    HorizontalAlignment="Center"/>
+        <ContentDialog x:Name="AboutContent"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   Title="关于“夏日”"
+                   PrimaryButtonText="了解"
+                   CloseButtonText="不了解"
+                   DefaultButton="Primary"
+                   CornerRadius="10"
+                   Background="White">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。" 
+            TextWrapping="Wrap" Margin="10"/>
+                <Image Source="Assets/03.png" Width="350" Height="350"/>
+                <TextBlock Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
+                <TextBlock Text="若发现Bug请发邮箱：monreestudio@outlook.com" Margin="10" />
+                <HyperlinkButton Content="Github开源项目" 
+                                 Margin="10"
+                                 NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
+            </StackPanel>
+        </ContentDialog>
         <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
@@ -100,16 +119,9 @@
                 Width="100"
                 Click="AboutButton_Click"
                 >
-            <Button.Flyout>
-                <Flyout>
-                    <StackPanel>
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}">
-                         emmmmmmmmmm.....................
-                        </TextBlock>
-                    </StackPanel>
-                </Flyout>
-            </Button.Flyout>
         </Button>
+        
+       
 
         <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
 

@@ -12,7 +12,7 @@
 
     <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <RelativePanel x:FieldModifier="Public">
-            <TextBlock FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
+            <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
             <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
                 <AppBarButton FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" Foreground="CornflowerBlue">
                     <AppBarButton.Icon>
@@ -37,7 +37,7 @@
             </CommandBar>
         </RelativePanel>
         <TextBlock Height="10"/>
-        <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="CornflowerBlue" FontSize="30" FontFamily="HYXuSTJ" HorizontalTextAlignment="Center"/>
+        <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="CornflowerBlue" FontSize="30" FontFamily="FZShuTi" HorizontalTextAlignment="Center"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
         <TextBlock Height="60"/>
         <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue"  Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">
@@ -56,6 +56,7 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
+        <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！" Foreground="Gray" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

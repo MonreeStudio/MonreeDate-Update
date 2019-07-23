@@ -61,7 +61,7 @@
 
     <Grid>
 
-        <StackPanel Background="SkyBlue"
+        <StackPanel Background="CornflowerBlue"
                     Padding="10"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"

@@ -84,6 +84,7 @@ namespace 倒计时
                 {
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate });
+                    All.Current.NewTB.Visibility = Visibility.Collapsed;
                 }
                 catch
                 {

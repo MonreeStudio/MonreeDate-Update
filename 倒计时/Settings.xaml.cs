@@ -6,10 +6,12 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.ServiceModel.Channels;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Contacts;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -40,6 +42,14 @@ namespace 倒计时
         Compositor _compositor = Window.Current.Compositor;
         SpringVector3NaturalMotionAnimation _springAnimation;
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        private StorageFile Picture_file;//UWP 采用StorageFile来读写文件
+        public int index = 0;
+
+        private StorageFile sampleFile;
+        private string filename = "sampleFile.dat";
+        StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
 
         public Settings()
         {
@@ -59,11 +69,13 @@ namespace 倒计时
                     AllPageAcylic.IsOn = false;
                 }
             }
-
+            
+                rpAsync();
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
             var _Birthday_date = localSettings.Values["BirthDay_Date"];
+            
             //var _PersonPicture = localSettings.Values["PersonPicture"];
             if (_NickName != null && _Sex != null && _sign != null && _Birthday_date != null)
             {
@@ -71,9 +83,50 @@ namespace 倒计时
                 PersonalNickName.Text = _NickName.ToString();
                 PersonalBirthday.Text = _Birthday_date.ToString();
                 PersonalSign.Text = _sign.ToString();
+
+                //MyPersonPicture.ProfilePicture = new BitmapImage(new Uri(localFolder.Path + "/" + desiredName));
                 //MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
             }
 
+        }
+        
+        private void rpAsync()
+        {
+           ReadPicture();
+        }
+
+        private async void ReadPicture()
+        { 
+            //if (Picture_file != null)
+            //{
+            //    PersonalNickName.Text = "头像不空！";
+            //    using (IRandomAccessStream stream = await Picture_file.OpenAsync(FileAccessMode.Read))
+            //    {
+            //        var bitmap = new BitmapImage();
+            //        await bitmap.SetSourceAsync(stream);
+            //        MyPersonPicture.ProfilePicture = bitmap;
+
+            //    }
+            //}
+        }
+
+        private static async Task<BitmapImage> OpenWriteableBitmapFile(StorageFile file)
+        {
+
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                //WriteableBitmap image = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                //image.SetSource(stream);
+
+                //return image;
+
+                var fileStream = await file.OpenReadAsync();
+                var bitmap = new BitmapImage();
+                await bitmap.SetSourceAsync(fileStream);
+                return bitmap;
+                
+            }
         }
 
         public static object GetSetting(string name)
@@ -107,8 +160,9 @@ namespace 倒计时
 
         private async void AboutButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageDialog AboutDialog = new MessageDialog("emmmmm\n...........");
-            await AboutDialog.ShowAsync();
+            await AboutContent.ShowAsync();
+            //MessageDialog AboutDialog = new MessageDialog("emmmmm\n...........");
+            //await AboutDialog.ShowAsync();
         }
 
         private void AllPageAcylic_Toggled(object sender, RoutedEventArgs e)
@@ -171,6 +225,11 @@ namespace 倒计时
 
         private async void MyPersonPicture_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            MessageDialog AboutDialog = new MessageDialog("更换头像的功能正在紧急开发中，\n您依旧可以在本地选择头像，但暂时不会被保存。\n","非常抱歉！");
+            AboutDialog.Commands.Add(new UICommand("继续加油", cmd => { }, commandId: 0));
+            AboutDialog.Commands.Add(new UICommand("好的收到", cmd => { }, commandId: 1));
+            await AboutDialog.ShowAsync();
+            
             var srcImage = new BitmapImage();
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.Thumbnail;
@@ -179,14 +238,18 @@ namespace 倒计时
             openPicker.FileTypeFilter.Add(".jpeg");
             openPicker.FileTypeFilter.Add(".png");
             StorageFile file = await openPicker.PickSingleFileAsync();
+            Picture_file = file;
             if (file != null)
             {
                 using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
                 {
                     await srcImage.SetSourceAsync(stream);
+                    await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
                     MyPersonPicture.ProfilePicture = srcImage;
                     //localSettings.Values["PersonPicture"] = srcImage;
+
                 }
+
             }
             if (file != null)
             {
@@ -203,6 +266,25 @@ namespace 倒计时
                 parameters.Add("CropWidthPixals", 300);
                 parameters.Add("CropHeightPixals", 300);
                 var result = await Launcher.LaunchUriForResultsAsync(new Uri("microsoft.windows.photos.crop:"), options, parameters);
+                //Guid bitmapEncoderGuid = BitmapEncoder.JpegEncoderId;
+                //using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
+                //{
+                //    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(bitmapEncoderGuid, stream);
+                //    WriteableBitmap bmp = new WriteableBitmap(srcImage.PixelWidth, srcImage.PixelHeight);
+                //    Stream pixelStream = bmp.PixelBuffer.AsStream();
+
+                //    byte[] pixels = new byte[pixelStream.Length];
+                //    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+
+                //    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
+                //              (uint)bmp.PixelWidth,
+                //              (uint)bmp.PixelHeight,
+                //              96.0,
+                //              96.0,
+                //              pixels);
+                //    await encoder.FlushAsync();
+                //}
+
                 if (result.Status == LaunchUriStatus.Success && result.Result != null)
                 {
                     try
@@ -211,7 +293,11 @@ namespace 倒计时
                         var bitmap = new BitmapImage();
                         await bitmap.SetSourceAsync(stream);
                         MyPersonPicture.ProfilePicture = bitmap;
+                        index++;
+
+                        await localFolder.CreateFileAsync("PersonPicture", CreationCollisionOption.ReplaceExisting);
                         localSettings.Values["PersonPicture"] = bitmap;
+                      
                     }
                     catch (Exception ex)
                     {
