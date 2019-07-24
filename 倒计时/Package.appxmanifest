@@ -9,7 +9,7 @@
   <Identity
     Name="10912MonreeStudio.6397911AA70B0"
     Publisher="CN=CA1BB48F-A548-4F00-8EF9-31E9C7536F64"
-    Version="1.1.0.0" />
+    Version="1.2.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="866ca99d-ca97-4149-b3df-e6ddc169c76b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -32,11 +32,11 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="倒计时.App">
       <uap:VisualElements
-        DisplayName="Monree Date"
+        DisplayName="夏日"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="简洁的日程App。"
-        BackgroundColor="#5271ff">
+        Description="一款简约设计的纪念日/倒计时记录应用。"
+        BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="夏日">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
@@ -44,7 +44,7 @@
             <uap:ShowOn Tile="square310x310Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="transparent"/>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
           <uap:Rotation Preference="portrait"/>
