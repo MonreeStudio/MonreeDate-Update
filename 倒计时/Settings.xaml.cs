@@ -46,8 +46,8 @@ namespace 倒计时
         private StorageFile Picture_file;//UWP 采用StorageFile来读写文件
         public int index = 0;
 
-        private StorageFile sampleFile;
-        private string filename = "sampleFile.dat";
+      //  private StorageFile sampleFile;
+      //  private string filename = "sampleFile.dat";
         StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
 
@@ -69,8 +69,10 @@ namespace 倒计时
                     AllPageAcylic.IsOn = false;
                 }
             }
-            
-                rpAsync();
+            else
+                AllPageAcylic.IsOn = true;
+
+            rpAsync();
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
@@ -95,7 +97,7 @@ namespace 倒计时
            ReadPicture();
         }
 
-        private async void ReadPicture()
+        private  void ReadPicture()
         { 
             //if (Picture_file != null)
             //{
@@ -310,6 +312,12 @@ namespace 倒计时
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(Edit));
+        }
+
+        private async void AboutContent_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
+            await Launcher.LaunchUriAsync(Uri);
         }
     }
 }

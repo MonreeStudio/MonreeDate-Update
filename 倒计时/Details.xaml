@@ -8,13 +8,43 @@
     mc:Ignorable="d"
     Background="{ThemeResource CustomAcrylicBackgroundBrush}">
 
-    <Grid>
+    <Grid x:Name="DetailsGrid">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition Height="2*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+        <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
+            <AppBarButton FocusVisualPrimaryThickness="1" CornerRadius="3" Label="分享" ToolTipService.ToolTip="以卡片形式分享" Foreground="White">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <Flyout>
+                    <StackPanel CornerRadius="10">
+                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="8">
+                                    将在未来版本推出！
+                        </TextBlock>
+                    </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton CornerRadius="3" Label="编辑" Foreground="White" ToolTipService.ToolTip="编辑以更新日程内容">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE104;"/>
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="10">
+                                    功能开发中，敬请期待~
+                            </TextBlock>
+                        </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+        </CommandBar>
         <TextBlock x:Name="DetailsPickedDate"
                    Text="2019/6/15"
                    FontSize="30"

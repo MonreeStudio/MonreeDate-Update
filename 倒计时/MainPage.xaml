@@ -17,7 +17,7 @@
                         BackRequested="MyNav_BackRequested"
                         SelectionChanged="MyNav_SelectionChanged"
                         PaneDisplayMode="Auto"
-                        PaneTitle="夏日"
+                        PaneTitle="夏日 —— 记录你的生活"
                         AlwaysShowHeader="True"
                         Foreground="CornflowerBlue"
                         x:FieldModifier="Public"

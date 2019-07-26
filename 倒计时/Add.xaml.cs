@@ -32,11 +32,14 @@ namespace 倒计时
         public string _Event;
         public string _PickDate;
         public string _Date;
+        public string _Color;
+        public double _TintOpacity;
         public Add()
         {  
             this.InitializeComponent();
             Current = this;
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            _TintOpacity = 0;
         }
 
         private string Calculator(string s1)
@@ -78,17 +81,17 @@ namespace 倒计时
             string _event = AddEvent.Text.Trim();
             _Event = _event;
             //All.Current.Model_event = _event;
-            if (_Date != null&&_event!="")
+            if (_Date != null&&_event!=""&&_Color!=""&&_TintOpacity>0)
             {
                 try
                 {
-                    All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, BackGroundColor = "SkyBlue" });
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate });
+                    All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate ,BgColor = _Color,TintOpacity = _TintOpacity });
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                 }
                 catch
                 {
-                    MessageDialog AboutDialog = new MessageDialog("此日程已被添加，请勿重复添加~");
+                    MessageDialog AboutDialog = new MessageDialog("此日程已被添加，请勿重复添加~","提示");
                     await AboutDialog.ShowAsync();
                     return;
                 }
@@ -98,9 +101,30 @@ namespace 倒计时
             }
             else
             {
-                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！");
+                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！","提示");
                 await AboutDialog.ShowAsync();
             }
+        }
+
+        private async void BgsButton_Click(object sender, RoutedEventArgs e)
+        {
+            await BgsDialog.ShowAsync();
+        }
+
+        private void BgsDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            _Color = MyColorPicker.Color.ToString();
+            MyEllipse.Fill = new SolidColorBrush(GetColor(_Color));
+            _TintOpacity = MySlider.Value/100;
+        }
+        public Color GetColor(string hex)
+        {
+            hex = hex.Replace("#", string.Empty);
+            byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
+            byte r = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
+            byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
+            byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
+            return Color.FromArgb(a, r, g, b);
         }
     }
 }

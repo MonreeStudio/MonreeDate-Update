@@ -5,6 +5,7 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local1="using:夏日"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     Background="White">
@@ -21,15 +22,31 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="CornflowerBlue" FontSize="28" Height="100" />
-            <TextBlock Text="列举了一些较为重要的节日" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
+            <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
         </Grid>
-        <ListView ItemClick="GridView_ItemClick" IsTapEnabled="False">
+        <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" IsTapEnabled="True" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
+            <ListView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="添加到首页" Click="MenuFlyoutItem_Click"/>
+                </MenuFlyout>
+            </ListView.ContextFlyout>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0" />
                 </Style>
             </ListView.ItemContainerStyle>
-            <ListViewItem Margin="0,0,0,2" x:FieldModifier="Public" Background="PaleVioletRed" Height="130">
+            
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local1:FestivalData">
+                    <RelativePanel Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
+                        <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
+                        <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
+                        <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
+                    </RelativePanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <!--<ListViewItem Margin="0,0,0,2" x:FieldModifier="Public" Background="PaleVioletRed" Height="130">
                 <RelativePanel>
                     <TextBlock x:Name="Name1" Text="元旦" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
                     <TextBlock x:Name="Date1" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
@@ -126,61 +143,9 @@
                     <TextBlock x:Name="Date14" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
                     <TextBlock x:Name="StartName14" x:FieldModifier="Public" RelativePanel.Below="Name14" Text="2019/12/25" FontSize="20" Foreground="White"/>
                 </RelativePanel>
-            </ListViewItem>
+            </ListViewItem>-->
         </ListView>
-        <!--<ListView>
-            <ListViewItem x:Name="Item2" Height="130" Background="LightSkyBlue">
-                <Grid x:Name="Grid2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock  Margin="10,0,0,0" FontSize="20" Foreground="White" Grid.Row="0" Grid.Column="0">
-                                    青年晚报演唱会——广州场
-                    </TextBlock>
-                    <TextBlock x:Name="Date2" Grid.Row="0" Grid.Column="1" FontSize="25" Foreground="White" >
-                    </TextBlock>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                        <FontIcon FontSize="20" Margin="5,5,5,0" Foreground="White" Glyph="&#xE8A1;" FontFamily="Segoe MDL2 Assets" />
-                        <TextBlock x:Name="StartName2" Text="2017/10/7" FontSize="20" Margin="5,0,0,0" Foreground="White" />
-                    </StackPanel>
-                </Grid>
-            </ListViewItem>
-            <ListViewItem Height="130" Background="LightBlue">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock  Margin="10,0,150,0" FontSize="20" Foreground="White">
-                                    许嵩深圳歌友会
-                        </TextBlock>
-                        <TextBlock x:Name="Date3" FontSize="25" Foreground="White" >
-                        </TextBlock>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon FontSize="20" Margin="5,5,5,0" Foreground="White" Glyph="&#xE8A1;" FontFamily="Segoe MDL2 Assets" />
-                        <TextBlock x:Name="StartName3" Text="2019/5/11" FontSize="20" Margin="5,0,0,0" Foreground="White" />
-                    </StackPanel>
-                </StackPanel>
-            </ListViewItem>
-            <ListViewItem Height="130" Background="SkyBlue">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock  Margin="10,0,240,0" FontSize="20" Foreground="White">
-                                    Meet
-                        </TextBlock>
-                        <TextBlock x:Name="Date4" FontSize="25" Foreground="White" >
-                        </TextBlock>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon FontSize="20" Margin="5,5,5,0" Foreground="White" Glyph="&#xE8A1;" FontFamily="Segoe MDL2 Assets" />
-                        <TextBlock x:Name="StartName4" Text="2017/08/14" FontSize="20" Margin="5,0,0,0" Foreground="White" />
-                    </StackPanel>
-                </StackPanel>
-            </ListViewItem>
-        </ListView>-->
+        
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

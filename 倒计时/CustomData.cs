@@ -6,37 +6,27 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLitePCL;
 using Windows.Storage;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 using 夏日.Models;
 
 namespace 倒计时
 {
     public class CustomData
     {
-
-        private ApplicationDataContainer _appSettings;
-
         public string Str1 { get; set; }
         public string Str2 { get; set; }
         public string Str3 { get; set; }
 
+        public AcrylicBrush Str4 { get; set; }
         public int ItemWidth { get; set; }
-        public string BackGroundColor { get; set; }
+        public Color BackGroundColor { get; set; }
 
         public CustomData()
         {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-            // Simple setting
-
-            localSettings.Values["exampleSetting"] = "Hello Windows";
-            // Simple setting
-            Object value = localSettings.Values["exampleSetting"];
-
             this.Str1 = "string 1";
             this.Str2 = "string 2";
             this.Str3 = "string 3";
-            this.BackGroundColor = "SkyBlue";
-            _appSettings = ApplicationData.Current.LocalSettings;
         }
 
         static public CustomData DateCalculator(string D, string E)
@@ -103,27 +93,7 @@ namespace 倒计时
         public string Today = DateTime.Now.ToShortDateString().ToString();
 
         public CustomDataViewModel()
-        {
-            //SQLiteConnection _connection = new SQLiteConnection(App.DB_NAME);
-            //using (var statement = _connection.Prepare(App.SQL_CREATE_TABLE))
-            //{
-            //    statement.Step();
-            //}
-
-            //using (var statement = _connection.Prepare(App.SQL_INSERT))
-            //{
-            //    statement.Bind(1,CustomDatas.Add(new CustomData() { Str1 = "Together", Str2 = CustomData.Calculator("2018/12/24"), Str3 = "2018/12/24" }));
-            //    statement.Bind(2, value);
-            //    statement.Step();
-            //}
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-            // Simple setting
-
-            localSettings.Values["exampleSetting"] = "Hello Windows";
-            // Simple setting
-            Object value = localSettings.Values["exampleSetting"];
-            
+        {        
             //CustomDatas.Add(new CustomData() { Str1 = "Together", Str2 = CustomData.Calculator("2018/12/24"), Str3 = "2018/12/24" });
             //CustomDatas.Add(new CustomData() { Str1 = "大学英语六级", Str2 = CustomData.Calculator("2019/6/15"), Str3 = "2019/6/15"});
             //CustomDatas.Add(new CustomData() { Str1 = "英语专业八级", Str2 = CustomData.Calculator("2020/3/23"), Str3 = "2020/3/23"});

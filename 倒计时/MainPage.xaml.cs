@@ -31,12 +31,13 @@ namespace 倒计时
     public sealed partial class MainPage : Page
     {
         public static MainPage Current;
-        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;   
+        public bool SelectedPage { get; set; }
         public MainPage()
         {
-
             this.InitializeComponent();
             Current = this;
+            SelectedPage = true;
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             var title = ApplicationView.GetForCurrentView().TitleBar;

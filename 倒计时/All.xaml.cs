@@ -25,6 +25,7 @@ using 夏日.Models;
 using static 倒计时.App;
 using Windows.UI;
 
+
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
 namespace 倒计时
@@ -38,7 +39,9 @@ namespace 倒计时
         public SQLite.Net.SQLiteConnection conn;
         private ApplicationDataContainer _appSettings;  
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
-        public string str1, str2, str3, str4;
+        public string str1, str2, str3;
+        public AcrylicBrush str4;
+        public Color BgsColor;
         public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static All Current;
         public string Model_event;
@@ -47,6 +50,7 @@ namespace 倒计时
         public String dbname;
         public int _index;
         private double percentage;
+        private bool TopTap;
         public All()
         {
             this.InitializeComponent();
@@ -63,9 +67,8 @@ namespace 倒计时
             _appSettings = ApplicationData.Current.LocalSettings;
             BindKeyList();
             Current = this;
+            TopTap = true;
             Today.Text= DateTime.Now.ToShortDateString().ToString();
-            percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
-            percentage = (int)percentage;
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
 
@@ -78,7 +81,7 @@ namespace 倒计时
 
             foreach (var item in datalist)
             {
-                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date });
+                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date ,Str4 = ColorfulBrush(GetColor(item.BgColor) ,item.TintOpacity),BackGroundColor = GetColor(item.BgColor)});
             }
 
             if (localSettings.Values["SetAllPageAcrylic"] != null)
@@ -101,7 +104,16 @@ namespace 倒计时
 
         }
 
-        
+        public AcrylicBrush ColorfulBrush(Color temp,double tintOpacity)
+        {
+            AcrylicBrush myBrush = new AcrylicBrush();
+            myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+            myBrush.TintColor = temp;
+            myBrush.TintColor = temp;
+            myBrush.FallbackColor = temp;
+            myBrush.TintOpacity = tintOpacity;
+            return myBrush;
+        }
 
         private void BindKeyList()
         {
@@ -149,8 +161,10 @@ namespace 倒计时
             str1 = _item.Str1;
             str2 = _item.Str2;
             str3 = _item.Str3;
-            str4 = _item.Str3;
-
+            str4 = _item.Str4;
+            BgsColor = _item.BackGroundColor;
+           
+            MainPage.Current.SelectedPage = true;
             Frame.Navigate(typeof(Details));
         }
 
@@ -220,7 +234,6 @@ namespace 倒计时
             {
                 _appSettings.Values.Remove(MyGridView.SelectedItem.ToString());
                 MyGridView.Items.Clear();
-                BindKeyList();
             }
             int _end = ViewModel.CustomDatas.Count();
             if (_start != _end) 
@@ -236,6 +249,22 @@ namespace 倒计时
             }
         }
 
+        private void TopText_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (TopTap == true)
+            {
+                TopTap = false;
+                percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+                percentage = (int)percentage;
+                TopText.Text = "今年你已经走过了" + percentage.ToString() + "%啦！";
+            }
+            else
+            {
+                TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
+                TopTap = true;
+            }
+        }
+
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //var selectedItems = MyListView.Items.Cast<ListViewItem>()
@@ -246,9 +275,14 @@ namespace 倒计时
             TopText.Text = wid.ToString();
         }
 
-        private void MyListView_ItemClick(object sender, ItemClickEventArgs e)
+        public Color GetColor(string hex)
         {
-            Frame.Navigate(typeof(Add));
+            hex = hex.Replace("#", string.Empty);
+            byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
+            byte r = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
+            byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
+            byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
+            return Color.FromArgb(a, r, g, b);
         }
     }
 }
