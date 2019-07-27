@@ -40,7 +40,7 @@
         <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="CornflowerBlue" FontSize="30" FontFamily="FZShuTi" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式" IsTapEnabled="True" Tapped="TopText_Tapped"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
         <TextBlock Height="60"/>
-        <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue"  Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">
+        <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">
             <GridView.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem x:Name="MyFlyout" Text="删除日程" Click="MenuFlyoutItem_Click" IsEnabled="False"/>
@@ -56,28 +56,7 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！（创建后可右键删除）" Foreground="Gray" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="MyNavCMTW"/>
-                        <!--MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}"-->
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="aa.Foreground" Value="Black"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1000"/>
-                        <!--MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}"-->
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="TopText.Text" Value="我再看看"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+        <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
+        <TextBlock x:Name="NewTB2" x:FieldModifier="public" Visibility="Collapsed" Text="（创建后可右键删除）" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </StackPanel>
 </Page>

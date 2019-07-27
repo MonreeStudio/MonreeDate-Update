@@ -66,14 +66,25 @@ namespace 倒计时
                 return s2;
         }
 
-        private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string Picker = Add_Picker.Date.ToString();
-           
-            DateTime s1 = Convert.ToDateTime(Picker);
-            _PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            try
+            {
+                DateTime s1 = Convert.ToDateTime(Picker);
+                _PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            }
+            catch
+            {
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                await AboutDialog.ShowAsync();
+            }
             _Date = Calculator(_PickDate);
-            //All.Current.Model_Date = _Date;
+        }
+
+        private void Add_Picker_Loaded(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -88,6 +99,7 @@ namespace 倒计时
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate ,BgColor = _Color,TintOpacity = _TintOpacity });
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
+                    All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
                 catch
                 {
@@ -95,6 +107,7 @@ namespace 倒计时
                     await AboutDialog.ShowAsync();
                     return;
                 }
+                MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                 Frame.Navigate(typeof(All));
                 PopupNotice popupNotice = new PopupNotice("添加成功");
                 popupNotice.ShowAPopup();

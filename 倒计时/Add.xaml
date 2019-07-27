@@ -47,9 +47,11 @@
                             BorderThickness="1"
                             Foreground="CornflowerBlue"
                             BorderBrush="CornflowerBlue"
+                            DateFormat="{}{year.full}/{month.integer}/{day.integer}"
                             CornerRadius="8"
                             PlaceholderText="选择一个日期"
-                            DateChanged="Add_Picker_DateChanged"/>
+                            DateChanged="Add_Picker_DateChanged"
+                            />
         <StackPanel Grid.Row="2" Grid.Column="1" Margin="20" Orientation="Horizontal">
         <Button Content="背景选项"
                 x:Name="BgsButton"

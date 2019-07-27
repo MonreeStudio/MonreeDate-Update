@@ -67,7 +67,7 @@
                 BorderThickness="2"
                 Style="{StaticResource ButtonRevealStyle}" Click="Button_Click"/>
         <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
-                      Header="主页背景开启亚克力效果"
+                      Header="主页背景开启亚克力模糊效果"
                       Grid.Row="2"
                       Grid.Column="0"
                       Margin="20,10,0,0"
@@ -95,7 +95,7 @@
                    Background="White"
                    SecondaryButtonClick="AboutContent_SecondaryButtonClick">
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock Text="Version 1.3.0" Margin="10" />
+                <TextBlock Text="Version 1.3.1" Margin="10" />
                 <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。" 
             TextWrapping="Wrap" Margin="10"/>
                 <Image Source="Assets/03.png" Width="350" Height="350"/>

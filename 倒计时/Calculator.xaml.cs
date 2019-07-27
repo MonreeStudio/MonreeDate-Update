@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -84,18 +85,35 @@ namespace 倒计时
             }
         }
 
-        private void Picker1_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private async void Picker1_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string str1 = Picker1.Date.ToString();
-            DateTime s1 = Convert.ToDateTime(str1);
-            Str.start = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            try
+            {
+                DateTime s1 = Convert.ToDateTime(str1);
+                Str.start = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            }
+            catch
+            {
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                await AboutDialog.ShowAsync();
+            }
         }
 
-        private void Picker2_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private async void Picker2_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string str2 = Picker2.Date.ToString();
-            DateTime s2 = Convert.ToDateTime(str2);
-            Str.end = string.Format("{0}/{1}/{2}", s2.Year, s2.Month, s2.Day);
+            try
+            {
+                DateTime s2 = Convert.ToDateTime(str2);
+                Str.end = string.Format("{0}/{1}/{2}", s2.Year, s2.Month, s2.Day);
+            }
+            catch
+            {
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                await AboutDialog.ShowAsync();
+            }
+
         }
     }
 }

@@ -24,6 +24,7 @@ using SQLite.Net.Interop;
 using 夏日.Models;
 using static 倒计时.App;
 using Windows.UI;
+using System.Collections.ObjectModel;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -75,10 +76,15 @@ namespace 倒计时
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
 
             if (datalist.Count() == 0)
+            {
                 NewTB.Visibility = Visibility.Visible;
+                NewTB2.Visibility = Visibility.Visible;
+            }
             else
+            {
                 NewTB.Visibility = Visibility.Collapsed;
-
+                NewTB2.Visibility = Visibility.Collapsed;
+            }
             foreach (var item in datalist)
             {
                 ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date ,Str4 = ColorfulBrush(GetColor(item.BgColor) ,item.TintOpacity),BackGroundColor = GetColor(item.BgColor)});
@@ -149,8 +155,12 @@ namespace 倒计时
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            //((NavigationViewItem)MainPage.Current.MyNav.MenuItems[2]).IsSelected = true;
+            MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[2];
             Frame.Navigate(typeof(Add));
+               
+            
+            
         }
 
         private void MyGirdView_ItemClick(object sender, ItemClickEventArgs e)
@@ -230,11 +240,11 @@ namespace 倒计时
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);
             conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
-            if (MyGridView.SelectedIndex > -1)
-            {
-                _appSettings.Values.Remove(MyGridView.SelectedItem.ToString());
-                MyGridView.Items.Clear();
-            }
+            //if (MyGridView.SelectedIndex > -1)
+            //{
+            //    _appSettings.Values.Remove(MyGridView.SelectedItem.ToString());
+            //    MyGridView.Items.Clear();
+            //}
             int _end = ViewModel.CustomDatas.Count();
             if (_start != _end) 
             {
@@ -246,6 +256,7 @@ namespace 倒计时
             if (datalist.Count() == 0)
             {
                 NewTB.Visibility = Visibility.Visible;
+                NewTB2.Visibility = Visibility.Visible;
             }
         }
 
@@ -263,6 +274,11 @@ namespace 倒计时
                 TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
                 TopTap = true;
             }
+        }
+
+        private void MyGridView_Drop(object sender, DragEventArgs e)
+        {
+            ViewModel.CustomDatas.Add(new CustomData() { Str1 = "排序", Str2 = CustomData.Calculator("2018/2/2"), Str3 = "2018/2/2", Str4 = ColorfulBrush(Colors.SkyBlue, 0.6), BackGroundColor = Colors.SkyBlue });
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
