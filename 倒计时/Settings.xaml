@@ -83,19 +83,23 @@
                    Grid.Row="3"
                    Grid.Column="0"
                    HorizontalAlignment="Center"/>
+        
         <ContentDialog x:Name="AboutContent"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    Title="关于“夏日”"
                    PrimaryButtonText="了解"
-                   SecondaryButtonText="五星好评👍"
+                   SecondaryButtonText="五星好评😝"
                    CloseButtonText="不了解"
                    DefaultButton="Primary"
                    CornerRadius="10"
                    Background="White"
                    SecondaryButtonClick="AboutContent_SecondaryButtonClick">
+            <ScrollViewer>
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock Text="Version 1.3.1" Margin="10" />
+                <TextBlock x:Name="Version" Margin="10,10,0,5" />
+                <TextBlock x:Name="SystemVersion" Margin="10,0,0,5" />
+                <TextBlock x:Name="Platform" Margin="10,0,0,10"/>
                 <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。" 
             TextWrapping="Wrap" Margin="10"/>
                 <Image Source="Assets/03.png" Width="350" Height="350"/>
@@ -105,7 +109,9 @@
                                  Margin="10"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
             </StackPanel>
+            </ScrollViewer>
         </ContentDialog>
+        
         <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
@@ -140,55 +146,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <!--<Border  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                 Background="{ThemeResource CustomAcrylicInAppBrush}"
-                 Margin="20"
-                 CornerRadius="8"
-                 BorderThickness="1"
-                 BorderBrush="Azure">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="Azure">
-                    <Grid>
-                    <TextBlock Text="昵称" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <TextBlock Text="Bill夏昕" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
-                </Border>
-                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="Azure">
-                    <Grid>
-                        <TextBlock Text="性别" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="男" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
-                </Border>
-                <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0.5" BorderBrush="Azure">
-                    <Grid>
-                        <TextBlock Text="生日" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="1999/7/8" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
-                </Border>
-                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0.5" BorderBrush="Azure">
-                    <Grid>
-                        <TextBlock Text="城市" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="广东 广州" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
-                </Border>
-                <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0.5" BorderBrush="Azure">
-                    <Grid>
-                        <TextBlock Text="个性签名" Foreground="Black" FontSize="20" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="只与同好赏风雅。" FontSize="20" Margin="10" Foreground="SkyBlue" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
-                </Border>
-            </Grid>
-        </Border>-->
     </Grid>
 </Page>

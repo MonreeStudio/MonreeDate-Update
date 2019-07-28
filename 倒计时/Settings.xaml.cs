@@ -7,11 +7,13 @@ using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Contacts;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
+using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -57,7 +59,14 @@ namespace 倒计时
             Current = this;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += OnSettingsPageLoaded;
-
+            ReadSettings();
+            GetAppVersion();
+            GetSystemVersion();
+            GetPlatform();
+        }
+        
+        private void ReadSettings()
+        {
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
                 if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
@@ -72,12 +81,11 @@ namespace 倒计时
             else
                 AllPageAcylic.IsOn = true;
 
-            rpAsync();
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
             var _Birthday_date = localSettings.Values["BirthDay_Date"];
-            
+
             //var _PersonPicture = localSettings.Values["PersonPicture"];
             if (_NickName != null && _Sex != null && _sign != null && _Birthday_date != null)
             {
@@ -89,27 +97,42 @@ namespace 倒计时
                 //MyPersonPicture.ProfilePicture = new BitmapImage(new Uri(localFolder.Path + "/" + desiredName));
                 //MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
             }
-
         }
-        
-        private void rpAsync()
+
+        private void GetAppVersion()
         {
-           ReadPicture();
+            string appVersion = string.Format("版本： {0}.{1}.{2}.{3}",
+                    Package.Current.Id.Version.Major,
+                    Package.Current.Id.Version.Minor,
+                    Package.Current.Id.Version.Build,
+                    Package.Current.Id.Version.Revision);
+            Version.Text = appVersion;
         }
 
-        private  void ReadPicture()
-        { 
-            //if (Picture_file != null)
-            //{
-            //    PersonalNickName.Text = "头像不空！";
-            //    using (IRandomAccessStream stream = await Picture_file.OpenAsync(FileAccessMode.Read))
-            //    {
-            //        var bitmap = new BitmapImage();
-            //        await bitmap.SetSourceAsync(stream);
-            //        MyPersonPicture.ProfilePicture = bitmap;
+        private void GetSystemVersion()
+        {
+            Windows.System.Profile.AnalyticsVersionInfo analyticsVersion = Windows.System.Profile.AnalyticsInfo.VersionInfo;
 
-            //    }
-            //}
+            //var reminder = analyticsVersion.DeviceFamily;
+
+            ulong v = ulong.Parse(Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
+            ulong v1 = (v & 0xFFFF000000000000L) >> 48;
+            ulong v2 = (v & 0x0000FFFF00000000L) >> 32;
+            ulong v3 = (v & 0x00000000FFFF0000L) >> 16;
+            ulong v4 = (v & 0x000000000000FFFFL);
+            var reminder = $"{v1}.{v2}.{v3}.{v4}";
+            //Package package = Package.Current;
+            //reminder = package.Id.Architecture.ToString();
+            //reminder = package.DisplayName;
+            //EasClientDeviceInformation eas = new EasClientDeviceInformation();
+            //reminder = eas.SystemManufacturer;
+            SystemVersion.Text = "系统版本：Windows "+ reminder;
+        }
+
+        private void GetPlatform()
+        {
+            Package package = Package.Current;
+            Platform.Text = "平台架构：" + package.Id.Architecture.ToString();
         }
 
         private static async Task<BitmapImage> OpenWriteableBitmapFile(StorageFile file)
