@@ -30,7 +30,7 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            <AppBarButton CornerRadius="3" Label="编辑" Foreground="White" ToolTipService.ToolTip="编辑以更新日程内容">
+            <AppBarButton x:Name="EditButton" CornerRadius="3" Label="编辑" Foreground="White" ToolTipService.ToolTip="编辑以更新日程内容" Click="EditButton_Click" >
                 <AppBarButton.Icon>
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE104;"/>
                 </AppBarButton.Icon>
@@ -46,12 +46,15 @@
             </AppBarButton>
         </CommandBar>
         <TextBlock x:Name="DetailsPickedDate"
+                   x:FieldModifier="public"
                    Text="2019/6/15"
                    FontSize="30"
                    Foreground="White"
                    HorizontalAlignment="Center" VerticalAlignment="Bottom"
                    Grid.Row="0"/>
         <TextBlock x:Name="DetailsEvent"
+                   x:FieldModifier="public"
+                   TextTrimming="CharacterEllipsis"
                    Text="大学英语六级"
                    FontSize="30"
                    Foreground="White"
@@ -63,12 +66,14 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <TextBlock x:Name="DetailsDate"
+                       x:FieldModifier="public"
                        Text="还有。。。"
                        FontSize="48"
                        Foreground="CornflowerBlue"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        IsTapEnabled="True"
+                       ToolTipService.ToolTip="点击切换显示模式（天数/年月日）"
                        Tapped="DetailsDate_Tapped"
                        />
         </Grid>

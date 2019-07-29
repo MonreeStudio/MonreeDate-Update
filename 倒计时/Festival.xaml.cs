@@ -65,8 +65,8 @@ namespace 倒计时
         {
             try
             {
+                All.Current.conn.Insert(new DataTemple() { Schedule_name = SelectedItem.Str1, CalculatedDate = SelectedItem.Str2, Date = SelectedItem.Str3, BgColor = SelectedItem.Str4.ToString(), TintOpacity = 0.8 });
                 All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = SelectedItem.Str1, Str2 = SelectedItem.Str2, Str3 = SelectedItem.Str3, Str4 = All.Current.ColorfulBrush(SelectedItem.Str4, 0.8), BackGroundColor = SelectedItem.Str4 });
-                All.Current.conn.Insert(new DataTemple() { Schedule_name = SelectedItem.Str1, CalculatedDate = SelectedItem.Str2, Date = SelectedItem.Str3, BgColor = SelectedItem.Str4.ToString(),TintOpacity = 0.8 });
                 All.Current.NewTB.Visibility = Visibility.Collapsed;
                 All.Current.NewTB2.Visibility = Visibility.Collapsed;
             }

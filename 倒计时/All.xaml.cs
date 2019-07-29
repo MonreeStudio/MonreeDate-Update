@@ -38,7 +38,6 @@ namespace 倒计时
     {
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
-        private ApplicationDataContainer _appSettings;  
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public string str1, str2, str3;
         public AcrylicBrush str4;
@@ -55,7 +54,6 @@ namespace 倒计时
         public All()
         {
             this.InitializeComponent();
-            this.InitializeComponent();
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
@@ -63,16 +61,18 @@ namespace 倒计时
             //以下等效上面的建表   
             //conn.CreateTable(typeof(DataTemple));  
             
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            _appSettings = ApplicationData.Current.LocalSettings;
-            BindKeyList();
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
             TopTap = true;
             Today.Text= DateTime.Now.ToShortDateString().ToString();
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+            loadSettings();
+            loadDateData();
+        }
 
+        private void loadDateData()
+        {
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
 
             if (datalist.Count() == 0)
@@ -87,9 +87,14 @@ namespace 倒计时
             }
             foreach (var item in datalist)
             {
-                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date ,Str4 = ColorfulBrush(GetColor(item.BgColor) ,item.TintOpacity),BackGroundColor = GetColor(item.BgColor)});
+                
+                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
             }
+        }
 
+        private void loadSettings()
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
                 if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
@@ -106,8 +111,6 @@ namespace 倒计时
                     AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
                 }
             }
-
-
         }
 
         public AcrylicBrush ColorfulBrush(Color temp,double tintOpacity)
@@ -121,13 +124,6 @@ namespace 倒计时
             return myBrush;
         }
 
-        private void BindKeyList()
-        {
-            foreach (string key in _appSettings.Values.Keys)
-            {
-                MyGridView.Items.Add(key);
-            }
-        }
         private string Calculator(string s1)
         {
             string str1 = s1;
@@ -278,7 +274,7 @@ namespace 倒计时
 
         private void MyGridView_Drop(object sender, DragEventArgs e)
         {
-            ViewModel.CustomDatas.Add(new CustomData() { Str1 = "排序", Str2 = CustomData.Calculator("2018/2/2"), Str3 = "2018/2/2", Str4 = ColorfulBrush(Colors.SkyBlue, 0.6), BackGroundColor = Colors.SkyBlue });
+           // ViewModel.CustomDatas.Add(new CustomData() { Str1 = "排序", Str2 = CustomData.Calculator("2018/2/2"), Str3 = "2018/2/2", Str4 = ColorfulBrush(Colors.SkyBlue, 0.6), BackGroundColor = Colors.SkyBlue });
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

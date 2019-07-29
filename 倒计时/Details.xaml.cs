@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using 夏日;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -23,16 +24,18 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Details : Page
     {
+        public static Details Current;
         public Details()
         {
             this.InitializeComponent();
+            Current = this;
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             bool sp;
             sp = MainPage.Current.SelectedPage;
             if (sp == true)
             {
-                DetailsPickedDate.Text = All.Current.str1;
-                DetailsEvent.Text = All.Current.str3;
+                DetailsPickedDate.Text = All.Current.str3;
+                DetailsEvent.Text = All.Current.str1;
                 DetailsDate.Text = All.Current.str2;
                 DetailsGrid.Background = All.Current.str4;
                 DetailsDate.Foreground = new SolidColorBrush(All.Current.BgsColor);
@@ -114,6 +117,11 @@ namespace 倒计时
                 else
                     DetailsDate.Text = Festival.Current.str2;
             }
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(EditDetails));
         }
     }
 }
