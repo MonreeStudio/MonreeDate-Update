@@ -25,15 +25,16 @@ namespace 倒计时
     public sealed partial class Details : Page
     {
         public static Details Current;
+        private bool sp;
         public Details()
         {
             this.InitializeComponent();
             Current = this;
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            bool sp;
             sp = MainPage.Current.SelectedPage;
             if (sp == true)
             {
+                EditButton.IsEnabled = true;
                 DetailsPickedDate.Text = All.Current.str3;
                 DetailsEvent.Text = All.Current.str1;
                 DetailsDate.Text = All.Current.str2;
@@ -42,6 +43,7 @@ namespace 倒计时
             }
             else
             {
+                EditButton.IsEnabled = false;
                 DetailsEvent.Text = Festival.Current.str1;
                 DetailsDate.Text = Festival.Current.str2;
                 DetailsPickedDate.Text = Festival.Current.str3;

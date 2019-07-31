@@ -69,6 +69,7 @@ namespace 倒计时
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
             loadSettings();
             loadDateData();
+            //localSettings.Values["TopDate"] = null;
         }
 
         private void loadDateData()
@@ -90,7 +91,7 @@ namespace 倒计时
             foreach (var item in datalist0)
             {
                 if(item!=null)
-                    ViewModel.CustomDatas.Add(new CustomData() { Str1 = "⇱ " + item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
             }
             if(localSettings.Values["TopDate"]==null)
             {
@@ -227,7 +228,7 @@ namespace 倒计时
                 }
                 else
                 {
-                    if ("⇱ " + localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
+                    if (localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
                     {
                         FS.Visibility = Visibility.Visible;
                         SetTop.Visibility = Visibility.Collapsed;
@@ -302,7 +303,7 @@ namespace 倒计时
 
         private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if ("⇱ " + localSettings.Values["TopDate"].ToString() ==  SelectedItem.Str1)
+            if (localSettings.Values["TopDate"].ToString() ==  SelectedItem.Str1)
                 localSettings.Values["TopDate"] = null;
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);

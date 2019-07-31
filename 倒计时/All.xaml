@@ -24,7 +24,7 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
                     </AppBarButton.Icon>
                     <AppBarButton.Flyout>
-                            <Flyout x:Name="AbbFlyout">
+                            <Flyout x:Name="AbbFlyout" Placement="Bottom">
                                 <StackPanel Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
                                     <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="10">
                                     功能开发中，敬请期待~

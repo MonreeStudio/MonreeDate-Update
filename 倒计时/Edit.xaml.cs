@@ -34,7 +34,6 @@ namespace 倒计时
             EditNickName.Text = Settings.Current.PersonalNickName.Text;
             EditSign.Text = Settings.Current.PersonalSign.Text;
             EditSex.Text = Settings.Current.PersonalSex.Text;
-            
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
