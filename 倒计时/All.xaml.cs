@@ -51,6 +51,8 @@ namespace 倒计时
         public int _index;
         private double percentage;
         private bool TopTap;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        
         public All()
         {
             this.InitializeComponent();
@@ -60,8 +62,6 @@ namespace 倒计时
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             //以下等效上面的建表   
             //conn.CreateTable(typeof(DataTemple));  
-            
-            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
             TopTap = true;
             Today.Text= DateTime.Now.ToShortDateString().ToString();
@@ -73,9 +73,11 @@ namespace 倒计时
 
         private void loadDateData()
         {
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
-
-            if (datalist.Count() == 0)
+            ViewModel.CustomDatas.Clear();
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", localSettings.Values["TopDate"]);
+            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
+            if ((datalist1.Count() + datalist2.Count()) == 0)
             {
                 NewTB.Visibility = Visibility.Visible;
                 NewTB2.Visibility = Visibility.Visible;
@@ -85,16 +87,40 @@ namespace 倒计时
                 NewTB.Visibility = Visibility.Collapsed;
                 NewTB2.Visibility = Visibility.Collapsed;
             }
-            foreach (var item in datalist)
+            foreach (var item in datalist0)
             {
-                
-                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                if(item!=null)
+                    ViewModel.CustomDatas.Add(new CustomData() { Str1 = "⇱ " + item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
             }
+            if(localSettings.Values["TopDate"]==null)
+            {
+                foreach (var item in datalist1)
+                {
+                    ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                }
+                foreach (var item in datalist2)
+                {
+                    ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                }
+            }
+            else
+            {
+                foreach (var item in datalist1)
+                {
+                    if(item.Schedule_name!=localSettings.Values["TopDate"].ToString())
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                }
+                foreach (var item in datalist2)
+                {
+                    if (item.Schedule_name != localSettings.Values["TopDate"].ToString())
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                }
+            }
+            
         }
 
         private void loadSettings()
         {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
                 if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
@@ -154,9 +180,6 @@ namespace 倒计时
             //((NavigationViewItem)MainPage.Current.MyNav.MenuItems[2]).IsSelected = true;
             MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[2];
             Frame.Navigate(typeof(Add));
-               
-            
-            
         }
 
         private void MyGirdView_ItemClick(object sender, ItemClickEventArgs e)
@@ -193,37 +216,45 @@ namespace 倒计时
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
             SelectedItem = _item;
             if (SelectedItem != null)
+            {
                 MyFlyout.IsEnabled = true;
+                if (localSettings.Values["TopDate"] == null)
+                {
+                    FS.Visibility = Visibility.Visible;
+                    SetTop.Visibility = Visibility.Visible;
+                    SetTop.IsEnabled = true;
+                    Cancel.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    if ("⇱ " + localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
+                    {
+                        FS.Visibility = Visibility.Visible;
+                        SetTop.Visibility = Visibility.Collapsed;
+                        Cancel.Visibility = Visibility.Visible;
+                        Cancel.IsEnabled = true;
+                    }
+                    else
+                    {
+                        SetTop.Visibility = Visibility.Collapsed;
+                        Cancel.Visibility = Visibility.Collapsed;
+                        FS.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
             else
+            {
                 MyFlyout.IsEnabled = false;
-            //string str = ((FrameworkElement)e.OriginalSource).DataContext.ToString();
-            //Copy.Text = str;
-            //menuFlyout.ShowAt(lvVerses, e.GetPosition(this.lvVerses));
+                FS.Visibility = Visibility.Collapsed;
+                SetTop.Visibility = Visibility.Collapsed;
+                Cancel.Visibility = Visibility.Collapsed;
+            }
 
-            //MenuFlyout myFlyout = new MenuFlyout();
-            //MenuFlyoutItem firstItem = new MenuFlyoutItem { Text = "删除日程" };
-            //myFlyout.Items.Add(firstItem);
-            ////if you only want to show in left or buttom 
-            ////myFlyout.Placement = FlyoutPlacementMode.Left;
-            //FrameworkElement senderElement = sender as FrameworkElement;
-            ////the code can show the flyout in your mouse click 
-            //myFlyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
         }
 
         private void MyGridView_Loaded(object sender, RoutedEventArgs e)
         {
-            //CustomData item = new CustomData(); // Get persisted item
-            //if (item != null)
-            //{
-            //   MyGridView.ScrollIntoView(item);
-            //    ConnectedAnimation animation =
-            //        ConnectedAnimationService.GetForCurrentView().GetAnimation("portrait");
-            //    if (animation != null)
-            //    {
-            //        await MyGridView.TryStartConnectedAnimationAsync(
-            //            animation, item, "GridViewStackPanel");
-            //    }
-            //}
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -231,29 +262,9 @@ namespace 倒计时
             AbbFlyout.Hide();
         }
 
-        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            int _start = ViewModel.CustomDatas.Count();
-            ViewModel.CustomDatas.Remove(SelectedItem);
-            conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
-            //if (MyGridView.SelectedIndex > -1)
-            //{
-            //    _appSettings.Values.Remove(MyGridView.SelectedItem.ToString());
-            //    MyGridView.Items.Clear();
-            //}
-            int _end = ViewModel.CustomDatas.Count();
-            if (_start != _end) 
-            {
-                PopupNotice popupNotice = new PopupNotice("删除成功");
-                popupNotice.ShowAPopup();
-            }
-
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
-            if (datalist.Count() == 0)
-            {
-                NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Visible;
-            }
+            await DeleteDialog.ShowAsync();
         }
 
         private void TopText_Tapped(object sender, TappedRoutedEventArgs e)
@@ -277,14 +288,43 @@ namespace 倒计时
            // ViewModel.CustomDatas.Add(new CustomData() { Str1 = "排序", Str2 = CustomData.Calculator("2018/2/2"), Str3 = "2018/2/2", Str4 = ColorfulBrush(Colors.SkyBlue, 0.6), BackGroundColor = Colors.SkyBlue });
         }
 
+        private void SetTop_Click(object sender, RoutedEventArgs e)
+        {
+            localSettings.Values["TopDate"] = SelectedItem.Str1;
+            loadDateData();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            localSettings.Values["TopDate"] = null;
+            loadDateData();
+        }
+
+        private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if ("⇱ " + localSettings.Values["TopDate"].ToString() ==  SelectedItem.Str1)
+                localSettings.Values["TopDate"] = null;
+            int _start = ViewModel.CustomDatas.Count();
+            ViewModel.CustomDatas.Remove(SelectedItem);
+            conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
+            int _end = ViewModel.CustomDatas.Count();
+            if (_start != _end)
+            {
+                PopupNotice popupNotice = new PopupNotice("删除成功");
+                popupNotice.ShowAPopup();
+            }
+
+            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+            if (datalist.Count() == 0)
+            {
+                NewTB.Visibility = Visibility.Visible;
+                NewTB2.Visibility = Visibility.Visible;
+            }
+        }
+
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //var selectedItems = MyListView.Items.Cast<ListViewItem>()
-            //    .Where(p => p.IsSelected)
-            //    .Select(t => t.Content.ToString())
-            //    .ToArray();
-            var wid = MyGridView.Width;
-            TopText.Text = wid.ToString();
+
         }
 
         public Color GetColor(string hex)

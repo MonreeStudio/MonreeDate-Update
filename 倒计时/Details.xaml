@@ -34,15 +34,6 @@
                 <AppBarButton.Icon>
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE104;"/>
                 </AppBarButton.Icon>
-                <AppBarButton.Flyout>
-                    <Flyout>
-                        <StackPanel>
-                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="10">
-                                    功能开发中，敬请期待~
-                            </TextBlock>
-                        </StackPanel>
-                    </Flyout>
-                </AppBarButton.Flyout>
             </AppBarButton>
         </CommandBar>
         <TextBlock x:Name="DetailsPickedDate"

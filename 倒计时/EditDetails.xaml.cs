@@ -70,19 +70,19 @@ namespace 夏日
 
         private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
-            
             string Picker = Add_Picker.Date.ToString();
             try
             {
                 DateTime s1 = Convert.ToDateTime(Picker);
-                _PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+                _PickDate = s1.ToString("yyyy-MM-dd");
+                //_PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
             }
             catch
             {
                 MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
                 await AboutDialog.ShowAsync();
             }
-             _Date = Calculator(_PickDate);
+            _Date = Calculator(_PickDate);
         }
 
         private async void BgsButton_Click(object sender, RoutedEventArgs e)

@@ -72,7 +72,8 @@ namespace 倒计时
             try
             {
                 DateTime s1 = Convert.ToDateTime(Picker);
-                _PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+                _PickDate = s1.ToString("yyyy-MM-dd");
+                //_PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
             }
             catch
             {
