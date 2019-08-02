@@ -303,8 +303,11 @@ namespace 倒计时
 
         private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if (localSettings.Values["TopDate"].ToString() ==  SelectedItem.Str1)
-                localSettings.Values["TopDate"] = null;
+            if (localSettings.Values["TopDate"] != null)
+            {
+                if (localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
+                    localSettings.Values["TopDate"] = null;
+            }
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);
             conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
