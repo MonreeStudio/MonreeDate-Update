@@ -74,8 +74,9 @@ namespace 倒计时
 
         private void loadDateData()
         {
+
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? order by AddTime desc", "1");
             List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
             List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
             if ((datalist1.Count() + datalist2.Count()) == 0)
@@ -302,7 +303,7 @@ namespace 倒计时
             conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
             foreach (var item in _datalist)
             {
-                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1" });
+                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1" ,AddTime = DateTime.Now.ToString()});
             }
             loadDateData();
         }
@@ -313,7 +314,7 @@ namespace 倒计时
             conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
             foreach (var item in _datalist)
             {
-                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0" });
+                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0",AddTime = "" });
             }
             loadDateData();
         }

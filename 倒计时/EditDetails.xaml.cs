@@ -104,7 +104,7 @@ namespace 夏日
                     All.Current.conn.Execute("delete from DataTemple where Schedule_name = ?", All.Current.str1);
                     All.Current.ViewModel.CustomDatas.Remove(All.Current.SelectedItem);
 
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity,IsTop = "0" });
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0", AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
 
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
@@ -117,7 +117,7 @@ namespace 夏日
 
                     foreach(var item in datalist)
                     {
-                        All.Current.conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity,IsTop = "0" });
+                        All.Current.conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity,IsTop = "0",AddTime = "" });
                         All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date, Str4 = All.Current.ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
                     return;
