@@ -75,7 +75,7 @@ namespace 倒计时
         private void loadDateData()
         {
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", localSettings.Values["TopDate"]);
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
             List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
             List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
             if ((datalist1.Count() + datalist2.Count()) == 0)
@@ -90,10 +90,10 @@ namespace 倒计时
             }
             foreach (var item in datalist0)
             {
-                if(item!=null)
+                if (item != null)
                     ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
             }
-            if(localSettings.Values["TopDate"]==null)
+            if (datalist0.Count() == 0)
             {
                 foreach (var item in datalist1)
                 {
@@ -108,12 +108,12 @@ namespace 倒计时
             {
                 foreach (var item in datalist1)
                 {
-                    if(item.Schedule_name!=localSettings.Values["TopDate"].ToString())
+                    if (item.IsTop == "0")
                         ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                 }
                 foreach (var item in datalist2)
                 {
-                    if (item.Schedule_name != localSettings.Values["TopDate"].ToString())
+                    if (item.IsTop == "0")
                         ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                 }
             }
@@ -215,11 +215,12 @@ namespace 倒计时
         private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
+            List<DataTemple> toplist = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
             SelectedItem = _item;
             if (SelectedItem != null)
             {
                 MyFlyout.IsEnabled = true;
-                if (localSettings.Values["TopDate"] == null)
+                if (toplist.Count() == 0)
                 {
                     FS.Visibility = Visibility.Visible;
                     SetTop.Visibility = Visibility.Visible;
@@ -228,7 +229,13 @@ namespace 倒计时
                 }
                 else
                 {
-                    if (localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
+                    bool in_toplist = false;
+                    foreach(var item in toplist)
+                    {
+                        if (item.Schedule_name == SelectedItem.Str1)
+                            in_toplist = true;
+                    }
+                    if (in_toplist==true)
                     {
                         FS.Visibility = Visibility.Visible;
                         SetTop.Visibility = Visibility.Collapsed;
@@ -237,7 +244,7 @@ namespace 倒计时
                     }
                     else
                     {
-                        SetTop.Visibility = Visibility.Collapsed;
+                        SetTop.Visibility = Visibility.Visible;
                         Cancel.Visibility = Visibility.Collapsed;
                         FS.Visibility = Visibility.Collapsed;
                     }
@@ -291,23 +298,34 @@ namespace 倒计时
 
         private void SetTop_Click(object sender, RoutedEventArgs e)
         {
-            localSettings.Values["TopDate"] = SelectedItem.Str1;
+            List<DataTemple> _datalist = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", SelectedItem.Str1);
+            conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
+            foreach (var item in _datalist)
+            {
+                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1" });
+            }
             loadDateData();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            localSettings.Values["TopDate"] = null;
+            List<DataTemple> _datalist = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", SelectedItem.Str1);
+            conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
+            foreach (var item in _datalist)
+            {
+                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0" });
+            }
             loadDateData();
         }
 
         private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if (localSettings.Values["TopDate"] != null)
-            {
-                if (localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
-                    localSettings.Values["TopDate"] = null;
-            }
+            //List<DataTemple> toplist = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
+            //if (localSettings.Values["TopDate"] != null)
+            //{
+            //    if (localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
+            //        localSettings.Values["TopDate"] = null;
+            //}
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(SelectedItem);
             conn.Execute("delete from DataTemple where Schedule_name = ?", SelectedItem.Str1);
