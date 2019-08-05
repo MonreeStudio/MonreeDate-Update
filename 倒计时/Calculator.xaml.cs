@@ -48,9 +48,9 @@ namespace 倒计时
                 DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
                 int days = (d4 - d3).Days;
                 if (d4 > d3)
-                    t = App.term(d3, d4);
+                    t = App.Term(d3, d4);
                 else
-                    t = App.term(d4, d3);
+                    t = App.Term(d4, d3);
                 if (days < 0)
                     days=Math.Abs(days);
                 int week, week_date;

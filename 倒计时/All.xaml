@@ -14,16 +14,16 @@
         <RelativePanel x:FieldModifier="Public">
             <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
             <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
-                <AppBarButton FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" Foreground="CornflowerBlue">
+                <AppBarButton FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="CornflowerBlue">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton CornerRadius="3" Label="日期显示年月日" Foreground="CornflowerBlue" Click="AppBarButton_Click_1">
+                <AppBarButton CornerRadius="3" Label="切换日期显示模式" ToolTipService.Placement="Mouse" ToolTipService.ToolTip="天数/年月日" Foreground="CornflowerBlue" Click="AppBarButton_Click_1">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
                     </AppBarButton.Icon>
-                    <AppBarButton.Flyout>
+                    <!--<AppBarButton.Flyout>
                             <Flyout x:Name="AbbFlyout" Placement="Bottom">
                                 <StackPanel Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
                                     <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="10">
@@ -32,7 +32,7 @@
                                 <Button Content="好的呢" Background="CornflowerBlue" BorderThickness="0" Foreground="White" Margin="10" Click="Button_Click"/>
                             </StackPanel>
                             </Flyout>
-                    </AppBarButton.Flyout>
+                    </AppBarButton.Flyout>-->
                 </AppBarButton>
             </CommandBar>
         </RelativePanel>
@@ -65,7 +65,7 @@
                 <DataTemplate x:DataType="local:CustomData">
                     <StackPanel x:Name="GridViewStackPanel" CornerRadius="10" Background="{x:Bind Str4}" Height="250" Width="225">
                         <TextBlock x:Name="aa" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                        <TextBlock x:Name="bb" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" FontSize="25" Foreground="White"/>
+                        <TextBlock x:Name="bb" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
                         <TextBlock x:Name="cc" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                     </StackPanel>
                 </DataTemplate>

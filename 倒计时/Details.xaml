@@ -21,10 +21,10 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
                 </AppBarButton.Icon>
                 <AppBarButton.Flyout>
-                    <Flyout>
+                    <Flyout Placement="Bottom">
                     <StackPanel CornerRadius="10">
                         <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="8">
-                                    将在未来版本推出！
+                                    将在未来某个版本推出！
                         </TextBlock>
                     </StackPanel>
                     </Flyout>

@@ -42,13 +42,13 @@ namespace 倒计时
             int days = (d4 - d3).Days;
             if (days < 0)
             {
-                s3 = "已过" + App.term(Convert.ToDateTime(d4), Convert.ToDateTime(d3));
+                s3 = "已过" + App.Term(Convert.ToDateTime(d4), Convert.ToDateTime(d3));
                 days = Math.Abs(days);
                 s2 = "已过" + days.ToString() + "天";
             }
             else
             {
-                s3 = "还有" + App.term(Convert.ToDateTime(d3), Convert.ToDateTime(d4));
+                s3 = "还有" + App.Term(Convert.ToDateTime(d3), Convert.ToDateTime(d4));
                 s2 = "还有" + days.ToString() + "天";
             }
             return new CustomData()

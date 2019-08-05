@@ -30,25 +30,24 @@ namespace 倒计时
         {
             this.InitializeComponent();
             Current = this;
-            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             sp = MainPage.Current.SelectedPage;
             if (sp == true)
             {
-                EditButton.IsEnabled = true;
-                DetailsPickedDate.Text = All.Current.str3;
-                DetailsEvent.Text = All.Current.str1;
-                DetailsDate.Text = All.Current.str2;
-                DetailsGrid.Background = All.Current.str4;
-                DetailsDate.Foreground = new SolidColorBrush(All.Current.BgsColor);
+                DetailsPickedDate.Text = App.AllItem.Str3;
+                DetailsEvent.Text = App.AllItem.Str1;
+                DetailsDate.Text = App.AllItem.Str2;
+                DetailsGrid.Background = App.AllItem.Str4;
+                DetailsDate.Foreground = new SolidColorBrush(App.AllItem.BackGroundColor);
+
             }
             else
             {
                 EditButton.IsEnabled = false;
-                DetailsEvent.Text = Festival.Current.str1;
-                DetailsDate.Text = Festival.Current.str2;
-                DetailsPickedDate.Text = Festival.Current.str3;
-                DetailsGrid.Background =  ColorfulBrush(Festival.Current.str4);
-                DetailsDate.Foreground = new SolidColorBrush(Festival.Current.str4);
+                DetailsEvent.Text = App.FestivalItem.Str1;
+                DetailsDate.Text = App.FestivalItem.Str2;
+                DetailsPickedDate.Text = App.FestivalItem.Str3;
+                DetailsGrid.Background =  ColorfulBrush(App.FestivalItem.Str4);
+                DetailsDate.Foreground = new SolidColorBrush(App.FestivalItem.Str4);
             }
         }
 
@@ -66,38 +65,30 @@ namespace 倒计时
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
 
-            //if (e.Parameter is string && !string.IsNullOrWhiteSpace((string)e.Parameter))
-            //{
-            //    InitialText.Text = $"Hi, {e.Parameter.ToString()}";
-            //}
-            //else
-            //{
-            //    InitialText.Text = "Hi!";
-            //}
-            //base.OnNavigatedTo(e);
         }
 
         private void DetailsDate_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (MainPage.Current.SelectedPage)
             {
+                
                 DateTime d1 = Convert.ToDateTime(All.Current.str3);
                 DateTime d2 = DateTime.Now;
                 DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
                 DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
 
-                if (DetailsDate.Text == All.Current.str2)
+                if (DetailsDate.Text == CustomData.Calculator(All.Current.str3))
                 {
                     if (d4 > d3)
-                        DetailsDate.Text = "已过" + App.term(d3, d4);
+                        DetailsDate.Text = "已过" + App.Term(d3, d4);
                     else
                     {
                         if (d4 < d3)
-                            DetailsDate.Text = "还有" + App.term(d4, d3);
+                            DetailsDate.Text = "还有" + App.Term(d4, d3);
                     }
                 }
                 else
-                    DetailsDate.Text = All.Current.str2;
+                    DetailsDate.Text = CustomData.Calculator(All.Current.str3);
             }
             else
             {
@@ -109,11 +100,11 @@ namespace 倒计时
                 if (DetailsDate.Text == Festival.Current.str2)
                 {
                     if (d4 > d3)
-                        DetailsDate.Text = "已过" + App.term(d3, d4);
+                        DetailsDate.Text = "已过" + App.Term(d3, d4);
                     else
                     {
                         if (d4 < d3)
-                            DetailsDate.Text = "还有" + App.term(d4, d3);
+                            DetailsDate.Text = "还有" + App.Term(d4, d3);
                     }
                 }
                 else

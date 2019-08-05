@@ -31,7 +31,7 @@ namespace 倒计时
         public string str1, str2, str3;
         public Color str4;
         public FestivalDataViewModel ViewModel = new FestivalDataViewModel();
-        public FestivalData SelectedItem;
+        //public FestivalData SelectedItem;
         public Festival()
         {
             this.InitializeComponent();
@@ -58,15 +58,15 @@ namespace 倒计时
         private void ListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as FestivalData;
-            SelectedItem = _item;
+            App.FestivalItem = _item;
         }
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                All.Current.conn.Insert(new DataTemple() { Schedule_name = SelectedItem.Str1, CalculatedDate = SelectedItem.Str2, Date = SelectedItem.Str3, BgColor = SelectedItem.Str4.ToString(), TintOpacity = 0.8, IsTop = "0", AddTime = "" });
-                All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = SelectedItem.Str1, Str2 = SelectedItem.Str2, Str3 = SelectedItem.Str3, Str4 = All.Current.ColorfulBrush(SelectedItem.Str4, 0.8), BackGroundColor = SelectedItem.Str4 });
+                All.Current.conn.Insert(new DataTemple() { Schedule_name = App.FestivalItem.Str1, CalculatedDate = App.FestivalItem.Str2, Date = App.FestivalItem.Str3, BgColor = App.FestivalItem.Str4.ToString(), TintOpacity = 0.8, IsTop = "0", AddTime = "" });
+                All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = App.FestivalItem.Str1, Str2 = App.FestivalItem.Str2, Str3 = App.FestivalItem.Str3, Str4 = All.Current.ColorfulBrush(App.FestivalItem.Str4, 0.8), BackGroundColor = App.FestivalItem.Str4 });
                 All.Current.NewTB.Visibility = Visibility.Collapsed;
                 All.Current.NewTB2.Visibility = Visibility.Collapsed;
             }

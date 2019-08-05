@@ -88,6 +88,7 @@
                    Background="White"
                    PrimaryButtonClick="BgsDialog_PrimaryButtonClick">
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock Text="建议选择较为温和的颜色" Margin="5,0,0,0" TextWrapping="Wrap"/>
                 <ColorPicker x:Name="MyColorPicker"
                              Margin="5"
                              IsColorSliderVisible="False"
@@ -99,7 +100,7 @@
                              />
                 <Slider AutomationProperties.Name="Slider with ticks"
                         x:Name="MySlider"
-                        Header="透明度（推荐60~80）"
+                        Header="透明度（推荐60~80，0为全透明）"
                         Margin="5"
                         Value="80"
                         Maximum="100"

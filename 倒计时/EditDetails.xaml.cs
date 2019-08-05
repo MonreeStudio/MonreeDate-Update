@@ -102,7 +102,7 @@ namespace 夏日
                 {
                    // ViewModel.CustomDatas.Remove(SelectedItem);
                     All.Current.conn.Execute("delete from DataTemple where Schedule_name = ?", All.Current.str1);
-                    All.Current.ViewModel.CustomDatas.Remove(All.Current.SelectedItem);
+                    All.Current.ViewModel.CustomDatas.Remove(App.AllItem);
 
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0", AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
