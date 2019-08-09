@@ -1,36 +1,27 @@
-# Monree Date  
+---
+中文名称: 夏日
+英文名称: Monree Date
+语言:
+  - XAML
+  - C#
+平台:
+  - Windows 10
+  - UWP
+描述:
+  - 纪念日
+  - 倒计时
+设计: 采用UWP平台最新的Fluent Design System（流畅设计体系），带来现代、美观、简洁的视觉效果。包括亚克力材质元素和背景、光标的光影效果、元素的深度效果。缩放以及动态效果还待加入。
+---
 
+# Monree Date  
 ## 安装方式        
 最后一个测试版1.3.3.0已上传至Microsoft Store，正式版将在2019年8月份以2.0版本的形式发出。  
 [微软应用商店传送门](https://www.microsoft.com/store/productId/9PKBWKPCCFJ8)      
     
-## 以下为简单介绍：  
+## 其他介绍：  
+- 关于[UWP](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/universal-application-platform-guide)  
+- 关于[Fluent Design System（流畅设计体系）](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)  
 
----
-中文名称: 夏日
-英文名称: Monre Date
-语言:
-  - XAML（界面）
-  - C#（逻辑）
-平台:
-  - Windows 10
-  - [UWP](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/universal-application-platform-guide)
-设计:
-  - 采用UWP平台最新的[Fluent Design System（流畅设计体系）](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)，带来现代、美观、简洁的视觉效果。包括亚克力材质元素和背景、光标的光影效果、元素的深度效果。缩放以及动态效果还待加入。
-描述: 一款简约设计的纪念日/倒计时记录应用。
----  
-
----
-page_type: sample
-name: Van Arsdel Sample
-languages:
-  - csharp
-  - xaml
-products:
-  - windows
-  - windows-uwp
-description: Demonstrates how to use the UWP XAML capabilities for a store application complete with forms, inventory, and custom lamp creation pages.
----
 
 ## 预计实现功能：  
 
