@@ -20,7 +20,17 @@
 描述: 一款简约设计的纪念日/倒计时记录应用。
 ---  
 
-
+---
+page_type: sample
+name: Van Arsdel Sample
+languages:
+  - csharp
+  - xaml
+products:
+  - windows
+  - windows-uwp
+description: Demonstrates how to use the UWP XAML capabilities for a store application complete with forms, inventory, and custom lamp creation pages.
+---
 
 ## 预计实现功能：  
 
