@@ -5,6 +5,7 @@
 [微软应用商店传送门](https://www.microsoft.com/store/productId/9PKBWKPCCFJ8)      
     
 ## 以下为简单介绍：  
+
 ---
 中文名称: 夏日
 英文名称: Monre Date
@@ -14,8 +15,9 @@
 平台:
   - Windows 10
   - [UWP](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/universal-application-platform-guide)
-设计：
+设计:
   - 采用UWP平台最新的[Fluent Design System（流畅设计体系）](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)，带来现代、美观、简洁的视觉效果。包括亚克力材质元素和背景、光标的光影效果、元素的深度效果。缩放以及动态效果还待加入。
+描述: 一款简约设计的纪念日/倒计时记录应用。
 ---  
 
 
