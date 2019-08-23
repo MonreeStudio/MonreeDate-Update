@@ -65,7 +65,7 @@ namespace 倒计时
         {
             try
             {
-                All.Current.conn.Insert(new DataTemple() { Schedule_name = App.FestivalItem.Str1, CalculatedDate = App.FestivalItem.Str2, Date = App.FestivalItem.Str3, BgColor = App.FestivalItem.Str4.ToString(), TintOpacity = 0.8, IsTop = "0", AddTime = "" });
+                All.Current.conn.Insert(new DataTemple() { Schedule_name = App.FestivalItem.Str1, CalculatedDate = App.FestivalItem.Str2, Date = App.FestivalItem.Str3, BgColor = App.FestivalItem.Str4.ToString(), TintOpacity = 0.7, IsTop = "0", AddTime = "" });
                 All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = App.FestivalItem.Str1, Str2 = App.FestivalItem.Str2, Str3 = App.FestivalItem.Str3, Str4 = All.Current.ColorfulBrush(App.FestivalItem.Str4, 0.8), BackGroundColor = App.FestivalItem.Str4 });
                 All.Current.NewTB.Visibility = Visibility.Collapsed;
                 All.Current.NewTB2.Visibility = Visibility.Collapsed;
@@ -105,6 +105,7 @@ namespace 倒计时
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var _item = (FestivalData)e.ClickedItem;
+            App.FestivalItem = _item;
             str1 = _item.Str1;
             str2 = _item.Str2;
             str3 = _item.Str3;

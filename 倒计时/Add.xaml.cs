@@ -93,7 +93,7 @@ namespace 倒计时
             string _event = AddEvent.Text.Trim();
             _Event = _event;
             //All.Current.Model_event = _event;
-            if (_Date != null&&_event!=""&&_Color!=""&&_TintOpacity>0)
+            if (_Date != null&&_event!=""&&_Color!=""&&_TintOpacity>=0)
             {
                 try
                 {

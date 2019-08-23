@@ -100,7 +100,7 @@
                              />
                 <Slider AutomationProperties.Name="Slider with ticks"
                         x:Name="MySlider"
-                        Header="透明度（推荐60~80，0为全透明）"
+                        Header="透明度（推荐40~80，0为全透明）"
                         Margin="5"
                         Value="80"
                         Maximum="100"

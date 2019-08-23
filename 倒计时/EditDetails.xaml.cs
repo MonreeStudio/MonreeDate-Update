@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using 倒计时;
 using 夏日.Models;
 
@@ -41,7 +32,7 @@ namespace 夏日
 
         private void InitialData()
         {
-            List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", All.Current.str1);
+            List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", App.AllItem.Str1);
             foreach (var item in datalist)
             {
                 AddEvent.Text = item.Schedule_name;
@@ -52,6 +43,7 @@ namespace 夏日
                 _Color = item.BgColor;
                 MyColorPicker.Color = GetColor(item.BgColor);
                 _TintOpacity = item.TintOpacity;
+                MySlider.Value = item.TintOpacity*100;
             }
             AddEvent.Text = All.Current.str1;
             Add_Picker.Date = Convert.ToDateTime(All.Current.str3);
@@ -95,7 +87,7 @@ namespace 夏日
             string _event = AddEvent.Text.Trim();
             _Event = _event;
             //All.Current.Model_event = _event;
-            if (_Date != null && _event != "" && _Color != "" && _TintOpacity > 0)
+            if (_Date != null && _event != "" && _Color != "" && _TintOpacity >= 0)
             {
                 List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", All.Current.str1);
                 try

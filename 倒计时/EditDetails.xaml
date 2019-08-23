@@ -87,7 +87,6 @@
                         x:Name="MySlider"
                         Header="透明度（推荐60~80）"
                         Margin="5"
-                        Value="80"
                         Maximum="100"
                         TickFrequency="10"
                         TickPlacement="Outside" />
