@@ -15,7 +15,7 @@
 
 # Monree Date  
 ## 安装方式        
-最后一个测试版1.3.3.0已上传至Microsoft Store，正式版将在2019年8月份以2.0版本的形式发出。  
+2.0正式版已上架Microsoft Store，请直接搜索安装。  
 [微软应用商店传送门](https://www.microsoft.com/store/productId/9PKBWKPCCFJ8)      
     
 ## 其他介绍：  
