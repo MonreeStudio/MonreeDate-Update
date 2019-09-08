@@ -25,6 +25,8 @@ using 夏日.Models;
 using static 倒计时.App;
 using Windows.UI;
 using System.Collections.ObjectModel;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -56,6 +58,15 @@ namespace 倒计时
         public All()
         {
             this.InitializeComponent();
+            var applicationView = CoreApplication.GetCurrentView();
+            applicationView.TitleBar.ExtendViewIntoTitleBar = true;
+            var title = ApplicationView.GetForCurrentView().TitleBar;
+            title.BackgroundColor = Colors.SkyBlue;
+            title.ForegroundColor = Colors.Transparent;
+            title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
+            title.ButtonHoverBackgroundColor = Colors.White;
+            title.ButtonPressedBackgroundColor = Colors.White;
+            title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
