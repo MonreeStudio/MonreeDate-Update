@@ -29,11 +29,11 @@ namespace 倒计时
     public sealed partial class Add : Page
     {
         public static Add Current;
-        public string _Event { get; set; }
-        public string _PickDate { get; set; }
-        public string _Date { get; set; }
-        public string _Color { get; set; }
-        public double _TintOpacity { get; set; }
+        private string _Event { get; set; }
+        private string _PickDate { get; set; }
+        private string _Date { get; set; }
+        private string _Color { get; set; }
+        private double _TintOpacity { get; set; }
         public Add()
         {  
             this.InitializeComponent();

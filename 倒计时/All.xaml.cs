@@ -45,6 +45,7 @@ namespace 倒计时
         public AcrylicBrush str4;
         public Color BgsColor;
         public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
+
         public static All Current;
         public string Model_event;
         public string Model_Date;
@@ -103,7 +104,6 @@ namespace 倒计时
             }
             if (localSettings.Values["YMD"].Equals(false))
             {
-                //localSettings.Values["YMD"] = true;
                 foreach (var item in datalist0)
                 {
                     if (item != null)
@@ -139,7 +139,6 @@ namespace 倒计时
             }
             else
             {
-                //localSettings.Values["YMD"] = false;
                 foreach (var item in datalist0)
                 {
                     if (item != null)
