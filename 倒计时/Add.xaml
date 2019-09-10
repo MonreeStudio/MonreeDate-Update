@@ -53,7 +53,7 @@
                             DateChanged="Add_Picker_DateChanged"
                             />
         <StackPanel Grid.Row="2" Grid.Column="1" Margin="20" Orientation="Horizontal">
-        <Button Content="背景选项"
+            <Button Content="背景选项"
                 x:Name="BgsButton"
                 HorizontalAlignment="Left"
                 CornerRadius="15"

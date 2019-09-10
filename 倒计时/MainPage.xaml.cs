@@ -38,6 +38,8 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             SelectedPage = true;
+            var applicationView = CoreApplication.GetCurrentView();
+            applicationView.TitleBar.ExtendViewIntoTitleBar = true;
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             var title = ApplicationView.GetForCurrentView().TitleBar;

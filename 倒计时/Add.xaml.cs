@@ -29,17 +29,18 @@ namespace 倒计时
     public sealed partial class Add : Page
     {
         public static Add Current;
-        public string _Event;
-        public string _PickDate;
-        public string _Date;
-        public string _Color;
-        public double _TintOpacity;
+        private string _Event { get; set; }
+        private string _PickDate { get; set; }
+        private string _Date { get; set; }
+        private string _Color { get; set; }
+        private double _TintOpacity { get; set; }
         public Add()
         {  
             this.InitializeComponent();
             Current = this;
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             _TintOpacity = 0;
+            _Color = "";
         }
 
         private string Calculator(string s1)
@@ -115,8 +116,27 @@ namespace 倒计时
             }
             else
             {
-                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！","提示");
-                await AboutDialog.ShowAsync();
+                if (_Event == "")
+                {
+                    MessageDialog AboutDialog = new MessageDialog("你还未填写日程名哦。", "温馨提示");
+                    await AboutDialog.ShowAsync();
+                }
+                else
+                {
+                    if (_Date == null)
+                    {
+                        MessageDialog AboutDialog = new MessageDialog("你还未选择日程的日期哦。", "温馨提示");
+                        await AboutDialog.ShowAsync();
+                    }
+                    else
+                    {
+                        if (_Color == "")
+                        {
+                            MessageDialog AboutDialog = new MessageDialog("你还未更改背景选项，快选择你喜欢的背景颜色吧！", "温馨提示");
+                            await AboutDialog.ShowAsync();
+                        }
+                    }
+                }
             }
         }
 
