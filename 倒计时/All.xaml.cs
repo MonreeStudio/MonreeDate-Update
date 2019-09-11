@@ -27,7 +27,8 @@ using Windows.UI;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
-
+using Windows.UI.Notifications;
+using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -56,6 +57,7 @@ namespace 倒计时
         private bool TopTap;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         
+
         public All()
         {
             this.InitializeComponent();
@@ -76,12 +78,174 @@ namespace 倒计时
             //conn.CreateTable(typeof(DataTemple));  
             Current = this;
             TopTap = true;
+
             Today.Text= DateTime.Now.ToShortDateString().ToString();
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
             LoadSettings();
             LoadDateData();
-            //localSettings.Values["TopDate"] = null;
+            LoadTile();
+            //localSettings.Values["TopDate"] = null;        
+        }
+
+        private void LoadTile()
+        {
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
+            string _ScheduleName = "";
+            string _CaculatedDate = "";
+            string _Date = "";
+
+            foreach (var item in datalist)
+            {
+                _ScheduleName = item.Schedule_name;
+                _CaculatedDate = item.CalculatedDate;
+                _Date = item.Date;
+            }
+            if (_ScheduleName != "" && _CaculatedDate != "" & _Date != "")
+            {
+                CreateTile(_ScheduleName, _CaculatedDate, _Date);
+            }
+        }
+
+        private void CreateTile(string _ScheduleName ,string CaculatedDate,string Date)
+        {
+            // 测试磁贴
+            string from = _ScheduleName;
+            string subject = CaculatedDate;
+            string body = Date;
+
+            // Construct the tile content
+            TileContent content = new TileContent()
+            {
+                Visual = new TileVisual()
+                {
+                    TileMedium = new TileBinding()
+                    {
+                        Content = new TileBindingContentAdaptive()
+                        {
+                            Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = from
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = subject,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = body,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    }
+                }
+                        }
+                    },
+
+                    TileWide = new TileBinding()
+                    {
+                        Content = new TileBindingContentAdaptive()
+                        {
+                            Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = from,
+                        HintStyle = AdaptiveTextStyle.Subtitle
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = subject,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = body,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    }
+                }
+                        }
+                    },
+
+                    TileLarge = new TileBinding()
+                    {
+                        Content = new TileBindingContentAdaptive()
+            {
+                Children = 
+                {
+                    new AdaptiveGroup()
+                    {
+                        Children = 
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children = 
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = from,
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body,
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new AdaptiveText()
+                    {
+                        Text = ""
+                    },
+                    new AdaptiveGroup()
+                    {
+                        Children = 
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children = 
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = "不要因繁忙而忘记\n生活",
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = "脚踏实地，仰望星空。",
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = "永远相信美好的事情即将发生！",
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+                    }
+                }
+            };
+            var notification = new TileNotification(content.GetXml());
+            //tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddMinutes(10);
+            // Send the notification to the primary tile
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
         }
 
         private void LoadDateData()
@@ -106,6 +270,7 @@ namespace 倒计时
             {
                 foreach (var item in datalist0)
                 {
+                    
                     if (item != null)
                         ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                 }
@@ -170,51 +335,6 @@ namespace 倒计时
                     }
                 }
             }
-
-            //ViewModel.CustomDatas.Clear();
-            //List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? order by AddTime desc", "1");
-            //List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
-            //List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
-            //if ((datalist1.Count() + datalist2.Count()) == 0)
-            //{
-            //    NewTB.Visibility = Visibility.Visible;
-            //    NewTB2.Visibility = Visibility.Visible;
-            //}
-            //else
-            //{
-            //    NewTB.Visibility = Visibility.Collapsed;
-            //    NewTB2.Visibility = Visibility.Collapsed;
-            //}
-            //foreach (var item in datalist0)
-            //{
-            //    if (item != null)
-            //        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-            //}
-            //if (datalist0.Count() == 0)
-            //{
-            //    foreach (var item in datalist1)
-            //    {
-            //        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-            //    }
-            //    foreach (var item in datalist2)
-            //    {
-            //        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-            //    }
-            //}
-            //else
-            //{
-            //    foreach (var item in datalist1)
-            //    {
-            //        if (item.IsTop == "0")
-            //            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-            //    }
-            //    foreach (var item in datalist2)
-            //    {
-            //        if (item.IsTop == "0")
-            //            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-            //    }
-            //}
-
         }
 
         private void LoadSettings()
@@ -481,12 +601,6 @@ namespace 倒计时
 
         private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            //List<DataTemple> toplist = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
-            //if (localSettings.Values["TopDate"] != null)
-            //{
-            //    if (localSettings.Values["TopDate"].ToString() == SelectedItem.Str1)
-            //        localSettings.Values["TopDate"] = null;
-            //}
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(AllItem);
             conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);

@@ -21,6 +21,7 @@ using Windows.System;
 using Windows.Storage;
 using Windows.Foundation.Metadata;
 
+
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
 namespace 倒计时
@@ -31,8 +32,10 @@ namespace 倒计时
     public sealed partial class MainPage : Page
     {
         public static MainPage Current;
-        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;   
+        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
         public bool SelectedPage { get; set; }
+
         public MainPage()
         {
             this.InitializeComponent();

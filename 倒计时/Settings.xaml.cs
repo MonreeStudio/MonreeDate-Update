@@ -9,6 +9,7 @@ using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Contacts;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -21,6 +22,8 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Popups;
+using Windows.UI.Shell;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -341,6 +344,49 @@ namespace 倒计时
         {
             var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
             await Launcher.LaunchUriAsync(Uri);
+        }
+
+        private async void PinButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get your own app list entry
+            AppListEntry entry = (await Package.Current.GetAppListEntriesAsync())[0];
+            bool isPinned1 = await StartScreenManager.GetDefault().ContainsAppListEntryAsync(entry);
+            // And pin it to Start
+            bool isPinned = await StartScreenManager.GetDefault().RequestAddAppListEntryAsync(entry);
+            if (isPinned1 == true)
+            {
+                PopupNotice popupNotice = new PopupNotice("应用已固定在开始菜单");
+                popupNotice.ShowAPopup();
+            }
+            else
+            {
+                PopupNotice popupNotice = new PopupNotice("固定成功");
+                popupNotice.ShowAPopup();
+            }
+        }
+
+        private async void PinTaskbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isPinned1 = await TaskbarManager.GetDefault().IsCurrentAppPinnedAsync();
+            if (isPinned1)
+            {
+                PopupNotice popupNotice = new PopupNotice("应用已固定在任务栏");
+                popupNotice.ShowAPopup();
+            }
+            else
+            {
+                bool isPinned = await TaskbarManager.GetDefault().RequestPinCurrentAppAsync();
+                if (isPinned)
+                {
+                    PopupNotice popupNotice = new PopupNotice("固定成功");
+                    popupNotice.ShowAPopup();
+                }  
+            }
+        }
+
+        private void SupportButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

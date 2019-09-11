@@ -67,23 +67,34 @@
                 BorderThickness="2"
                 Style="{StaticResource ButtonRevealStyle}" Click="Button_Click"/>
         <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
-                      Header="主页背景开启亚克力模糊效果"
+                      Header="主页背景亚克力模糊效果"
                       Grid.Row="2"
                       Grid.Column="0"
                       Margin="20,10,0,0"
                       HorizontalAlignment="Left"
-                      VerticalAlignment="Top"
+                      VerticalAlignment="Center"
                       x:Name="AllPageAcylic"
                       x:FieldModifier="public"
                       OnContent="开"
                       OffContent="关"
                       Toggled="AllPageAcylic_Toggled"
                       />
+        <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="20,0,0,0">
+            <Button x:Name="PinButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,10" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
+            <Button x:Name="PinTaskbarButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,10" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
+            <Button x:Name="SupportButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,10" Content="支持开发者" Click="SupportButton_Click">
+                <Button.Flyout>
+                    <Flyout>
+                        <Image Stretch="UniformToFill" Height="420" Width="270" Source="/Assets//支付宝收款码.jpg"/>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
         <TextBlock x:Name="TestTb"
                    Grid.Row="3"
                    Grid.Column="0"
                    HorizontalAlignment="Center"/>
-        
+
         <ContentDialog x:Name="AboutContent"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

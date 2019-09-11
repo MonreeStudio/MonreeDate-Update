@@ -21,7 +21,7 @@
                         AlwaysShowHeader="True"
                         Foreground="CornflowerBlue"
                         x:FieldModifier="Public"
-                        Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
+                        Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"
                         >
                 <NavigationView.MenuItems>
                 <NavigationViewItem Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
