@@ -122,7 +122,40 @@
             </StackPanel>
             </ScrollViewer>
         </ContentDialog>
-        
+
+        <StackPanel Grid.Row="3" Margin="20">
+            <TextBlock Text="选择主题色" Margin="0,0,0,10" Foreground="Black"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Width="50"
+                        Height="50"
+                        Background="CornflowerBlue"
+                        Margin="2"/>
+                <Button Width="50"
+                        Height="50"
+                        Background="MediumPurple"
+                        Margin="2"/>
+                <Button Width="50"
+                        Height="50"
+                        Background="Orange"
+                        Margin="2"/>
+                <Button Width="50"
+                        Height="50"
+                        Background="OrangeRed"
+                        
+                        Margin="2">
+                   
+                </Button>
+                <Button Width="50"
+                        Height="50"
+                        Background="Crimson"
+                        Margin="2"/>
+                <AppBarButton Width="50" 
+                              Height="50"
+                              Margin="2"
+                              Icon="OpenWith"/>
+                
+            </StackPanel>
+        </StackPanel>
         <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
