@@ -60,7 +60,28 @@ namespace 倒计时
 
         public All()
         {
-            this.InitializeComponent();
+            this.InitializeComponent();           
+            //建立数据库连接   
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            Current = this;
+            TopTap = true;
+            SetToptext();
+            SetTitle();
+            LoadSettings();
+            LoadDateData();
+            LoadTile();
+        }
+        private void SetToptext()
+        {
+            Today.Text = DateTime.Now.ToShortDateString().ToString();
+            TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
+            MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+        }
+
+        private void SetTitle()
+        {
             var applicationView = CoreApplication.GetCurrentView();
             applicationView.TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
@@ -70,25 +91,7 @@ namespace 倒计时
             title.ButtonHoverBackgroundColor = Colors.White;
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
-            //以下等效上面的建表   
-            //conn.CreateTable(typeof(DataTemple));  
-            Current = this;
-            TopTap = true;
-
-            Today.Text= DateTime.Now.ToShortDateString().ToString();
-            TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
-            MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
-            LoadSettings();
-            LoadDateData();
-            //TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-            LoadTile();
-            //TestTosat(); 
         }
-
         private void LoadTile()
         {
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
