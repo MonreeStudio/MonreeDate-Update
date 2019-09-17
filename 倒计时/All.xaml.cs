@@ -29,6 +29,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
+using Windows.Data.Xml.Dom;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -56,7 +57,6 @@ namespace 倒计时
         private double percentage;
         private bool TopTap;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        
 
         public All()
         {
@@ -84,13 +84,13 @@ namespace 倒计时
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
             LoadSettings();
             LoadDateData();
+            //TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             LoadTile();
-            //localSettings.Values["TopDate"] = null;        
+            //TestTosat(); 
         }
 
         private void LoadTile()
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
             string _CaculatedDate = "";
@@ -99,23 +99,23 @@ namespace 倒计时
             foreach (var item in datalist)
             {
                 _ScheduleName = item.Schedule_name;
-                _CaculatedDate = item.CalculatedDate;
+                _CaculatedDate = CustomData.Calculator(item.Date);
                 _Date = item.Date;
             }
-            if (_ScheduleName != "" && _CaculatedDate != "" & _Date != "")
+            if (_ScheduleName != "" && _CaculatedDate != "" && _Date != "")
             {
                 CreateTile(_ScheduleName, _CaculatedDate, _Date);
             }
         }
 
-        private void CreateTile(string _ScheduleName ,string CaculatedDate,string Date)
+        private void CreateTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
-            string subject = CaculatedDate;
-            string body = Date;
+            string subject = _CaculatedDate;
+            string body = _Date;
 
-            // Construct the tile content
             TileContent content = new TileContent()
             {
                 Visual = new TileVisual()
@@ -176,16 +176,16 @@ namespace 倒计时
                     TileLarge = new TileBinding()
                     {
                         Content = new TileBindingContentAdaptive()
-            {
-                Children = 
+                        {
+                            Children =
                 {
                     new AdaptiveGroup()
                     {
-                        Children = 
+                        Children =
                         {
                             new AdaptiveSubgroup()
                             {
-                                Children = 
+                                Children =
                                 {
                                     new AdaptiveText()
                                     {
@@ -212,15 +212,15 @@ namespace 倒计时
                     },
                     new AdaptiveGroup()
                     {
-                        Children = 
+                        Children =
                         {
                             new AdaptiveSubgroup()
                             {
-                                Children = 
+                                Children =
                                 {
                                     new AdaptiveText()
                                     {
-                                        Text = "不要因繁忙而忘记\n生活",
+                                        Text = "不要因为繁忙而忘记\n生活",
                                         HintStyle = AdaptiveTextStyle.Subtitle
                                     },
                                     new AdaptiveText()
@@ -238,15 +238,35 @@ namespace 倒计时
                         }
                     }
                 }
-            }
+                        }
                     }
                 }
             };
             var notification = new TileNotification(content.GetXml());
-            //tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddMinutes(10);
-            // Send the notification to the primary tile
             TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
         }
+
+        //private void TestTosat()
+        //{
+        //    //选定Toast模板类型
+        //    var type = ToastTemplateType.ToastText02;
+        //    var content = ToastNotificationManager.GetTemplateContent(type);
+        //    //生成XML
+        //    XmlNodeList toastxml = content.GetElementsByTagName("text");
+        //    toastxml[0].AppendChild(content.CreateTextNode("我是一个标题"));
+        //    toastxml[1].AppendChild(content.CreateTextNode("明天中秋啦！"));
+        //    //设置时间、次数等参数
+        //    DateTime due = DateTime.Now.AddMinutes(1);
+        //    TimeSpan span = TimeSpan.FromMinutes(1);
+        //    UInt32 time = 3;
+        //    ScheduledToastNotification toast = new ScheduledToastNotification(content, due, span, time);
+        //    //设置Toast的id
+        //    toast.Id = "toast1";
+        //    ToastNotificationManager.CreateToastNotifier().AddToSchedule(toast);
+
+        //}
+
+
 
         private void LoadDateData()
         {

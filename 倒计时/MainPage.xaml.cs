@@ -20,6 +20,10 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.System;
 using Windows.Storage;
 using Windows.Foundation.Metadata;
+using Windows.ApplicationModel.Background;
+using Windows.UI.Notifications;
+using 夏日.Models;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -54,7 +58,35 @@ namespace 倒计时
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            this.RegisterBackgroundTask();
+        }
 
+        private async void RegisterBackgroundTask()
+        {
+            const string taskName = "BlogFeedBackgroundTask";
+            const string taskEntryPoint = "BackgroundTasks.BlogFeedBackgroundTask";
+
+            var backgroundAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
+            if (backgroundAccessStatus == BackgroundAccessStatus.AlwaysAllowed ||
+                backgroundAccessStatus == BackgroundAccessStatus.AllowedSubjectToSystemPolicy)
+            {
+                foreach (var task in BackgroundTaskRegistration.AllTasks)
+                {
+                    if (task.Value.Name == taskName)
+                    {
+                        task.Value.Unregister(true);
+                    }
+                }
+
+                BackgroundTaskBuilder taskBuilder = new BackgroundTaskBuilder();
+                taskBuilder.Name = taskName;
+                taskBuilder.TaskEntryPoint = taskEntryPoint;
+                taskBuilder.SetTrigger(new TimeTrigger(15, false));
+                var registration = taskBuilder.Register();
+            }
+        }
 
         private readonly List<(string Tag, Type Page)> _pages = new List<(string Tag, Type Page)>
         {

@@ -52,6 +52,13 @@
           <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
       </uap:VisualElements>
+      <Extensions>
+        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTasks.BlogFeedBackgroundTask">
+          <BackgroundTasks>
+            <Task Type="timer"/>
+          </BackgroundTasks>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
 
