@@ -92,7 +92,7 @@
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
-                <!--<ComboBox.Items> 
+                <ComboBox.Items> 
                 <ComboBoxItem>
                     <StackPanel Orientation="Horizontal">
                         <Rectangle Fill="CornflowerBlue" Height="25" Width="25"/>
@@ -123,7 +123,7 @@
                         <TextBlock Text="深空灰" Margin="2" Foreground="#495c69"/>
                     </StackPanel>
                 </ComboBoxItem>
-            </ComboBox.Items>-->
+            </ComboBox.Items>
         </ComboBox>
         </StackPanel>
         <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,0,0,0">

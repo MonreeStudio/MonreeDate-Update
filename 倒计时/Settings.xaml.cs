@@ -32,7 +32,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using 夏日;
+using 夏日.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -395,7 +395,8 @@ namespace 倒计时
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var tc = ThemeColorSelected.SelectedItem;
-            
+            if (ThemeColorSelected.SelectedIndex == 0)
+                AboutButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
         }
     }
 }

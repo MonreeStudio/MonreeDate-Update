@@ -8,6 +8,7 @@ using Windows.UI;
 using Windows.UI.Xaml.Media;
 using 倒计时;
 using 夏日;
+using 夏日.Models;
 
 namespace 倒计时
 {

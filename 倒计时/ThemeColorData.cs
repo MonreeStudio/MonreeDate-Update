@@ -13,7 +13,7 @@ namespace 倒计时
 {
     public class ThemeColorData
     {
-        public Color themeColor { get; set; }
+        public SolidColorBrush themeColor { get; set; }
         public string colorName { get; set; }
         public static ThemeColorData Current;
         public ThemeColorData()
@@ -27,7 +27,7 @@ namespace 倒计时
         public ObservableCollection<ThemeColorData> ThemeColorDatas = new ObservableCollection<ThemeColorData>();
         public ThemeColorDataViewModel()
         {
-            ThemeColorDatas.Add(new ThemeColorData() { colorName = "夏日蓝", themeColor = Colors.CornflowerBlue });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "夏日蓝", themeColor = new SolidColorBrush(Colors.CornflowerBlue) });
         }
     }
 }
