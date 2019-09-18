@@ -25,10 +25,10 @@
         <TextBlock x:Name="EditTopText" Text="编辑个人信息" Grid.Row="0" FontSize="28" Margin="90,30,0,0" Foreground="Black" />
         <StackPanel Grid.Row="1" Margin="20">
         <TextBlock Text="昵称" Foreground="Black"  FontSize="20" Margin="0,0,0,5"/>
-        <TextBox x:Name="EditNickName" x:FieldModifier="Public" Width="300" BorderBrush="SkyBlue" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
+        <TextBox x:Name="EditNickName" x:FieldModifier="Public" Width="300" BorderBrush="CornflowerBlue" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Margin="20,0,0,0">
-            <ComboBox x:Name="EditSex" x:FieldModifier="Public" BorderBrush="SkyBlue" CornerRadius="8" BorderThickness="1" SelectionChanged="ComboBox_SelectionChanged"  Header="性别" FontSize="20" Width="80">
+            <ComboBox x:Name="EditSex" x:FieldModifier="Public" BorderBrush="CornflowerBlue" CornerRadius="8" BorderThickness="1" SelectionChanged="ComboBox_SelectionChanged"  Header="性别" FontSize="20" Width="80">
                 <x:String>男</x:String>
                 <x:String>女</x:String>
             </ComboBox>
@@ -38,7 +38,7 @@
                                 x:Name="EditBirthday"
                                 x:FieldModifier="Public"
                                 Foreground="Black"
-                                BorderBrush="SkyBlue"
+                                BorderBrush="CornflowerBlue"
                                 Header="生日"
                                 FontSize="20"
                                 CornerRadius="8"
@@ -47,13 +47,13 @@
         </StackPanel>
         <StackPanel Grid.Row="4" Margin="20">
             <TextBlock Text="个性签名"  Foreground="Black"  FontSize="20" Margin="0,0,0,5"/>
-            <TextBox Width="300" x:Name="EditSign" x:FieldModifier="Public" BorderBrush="SkyBlue" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
+            <TextBox Width="300" x:Name="EditSign" x:FieldModifier="Public" BorderBrush="CornflowerBlue" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
         </StackPanel>
         <Button x:Name="SaveButton"
                 Content="保存修改"
                 Grid.Row="8"
                 Foreground="White"
-                Background="SkyBlue"
+                Background="{ThemeResource ThemeColor}"
                 HorizontalAlignment="Left"
                 CornerRadius="15"
                 BorderThickness="3"

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using 倒计时;
+using 夏日;
 
-namespace 夏日
+namespace 倒计时
 {
     public class FestivalData
     {

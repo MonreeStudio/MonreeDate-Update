@@ -21,9 +21,8 @@
                         AlwaysShowHeader="True"
                         Foreground="CornflowerBlue"
                         x:FieldModifier="Public"
-                        Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"
                         >
-                <NavigationView.MenuItems>
+            <NavigationView.MenuItems>
                 <NavigationViewItem Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
                 <NavigationViewItemSeparator  />
                 <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
@@ -70,7 +69,9 @@
                         MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        --><!-- Leave the next line for left-only navigation. --><!--
+                        -->
+        <!-- Leave the next line for left-only navigation. -->
+        <!--
                         <Setter Target="ContentFrame.Padding" Value="24,54,24,24"/>
                     </VisualState.Setters>
                 </VisualState>

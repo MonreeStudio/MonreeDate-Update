@@ -38,7 +38,7 @@
             </ListView.ItemContainerStyle>
             
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local1:FestivalData">
+                <DataTemplate x:DataType="local:FestivalData">
                     <RelativePanel Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
                         <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
                         <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>

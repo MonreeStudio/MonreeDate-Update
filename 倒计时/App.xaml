@@ -12,7 +12,7 @@
         TintOpacity="0.9" TintColor="White" FallbackColor="White" />
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush2" BackgroundSource="HostBackdrop"
         TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="PowderBlue" />
-            
+            <media:SolidColorBrush x:FieldModifier="public" x:Key="ThemeColor" Color="CornflowerBlue" />
         </ResourceDictionary>
         
     </Application.Resources>

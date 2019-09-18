@@ -5,6 +5,8 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:夏日="using:夏日"
+    xmlns:models="using:夏日.Models"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
@@ -36,7 +38,7 @@
                        ToolTipService.ToolTip="点击更换头像"
                        Grid.Row="0" Grid.RowSpan="5" Grid.Column="0"
                        HorizontalAlignment="Left"
-                       ProfilePicture="Assets//默认头像.png"
+                       ProfilePicture="Assets//默认头像2.jpg"
                        Tapped="MyPersonPicture_Tapped"
                        />
             <StackPanel Margin="20,16,0,0">
@@ -72,17 +74,62 @@
                       Grid.Column="0"
                       Margin="20,10,0,0"
                       HorizontalAlignment="Left"
-                      VerticalAlignment="Center"
+                      VerticalAlignment="Bottom"
                       x:Name="AllPageAcylic"
                       x:FieldModifier="public"
                       OnContent="开"
                       OffContent="关"
                       Toggled="AllPageAcylic_Toggled"
                       />
-        <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="20,0,0,0">
-            <Button x:Name="PinButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,10" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
-            <Button x:Name="PinTaskbarButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,10" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
-            <Button x:Name="SupportButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,10" Content="支持开发者" Click="SupportButton_Click">
+        <StackPanel Grid.Row="3" Margin="20" VerticalAlignment="Top">
+            <TextBlock Text="主题色" Margin="0,0,0,5"/>
+            <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="CornflowerBlue" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="local:ThemeColorData"> 
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25"/>
+                            <TextBlock Text="{x:Bind colorName}" Margin="2" Foreground="{x:Bind themeColor}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                <!--<ComboBox.Items> 
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Fill="CornflowerBlue" Height="25" Width="25"/>
+                        <TextBlock Text="夏日蓝" Margin="2" Foreground="CornflowerBlue"/>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Fill="SkyBlue" Height="25" Width="25"/>
+                        <TextBlock Text="天空蓝" Margin="2" Foreground="SkyBlue"/>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Fill="Orange" Height="25" Width="25"/>
+                        <TextBlock Text="寻宝橙" Margin="2" Foreground="Orange"/>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Fill="Crimson" Height="25" Width="25"/>
+                        <TextBlock Text="绯红" Margin="2" Foreground="Crimson"/>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Fill="#495c69" Height="25" Width="25"/>
+                        <TextBlock Text="深空灰" Margin="2" Foreground="#495c69"/>
+                    </StackPanel>
+                </ComboBoxItem>
+            </ComboBox.Items>-->
+        </ComboBox>
+        </StackPanel>
+        <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,0,0,0">
+            <Button x:Name="PinButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,20" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
+            <Button x:Name="PinTaskbarButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,20" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
+            <Button x:Name="SupportButton" Foreground="White" Background="CornflowerBlue" CornerRadius="6" Margin="0,0,0,20" Content="支持开发者" Click="SupportButton_Click">
                 <Button.Flyout>
                     <Flyout>
                         <Image Stretch="UniformToFill" Height="420" Width="270" Source="/Assets//支付宝收款码.jpg"/>

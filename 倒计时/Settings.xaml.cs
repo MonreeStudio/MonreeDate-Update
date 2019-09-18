@@ -32,6 +32,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using 夏日;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -50,6 +51,7 @@ namespace 倒计时
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         private StorageFile Picture_file;//UWP 采用StorageFile来读写文件
         public int index = 0;
+        public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
 
       //  private StorageFile sampleFile;
       //  private string filename = "sampleFile.dat";
@@ -66,6 +68,7 @@ namespace 倒计时
             GetAppVersion();
             GetSystemVersion();
             GetPlatform();
+            
         }
         
         private void ReadSettings()
@@ -387,6 +390,12 @@ namespace 倒计时
         private void SupportButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var tc = ThemeColorSelected.SelectedItem;
+            
         }
     }
 }
