@@ -23,14 +23,14 @@
                         x:FieldModifier="Public"
                         >
             <NavigationView.MenuItems>
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
+                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
                 <NavigationViewItemSeparator  />
                 <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="New" Icon="Add" Content="新建"/>
+                <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
+                <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="Festival" Icon="CalendarDay" Content="节日"/>
+                <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="Festival" Icon="CalendarDay" Content="节日"/>
             </NavigationView.MenuItems>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Frame x:Name="ContentFrame"

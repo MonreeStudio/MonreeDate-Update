@@ -68,9 +68,139 @@ namespace 倒计时
             GetAppVersion();
             GetSystemVersion();
             GetPlatform();
-            
+            SetThemeColor();
         }
-        
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    SettingsTopText.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    NameTB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    SexTB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    BirthdayTB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    SignTB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    PersonalNickName.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    PersonalSex.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    PersonalSign.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    AllPageAcylic.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    ThemeColorSelected.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    EditButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    PinButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    PinTaskbarButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    SupportButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    AboutButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    ThemeColorSelected.SelectedIndex = 0;
+                    break;
+                case "SkyBlue":
+                    SettingsTopText.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    NameTB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    SexTB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    BirthdayTB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    SignTB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    PersonalNickName.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    PersonalSex.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    PersonalSign.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    AllPageAcylic.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    AllPageAcylic.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    ThemeColorSelected.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    EditButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    PinButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    PinTaskbarButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    SupportButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    AboutButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    ThemeColorSelected.SelectedIndex = 1;
+                    break;
+                case "Orange":
+                    SettingsTopText.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    NameTB.Foreground = new SolidColorBrush(Colors.Orange);
+                    SexTB.Foreground = new SolidColorBrush(Colors.Orange);
+                    BirthdayTB.Foreground = new SolidColorBrush(Colors.Orange);
+                    SignTB.Foreground = new SolidColorBrush(Colors.Orange);
+                    PersonalNickName.Foreground = new SolidColorBrush(Colors.Orange);
+                    PersonalSex.Foreground = new SolidColorBrush(Colors.Orange);
+                    PersonalSign.Foreground = new SolidColorBrush(Colors.Orange);
+                    AllPageAcylic.Foreground = new SolidColorBrush(Colors.Orange);
+                    AllPageAcylic.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    ThemeColorSelected.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    EditButton.Background = new SolidColorBrush(Colors.Orange);
+                    PinButton.Background = new SolidColorBrush(Colors.Orange);
+                    PinTaskbarButton.Background = new SolidColorBrush(Colors.Orange);
+                    SupportButton.Background = new SolidColorBrush(Colors.Orange);
+                    AboutButton.Background = new SolidColorBrush(Colors.Orange);
+                    ThemeColorSelected.SelectedIndex = 2;
+                    break;
+                case "Crimson":
+                    SettingsTopText.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    NameTB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    SexTB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    BirthdayTB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    SignTB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    PersonalNickName.Foreground = new SolidColorBrush(Colors.Crimson);
+                    PersonalSex.Foreground = new SolidColorBrush(Colors.Crimson);
+                    PersonalSign.Foreground = new SolidColorBrush(Colors.Crimson);
+                    AllPageAcylic.Foreground = new SolidColorBrush(Colors.Crimson);
+                    AllPageAcylic.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    ThemeColorSelected.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    EditButton.Background = new SolidColorBrush(Colors.Crimson);
+                    PinButton.Background = new SolidColorBrush(Colors.Crimson);
+                    PinTaskbarButton.Background = new SolidColorBrush(Colors.Crimson);
+                    SupportButton.Background = new SolidColorBrush(Colors.Crimson);
+                    AboutButton.Background = new SolidColorBrush(Colors.Crimson);
+                    ThemeColorSelected.SelectedIndex = 3;
+                    break;
+                case "Gray":
+                    SettingsTopText.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    NameTB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    SexTB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    BirthdayTB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    SignTB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    PersonalNickName.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    PersonalSex.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    PersonalSign.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AllPageAcylic.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AllPageAcylic.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    ThemeColorSelected.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    EditButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    PinButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    PinTaskbarButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    SupportButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AboutButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    ThemeColorSelected.SelectedIndex = 4;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void ReadSettings()
         {
             if (localSettings.Values["SetAllPageAcrylic"] != null)
@@ -394,9 +524,31 @@ namespace 倒计时
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var tc = ThemeColorSelected.SelectedItem;
-            if (ThemeColorSelected.SelectedIndex == 0)
-                AboutButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+            switch (ThemeColorSelected.SelectedIndex)
+            {
+                case 0:
+                    localSettings.Values["ThemeColor"]="CornflowerBlue";
+                    SetThemeColor();
+                    break;
+                case 1:
+                    localSettings.Values["ThemeColor"] = "SkyBlue";
+                    SetThemeColor();
+                    break;
+                case 2:
+                    localSettings.Values["ThemeColor"] = "Orange";
+                    SetThemeColor();
+                    break;
+                case 3:
+                    localSettings.Values["ThemeColor"] = "Crimson";
+                    SetThemeColor();
+                    break;
+                case 4:
+                    localSettings.Values["ThemeColor"] = "Gray";
+                    SetThemeColor();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

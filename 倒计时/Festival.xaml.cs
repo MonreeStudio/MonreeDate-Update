@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -31,12 +32,39 @@ namespace 倒计时
         public string str1, str2, str3;
         public Color str4;
         public FestivalDataViewModel ViewModel = new FestivalDataViewModel();
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         //public FestivalData SelectedItem;
         public Festival()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            Current = this;    
+            Current = this;
+            SetThemeColor();
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    FsTop.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    break;
+                case "SkyBlue":
+                    FsTop.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "Orange":
+                    FsTop.Foreground = new SolidColorBrush(Colors.Orange);
+                    break;
+                case "Crimson":
+                    FsTop.Foreground = new SolidColorBrush(Colors.Crimson);
+                    break;
+                case "Gray":
+                    FsTop.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ListView_RightTapped(object sender, RightTappedRoutedEventArgs e)

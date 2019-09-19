@@ -43,24 +43,25 @@
                        />
             <StackPanel Margin="20,16,0,0">
                 <StackPanel Orientation="Horizontal">
-                <TextBlock Text="昵称：" FontSize="13"/>
+                <TextBlock x:Name="NameTB" Text="昵称：" FontSize="13"/>
                     <TextBlock x:Name="PersonalNickName" x:FieldModifier="Public" Text="游客" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="性别：" FontSize="13"/>
+                    <TextBlock x:Name="SexTB" Text="性别：" FontSize="13"/>
                     <TextBlock x:Name="PersonalSex" x:FieldModifier="Public" Text="未选择" FontSize="13" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="生日：" FontSize="13"/>
+                    <TextBlock x:Name="BirthdayTB" Text="生日：" FontSize="13"/>
                     <TextBlock x:Name="PersonalBirthday" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="个性签名：" FontSize="13"/>
+                    <TextBlock x:Name="SignTB" Text="个性签名：" FontSize="13"/>
                     <TextBlock x:Name="PersonalSign" x:FieldModifier="Public" Text="这个人好懒，什么也没写……" FontSize="13"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
         <Button Content="编辑个人信息"
+                x:Name="EditButton"
                 Height="40"
                 Grid.Row="1"
                 Grid.Column="1"
@@ -79,10 +80,12 @@
                       x:FieldModifier="public"
                       OnContent="开"
                       OffContent="关"
+                      Foreground="CornflowerBlue"
                       Toggled="AllPageAcylic_Toggled"
+                      
                       />
         <StackPanel Grid.Row="3" Margin="20" VerticalAlignment="Top">
-            <TextBlock Text="主题色" Margin="0,0,0,5"/>
+            <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
             <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="CornflowerBlue" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate x:DataType="local:ThemeColorData"> 
@@ -92,38 +95,6 @@
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
-                <ComboBox.Items> 
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="CornflowerBlue" Height="25" Width="25"/>
-                        <TextBlock Text="夏日蓝" Margin="2" Foreground="CornflowerBlue"/>
-                    </StackPanel>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="SkyBlue" Height="25" Width="25"/>
-                        <TextBlock Text="天空蓝" Margin="2" Foreground="SkyBlue"/>
-                    </StackPanel>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="Orange" Height="25" Width="25"/>
-                        <TextBlock Text="寻宝橙" Margin="2" Foreground="Orange"/>
-                    </StackPanel>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="Crimson" Height="25" Width="25"/>
-                        <TextBlock Text="绯红" Margin="2" Foreground="Crimson"/>
-                    </StackPanel>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Fill="#495c69" Height="25" Width="25"/>
-                        <TextBlock Text="深空灰" Margin="2" Foreground="#495c69"/>
-                    </StackPanel>
-                </ComboBoxItem>
-            </ComboBox.Items>
         </ComboBox>
         </StackPanel>
         <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,0,0,0">

@@ -28,7 +28,7 @@
         <TextBox x:Name="EditNickName" x:FieldModifier="Public" Width="300" BorderBrush="CornflowerBlue" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Margin="20,0,0,0">
-            <ComboBox x:Name="EditSex" x:FieldModifier="Public" BorderBrush="CornflowerBlue" CornerRadius="8" BorderThickness="1" SelectionChanged="ComboBox_SelectionChanged"  Header="性别" FontSize="20" Width="80">
+            <ComboBox x:Name="EditSex" x:FieldModifier="Public" BorderBrush="CornflowerBlue" CornerRadius="8" BorderThickness="1" SelectionChanged="ComboBox_SelectionChanged"  Header="性别" FontSize="20" >
                 <x:String>男</x:String>
                 <x:String>女</x:String>
             </ComboBox>
@@ -53,7 +53,7 @@
                 Content="保存修改"
                 Grid.Row="8"
                 Foreground="White"
-                Background="{ThemeResource ThemeColor}"
+                Background="CornflowerBlue"
                 HorizontalAlignment="Left"
                 CornerRadius="15"
                 BorderThickness="3"

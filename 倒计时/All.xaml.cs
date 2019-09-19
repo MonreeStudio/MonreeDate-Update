@@ -72,7 +72,80 @@ namespace 倒计时
             LoadSettings();
             LoadDateData();
             LoadTile();
+            SetThemeColor();
         }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    TopText.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    AddABB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    ChangeABB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "SkyBlue":
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    TopText.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    AddABB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    ChangeABB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "Orange":
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.Orange);
+                    TopText.Foreground = new SolidColorBrush(Colors.Orange);
+                    AddABB.Foreground = new SolidColorBrush(Colors.Orange);
+                    ChangeABB.Foreground = new SolidColorBrush(Colors.Orange);
+                    MyProgressBar.Background = new SolidColorBrush(Colors.Orange);
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Gold);
+                    break;
+                case "Crimson":
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Colors.Crimson);
+                    TopText.Foreground = new SolidColorBrush(Colors.Crimson);
+                    AddABB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    ChangeABB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    MyProgressBar.Background = new SolidColorBrush(Colors.DarkRed);
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Crimson);
+                    break;
+                case "Gray":
+                    MainPage.Current.MyNav.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.AllItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.NewItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.CalculatorItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MainPage.Current.FestivalItem.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    TopText.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AddABB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    ChangeABB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    MyProgressBar.Background = new SolidColorBrush(Colors.Black);
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Gray);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void SetToptext()
         {
             Today.Text = DateTime.Now.ToShortDateString().ToString();

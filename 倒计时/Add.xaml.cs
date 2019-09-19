@@ -34,6 +34,7 @@ namespace 倒计时
         private string _Date { get; set; }
         private string _Color { get; set; }
         private double _TintOpacity { get; set; }
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Add()
         {  
             this.InitializeComponent();
@@ -41,6 +42,53 @@ namespace 倒计时
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             _TintOpacity = 0;
             _Color = "";
+            SetThemeColor();
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TipTB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    BgsButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    AddButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    break;
+                case "SkyBlue":
+                    TipTB.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    BgsButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    AddButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "Orange":
+                    TipTB.Foreground = new SolidColorBrush(Colors.Orange);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    BgsButton.Background = new SolidColorBrush(Colors.Orange);
+                    AddButton.Background = new SolidColorBrush(Colors.Orange);
+                    break;
+                case "Crimson":
+                    TipTB.Foreground = new SolidColorBrush(Colors.Crimson);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    BgsButton.Background = new SolidColorBrush(Colors.Crimson);
+                    AddButton.Background = new SolidColorBrush(Colors.Crimson);
+                    break;
+                case "Gray":
+                    TipTB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AddEvent.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    Add_Picker.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    BgsButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AddButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private string Calculator(string s1)

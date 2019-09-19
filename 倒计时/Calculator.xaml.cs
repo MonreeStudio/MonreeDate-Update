@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,12 +25,64 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Calculator : Page
     {
-        public static Calculator Current; 
+        public static Calculator Current;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Calculator()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
+            SetThemeColor();
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    StartDate.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    EndDate.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    Picker1.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    Picker2.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    CalButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    SpanTime.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    break;
+                case "SkyBlue":
+                    StartDate.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    EndDate.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    Picker1.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    Picker2.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    CalButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    SpanTime.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "Orange":
+                    StartDate.Foreground = new SolidColorBrush(Colors.Orange);
+                    EndDate.Foreground = new SolidColorBrush(Colors.Orange);
+                    Picker1.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    Picker2.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    CalButton.Background = new SolidColorBrush(Colors.Orange);
+                    SpanTime.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    break;
+                case "Crimson":
+                    StartDate.Foreground = new SolidColorBrush(Colors.Crimson);
+                    EndDate.Foreground = new SolidColorBrush(Colors.Crimson);
+                    Picker1.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    Picker2.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    CalButton.Background = new SolidColorBrush(Colors.Crimson);
+                    SpanTime.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    break;
+                case "Gray":
+                    StartDate.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    EndDate.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    Picker1.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    Picker2.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    CalButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    SpanTime.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    break;
+                default:
+                    break;
+            }
         }
 
         public class Str

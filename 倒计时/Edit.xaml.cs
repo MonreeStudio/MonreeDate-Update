@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,9 +32,64 @@ namespace 倒计时
         public Edit()
         {
             this.InitializeComponent();
+            SetThemeColor();
             EditNickName.Text = Settings.Current.PersonalNickName.Text;
             EditSign.Text = Settings.Current.PersonalSign.Text;
-            EditSex.Text = Settings.Current.PersonalSex.Text;
+            if(Settings.Current.PersonalSex.Text != "未选择")
+            {
+                if (Settings.Current.PersonalSex.Text == "男")
+                    EditSex.SelectedIndex = 0;
+                else
+                    EditSex.SelectedIndex = 1;
+            }
+            if(Settings.Current.PersonalBirthday.Text!="未设置")
+                EditBirthday.Date = Convert.ToDateTime(Settings.Current.PersonalBirthday.Text);
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    EditNickName.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    EditBirthday.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    EditSex.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    EditSign.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    SaveButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    break;
+                case "SkyBlue":
+                    EditNickName.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    EditBirthday.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    EditSex.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    EditSign.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    SaveButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "Orange":
+                    EditNickName.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    EditBirthday.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    EditSex.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    EditSign.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    SaveButton.Background = new SolidColorBrush(Colors.Orange);
+                    break;
+                case "Crimson":
+                    EditNickName.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    EditBirthday.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    EditSex.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    EditSign.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    SaveButton.Background = new SolidColorBrush(Colors.Crimson);
+                    break;
+                case "Gray":
+                    EditNickName.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    EditBirthday.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    EditSex.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    EditSign.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    SaveButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

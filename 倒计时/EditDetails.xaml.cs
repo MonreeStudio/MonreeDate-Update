@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -24,10 +25,58 @@ namespace 夏日
         public double _TintOpacity;
         public string tempDate;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public EditDetails()
         {
             this.InitializeComponent();
-            InitialData();            
+            InitialData();
+            SetThemeColor();
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    title.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    BgsButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    UpdateButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    break;
+                case "SkyBlue":
+                    title.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    BgsButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    UpdateButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    break;
+                case "Orange":
+                    title.Foreground = new SolidColorBrush(Colors.Orange);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    BgsButton.Background = new SolidColorBrush(Colors.Orange);
+                    UpdateButton.Background = new SolidColorBrush(Colors.Orange);
+                    break;
+                case "Crimson":
+                    title.Foreground = new SolidColorBrush(Colors.Crimson);
+                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    BgsButton.Background = new SolidColorBrush(Colors.Crimson);
+                    UpdateButton.Background = new SolidColorBrush(Colors.Crimson);
+                    break;
+                case "Gray":
+                    title.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    AddEvent.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    Add_Picker.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    BgsButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    UpdateButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void InitialData()

@@ -20,6 +20,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TextBlock Text="创建一个日程吧！"
+                   x:Name="TipTB"
                    Grid.Row="0"
                    Grid.Column="0"
                    Grid.ColumnSpan="2"
@@ -64,6 +65,7 @@
             <Ellipse x:Name="MyEllipse" Height="20" Width="20" Margin="10" Fill="Transparent" StrokeThickness="0"/>
         </StackPanel>
         <Button Content="确认添加"
+                x:Name="AddButton"
                 Grid.Row="3"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
