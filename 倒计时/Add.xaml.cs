@@ -52,39 +52,19 @@ namespace 倒计时
             switch (localSettings.Values["ThemeColor"].ToString())
             {
                 case "CornflowerBlue":
-                    TipTB.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-                    BgsButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    AddButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    TC.Color = Colors.CornflowerBlue;
                     break;
                 case "SkyBlue":
-                    TipTB.Foreground = new SolidColorBrush(Colors.SkyBlue);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
-                    BgsButton.Background = new SolidColorBrush(Colors.SkyBlue);
-                    AddButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    TC.Color = Colors.SkyBlue;
                     break;
                 case "Orange":
-                    TipTB.Foreground = new SolidColorBrush(Colors.Orange);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Orange);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Orange);
-                    BgsButton.Background = new SolidColorBrush(Colors.Orange);
-                    AddButton.Background = new SolidColorBrush(Colors.Orange);
+                    TC.Color = Colors.Orange;
                     break;
                 case "Crimson":
-                    TipTB.Foreground = new SolidColorBrush(Colors.Crimson);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Crimson);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Crimson);
-                    BgsButton.Background = new SolidColorBrush(Colors.Crimson);
-                    AddButton.Background = new SolidColorBrush(Colors.Crimson);
+                    TC.Color = Colors.Crimson;
                     break;
                 case "Gray":
-                    TipTB.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    AddEvent.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    Add_Picker.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    BgsButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    AddButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
                     break;
                 default:
                     break;

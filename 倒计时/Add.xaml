@@ -8,6 +8,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+    </Page.Resources>
+    
     <Grid x:Name="AddPageGird" x:FieldModifier="Public">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -28,14 +32,14 @@
                    VerticalAlignment="Bottom"
                    FontSize="48"
                    FontFamily="FZShuTi"
-                   Foreground="CornflowerBlue" />
+                   Foreground="{x:Bind TC}" />
         <TextBox x:Name="AddEvent"
                  PlaceholderText="日程名称"
                  Grid.Row="1"
                  Grid.Column="0"
                  Grid.ColumnSpan="2"
                  CornerRadius="8"
-                 BorderBrush="CornflowerBlue"
+                 BorderBrush="{x:Bind TC}"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Bottom"
                  Height="Auto" Width="400" 
@@ -46,8 +50,8 @@
                             Margin="20"
                             x:Name="Add_Picker"
                             BorderThickness="1"
-                            Foreground="CornflowerBlue"
-                            BorderBrush="CornflowerBlue"
+                            Foreground="{x:Bind TC}"
+                            BorderBrush="{x:Bind TC}"
                             DateFormat="{}{year.full}/{month.integer}/{day.integer}"
                             CornerRadius="8"
                             PlaceholderText="选择一个日期"
@@ -58,7 +62,7 @@
                 x:Name="BgsButton"
                 HorizontalAlignment="Left"
                 CornerRadius="15"
-                Background="CornflowerBlue"
+                Background="{x:Bind TC}"
                 Foreground="White"
                 Click="BgsButton_Click"
                 />
@@ -74,7 +78,7 @@
                 BorderThickness="3"
                 BorderBrush="Azure"
                 Foreground="White"
-                Background="CornflowerBlue"
+                Background="{x:Bind TC}"
                 Height="50"
                 Width="100"
                 Click="Button_Click"/>

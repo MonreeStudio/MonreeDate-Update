@@ -8,6 +8,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+    </Page.Resources>
+    
     <StackPanel x:FieldModifier="Public">
         <TextBlock Text="编辑"
                    x:Name="title"
@@ -15,12 +19,12 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    FontSize="28"
-                   Foreground="CornflowerBlue" />
+                   Foreground="{x:Bind TC}" />
         <StackPanel>
         <TextBlock Text="日程名称" Margin="20,0,0,10" FontSize="20"/>
         <TextBox x:Name="AddEvent"
                  CornerRadius="8"
-                 BorderBrush="CornflowerBlue"
+                 BorderBrush="{x:Bind TC}"
                  HorizontalAlignment="Left"
                  Margin="20,0,0,0"
                  VerticalAlignment="Bottom"
@@ -33,8 +37,8 @@
                             Margin="20,0,0,0"
                             x:Name="Add_Picker"
                             BorderThickness="1"
-                            Foreground="CornflowerBlue"
-                            BorderBrush="CornflowerBlue"
+                            Foreground="{x:Bind TC}"
+                            BorderBrush="{x:Bind TC}"
                             DateFormat="{}{year.full}/{month.integer}/{day.integer}"
                             CornerRadius="8"
                             PlaceholderText="选择一个日期"
@@ -47,7 +51,7 @@
                     HorizontalAlignment="Left"
                     CornerRadius="15"
                     Foreground="White"
-                    Background="CornflowerBlue"
+                    Background="{x:Bind TC}"
                     Click="BgsButton_Click"/>
             <Ellipse x:Name="MyEllipse" Height="20" Width="20" Margin="10" Fill="Transparent" StrokeThickness="0"/>
         </StackPanel>
@@ -59,7 +63,7 @@
                 Margin="20,100,0,0"
                 BorderBrush="Azure"
                 Foreground="White"
-                Background="CornflowerBlue"
+                Background="{x:Bind TC}"
                 Height="50"
                 Width="100"
                 Click="UpdateButton_Click"/>

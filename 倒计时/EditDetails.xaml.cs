@@ -40,39 +40,19 @@ namespace 夏日
             switch (localSettings.Values["ThemeColor"].ToString())
             {
                 case "CornflowerBlue":
-                    title.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-                    BgsButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    UpdateButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
+                    TC.Color = Colors.CornflowerBlue;
                     break;
                 case "SkyBlue":
-                    title.Foreground = new SolidColorBrush(Colors.SkyBlue);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
-                    BgsButton.Background = new SolidColorBrush(Colors.SkyBlue);
-                    UpdateButton.Background = new SolidColorBrush(Colors.SkyBlue);
+                    TC.Color = Colors.SkyBlue;
                     break;
                 case "Orange":
-                    title.Foreground = new SolidColorBrush(Colors.Orange);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Orange);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Orange);
-                    BgsButton.Background = new SolidColorBrush(Colors.Orange);
-                    UpdateButton.Background = new SolidColorBrush(Colors.Orange);
+                    TC.Color = Colors.Orange;
                     break;
                 case "Crimson":
-                    title.Foreground = new SolidColorBrush(Colors.Crimson);
-                    AddEvent.BorderBrush = new SolidColorBrush(Colors.Crimson);
-                    Add_Picker.BorderBrush = new SolidColorBrush(Colors.Crimson);
-                    BgsButton.Background = new SolidColorBrush(Colors.Crimson);
-                    UpdateButton.Background = new SolidColorBrush(Colors.Crimson);
+                    TC.Color = Colors.Crimson;
                     break;
                 case "Gray":
-                    title.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    AddEvent.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    Add_Picker.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    BgsButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    UpdateButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
                     break;
                 default:
                     break;

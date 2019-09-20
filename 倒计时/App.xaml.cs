@@ -27,6 +27,7 @@ using SQLite.Net.Platform.WinRT;
 using SQLite.Net.Interop;
 using SQLite.Net.Attributes;
 using 夏日;
+using Windows.UI;
 
 namespace 倒计时
 {

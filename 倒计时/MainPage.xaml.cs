@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -56,6 +55,33 @@ namespace 倒计时
             title.ButtonHoverBackgroundColor = Colors.White;
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+            SetThemeColor();
+        }
+
+        public void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "SkyBlue":
+                    TC.Color = Colors.SkyBlue;
+                    break;
+                case "Orange":
+                    TC.Color = Colors.Orange;
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                default:
+                    break;
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

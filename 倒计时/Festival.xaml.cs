@@ -48,19 +48,19 @@ namespace 倒计时
             switch (localSettings.Values["ThemeColor"].ToString())
             {
                 case "CornflowerBlue":
-                    FsTop.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
+                    TC.Color = Colors.CornflowerBlue;
                     break;
                 case "SkyBlue":
-                    FsTop.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    TC.Color = Colors.SkyBlue;
                     break;
                 case "Orange":
-                    FsTop.Foreground = new SolidColorBrush(Colors.Orange);
+                    TC.Color = Colors.Orange;
                     break;
                 case "Crimson":
-                    FsTop.Foreground = new SolidColorBrush(Colors.Crimson);
+                    TC.Color = Colors.Crimson;
                     break;
                 case "Gray":
-                    FsTop.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
                     break;
                 default:
                     break;

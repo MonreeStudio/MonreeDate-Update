@@ -41,44 +41,19 @@ namespace 倒计时
             switch (localSettings.Values["ThemeColor"].ToString())
             {
                 case "CornflowerBlue":
-                    StartDate.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
-                    EndDate.Foreground = new SolidColorBrush(Colors.CornflowerBlue);
-                    Picker1.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-                    Picker2.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
-                    CalButton.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    SpanTime.BorderBrush = new SolidColorBrush(Colors.CornflowerBlue);
+                    TC.Color = Colors.CornflowerBlue;
                     break;
                 case "SkyBlue":
-                    StartDate.Foreground = new SolidColorBrush(Colors.SkyBlue);
-                    EndDate.Foreground = new SolidColorBrush(Colors.SkyBlue);
-                    Picker1.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
-                    Picker2.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
-                    CalButton.Background = new SolidColorBrush(Colors.SkyBlue);
-                    SpanTime.BorderBrush = new SolidColorBrush(Colors.SkyBlue);
+                    TC.Color = Colors.SkyBlue;
                     break;
                 case "Orange":
-                    StartDate.Foreground = new SolidColorBrush(Colors.Orange);
-                    EndDate.Foreground = new SolidColorBrush(Colors.Orange);
-                    Picker1.BorderBrush = new SolidColorBrush(Colors.Orange);
-                    Picker2.BorderBrush = new SolidColorBrush(Colors.Orange);
-                    CalButton.Background = new SolidColorBrush(Colors.Orange);
-                    SpanTime.BorderBrush = new SolidColorBrush(Colors.Orange);
+                    TC.Color = Colors.Orange;
                     break;
                 case "Crimson":
-                    StartDate.Foreground = new SolidColorBrush(Colors.Crimson);
-                    EndDate.Foreground = new SolidColorBrush(Colors.Crimson);
-                    Picker1.BorderBrush = new SolidColorBrush(Colors.Crimson);
-                    Picker2.BorderBrush = new SolidColorBrush(Colors.Crimson);
-                    CalButton.Background = new SolidColorBrush(Colors.Crimson);
-                    SpanTime.BorderBrush = new SolidColorBrush(Colors.Crimson);
+                    TC.Color = Colors.Crimson;
                     break;
                 case "Gray":
-                    StartDate.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    EndDate.Foreground = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    Picker1.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    Picker2.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    CalButton.Background = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
-                    SpanTime.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105));
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
                     break;
                 default:
                     break;

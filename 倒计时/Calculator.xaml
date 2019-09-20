@@ -8,6 +8,10 @@
     mc:Ignorable="d"
     Background="Azure">
 
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <!--<Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -27,10 +31,10 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="StartDate" Grid.Row="1" Grid.Column="0" FontSize="25" Text="开始日期:"  Foreground="CornflowerBlue"  HorizontalAlignment="Center" VerticalAlignment="Center" >
+        <TextBlock x:Name="StartDate" Grid.Row="1" Grid.Column="0" FontSize="25" Text="开始日期:"  Foreground="{x:Bind TC}"  HorizontalAlignment="Center" VerticalAlignment="Center" >
         </TextBlock>
         <!--<TextBox x:Name="StartTime" BorderThickness="0" Grid.Row="0" Grid.Column="2" Width="100" Height="30"/>-->
-        <TextBlock x:Name="EndDate" Grid.Row="2" Grid.Column="0" FontSize="25" Text="结束日期:"  Foreground="CornflowerBlue" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock x:Name="EndDate" Grid.Row="2" Grid.Column="0" FontSize="25" Text="结束日期:"  Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         <!--<TextBox x:Name="EndTime" BorderThickness="0" Grid.Row="3" Grid.Column="2" Width="100" Height="30"/>-->
         <Button  Content="计算"
                  x:Name="CalButton"
@@ -40,7 +44,7 @@
                  Height="50"
                  Width="100"
                  HorizontalAlignment="Center"
-                 Background="CornflowerBlue"
+                 Background="{x:Bind TC}"
                  Foreground="White"
                  BorderBrush="Azure"
                  BorderThickness="2"
@@ -49,7 +53,7 @@
                  PlaceholderText="计算结果"
                  x:Name="SpanTime"
                  BorderThickness="1"
-                 BorderBrush="CornflowerBlue"
+                 BorderBrush="{x:Bind TC}"
                  Grid.Row="4"
                  Grid.Column="1"
                  Width="230"
@@ -58,7 +62,7 @@
                  FontSize="20"
                  Foreground="Black"
                  HorizontalAlignment="Left"/>
-        <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="CornflowerBlue" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="CornflowerBlue" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" />
     </Grid>
 </Page>

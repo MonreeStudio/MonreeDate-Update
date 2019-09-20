@@ -10,6 +10,11 @@
     x:Name="MPage"
     Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
         <NavigationView x:Name="MyNav"
                         Loaded="MyNav_Loaded"
@@ -19,18 +24,19 @@
                         PaneDisplayMode="Auto"
                         PaneTitle="夏日 —— 记录你的生活"
                         AlwaysShowHeader="True"
-                        Foreground="CornflowerBlue"
+                        Foreground="{x:Bind TC}"
+                        CornerRadius="10"
                         x:FieldModifier="Public"
                         >
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
+                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="首页"/>
                 <NavigationViewItemSeparator  />
                 <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
-                <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="New" Icon="Add" Content="新建"/>
+                <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
+                <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="CornflowerBlue" Tag="Festival" Icon="CalendarDay" Content="节日"/>
+                <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
             </NavigationView.MenuItems>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Frame x:Name="ContentFrame"

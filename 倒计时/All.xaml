@@ -10,16 +10,20 @@
     x:FieldModifier="Public"
     Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+    </Page.Resources>
+    
     <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <RelativePanel x:FieldModifier="Public">
             <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
             <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
-                <AppBarButton x:Name="AddABB" FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="CornflowerBlue">
+                <AppBarButton x:Name="AddABB"  FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="切换日期显示模式" ToolTipService.Placement="Mouse" ToolTipService.ToolTip="天数/年月日" Foreground="CornflowerBlue" Click="AppBarButton_Click_1">
+                <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="切换日期显示模式" ToolTipService.Placement="Mouse" ToolTipService.ToolTip="天数/年月日" Foreground="{x:Bind TC}" Click="AppBarButton_Click_1">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
                     </AppBarButton.Icon>
@@ -27,7 +31,7 @@
             </CommandBar>
         </RelativePanel>
         <TextBlock Height="10"/>
-        <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="CornflowerBlue" FontSize="30" FontFamily="FZShuTi" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped"/>
+        <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="{x:Bind TC}" FontSize="30" FontFamily="FZShuTi" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
         <TextBlock Height="60"/>
         <ContentDialog x:Name="DeleteDialog"
