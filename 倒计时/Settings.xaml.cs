@@ -401,8 +401,11 @@ namespace 倒计时
             }
             else
             {
-                PopupNotice popupNotice = new PopupNotice("固定成功");
-                popupNotice.ShowAPopup();
+                if (isPinned == true)
+                {
+                    PopupNotice popupNotice = new PopupNotice("固定成功");
+                    popupNotice.ShowAPopup();
+                }
             }
         }
 
