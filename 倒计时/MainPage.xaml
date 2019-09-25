@@ -13,6 +13,7 @@
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
+        <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor" />
     </Page.Resources>
     
     <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
@@ -66,22 +67,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <!--<VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger
-                        MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        -->
-        <!-- Leave the next line for left-only navigation. -->
-        <!--
-                        <Setter Target="ContentFrame.Padding" Value="24,54,24,24"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>-->
     </Grid>
 </Page>

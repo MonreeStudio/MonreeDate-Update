@@ -69,6 +69,7 @@
         <Button Content="编辑个人信息"
                 x:Name="EditButton"
                 Height="40"
+                CornerRadius="8"
                 Grid.Row="1"
                 Grid.Column="1"
                 Foreground="White"

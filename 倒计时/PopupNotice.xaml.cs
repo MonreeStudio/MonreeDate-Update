@@ -7,6 +7,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -21,6 +23,9 @@ namespace 倒计时
 {
     public sealed partial class PopupNotice : UserControl
     {
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+
         //存放弹出框中的信息
         private string _popupContent;
 
@@ -29,6 +34,7 @@ namespace 倒计时
         public PopupNotice()
         {
             this.InitializeComponent();
+            SetThemeColor();
             //将当前的长和框 赋值给控件
             this.Width = Window.Current.Bounds.Width;
             this.Height = Window.Current.Bounds.Height;
@@ -45,6 +51,32 @@ namespace 倒计时
         public PopupNotice(string popupContentString) : this()
         {
             _popupContent = popupContentString;
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "SkyBlue":
+                    TC.Color = Colors.SkyBlue;
+                    break;
+                case "Orange":
+                    TC.Color = Colors.Orange;
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>

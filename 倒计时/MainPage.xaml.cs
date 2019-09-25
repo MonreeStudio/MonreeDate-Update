@@ -56,6 +56,7 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             SetThemeColor();
+            
         }
 
         public void SetThemeColor()
@@ -66,6 +67,7 @@ namespace 倒计时
             {
                 case "CornflowerBlue":
                     TC.Color = Colors.CornflowerBlue;
+                    
                     break;
                 case "SkyBlue":
                     TC.Color = Colors.SkyBlue;

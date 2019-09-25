@@ -10,7 +10,7 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <Storyboard x:Name="PopupIn">
             <DoubleAnimation From="0"
                              To="1"
@@ -61,8 +61,9 @@
 
     <Grid>
 
-        <StackPanel Background="CornflowerBlue"
+        <StackPanel Background="{x:Bind TC}"
                     Padding="10"
+                    CornerRadius="8"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Name="PopupContainer"

@@ -472,6 +472,8 @@ namespace 倒计时
             {
                 if (d4 < d3)
                     CDate = "还有" + Term(d4, d3);
+                else
+                    CDate = "就在今天";
             }
             return CDate;
         }
@@ -588,7 +590,7 @@ namespace 倒计时
                     {
                         SetTop.Visibility = Visibility.Visible;
                         Cancel.Visibility = Visibility.Collapsed;
-                        FS.Visibility = Visibility.Collapsed;
+                        FS.Visibility = Visibility.Visible;
                     }
                 }
             }
