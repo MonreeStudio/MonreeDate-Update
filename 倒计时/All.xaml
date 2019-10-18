@@ -53,6 +53,10 @@
                     <MenuFlyoutItem x:Name="Cancel" Text="取消置顶" Visibility="Collapsed" Click="Cancel_Click"/>
                     <MenuFlyoutSeparator x:Name="FS"/>
                     <MenuFlyoutItem x:Name="MyFlyout" Text="删除日程" Click="MenuFlyoutItem_Click" IsEnabled="False"/>
+                    <MenuFlyoutSeparator x:Name="FS2"/>
+                    <MenuFlyoutItem x:Name="PinToSC" Text="固定日程到开始菜单" Visibility="Visible" Click="PinToSC_Click"/>
+                    <MenuFlyoutItem x:Name="unPinToSC" Text="从开始菜单中取消固定" Visibility="Collapsed" Click="unPinToSC_Click"/>
+                    <MenuFlyoutItem x:Name="MainTile" Text="该日程已被自动设为主磁贴" IsEnabled="False" Visibility="Collapsed"/>
                 </MenuFlyout>
             </GridView.ContextFlyout>
             <GridView.ItemTemplate>

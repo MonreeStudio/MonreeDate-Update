@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -142,6 +143,12 @@ namespace 夏日
                         All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date, Str4 = All.Current.ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
                     return;
+                }
+                bool isPinned = SecondaryTile.Exists(All.Current.str1);
+                if (isPinned)
+                {
+                    SecondaryTile toBeDeleted = new SecondaryTile(All.Current.str1);
+                    await toBeDeleted.RequestDeleteAsync();
                 }
                 MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                 Frame.Navigate(typeof(All));

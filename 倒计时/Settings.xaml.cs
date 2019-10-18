@@ -70,7 +70,6 @@ namespace 倒计时
             GetSystemVersion();
             GetPlatform();
             SetThemeColor();
-            
         }
 
         private void SetThemeColor()

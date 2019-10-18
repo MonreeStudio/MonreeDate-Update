@@ -30,6 +30,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
 using Windows.Data.Xml.Dom;
+using Windows.UI.StartScreen;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -130,7 +131,7 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
         }
-        private void LoadTile()
+        private async void LoadTile()
         {
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
@@ -146,6 +147,13 @@ namespace 倒计时
             if (_ScheduleName != "" && _CaculatedDate != "" && _Date != "")
             {
                 CreateTile(_ScheduleName, _CaculatedDate, _Date);
+            }
+
+            bool isPinned = SecondaryTile.Exists(_ScheduleName);
+            if(isPinned)
+            {
+                SecondaryTile toBeDeleted = new SecondaryTile(_ScheduleName);
+                await toBeDeleted.RequestDeleteAsync();
             }
         }
 
@@ -285,29 +293,8 @@ namespace 倒计时
             };
             var notification = new TileNotification(content.GetXml());
             TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+            localSettings.Values["mainTile"] = _ScheduleName;
         }
-
-        //private void TestTosat()
-        //{
-        //    //选定Toast模板类型
-        //    var type = ToastTemplateType.ToastText02;
-        //    var content = ToastNotificationManager.GetTemplateContent(type);
-        //    //生成XML
-        //    XmlNodeList toastxml = content.GetElementsByTagName("text");
-        //    toastxml[0].AppendChild(content.CreateTextNode("我是一个标题"));
-        //    toastxml[1].AppendChild(content.CreateTextNode("明天中秋啦！"));
-        //    //设置时间、次数等参数
-        //    DateTime due = DateTime.Now.AddMinutes(1);
-        //    TimeSpan span = TimeSpan.FromMinutes(1);
-        //    UInt32 time = 3;
-        //    ScheduledToastNotification toast = new ScheduledToastNotification(content, due, span, time);
-        //    //设置Toast的id
-        //    toast.Id = "toast1";
-        //    ToastNotificationManager.CreateToastNotifier().AddToSchedule(toast);
-
-        //}
-
-
 
         private void LoadDateData()
         {
@@ -414,6 +401,14 @@ namespace 倒计时
                 else
                 {
                     AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
+                }
+            }
+            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+            foreach(var item in datalist)
+            {
+                if (SecondaryTile.Exists(item.Schedule_name))
+                {
+                    CreateSecondaryTile(item.Schedule_name, CustomData.Calculator(item.Date), item.Date);
                 }
             }
         }
@@ -561,6 +556,37 @@ namespace 倒计时
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
             List<DataTemple> toplist = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
             AllItem = _item;
+            if (localSettings.Values["mainTile"].ToString().Equals(AllItem.Str1))
+            {
+                PinToSC.Visibility = Visibility.Collapsed;
+                unPinToSC.Visibility = Visibility.Collapsed;
+                MainTile.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MainTile.Visibility = Visibility.Collapsed;
+                bool isPinned = SecondaryTile.Exists(AllItem.Str1);
+                if (!isPinned)
+                {
+                    PinToSC.Visibility = Visibility.Visible;
+                    unPinToSC.Visibility = Visibility.Collapsed;
+                    localSettings.Values[AllItem.Str1] = "unpined";
+                }
+                else
+                {
+                    if (isPinned && localSettings.Values["mainTile"].ToString() != AllItem.Str1)
+                    {
+                        PinToSC.Visibility = Visibility.Collapsed;
+                        unPinToSC.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        PinToSC.Visibility = Visibility.Visible;
+                        unPinToSC.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            
             if (AllItem != null)
             {
                 MyFlyout.IsEnabled = true;
@@ -649,6 +675,7 @@ namespace 倒计时
                 conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1" ,AddTime = DateTime.Now.ToString()});
             }
             LoadDateData();
+            LoadSettings();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -660,10 +687,17 @@ namespace 倒计时
                 conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0",AddTime = "" });
             }
             LoadDateData();
+            LoadSettings();
         }
 
-        private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            bool isPinned = SecondaryTile.Exists(AllItem.Str1);
+            if (isPinned)
+            {
+                SecondaryTile toBeDeleted = new SecondaryTile(AllItem.Str1);
+                await toBeDeleted.RequestDeleteAsync();
+            }
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(AllItem);
             conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
@@ -680,6 +714,50 @@ namespace 倒计时
                 NewTB.Visibility = Visibility.Visible;
                 NewTB2.Visibility = Visibility.Visible;
             }
+            LoadTile();
+        }
+
+        private async void PinToSC_Click(object sender, RoutedEventArgs e)
+        {
+            string tileId = AllItem.Str1;
+            string displayName = "夏日：" + AllItem.Str1;
+            string arguments = "action=viewCity&zipCode=" + AllItem.Str1;
+            SecondaryTile tile = new SecondaryTile(
+                tileId,
+                displayName,
+                arguments,
+                new Uri("ms-appx:///Assets/Square150x150Logo.scale-150.png"),
+                TileSize.Default);
+            tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.scale-400.png");
+            tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTIle.scale-400.png");
+            tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.scale-400.png");
+            bool isPinned = await tile.RequestCreateAsync();
+            CreateSecondaryTile(AllItem.Str1, CustomData.Calculator(AllItem.Str3), AllItem.Str3);
+            if (isPinned)
+            {
+                PinToSC.Visibility = Visibility.Collapsed;
+                unPinToSC.Visibility = Visibility.Visible;
+                localSettings.Values[AllItem.Str1] = "pined";
+                PopupNotice popupNotice = new PopupNotice("日程固定成功");
+                popupNotice.ShowAPopup();
+            }
+            LoadDateData();
+            LoadSettings();
+            LoadTile();
+        }
+
+        private async void unPinToSC_Click(object sender, RoutedEventArgs e)
+        {
+            SecondaryTile toBeDeleted = new SecondaryTile(AllItem.Str1);
+            await toBeDeleted.RequestDeleteAsync();
+            PinToSC.Visibility = Visibility.Visible;
+            unPinToSC.Visibility = Visibility.Collapsed;
+            localSettings.Values[AllItem.Str1] = "unpined";
+            PopupNotice popupNotice = new PopupNotice("日程已取消固定");
+            popupNotice.ShowAPopup();
+            LoadDateData();
+            LoadSettings();
+            LoadTile();
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -696,5 +774,149 @@ namespace 倒计时
             byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
             return Color.FromArgb(a, r, g, b);
         }
+
+        public void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        {
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            // 测试磁贴
+            string from = _ScheduleName;
+            string subject = _CaculatedDate;
+            string body = _Date;
+
+            TileContent content = new TileContent()
+            {
+                Visual = new TileVisual()
+                {
+                    TileMedium = new TileBinding()
+                    {
+                        Content = new TileBindingContentAdaptive()
+                        {
+                            Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = from
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = subject,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = body,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    }
+                }
+                        }
+                    },
+
+                    TileWide = new TileBinding()
+                    {
+                        Content = new TileBindingContentAdaptive()
+                        {
+                            Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = from,
+                        HintStyle = AdaptiveTextStyle.Subtitle
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = subject,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = body,
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    }
+                }
+                        }
+                    },
+
+                    TileLarge = new TileBinding()
+                    {
+                        Content = new TileBindingContentAdaptive()
+                        {
+                            Children =
+                {
+                    new AdaptiveGroup()
+                    {
+                        Children =
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children =
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = from,
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body,
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new AdaptiveText()
+                    {
+                        Text = ""
+                    },
+                    new AdaptiveGroup()
+                    {
+                        Children =
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children =
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = "不要因为繁忙而忘记\n生活",
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = "脚踏实地，仰望星空。",
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = "永远相信美好的事情即将发生！",
+                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                        }
+                    }
+                }
+            };
+            var notification = new TileNotification(content.GetXml());
+            if (SecondaryTile.Exists(_ScheduleName))
+            {
+                var updater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(_ScheduleName);
+
+                updater.Update(notification);
+            }
+        }
     }
 }
+

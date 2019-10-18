@@ -21,8 +21,8 @@
                    FontSize="28"
                    Foreground="{x:Bind TC}" />
         <StackPanel>
-        <TextBlock Text="日程名称" Margin="20,0,0,10" FontSize="20"/>
-        <TextBox x:Name="AddEvent"
+            <TextBlock Text="日程名称" Margin="20,0,0,10" FontSize="20"/>
+            <TextBox x:Name="AddEvent"
                  CornerRadius="8"
                  BorderBrush="{x:Bind TC}"
                  HorizontalAlignment="Left"
@@ -30,6 +30,7 @@
                  VerticalAlignment="Bottom"
                  Height="Auto" Width="200" 
                  BorderThickness="1"/>
+            <TextBlock Text="提示：若该日程已被固定到开始菜单，更改名称后需重新固定。" TextTrimming="Clip" Margin="20,5,0,10" FontSize="15" Foreground="Gray"/>
         </StackPanel>
         <StackPanel Margin="0,50,0,0">
         <TextBlock Text="日期" Margin="20,0,0,10" FontSize="20"/>
