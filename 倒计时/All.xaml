@@ -5,6 +5,10 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     x:Name="APage"
     x:FieldModifier="Public"
@@ -46,7 +50,7 @@
                 </TextBlock>
             </StackPanel>
         </ContentDialog>
-        <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded">
+        <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded" animations:ReorderGridAnimation.Duration="273">
             <GridView.ContextFlyout>
                 <MenuFlyout x:Name="MyMenuFlyout">
                     <MenuFlyoutItem x:Name="SetTop" Text="置顶" Visibility="Visible" Click="SetTop_Click"/>
@@ -68,6 +72,26 @@
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:1" From="0, -200, 0" To="0" ></animations:TranslationAnimation>
+                <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
+            </animations:Implicit.ShowAnimations>
+
+            <animations:Implicit.HideAnimations>
+                <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
+                <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="-200">
+                    <animations:ScalarKeyFrame Key="0.1" Value="30"></animations:ScalarKeyFrame>
+                    <animations:ScalarKeyFrame Key="0.5" Value="0.0"></animations:ScalarKeyFrame>
+                </animations:ScalarAnimation>
+            </animations:Implicit.HideAnimations>
+
+            <animations:Implicit.Animations>
+                <animations:Vector3Animation Target="Offset"  Duration="0:0:1"></animations:Vector3Animation>
+                <animations:ScalarAnimation Target="GridViewStackPanel" ImplicitTarget="Offset"  Duration="0:0:1.2" From="0" To="0">
+                    <animations:ScalarKeyFrame Key="0.9" Value="80"></animations:ScalarKeyFrame>
+                </animations:ScalarAnimation>
+                <animations:Vector3Animation Target="Scale" Duration="0:0:1"></animations:Vector3Animation>
+            </animations:Implicit.Animations>
         </GridView>
         <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
         <TextBlock x:Name="NewTB2" x:FieldModifier="public" Visibility="Collapsed" Text="（创建后可右键删除）" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
