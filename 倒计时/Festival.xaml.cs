@@ -50,8 +50,8 @@ namespace 倒计时
                 case "CornflowerBlue":
                     TC.Color = Colors.CornflowerBlue;
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;

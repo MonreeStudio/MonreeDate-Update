@@ -87,10 +87,10 @@ namespace 倒计时
                     MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
                     MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.DeepSkyBlue);
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;

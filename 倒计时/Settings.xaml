@@ -5,6 +5,9 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:夏日="using:夏日"
     xmlns:models="using:夏日.Models"
     xmlns:media="using:Windows.UI.Xaml.Media"
@@ -38,7 +41,7 @@
                    Grid.Column="0" 
                    VerticalAlignment="Top"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="20,30,0,0">
-        <PersonPicture x:Name="MyPersonPicture"
+            <PersonPicture x:Name="MyPersonPicture"
                        Width="110"
                        Height="110"
                        ToolTipService.ToolTip="点击更换头像"
@@ -49,7 +52,7 @@
                        />
             <StackPanel Margin="20,16,0,0">
                 <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
+                    <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
                     <TextBlock x:Name="PersonalNickName" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="游客" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">

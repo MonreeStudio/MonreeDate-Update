@@ -36,9 +36,7 @@ namespace 倒计时
     {
         public static MainPage Current;
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
         public bool SelectedPage { get; set; }
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -56,8 +54,9 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             SetThemeColor();
-            
         }
+
+       
 
         public void SetThemeColor()
         {
@@ -69,8 +68,8 @@ namespace 倒计时
                     TC.Color = Colors.CornflowerBlue;
                     
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;
@@ -89,6 +88,7 @@ namespace 倒计时
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.RegisterBackgroundTask();
+            
         }
 
         private async void RegisterBackgroundTask()
@@ -205,6 +205,7 @@ namespace 倒计时
 
         private bool On_BackRequested()
         {
+
             if (!ContentFrame.CanGoBack)
                 return false;
 
@@ -240,8 +241,13 @@ namespace 倒计时
                 MyNav_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
             }
         }
-        private void On_Navigated(object sender, NavigationEventArgs e)
+        private async void On_Navigated(object sender, NavigationEventArgs e)
         {
+            if (localSettings.Values["FirstlyOpen"] == null)
+            { 
+                await MyCD.ShowAsync();
+                localSettings.Values["FirstlyOpen"] = "false";
+            }
             MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
             if (ContentFrame.SourcePageType == typeof(Settings))

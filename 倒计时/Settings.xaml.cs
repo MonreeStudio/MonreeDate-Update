@@ -83,8 +83,8 @@ namespace 倒计时
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 0;
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 1;
                     break;
@@ -441,7 +441,7 @@ namespace 倒计时
                     SetThemeColor();
                     break;
                 case 1:
-                    localSettings.Values["ThemeColor"] = "SkyBlue";
+                    localSettings.Values["ThemeColor"] = "DeepSkyBlue";
                     SetThemeColor();
                     break;
                 case 2:

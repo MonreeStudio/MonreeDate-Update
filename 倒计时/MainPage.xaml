@@ -5,6 +5,7 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     x:Name="MPage"
@@ -46,6 +47,12 @@
             </ScrollViewer>
         </NavigationView>
 
+        <ContentDialog x:Name="MyCD" 
+                       CornerRadius="10"
+                       Title="此版本的新功能！"
+                       PrimaryButtonText="确定"
+                       DefaultButton="Primary">
+        </ContentDialog>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
