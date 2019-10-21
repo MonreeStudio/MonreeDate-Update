@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:models="using:倒计时.Models"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     x:Name="MPage"
@@ -14,7 +15,7 @@
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
-        <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor" />
+        <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor"/>
     </Page.Resources>
     
     <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
@@ -32,7 +33,7 @@
                         >
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="首页"/>
-                <NavigationViewItemSeparator  />
+                <NavigationViewItemSeparator />
                 <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
                 <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
@@ -51,7 +52,33 @@
                        CornerRadius="10"
                        Title="此版本的新功能！"
                        PrimaryButtonText="确定"
-                       DefaultButton="Primary">
+                       DefaultButton="Primary"
+                       Background="White">
+            <StackPanel>
+                <TextBlock x:Name="Version"/>
+                <controls:Carousel x:Name="CarouselControl"
+                                   InvertPositive="True"
+                                   ItemDepth="300"
+                                   ItemMargin="0"
+                                   ItemRotationX="0"
+                                   ItemRotationY="45"
+                                   ItemRotationZ ="0"
+                                   Orientation="Horizontal"
+                                   SelectedIndex="0"
+                                   SelectionChanged="CarouselControl_SelectionChanged"
+                                   ItemsSource="{x:Bind ViewModel.IntroImage}">
+                    <controls:Carousel.EasingFunction>
+                        <CubicEase EasingMode="EaseOut" />
+                    </controls:Carousel.EasingFunction>
+                    <controls:Carousel.ItemTemplate>
+                        <DataTemplate x:DataType="models:IntroPage">
+                            <Image  Height="290" Width="1000" VerticalAlignment="Center" Source="{x:Bind coverImage}" Stretch="Uniform" />
+                        </DataTemplate>
+                    </controls:Carousel.ItemTemplate>
+                </controls:Carousel>
+                <TextBlock x:Name="FlowTip" Text="(滑动查看)" FontSize="18" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="CDT" Text="1/4" FontSize="18" HorizontalAlignment="Center" />
+            </StackPanel>
         </ContentDialog>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

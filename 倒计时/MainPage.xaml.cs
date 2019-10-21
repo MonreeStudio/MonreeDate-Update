@@ -23,6 +23,8 @@ using Windows.ApplicationModel.Background;
 using Windows.UI.Notifications;
 using 夏日.Models;
 using Microsoft.Toolkit.Uwp.Notifications;
+using 倒计时.Models;
+using Windows.ApplicationModel;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -37,6 +39,7 @@ namespace 倒计时
         public static MainPage Current;
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public bool SelectedPage { get; set; }
+        public IntroPageViewModel ViewModel = new IntroPageViewModel();
         public MainPage()
         {
             this.InitializeComponent();
@@ -54,6 +57,7 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             SetThemeColor();
+            GetAppVersion();
         }
 
        
@@ -243,6 +247,7 @@ namespace 倒计时
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
+            localSettings.Values["FirstlyOpen"] = null;
             if (localSettings.Values["FirstlyOpen"] == null)
             { 
                 await MyCD.ShowAsync();
@@ -267,6 +272,21 @@ namespace 倒计时
                 // MyNav.Header =
                 //   ((NavigationViewItem)MyNav.SelectedItem)?.Content?.ToString();
             }
+        }
+
+        private void CarouselControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CDT.Text = (CarouselControl.SelectedIndex + 1).ToString()+"/4";
+        }
+
+        private void GetAppVersion()
+        {
+            string appVersion = string.Format("版本： {0}.{1}.{2}.{3}",
+                    Package.Current.Id.Version.Major,
+                    Package.Current.Id.Version.Minor,
+                    Package.Current.Id.Version.Build,
+                    Package.Current.Id.Version.Revision);
+            Version.Text = appVersion;
         }
     }
 }

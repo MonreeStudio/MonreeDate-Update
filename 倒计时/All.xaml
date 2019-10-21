@@ -17,7 +17,7 @@
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
     </Page.Resources>
-    
+
     <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <RelativePanel x:FieldModifier="Public">
             <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,34,0,0" VerticalAlignment="Center" Width="Auto"/>
@@ -51,7 +51,7 @@
             </StackPanel>
         </ContentDialog>
         <GridView FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded" animations:ReorderGridAnimation.Duration="273">
-            
+
             <GridView.ContextFlyout>
                 <MenuFlyout x:Name="MyMenuFlyout">
                     <MenuFlyoutItem x:Name="SetTop" Text="置顶" Visibility="Visible" Click="SetTop_Click"/>
@@ -65,11 +65,11 @@
                 </MenuFlyout>
             </GridView.ContextFlyout>
             <GridView.ItemTemplate>
-                <DataTemplate x:DataType="local:CustomData">
+                <DataTemplate x:DataType="local:CustomData" x:Name="gw">
                     <StackPanel x:Name="GridViewStackPanel" CornerRadius="15" Background="{x:Bind Str4}" Height="250" Width="225">
-                        <TextBlock x:Name="aa" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                        <TextBlock x:Name="bb" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
-                        <TextBlock x:Name="cc" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                        <TextBlock TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                        <TextBlock HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>

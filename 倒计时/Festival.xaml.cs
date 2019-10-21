@@ -27,7 +27,7 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Festival : Page
     {
-        public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        private double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static Festival Current;
         public string str1, str2, str3;
         public Color str4;

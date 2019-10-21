@@ -80,7 +80,7 @@ namespace 夏日
             MyEllipse.Fill = All.Current.str4;
         }
 
-        public Color GetColor(string hex)
+        public static Color GetColor(string hex)
         {
             hex = hex.Replace("#", string.Empty);
             byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));

@@ -47,7 +47,7 @@ namespace 倒计时
         public string str1, str2, str3;
         public AcrylicBrush str4;
         public Color BgsColor;
-        public double MyNavCMTW = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        private double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
 
         public static All Current;
         public string Model_event;
@@ -775,7 +775,7 @@ namespace 倒计时
             return Color.FromArgb(a, r, g, b);
         }
 
-        public void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        public static void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴

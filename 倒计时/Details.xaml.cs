@@ -51,7 +51,7 @@ namespace 倒计时
             }
         }
 
-        public AcrylicBrush ColorfulBrush(Color temp)
+        public static AcrylicBrush ColorfulBrush(Color temp)
         {
             AcrylicBrush myBrush = new AcrylicBrush();
             myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
