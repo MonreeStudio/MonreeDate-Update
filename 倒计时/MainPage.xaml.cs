@@ -247,7 +247,7 @@ namespace 倒计时
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
-            localSettings.Values["FirstlyOpen"] = null;
+            //localSettings.Values["FirstlyOpen"] = null;
             if (localSettings.Values["FirstlyOpen"] == null)
             { 
                 await MyCD.ShowAsync();
@@ -287,6 +287,12 @@ namespace 倒计时
                     Package.Current.Id.Version.Build,
                     Package.Current.Id.Version.Revision);
             Version.Text = appVersion;
+        }
+
+        private async void MyCD_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
+            await Launcher.LaunchUriAsync(Uri);
         }
     }
 }

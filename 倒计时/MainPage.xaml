@@ -52,11 +52,15 @@
                        CornerRadius="10"
                        Title="此版本的新功能！"
                        PrimaryButtonText="确定"
+                       SecondaryButtonText="好评鼓励！"
+                       SecondaryButtonClick="MyCD_SecondaryButtonClick"
                        DefaultButton="Primary"
                        Background="White">
+            <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version"/>
-                <controls:Carousel x:Name="CarouselControl"
+                    <TextBlock Text="1、首页进行了动画优化；&#x0a;2、新增固定日程到开始菜单的操作，使用方法如下图所示；&#x0a;   （省电模式下磁贴可能无法更新）&#x0a;3、节日页面日期更新为下一年日期；&#x0a;4、修复了一些bug；&#x0a;5、优化了用户体验……" TextWrapping="WrapWholeWords"  Margin="0,10,0,10"/>
+                    <controls:Carousel x:Name="CarouselControl"
                                    InvertPositive="True"
                                    ItemDepth="300"
                                    ItemMargin="0"
@@ -78,7 +82,9 @@
                 </controls:Carousel>
                 <TextBlock x:Name="FlowTip" Text="(滑动查看)" FontSize="18" HorizontalAlignment="Center"/>
                 <TextBlock x:Name="CDT" Text="1/4" FontSize="18" HorizontalAlignment="Center" />
-            </StackPanel>
+                    <TextBlock Text="开发者的话：&#x0a;因开发者个人精力有限，无法精细地排除bug，若应用出现崩溃等情况，敬请您反馈情况，以便于后期修复，改善体验，谢谢！还有一点，不少用户想要固定日程在桌面的功能，但由于UWP平台的限制，此功能暂时无法实现，所以此次更新推出了固定日程到开始菜单的操作，您只需打开开始菜单，便可查看您的重要日程。" TextWrapping="WrapWholeWords" Margin="10"/>
+                </StackPanel>
+            </ScrollViewer>
         </ContentDialog>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

@@ -140,7 +140,7 @@
                 <TextBlock x:Name="Version" Margin="10,10,0,5" />
                 <TextBlock x:Name="SystemVersion" Margin="10,0,0,5" />
                 <TextBlock x:Name="Platform" Margin="10,0,0,10"/>
-                <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。" 
+                    <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
             TextWrapping="Wrap" Margin="10"/>
                 <Image Source="Assets/03.png" Width="350" Height="350"/>
                 <TextBlock Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
