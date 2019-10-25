@@ -50,7 +50,7 @@
 
         <ContentDialog x:Name="MyCD" 
                        CornerRadius="10"
-                       Title="此版本的新功能！"
+                       Title="新功能！"
                        PrimaryButtonText="确定"
                        SecondaryButtonText="好评鼓励！"
                        SecondaryButtonClick="MyCD_SecondaryButtonClick"
@@ -59,7 +59,8 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version"/>
-                    <TextBlock Text="1、首页进行了动画优化；&#x0a;2、新增固定日程到开始菜单的操作，使用方法如下图所示；&#x0a;   （省电模式下磁贴可能无法更新）&#x0a;3、节日页面日期更新为下一年日期；&#x0a;4、修复了一些bug；&#x0a;5、优化了用户体验……" TextWrapping="WrapWholeWords"  Margin="0,10,0,10"/>
+                    <TextBlock Text="1、修复了更改日程信息后，置顶日程的置顶失效的问题；&#x0a;2、修复了在没有选中日程的情况下右键菜单可用的问题；&#x0a;3、细节优化……" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="上一版本：2.1.2.0&#x0a;1、首页进行了动画优化；&#x0a;2、新增固定日程到开始菜单的操作，使用方法如下图所示；&#x0a;   （省电模式下磁贴可能无法更新）&#x0a;3、节日页面日期更新为下一年日期；&#x0a;4、修复了一些bug；&#x0a;5、优化了用户体验……" TextWrapping="WrapWholeWords"  Margin="0,0,0,10"/>
                     <controls:Carousel x:Name="CarouselControl"
                                    InvertPositive="True"
                                    ItemDepth="300"

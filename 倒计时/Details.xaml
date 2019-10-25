@@ -8,6 +8,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource CustomAcrylicBackgroundBrush}">
 
@@ -70,6 +71,8 @@
                        IsTapEnabled="True"
                        ToolTipService.ToolTip="点击切换显示模式（天数/年月日）"
                        Tapped="DetailsDate_Tapped"
+                       PointerEntered="DetailsDate_PointerEntered"
+                       PointerExited="DetailsDate_PointerExited"
                        >
                 <interactivity:Interaction.Behaviors>
                     <behaviors:Light x:Name="LightBehavior"

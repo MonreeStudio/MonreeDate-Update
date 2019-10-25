@@ -19,12 +19,13 @@ namespace 夏日
     /// </summary>
     public sealed partial class EditDetails : Page
     {
-        public string _Event;
-        public string _PickDate;
-        public string _Date;
-        public string _Color;
-        public double _TintOpacity;
-        public string tempDate;
+        private string _Event;
+        private string _PickDate;
+        private string _Date;
+        private string _Color;
+        private double _TintOpacity;
+        private string tempDate;
+        private string _isTop;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public EditDetails()
@@ -65,6 +66,7 @@ namespace 夏日
             List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", App.AllItem.Str1);
             foreach (var item in datalist)
             {
+                _isTop = item.IsTop;
                 AddEvent.Text = item.Schedule_name;
                 _Event = item.Schedule_name;
                 Add_Picker.Date = Convert.ToDateTime(item.Date);
@@ -126,7 +128,7 @@ namespace 夏日
                     All.Current.conn.Execute("delete from DataTemple where Schedule_name = ?", All.Current.str1);
                     All.Current.ViewModel.CustomDatas.Remove(App.AllItem);
 
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0", AddTime = "" });
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = _isTop, AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
 
                     All.Current.NewTB.Visibility = Visibility.Collapsed;

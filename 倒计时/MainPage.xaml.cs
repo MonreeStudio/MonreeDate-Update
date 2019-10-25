@@ -281,7 +281,7 @@ namespace 倒计时
 
         private void GetAppVersion()
         {
-            string appVersion = string.Format("版本： {0}.{1}.{2}.{3}",
+            string appVersion = string.Format("此版本： {0}.{1}.{2}.{3}",
                     Package.Current.Id.Version.Major,
                     Package.Current.Id.Version.Minor,
                     Package.Current.Id.Version.Build,

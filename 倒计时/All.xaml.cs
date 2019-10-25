@@ -320,20 +320,20 @@ namespace 倒计时
                 {
                     
                     if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                 }
                 if (datalist0.Count() == 0)
                 {
                     foreach (var item in datalist1)
                     {
                         if (item.CalculatedDate == "就在今天")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                         else
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                     }
                     foreach (var item in datalist2)
                     {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                     }
                 }
                 else
@@ -341,12 +341,12 @@ namespace 倒计时
                     foreach (var item in datalist1)
                     {
                         if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                     }
                     foreach (var item in datalist2)
                     {
                         if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                     }
                 }
             }
@@ -355,18 +355,17 @@ namespace 倒计时
                 foreach (var item in datalist0)
                 {
                     if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                 }
                 if (datalist0.Count() == 0)
                 {
                     foreach (var item in datalist1)
                     {
-
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)}) ;
                     }
                     foreach (var item in datalist2)
                     {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)}) ;
                     }
                 }
                 else
@@ -374,12 +373,12 @@ namespace 倒计时
                     foreach (var item in datalist1)
                     {
                         if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                     }
                     foreach (var item in datalist2)
                     {
                         if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor)});
                     }
                 }
             }
@@ -556,39 +555,44 @@ namespace 倒计时
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
             List<DataTemple> toplist = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
             AllItem = _item;
-            if (localSettings.Values["mainTile"].ToString().Equals(AllItem.Str1))
+            if (AllItem != null)
             {
-                PinToSC.Visibility = Visibility.Collapsed;
-                unPinToSC.Visibility = Visibility.Collapsed;
-                MainTile.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                MainTile.Visibility = Visibility.Collapsed;
-                bool isPinned = SecondaryTile.Exists(AllItem.Str1);
-                if (!isPinned)
+                if (localSettings.Values["mainTile"] == null)
+                    localSettings.Values["mainTile"] = "";
+                if (localSettings.Values["mainTile"].ToString().Equals(AllItem.Str1))
                 {
-                    PinToSC.Visibility = Visibility.Visible;
+                    PinToSC.Visibility = Visibility.Collapsed;
                     unPinToSC.Visibility = Visibility.Collapsed;
-                    localSettings.Values[AllItem.Str1] = "unpined";
+                    FS2.Visibility = Visibility.Visible;
+                    MainTile.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    if (isPinned && localSettings.Values["mainTile"].ToString() != AllItem.Str1)
+                    MainTile.Visibility = Visibility.Collapsed;
+                    bool isPinned = SecondaryTile.Exists(AllItem.Str1);
+                    if (!isPinned)
                     {
-                        PinToSC.Visibility = Visibility.Collapsed;
-                        unPinToSC.Visibility = Visibility.Visible;
+                        PinToSC.Visibility = Visibility.Visible;
+                        FS2.Visibility = Visibility.Visible;
+                        unPinToSC.Visibility = Visibility.Collapsed;
+                        localSettings.Values[AllItem.Str1] = "unpined";
                     }
                     else
                     {
-                        PinToSC.Visibility = Visibility.Visible;
-                        unPinToSC.Visibility = Visibility.Collapsed;
+                        if (isPinned && localSettings.Values["mainTile"].ToString() != AllItem.Str1)
+                        {
+                            PinToSC.Visibility = Visibility.Collapsed;
+                            unPinToSC.Visibility = Visibility.Visible;
+                            FS2.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            PinToSC.Visibility = Visibility.Visible;
+                            unPinToSC.Visibility = Visibility.Collapsed;
+                            FS2.Visibility = Visibility.Visible;
+                        }
                     }
                 }
-            }
-            
-            if (AllItem != null)
-            {
                 MyFlyout.IsEnabled = true;
                 if (toplist.Count() == 0)
                 {
@@ -623,7 +627,11 @@ namespace 倒计时
             else
             {
                 MyFlyout.IsEnabled = false;
+                MainTile.Visibility = Visibility.Collapsed;
                 FS.Visibility = Visibility.Collapsed;
+                FS2.Visibility = Visibility.Collapsed;
+                PinToSC.Visibility = Visibility.Collapsed;
+                unPinToSC.Visibility = Visibility.Collapsed;
                 SetTop.Visibility = Visibility.Collapsed;
                 Cancel.Visibility = Visibility.Collapsed;
             }
