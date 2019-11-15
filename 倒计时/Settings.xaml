@@ -5,6 +5,9 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:夏日="using:夏日"
     xmlns:models="using:夏日.Models"
     xmlns:media="using:Windows.UI.Xaml.Media"
@@ -38,18 +41,20 @@
                    Grid.Column="0" 
                    VerticalAlignment="Top"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="20,30,0,0">
-        <PersonPicture x:Name="MyPersonPicture"
+            <PersonPicture x:Name="MyPersonPicture"
                        Width="110"
                        Height="110"
                        ToolTipService.ToolTip="点击更换头像"
                        Grid.Row="0" Grid.RowSpan="5" Grid.Column="0"
                        HorizontalAlignment="Left"
-                       ProfilePicture="Assets//默认头像2.jpg"
+                       
                        Tapped="MyPersonPicture_Tapped"
+                       PointerEntered="MyPersonPicture_PointerEntered"
+                       PointerExited="MyPersonPicture_PointerExited"
                        />
             <StackPanel Margin="20,16,0,0">
                 <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
+                    <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
                     <TextBlock x:Name="PersonalNickName" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="游客" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -69,6 +74,7 @@
         <Button Content="编辑个人信息"
                 x:Name="EditButton"
                 Height="40"
+                CornerRadius="8"
                 Grid.Row="1"
                 Grid.Column="1"
                 Foreground="White"
@@ -76,22 +82,26 @@
                 BorderThickness="2"
                 Style="{StaticResource ButtonRevealStyle}" 
                 Click="Button_Click"/>
+        <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
         <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
                       Header="主页背景亚克力模糊效果"
-                      Grid.Row="2"
-                      Grid.Column="0"
-                      Margin="20,10,0,0"
                       HorizontalAlignment="Left"
-                      VerticalAlignment="Bottom"
                       x:Name="AllPageAcylic"
                       x:FieldModifier="public"
                       OnContent="开"
                       OffContent="关"
                       Foreground="{x:Bind TC}"
-                      Toggled="AllPageAcylic_Toggled"
-                      
-                      />
-        <StackPanel Grid.Row="3" Margin="20" VerticalAlignment="Top">
+                      Toggled="AllPageAcylic_Toggled"/>
+        <ToggleSwitch x:Name="AllPersonPicture"
+                      Header="主页显示头像"
+                      Margin="0,5,0,0"
+                      HorizontalAlignment="Left"
+                      OnContent="开"
+                      OffContent="关"
+                      Foreground="{x:Bind TC}"
+                      Toggled="AllPersonPicture_Toggled"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Margin="20,0,0,0" VerticalAlignment="Top">
             <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
             <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
@@ -136,7 +146,7 @@
                 <TextBlock x:Name="Version" Margin="10,10,0,5" />
                 <TextBlock x:Name="SystemVersion" Margin="10,0,0,5" />
                 <TextBlock x:Name="Platform" Margin="10,0,0,10"/>
-                <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。" 
+                    <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
             TextWrapping="Wrap" Margin="10"/>
                 <Image Source="Assets/03.png" Width="350" Height="350"/>
                 <TextBlock Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
@@ -164,8 +174,6 @@
                 Click="AboutButton_Click"
                 >
         </Button>
-        
-       
 
         <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
 
@@ -182,5 +190,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
     </Grid>
 </Page>

@@ -21,8 +21,9 @@
                    FontSize="28"
                    Foreground="{x:Bind TC}" />
         <StackPanel>
-        <TextBlock Text="日程名称" Margin="20,0,0,10" FontSize="20"/>
-        <TextBox x:Name="AddEvent"
+            <TextBlock Text="提示：若该日程已被固定到开始菜单，则更改信息后需重新固定。" TextTrimming="Clip" Margin="20,5,0,10" FontSize="15" Foreground="Gray"/>
+            <TextBlock Text="日程名称" Margin="20,0,0,10" FontSize="20"/>
+            <TextBox x:Name="AddEvent"
                  CornerRadius="8"
                  BorderBrush="{x:Bind TC}"
                  HorizontalAlignment="Left"
@@ -54,6 +55,16 @@
                     Background="{x:Bind TC}"
                     Click="BgsButton_Click"/>
             <Ellipse x:Name="MyEllipse" Height="20" Width="20" Margin="10" Fill="Transparent" StrokeThickness="0"/>
+        </StackPanel>
+        <StackPanel Margin="20,50,0,0" Orientation="Horizontal">
+            <Button Content="备注"
+                x:Name="TipButton"
+                Foreground="White"
+                Background="{x:Bind TC}"
+                HorizontalAlignment="Left"
+                CornerRadius="15"
+                Click="TipButton_Click"/>
+            <TextBlock x:Name="TTB" Margin="10,0,0,0" Width="200" FontSize="15" Foreground="Gray" TextWrapping="Wrap" VerticalAlignment="Top"/>
         </StackPanel>
         <Button Content="确认修改"
                 x:Name="UpdateButton"
@@ -96,13 +107,25 @@
                         TickPlacement="Outside" />
             </StackPanel>
         </ContentDialog>
-
+        <ContentDialog x:Name="TipDialog"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       Title="添加备注"
+                       PrimaryButtonText="确定"
+                       CloseButtonText="取消"
+                       DefaultButton="Primary"
+                       CornerRadius="10"
+                       Background="White"
+                       PrimaryButtonClick="TipDialog_PrimaryButtonClick"
+                       CloseButtonClick="TipDialog_CloseButtonClick">
+            <TextBox x:Name="TipTextbox" Margin="10" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="10"/>
+        </ContentDialog>
+        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger
-                        MinWindowWidth="{x:Bind MinMyNav}"/>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind MinMyNav}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="title.Margin" Value="20"/>

@@ -27,7 +27,7 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Festival : Page
     {
-        public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        private double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static Festival Current;
         public string str1, str2, str3;
         public Color str4;
@@ -50,8 +50,8 @@ namespace 倒计时
                 case "CornflowerBlue":
                     TC.Color = Colors.CornflowerBlue;
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;

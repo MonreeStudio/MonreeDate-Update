@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,6 +30,7 @@ namespace 倒计时
     {
         public static Details Current;
         private bool sp;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Details()
         {
             this.InitializeComponent();
@@ -38,7 +43,8 @@ namespace 倒计时
                 DetailsDate.Text = App.AllItem.Str2;
                 DetailsGrid.Background = App.AllItem.Str4;
                 DetailsDate.Foreground = new SolidColorBrush(App.AllItem.BackGroundColor);
-
+                if (localSettings.Values[App.AllItem.Str1] != null)
+                    TipText.Text = localSettings.Values[App.AllItem.Str1].ToString();
             }
             else
             {
@@ -48,10 +54,11 @@ namespace 倒计时
                 DetailsPickedDate.Text = App.FestivalItem.Str3;
                 DetailsGrid.Background =  ColorfulBrush(App.FestivalItem.Str4);
                 DetailsDate.Foreground = new SolidColorBrush(App.FestivalItem.Str4);
+                TipText.Text = "节日";
             }
         }
 
-        public AcrylicBrush ColorfulBrush(Color temp)
+        public static AcrylicBrush ColorfulBrush(Color temp)
         {
             AcrylicBrush myBrush = new AcrylicBrush();
             myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
@@ -115,6 +122,18 @@ namespace 倒计时
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(EditDetails));
+        }
+
+        private void DetailsDate_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+            DetailsDate.FontSize = 58;
+        }
+
+        private void DetailsDate_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            DetailsDate.FontSize = 48;
         }
     }
 }

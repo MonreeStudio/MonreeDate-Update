@@ -34,6 +34,7 @@ namespace 倒计时
         private string _Date { get; set; }
         private string _Color { get; set; }
         private double _TintOpacity { get; set; }
+        private string _Tip { get; set; }
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Add()
         {  
@@ -42,6 +43,7 @@ namespace 倒计时
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             _TintOpacity = 0;
             _Color = "";
+            _Tip = "";
             SetThemeColor();
         }
 
@@ -54,8 +56,8 @@ namespace 倒计时
                 case "CornflowerBlue":
                     TC.Color = Colors.CornflowerBlue;
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;
@@ -128,6 +130,7 @@ namespace 倒计时
                 {
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0",AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
+                    localSettings.Values[_event] = _Tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
@@ -187,6 +190,22 @@ namespace 倒计时
             byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
             byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
             return Color.FromArgb(a, r, g, b);
+        }
+
+        private async void TipButton_Click(object sender, RoutedEventArgs e)
+        {
+            await TipDialog.ShowAsync();
+        }
+
+        private void TipDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            _Tip = TipTextbox.Text;
+            TTB.Text = _Tip;
+        }
+
+        private void TipDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            
         }
     }
 }

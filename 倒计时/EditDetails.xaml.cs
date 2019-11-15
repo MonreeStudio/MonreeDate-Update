@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -18,12 +19,14 @@ namespace 夏日
     /// </summary>
     public sealed partial class EditDetails : Page
     {
-        public string _Event;
-        public string _PickDate;
-        public string _Date;
-        public string _Color;
-        public double _TintOpacity;
-        public string tempDate;
+        private string _Event;
+        private string _PickDate;
+        private string _Date;
+        private string _Color;
+        private double _TintOpacity;
+        private string tempDate;
+        private string _isTop;
+        private string _tip;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public EditDetails()
@@ -42,8 +45,8 @@ namespace 夏日
                 case "CornflowerBlue":
                     TC.Color = Colors.CornflowerBlue;
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;
@@ -64,6 +67,7 @@ namespace 夏日
             List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", App.AllItem.Str1);
             foreach (var item in datalist)
             {
+                _isTop = item.IsTop;
                 AddEvent.Text = item.Schedule_name;
                 _Event = item.Schedule_name;
                 Add_Picker.Date = Convert.ToDateTime(item.Date);
@@ -74,12 +78,23 @@ namespace 夏日
                 _TintOpacity = item.TintOpacity;
                 MySlider.Value = item.TintOpacity*100;
             }
+            if (localSettings.Values[All.Current.str1] != null)
+            {
+                TipTextbox.Text = localSettings.Values[All.Current.str1].ToString();
+                _tip = localSettings.Values[All.Current.str1].ToString();
+                TTB.Text = _tip;
+            }
+            else
+            {
+                TipTextbox.Text = "";
+                _tip = "";
+            }
             AddEvent.Text = All.Current.str1;
             Add_Picker.Date = Convert.ToDateTime(All.Current.str3);
             MyEllipse.Fill = All.Current.str4;
         }
 
-        public Color GetColor(string hex)
+        public static Color GetColor(string hex)
         {
             hex = hex.Replace("#", string.Empty);
             byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
@@ -125,9 +140,9 @@ namespace 夏日
                     All.Current.conn.Execute("delete from DataTemple where Schedule_name = ?", All.Current.str1);
                     All.Current.ViewModel.CustomDatas.Remove(App.AllItem);
 
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0", AddTime = "" });
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = _isTop, AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
-
+                    localSettings.Values[_event] = _tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
@@ -142,6 +157,12 @@ namespace 夏日
                         All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date, Str4 = All.Current.ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
                     return;
+                }
+                bool isPinned = SecondaryTile.Exists(All.Current.str1);
+                if (isPinned)
+                {
+                    SecondaryTile toBeDeleted = new SecondaryTile(All.Current.str1);
+                    await toBeDeleted.RequestDeleteAsync();
                 }
                 MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                 Frame.Navigate(typeof(All));
@@ -185,6 +206,22 @@ namespace 夏日
                     s2 = "就在今天";
             }
             return s2;
+        }
+
+        private async void TipButton_Click(object sender, RoutedEventArgs e)
+        {
+            await TipDialog.ShowAsync();
+        }
+
+        private void TipDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+           
+        }
+
+        private void TipDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            _tip = TipTextbox.Text;
+            TTB.Text = _tip;
         }
     }
 }

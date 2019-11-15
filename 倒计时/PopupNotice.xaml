@@ -5,12 +5,13 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <UserControl.Resources>
-
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <Storyboard x:Name="PopupIn">
             <DoubleAnimation From="0"
                              To="1"
@@ -61,8 +62,9 @@
 
     <Grid>
 
-        <StackPanel Background="CornflowerBlue"
+        <StackPanel Background="{x:Bind TC}"
                     Padding="10"
+                    CornerRadius="8"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Name="PopupContainer"
@@ -76,7 +78,6 @@
             <TextBlock Name="PopupContent" Foreground="White"></TextBlock>
 
         </StackPanel>
-
 
     </Grid>
 </UserControl>

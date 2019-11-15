@@ -23,6 +23,8 @@ using Windows.ApplicationModel.Background;
 using Windows.UI.Notifications;
 using 夏日.Models;
 using Microsoft.Toolkit.Uwp.Notifications;
+using 倒计时.Models;
+using Windows.ApplicationModel;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -36,9 +38,8 @@ namespace 倒计时
     {
         public static MainPage Current;
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
         public bool SelectedPage { get; set; }
-
+        public IntroPageViewModel ViewModel = new IntroPageViewModel();
         public MainPage()
         {
             this.InitializeComponent();
@@ -56,7 +57,10 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             SetThemeColor();
+            GetAppVersion();
         }
+
+       
 
         public void SetThemeColor()
         {
@@ -66,9 +70,10 @@ namespace 倒计时
             {
                 case "CornflowerBlue":
                     TC.Color = Colors.CornflowerBlue;
+                    
                     break;
-                case "SkyBlue":
-                    TC.Color = Colors.SkyBlue;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;
@@ -87,6 +92,7 @@ namespace 倒计时
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.RegisterBackgroundTask();
+            
         }
 
         private async void RegisterBackgroundTask()
@@ -203,6 +209,7 @@ namespace 倒计时
 
         private bool On_BackRequested()
         {
+
             if (!ContentFrame.CanGoBack)
                 return false;
 
@@ -238,8 +245,14 @@ namespace 倒计时
                 MyNav_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
             }
         }
-        private void On_Navigated(object sender, NavigationEventArgs e)
+        private async void On_Navigated(object sender, NavigationEventArgs e)
         {
+            //localSettings.Values["FirstlyOpen"] = null;
+            if (localSettings.Values["FirstlyOpen"] == null)
+            { 
+                await MyCD.ShowAsync();
+                localSettings.Values["FirstlyOpen"] = "false";
+            }
             MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
             if (ContentFrame.SourcePageType == typeof(Settings))
@@ -259,6 +272,27 @@ namespace 倒计时
                 // MyNav.Header =
                 //   ((NavigationViewItem)MyNav.SelectedItem)?.Content?.ToString();
             }
+        }
+
+        private void CarouselControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CDT.Text = (CarouselControl.SelectedIndex + 1).ToString()+"/4";
+        }
+
+        private void GetAppVersion()
+        {
+            string appVersion = string.Format("此版本： {0}.{1}.{2}.{3}",
+                    Package.Current.Id.Version.Major,
+                    Package.Current.Id.Version.Minor,
+                    Package.Current.Id.Version.Build,
+                    Package.Current.Id.Version.Revision);
+            Version.Text = appVersion;
+        }
+
+        private async void MyCD_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
+            await Launcher.LaunchUriAsync(Uri);
         }
     }
 }
