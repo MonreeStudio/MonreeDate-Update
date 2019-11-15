@@ -60,7 +60,7 @@
         <TextBlock x:Name="TipText"
                    Text=""
                    FontSize="20"
-                   Margin="100,0,100,10"
+                   Margin="50,0,50,0"
                    TextWrapping="WrapWholeWords"
                    Foreground="White"
                    TextAlignment="Center"

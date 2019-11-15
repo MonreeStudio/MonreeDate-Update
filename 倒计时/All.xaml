@@ -37,7 +37,7 @@
 
         <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" Margin="10,0,0,0"/>
         <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="{x:Bind TC}" FontSize="30" FontFamily="FZShuTi" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
-        <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" />
+        <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" Margin="0,0,0,20"/>
         <TextBlock x:Name="MarginText" x:FieldModifier="public" Height="30"/>
         <ContentDialog x:Name="DeleteDialog"
                        Title="确定删除该日程吗?"

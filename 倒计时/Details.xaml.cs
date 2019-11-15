@@ -43,8 +43,8 @@ namespace 倒计时
                 DetailsDate.Text = App.AllItem.Str2;
                 DetailsGrid.Background = App.AllItem.Str4;
                 DetailsDate.Foreground = new SolidColorBrush(App.AllItem.BackGroundColor);
-                if (localSettings.Values[App.AllItem.Str1] != null)
-                    TipText.Text = localSettings.Values[App.AllItem.Str1].ToString();
+                if (localSettings.Values[App.AllItem.Str1+App.AllItem.Str3] != null)
+                    TipText.Text = localSettings.Values[App.AllItem.Str1 + App.AllItem.Str3].ToString();
             }
             else
             {

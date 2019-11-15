@@ -78,10 +78,10 @@ namespace 夏日
                 _TintOpacity = item.TintOpacity;
                 MySlider.Value = item.TintOpacity*100;
             }
-            if (localSettings.Values[All.Current.str1] != null)
+            if (localSettings.Values[All.Current.str1 + All.Current.str3] != null)
             {
-                TipTextbox.Text = localSettings.Values[All.Current.str1].ToString();
-                _tip = localSettings.Values[All.Current.str1].ToString();
+                TipTextbox.Text = localSettings.Values[All.Current.str1 + All.Current.str3].ToString();
+                _tip = localSettings.Values[All.Current.str1 + All.Current.str3].ToString();
                 TTB.Text = _tip;
             }
             else
@@ -142,7 +142,7 @@ namespace 夏日
 
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = _isTop, AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
-                    localSettings.Values[_event] = _tip;
+                    localSettings.Values[_event + _PickDate] = _tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
