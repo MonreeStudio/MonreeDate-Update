@@ -31,6 +31,9 @@ using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
 using Windows.Data.Xml.Dom;
 using Windows.UI.StartScreen;
+using Windows.UI.Core;
+using 倒计时.Models;
+using Windows.UI.Xaml.Media.Imaging;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -74,8 +77,31 @@ namespace 倒计时
             LoadDateData();
             LoadTile();
             SetThemeColor();
+            SetPersonPicture();
         }
 
+        private async void SetPersonPicture()
+        {
+            try
+            {
+                List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+                foreach (var item in datalist)
+                {
+                    try
+                    {
+                        MemoryStream stream = new MemoryStream(item.picture);
+                        BitmapImage bitmap = new BitmapImage();
+                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                        AllPicture.ProfilePicture = bitmap;
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+            catch { }
+        }
         private void SetThemeColor()
         {
             if (localSettings.Values["ThemeColor"] == null)
@@ -150,8 +176,7 @@ namespace 倒计时
             }
 
             bool isPinned = SecondaryTile.Exists(_ScheduleName);
-            if(isPinned)
-            {
+            if(isPinned)            {
                 SecondaryTile toBeDeleted = new SecondaryTile(_ScheduleName);
                 await toBeDeleted.RequestDeleteAsync();
             }
@@ -402,6 +427,25 @@ namespace 倒计时
                     AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
                 }
             }
+            if (localSettings.Values["SetAllPersonPicture"] != null)
+            {
+                if (localSettings.Values["SetAllPersonPicture"].Equals(true))
+                {
+                    AllPicture.Visibility = Visibility.Visible;
+                    MarginText.Height = 30;
+                    TopText.Margin = new Thickness(0);
+                    MyProgressBar.Margin = new Thickness(0, 0, 0, 10);
+                }
+                else
+                {
+                    AllPicture.Visibility = Visibility.Collapsed;
+                    MarginText.Height = 50;
+                    TopText.Margin = new Thickness(0, 25, 0, 0);
+                    MyProgressBar.Margin = new Thickness(0);
+                }
+            }
+            else
+                AllPicture.Visibility = Visibility.Collapsed;
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
             foreach(var item in datalist)
             {
@@ -771,6 +815,26 @@ namespace 倒计时
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void GridViewStackPanel_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void GridViewStackPanel_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private void TopText_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void TopText_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
         }
 
         public Color GetColor(string hex)

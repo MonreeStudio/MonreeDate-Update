@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Platform.WinRT;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -21,6 +22,7 @@ using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Shell;
 using Windows.UI.StartScreen;
@@ -32,6 +34,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using 倒计时.Models;
 using 夏日.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -50,16 +53,22 @@ namespace 倒计时
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         private StorageFile Picture_file;//UWP 采用StorageFile来读写文件
-        public int index = 0;
         public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
         public Color color;
       //  private StorageFile sampleFile;
       //  private string filename = "sampleFile.dat";
         StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
+        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        public SQLite.Net.SQLiteConnection conn;
+
 
         public Settings()
         {
+            //建立数据库连接   
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<PersonPictures>(); //默认表名同范型参数  
             color = Colors.SkyBlue;
             this.InitializeComponent();
             Current = this;
@@ -70,8 +79,33 @@ namespace 倒计时
             GetSystemVersion();
             GetPlatform();
             SetThemeColor();
+            SetPersonPicture();
         }
 
+        private async void SetPersonPicture()
+        {
+            List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+            foreach (var item in datalist)
+            {
+                if (item != null)
+                {
+                    try
+                    {
+                        MemoryStream stream = new MemoryStream(item.picture);
+                        BitmapImage bitmap = new BitmapImage();
+
+                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                        MyPersonPicture.ProfilePicture = bitmap;
+                        All.Current.AllPicture.ProfilePicture = bitmap;
+
+                    }
+                    catch
+                    {
+                        //throw ex;
+                    }
+                }
+            }
+        }
         private void SetThemeColor()
         {
             if (localSettings.Values["ThemeColor"] == null)
@@ -124,6 +158,15 @@ namespace 倒计时
             else
                 AllPageAcylic.IsOn = true;
 
+            if (localSettings.Values["SetAllPersonPicture"] != null)
+            {
+                if (localSettings.Values["SetAllPersonPicture"].Equals(true))
+                    AllPersonPicture.IsOn = true;
+                else
+                    AllPersonPicture.IsOn = false;
+            }
+            else
+                AllPersonPicture.IsOn = false;
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
@@ -164,11 +207,6 @@ namespace 倒计时
             ulong v3 = (v & 0x00000000FFFF0000L) >> 16;
             ulong v4 = (v & 0x000000000000FFFFL);
             var reminder = $"{v1}.{v2}.{v3}.{v4}";
-            //Package package = Package.Current;
-            //reminder = package.Id.Architecture.ToString();
-            //reminder = package.DisplayName;
-            //EasClientDeviceInformation eas = new EasClientDeviceInformation();
-            //reminder = eas.SystemManufacturer;
             SystemVersion.Text = "系统版本：Windows "+ reminder;
         }
 
@@ -178,48 +216,41 @@ namespace 倒计时
             Platform.Text = "平台架构：" + package.Id.Architecture.ToString();
         }
 
-        private static async Task<BitmapImage> OpenWriteableBitmapFile(StorageFile file)
-        {
+        //private static async Task<BitmapImage> OpenWriteableBitmapFile(StorageFile file)
+        //{
 
-            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
-            {
-                //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                //WriteableBitmap image = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                //image.SetSource(stream);
+        //    using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+        //    {
+        //        var fileStream = await file.OpenReadAsync();
+        //        var bitmap = new BitmapImage();
+        //        await bitmap.SetSourceAsync(fileStream);
+        //        return bitmap;
+        //    }
+        //}
 
-                //return image;
+        //public static object GetSetting(string name)
+        //{
+        //    if (localSettings.Values.ContainsKey(name))
+        //    {
+        //        return localSettings.Values[name];
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
-                var fileStream = await file.OpenReadAsync();
-                var bitmap = new BitmapImage();
-                await bitmap.SetSourceAsync(fileStream);
-                return bitmap;
-                
-            }
-        }
-
-        public static object GetSetting(string name)
-        {
-            if (localSettings.Values.ContainsKey(name))
-            {
-                return localSettings.Values[name];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static void RemoveSetting(string name)
-        {
-            if (localSettings.Values.ContainsKey(name))
-            {
-                localSettings.Values.Remove(name);
-            }
-            else
-            {
-                //
-            }
-        }
+        //public static void RemoveSetting(string name)
+        //{
+        //    if (localSettings.Values.ContainsKey(name))
+        //    {
+        //        localSettings.Values.Remove(name);
+        //    }
+        //    else
+        //    {
+        //        //
+        //    }
+        //}
 
         private void OnSettingsPageLoaded(object sender, RoutedEventArgs e)
         {
@@ -229,8 +260,6 @@ namespace 倒计时
         private async void AboutButton_Click(object sender, RoutedEventArgs e)
         {
             await AboutContent.ShowAsync();
-            //MessageDialog AboutDialog = new MessageDialog("emmmmm\n...........");
-            //await AboutDialog.ShowAsync();
         }
 
         private void AllPageAcylic_Toggled(object sender, RoutedEventArgs e)
@@ -281,23 +310,17 @@ namespace 倒计时
             (sender as UIElement).StartAnimation(_springAnimation);
         }
 
-        private void element_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            // Scale back down to 1.0
-            CreateOrUpdateSpringAnimation(1.0f);
+        //private void element_PointerExited(object sender, PointerRoutedEventArgs e)
+        //{
+        //    // Scale back down to 1.0
+        //    CreateOrUpdateSpringAnimation(1.0f);
 
-            (sender as UIElement).StartAnimation(_springAnimation);
-        }
+        //    (sender as UIElement).StartAnimation(_springAnimation);
+        //}
 
-        // Gets the rectangle of the element 
 
         private async void MyPersonPicture_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MessageDialog AboutDialog = new MessageDialog("更换头像的功能正在紧急开发中，\n您依旧可以在本地选择头像，但暂时不会被保存。\n","非常抱歉！");
-            AboutDialog.Commands.Add(new UICommand("继续加油", cmd => { }, commandId: 0));
-            AboutDialog.Commands.Add(new UICommand("好的收到", cmd => { }, commandId: 1));
-            await AboutDialog.ShowAsync();
-            
             var srcImage = new BitmapImage();
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.Thumbnail;
@@ -313,9 +336,6 @@ namespace 倒计时
                 {
                     await srcImage.SetSourceAsync(stream);
                     await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-                    MyPersonPicture.ProfilePicture = srcImage;
-                    //localSettings.Values["PersonPicture"] = srcImage;
-
                 }
 
             }
@@ -334,38 +354,26 @@ namespace 倒计时
                 parameters.Add("CropWidthPixals", 300);
                 parameters.Add("CropHeightPixals", 300);
                 var result = await Launcher.LaunchUriForResultsAsync(new Uri("microsoft.windows.photos.crop:"), options, parameters);
-                //Guid bitmapEncoderGuid = BitmapEncoder.JpegEncoderId;
-                //using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
-                //{
-                //    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(bitmapEncoderGuid, stream);
-                //    WriteableBitmap bmp = new WriteableBitmap(srcImage.PixelWidth, srcImage.PixelHeight);
-                //    Stream pixelStream = bmp.PixelBuffer.AsStream();
-
-                //    byte[] pixels = new byte[pixelStream.Length];
-                //    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-
-                //    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                //              (uint)bmp.PixelWidth,
-                //              (uint)bmp.PixelHeight,
-                //              96.0,
-                //              96.0,
-                //              pixels);
-                //    await encoder.FlushAsync();
-                //}
-
-                if (result.Status == LaunchUriStatus.Success && result.Result != null)
+                if (result.Status.Equals(LaunchUriStatus.Success) && result.Result != null)
                 {
                     try
                     {
                         var stream = await destination.OpenReadAsync();
                         var bitmap = new BitmapImage();
-                        await bitmap.SetSourceAsync(stream);
-                        MyPersonPicture.ProfilePicture = bitmap;
-                        index++;
-
+                        using (var dataRender = new DataReader(stream))
+                        {
+                            if (stream.Size == 0)
+                                return;
+                            var imgBytes = new byte[stream.Size];
+                            await dataRender.LoadAsync((uint)stream.Size);
+                            dataRender.ReadBytes(imgBytes);
+                            List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+                            if (datalist != null)
+                                conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
+                            conn.Insert(new PersonPictures() { pictureName = "picture", picture = imgBytes });
+                            SetPersonPicture();
+                        }
                         await localFolder.CreateFileAsync("PersonPicture", CreationCollisionOption.ReplaceExisting);
-                        localSettings.Values["PersonPicture"] = bitmap;
-                      
                     }
                     catch (Exception ex)
                     {
@@ -459,6 +467,38 @@ namespace 倒计时
                 default:
                     break;
             }
+        }
+
+        private void MyPersonPicture_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void MyPersonPicture_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private void AllPersonPicture_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+
+            if (toggleSwitch != null)
+            {
+                if (AllPersonPicture.IsOn == true)
+                {
+                    All.Current.AllPicture.Visibility = Visibility.Visible;
+                    All.Current.MarginText.Height = 30;
+                    localSettings.Values["SetAllPersonPicture"] = true;
+                }
+                else
+                {
+                    All.Current.AllPicture.Visibility = Visibility.Collapsed;
+                    All.Current.MarginText.Height = 60;
+                    localSettings.Values["SetAllPersonPicture"] = false;
+                }
+            }
+            toggleSwitch.Toggled += AllPageAcylic_Toggled;
         }
     }
 }

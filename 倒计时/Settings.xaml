@@ -47,8 +47,10 @@
                        ToolTipService.ToolTip="点击更换头像"
                        Grid.Row="0" Grid.RowSpan="5" Grid.Column="0"
                        HorizontalAlignment="Left"
-                       ProfilePicture="Assets//默认头像2.jpg"
+                       
                        Tapped="MyPersonPicture_Tapped"
+                       PointerEntered="MyPersonPicture_PointerEntered"
+                       PointerExited="MyPersonPicture_PointerExited"
                        />
             <StackPanel Margin="20,16,0,0">
                 <StackPanel Orientation="Horizontal">
@@ -80,22 +82,26 @@
                 BorderThickness="2"
                 Style="{StaticResource ButtonRevealStyle}" 
                 Click="Button_Click"/>
+        <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
         <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
                       Header="主页背景亚克力模糊效果"
-                      Grid.Row="2"
-                      Grid.Column="0"
-                      Margin="20,10,0,0"
                       HorizontalAlignment="Left"
-                      VerticalAlignment="Bottom"
                       x:Name="AllPageAcylic"
                       x:FieldModifier="public"
                       OnContent="开"
                       OffContent="关"
                       Foreground="{x:Bind TC}"
-                      Toggled="AllPageAcylic_Toggled"
-                      
-                      />
-        <StackPanel Grid.Row="3" Margin="20" VerticalAlignment="Top">
+                      Toggled="AllPageAcylic_Toggled"/>
+        <ToggleSwitch x:Name="AllPersonPicture"
+                      Header="主页显示头像"
+                      Margin="0,5,0,0"
+                      HorizontalAlignment="Left"
+                      OnContent="开"
+                      OffContent="关"
+                      Foreground="{x:Bind TC}"
+                      Toggled="AllPersonPicture_Toggled"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Margin="20,0,0,0" VerticalAlignment="Top">
             <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
             <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
@@ -168,8 +174,6 @@
                 Click="AboutButton_Click"
                 >
         </Button>
-        
-       
 
         <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
 
@@ -186,5 +190,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
     </Grid>
 </Page>

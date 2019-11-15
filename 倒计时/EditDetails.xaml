@@ -56,6 +56,14 @@
                     Click="BgsButton_Click"/>
             <Ellipse x:Name="MyEllipse" Height="20" Width="20" Margin="10" Fill="Transparent" StrokeThickness="0"/>
         </StackPanel>
+        <Button Content="备注"
+                x:Name="TipButton"
+                Foreground="White"
+                Background="{x:Bind TC}"
+                HorizontalAlignment="Left"
+                Margin="20,50,0,0"
+                CornerRadius="15"
+                Click="TipButton_Click"/>
         <Button Content="确认修改"
                 x:Name="UpdateButton"
                 HorizontalAlignment="Left"
@@ -97,7 +105,20 @@
                         TickPlacement="Outside" />
             </StackPanel>
         </ContentDialog>
-
+        <ContentDialog x:Name="TipDialog"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       Title="添加备注"
+                       PrimaryButtonText="确定"
+                       CloseButtonText="取消"
+                       DefaultButton="Primary"
+                       CornerRadius="10"
+                       Background="White"
+                       PrimaryButtonClick="TipDialog_PrimaryButtonClick"
+                       CloseButtonClick="TipDialog_CloseButtonClick">
+            <TextBox x:Name="TipTextbox" Margin="10" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="10"/>
+        </ContentDialog>
+        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

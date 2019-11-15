@@ -26,6 +26,7 @@ namespace 夏日
         private double _TintOpacity;
         private string tempDate;
         private string _isTop;
+        private string _tip;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public EditDetails()
@@ -76,6 +77,16 @@ namespace 夏日
                 MyColorPicker.Color = GetColor(item.BgColor);
                 _TintOpacity = item.TintOpacity;
                 MySlider.Value = item.TintOpacity*100;
+            }
+            if (localSettings.Values[All.Current.str1] != null)
+            {
+                TipTextbox.Text = localSettings.Values[All.Current.str1].ToString();
+                _tip = localSettings.Values[All.Current.str1].ToString();
+            }
+            else
+            {
+                TipTextbox.Text = "";
+                _tip = "";
             }
             AddEvent.Text = All.Current.str1;
             Add_Picker.Date = Convert.ToDateTime(All.Current.str3);
@@ -130,7 +141,7 @@ namespace 夏日
 
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = _isTop, AddTime = "" });
                     All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
-
+                    localSettings.Values[_event] = _tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
@@ -194,6 +205,21 @@ namespace 夏日
                     s2 = "就在今天";
             }
             return s2;
+        }
+
+        private async void TipButton_Click(object sender, RoutedEventArgs e)
+        {
+            await TipDialog.ShowAsync();
+        }
+
+        private void TipDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+           
+        }
+
+        private void TipDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            _tip = TipTextbox.Text;
         }
     }
 }

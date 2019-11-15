@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
@@ -51,12 +52,22 @@
                    x:FieldModifier="public"
                    TextTrimming="CharacterEllipsis"
                    Text="大学英语六级"
-                   FontSize="30"
+                   FontSize="40"
                    Foreground="White"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Grid.Row="1"/>
-        <Grid  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <TextBlock x:Name="TipText"
+                   Text=""
+                   FontSize="20"
+                   Margin="100,0,100,10"
+                   TextWrapping="WrapWholeWords"
+                   Foreground="White"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Grid.Row="2"/>
+        <Grid  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -65,6 +76,7 @@
                        x:FieldModifier="public"
                        Text="还有。。。"
                        FontSize="48"
+                       
                        Foreground="CornflowerBlue"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"

@@ -161,6 +161,7 @@
     </Compile>
     <Compile Include="Models\DataTemple.cs" />
     <Compile Include="Models\IntroPage.cs" />
+    <Compile Include="Models\PersonPictures.cs" />
     <Compile Include="PopupNotice.xaml.cs">
       <DependentUpon>PopupNotice.xaml</DependentUpon>
     </Compile>
@@ -230,9 +231,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\支付宝收款码.jpg" />
-    <Content Include="Assets\老许1.jpg" />
-    <Content Include="Assets\老许2.jpg" />
-    <Content Include="Assets\默认头像.png" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Assets\默认头像2.jpg" />
     <Content Include="Properties\Default.rd.xml" />
