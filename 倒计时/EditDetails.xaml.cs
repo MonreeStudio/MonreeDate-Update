@@ -82,6 +82,7 @@ namespace 夏日
             {
                 TipTextbox.Text = localSettings.Values[All.Current.str1].ToString();
                 _tip = localSettings.Values[All.Current.str1].ToString();
+                TTB.Text = _tip;
             }
             else
             {
@@ -220,6 +221,7 @@ namespace 夏日
         private void TipDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             _tip = TipTextbox.Text;
+            TTB.Text = _tip;
         }
     }
 }

@@ -200,6 +200,7 @@ namespace 倒计时
         private void TipDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             _Tip = TipTextbox.Text;
+            TTB.Text = _Tip;
         }
 
         private void TipDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

@@ -69,7 +69,8 @@
                 />
             <Ellipse x:Name="MyEllipse" Height="20" Width="20" Margin="10" Fill="Transparent" StrokeThickness="0"/>
         </StackPanel>
-        <Button x:Name="TipButton"
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
+            <Button x:Name="TipButton"
                 Content="添加备注"
                 Grid.Row="3"
                 Grid.ColumnSpan="2"
@@ -78,6 +79,8 @@
                 Background="{x:Bind TC}"
                 CornerRadius="15"
                 Click="TipButton_Click"/>
+            <TextBlock x:Name="TTB" Foreground="Gray"  FontSize="15" Width="200" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
+        </StackPanel>
         <Button Content="确认添加"
                 x:Name="AddButton"
                 Grid.Row="4"
