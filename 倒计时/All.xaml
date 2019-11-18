@@ -34,8 +34,49 @@
                 </AppBarButton>
             </CommandBar>
         </RelativePanel>
+        <Grid>
+        <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited"/>
+            <TextBlock x:Name="UserName" Text="我是昵称" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <animations:Implicit.ShowAnimations>
+          <animations:TranslationAnimation Duration="0:0:1" From="-30" To="-150,0,0" />
+          <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
+        </animations:Implicit.ShowAnimations>
 
-        <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" Margin="10,0,0,0"/>
+        <animations:Implicit.HideAnimations>
+          <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
+          <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0">
+              
+            <animations:ScalarKeyFrame Key="0.1" Value="30"/>
+            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+          </animations:ScalarAnimation>
+            <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
+              
+            <animations:ScalarKeyFrame Key="0.1" Value="0"/>
+            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+          </animations:ScalarAnimation>
+        </animations:Implicit.HideAnimations>
+
+            </TextBlock>
+            <TextBlock x:Name="UserSign" Text="我是个性签名" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <animations:Implicit.ShowAnimations>
+          <animations:TranslationAnimation Duration="0:0:1" From="30" To="150,0,0" />
+          <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
+        </animations:Implicit.ShowAnimations>
+
+        <animations:Implicit.HideAnimations>
+          <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
+          <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0">
+            <animations:ScalarKeyFrame Key="0.1" Value="30"/>
+            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+          </animations:ScalarAnimation>
+            <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
+              
+            <animations:ScalarKeyFrame Key="0.1" Value="0"/>
+            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+          </animations:ScalarAnimation>
+        </animations:Implicit.HideAnimations>
+            </TextBlock>
+        </Grid>
         <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Foreground="{x:Bind TC}" FontSize="30" FontFamily="FZShuTi" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
         <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" Margin="0,0,0,20"/>
         <TextBlock x:Name="MarginText" x:FieldModifier="public" Height="30"/>

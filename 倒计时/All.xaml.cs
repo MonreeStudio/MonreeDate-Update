@@ -411,6 +411,18 @@ namespace 倒计时
 
         private void LoadSettings()
         {
+            UserName.Visibility = Visibility.Collapsed;
+            UserSign.Visibility = Visibility.Collapsed;
+            if(localSettings.Values["NickName"]!=null&&localSettings.Values["Sign"]!=null)
+            {
+                UserName.Text = localSettings.Values["NickName"].ToString();
+                UserSign.Text = localSettings.Values["Sign"].ToString();
+            }
+            else
+            {
+                UserName.Text = "游客";
+                UserSign.Text = "这个人好懒，什么也没写……";
+            }
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
                 if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
@@ -835,6 +847,18 @@ namespace 倒计时
         private void TopText_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private void AllPicture_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            UserName.Visibility = Visibility.Visible;
+            UserSign.Visibility = Visibility.Visible;
+        }
+
+        private void AllPicture_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            UserName.Visibility = Visibility.Collapsed;
+            UserSign.Visibility = Visibility.Collapsed;
         }
 
         public Color GetColor(string hex)
