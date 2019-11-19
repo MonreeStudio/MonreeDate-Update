@@ -39,6 +39,7 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             SetThemeColor();
+            MainPage.Current.MyNav.IsBackEnabled = false;
         }
 
         private void SetThemeColor()

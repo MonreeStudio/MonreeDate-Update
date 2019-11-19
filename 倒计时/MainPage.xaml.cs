@@ -58,9 +58,10 @@ namespace 倒计时
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             SetThemeColor();
             GetAppVersion();
+            MainPage.Current.MyNav.IsBackEnabled = false;
         }
 
-       
+
 
         public void SetThemeColor()
         {
@@ -218,7 +219,6 @@ namespace 倒计时
                 (MyNav.DisplayMode == NavigationViewDisplayMode.Compact ||
                  MyNav.DisplayMode == NavigationViewDisplayMode.Minimal))
                 return false;
-
             ContentFrame.GoBack();
             return true;
         }
@@ -253,7 +253,7 @@ namespace 倒计时
                 await MyCD.ShowAsync();
                 localSettings.Values["FirstlyOpen"] = "false";
             }
-            MyNav.IsBackEnabled = ContentFrame.CanGoBack;
+            //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
             if (ContentFrame.SourcePageType == typeof(Settings))
             {

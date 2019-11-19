@@ -72,7 +72,7 @@ namespace 倒计时
             color = Colors.SkyBlue;
             this.InitializeComponent();
             Current = this;
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += OnSettingsPageLoaded;
             ReadSettings();
             GetAppVersion();
@@ -80,6 +80,7 @@ namespace 倒计时
             GetPlatform();
             SetThemeColor();
             SetPersonPicture();
+            MainPage.Current.MyNav.IsBackEnabled = false;
         }
 
         private async void SetPersonPicture()

@@ -44,6 +44,7 @@ namespace 倒计时
             }
             if(Settings.Current.PersonalBirthday.Text!="未设置")
                 EditBirthday.Date = Convert.ToDateTime(Settings.Current.PersonalBirthday.Text);
+            MainPage.Current.MyNav.IsBackEnabled = true;
         }
 
         private void SetThemeColor()

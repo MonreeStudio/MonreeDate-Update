@@ -48,9 +48,20 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             LoadData();
+            SetBorderColor();
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
+            MainPage.Current.MyNav.IsBackEnabled = true;
         }
 
+        private void SetBorderColor()
+        {
+            YellowRec.Fill = new SolidColorBrush(Color.FromArgb(255,246,247,231));
+            BlueRec.Fill = new SolidColorBrush(Color.FromArgb(255, 235, 246, 252));
+            GreenRec.Fill = new SolidColorBrush(Color.FromArgb(255, 241, 253, 241));
+            PinkRec.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 246, 239));
+            RenderGrid.Background = BlueRec.Fill;
+            RenderTitle.Foreground = new SolidColorBrush(Color.FromArgb(255, 106, 164, 210));
+        }
         private void LoadData()
         {
             sp = MainPage.Current.SelectedPage;
@@ -287,6 +298,28 @@ namespace 倒计时
             return stream;
         }
 
+        private void YellowRec_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            RenderGrid.Background = new SolidColorBrush(Color.FromArgb(255, 246, 247, 231));
+            RenderTitle.Foreground = new SolidColorBrush(Color.FromArgb(255, 238, 177, 60));
+        }
 
+        private void BlueRec_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            RenderGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235, 246, 252));
+            RenderTitle.Foreground = new SolidColorBrush(Color.FromArgb(255, 106, 164, 210));
+        }
+
+        private void GreenRec_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            RenderGrid.Background = new SolidColorBrush(Color.FromArgb(255, 241, 253, 241));
+            RenderTitle.Foreground = new SolidColorBrush(Color.FromArgb(255, 131, 179, 141));
+        }
+
+        private void PinkRec_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            RenderGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 246, 239));
+            RenderTitle.Foreground = new SolidColorBrush(Color.FromArgb(255, 230, 129, 111));
+        }
     }
 }

@@ -34,6 +34,7 @@ namespace 夏日
             this.InitializeComponent();
             InitialData();
             SetThemeColor();
+            MainPage.Current.MyNav.IsBackEnabled = true;
         }
 
         private void SetThemeColor()

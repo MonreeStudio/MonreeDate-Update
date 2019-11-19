@@ -78,6 +78,7 @@ namespace 倒计时
             LoadTile();
             SetThemeColor();
             SetPersonPicture();
+            MainPage.Current.MyNav.IsBackEnabled = false;
         }
 
         private async void SetPersonPicture()
