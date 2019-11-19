@@ -4,19 +4,27 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using 倒计时.Models;
 using 夏日;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -31,10 +39,20 @@ namespace 倒计时
         public static Details Current;
         private bool sp;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        public SQLite.Net.SQLiteConnection conn;
+        DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+        IRandomAccessStream Bitmap;
         public Details()
         {
             this.InitializeComponent();
             Current = this;
+            LoadData();
+            DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
+        }
+
+        private void LoadData()
+        {
             sp = MainPage.Current.SelectedPage;
             if (sp == true)
             {
@@ -43,7 +61,7 @@ namespace 倒计时
                 DetailsDate.Text = App.AllItem.Str2;
                 DetailsGrid.Background = App.AllItem.Str4;
                 DetailsDate.Foreground = new SolidColorBrush(App.AllItem.BackGroundColor);
-                if (localSettings.Values[App.AllItem.Str1+App.AllItem.Str3] != null)
+                if (localSettings.Values[App.AllItem.Str1 + App.AllItem.Str3] != null)
                     TipText.Text = localSettings.Values[App.AllItem.Str1 + App.AllItem.Str3].ToString();
             }
             else
@@ -52,10 +70,14 @@ namespace 倒计时
                 DetailsEvent.Text = App.FestivalItem.Str1;
                 DetailsDate.Text = App.FestivalItem.Str2;
                 DetailsPickedDate.Text = App.FestivalItem.Str3;
-                DetailsGrid.Background =  ColorfulBrush(App.FestivalItem.Str4);
+                DetailsGrid.Background = ColorfulBrush(App.FestivalItem.Str4);
                 DetailsDate.Foreground = new SolidColorBrush(App.FestivalItem.Str4);
                 TipText.Text = "节日";
             }
+            dEvent.Text = DetailsEvent.Text;
+            dCalDate.Text = DetailsDate.Text;
+            dDate.Text = DetailsPickedDate.Text;
+            RenderPicture.ProfilePicture = All.Current.AllPicture.ProfilePicture;
         }
 
         public static AcrylicBrush ColorfulBrush(Color temp)
@@ -69,10 +91,6 @@ namespace 倒计时
             return myBrush;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-
-        }
 
         private void DetailsDate_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -117,6 +135,7 @@ namespace 倒计时
                 else
                     DetailsDate.Text = Festival.Current.str2;
             }
+            dCalDate.Text = DetailsDate.Text;
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -135,5 +154,139 @@ namespace 倒计时
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
             DetailsDate.FontSize = 48;
         }
+
+        private async void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RenderDialog.ShowAsync();
+            
+        }
+
+        public static async Task<WriteableBitmap> RenderUIElement(UIElement element)
+        {
+            var bitmap = new RenderTargetBitmap();
+            await bitmap.RenderAsync(element);
+            var pixelBuffer = await bitmap.GetPixelsAsync();
+            var pixels = pixelBuffer.ToArray();
+            //var writeableBitmap = new WriteableBitmap(500, 300);
+            var writeableBitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight);
+            using (Stream stream = writeableBitmap.PixelBuffer.AsStream())
+            {
+                await stream.WriteAsync(pixels, 0, pixels.Length);
+            }
+            return writeableBitmap;
+        }
+
+        private async void Share_Click(object sender, RoutedEventArgs e)
+        {
+            var image = await RenderUIElement(RenderBorder);
+            Bitmap = await ConvertWriteableBitmapToRandomAccessStream(image);
+            //var bitmap = RandomAccessStreamReference.CreateFromStream(bitImage);
+            DataTransferManager.ShowShareUI();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            DataTransferManager.GetForCurrentView().DataRequested -= DataTransferManager_DataRequested;
+        }
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            
+            //var bitmap = rasr.CreateFromStream(bitImage);
+            //DataRequest request = args.Request;
+            DataRequestDeferral deferral = args.Request.GetDeferral();
+            args.Request.Data.Properties.Title = "分享日程";
+            args.Request.Data.Properties.Description = "夏日——记录你的生活";
+            args.Request.Data.SetText("分享自“夏日”");
+            args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromStream(Bitmap));
+            deferral.Complete();
+        }
+        
+        private async void Save_Click(object sender, RoutedEventArgs e)
+        {
+            var rtb = new RenderTargetBitmap();
+            await rtb.RenderAsync(RenderBorder);
+
+            var saveFile = new FileSavePicker();
+            saveFile.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            saveFile.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+            saveFile.SuggestedFileName = "夏日：" + DetailsEvent.Text;
+            StorageFile sFile = await saveFile.PickSaveFileAsync();
+            if (sFile == null)
+                return;
+
+            var pixels = await rtb.GetPixelsAsync();
+            using (IRandomAccessStream stream = await sFile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                var encoder = await
+                BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                byte[] bytes = pixels.ToArray();
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                                        BitmapAlphaMode.Ignore,
+                                        (uint)rtb.PixelWidth,
+                                        (uint)rtb.PixelHeight,
+                                        200,
+                                        200,
+                                        bytes);
+
+                await encoder.FlushAsync();
+            }
+            PopupNotice popupNotice = new PopupNotice("保存成功");
+            popupNotice.ShowAPopup();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            RenderDialog.Hide();
+        }
+
+        //private async void TestButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ////var image = await RenderUIElement(RenderBorder);
+        //    var rtb = new RenderTargetBitmap();
+        //    await rtb.RenderAsync(RenderBorder);
+
+        //    var saveFile = new FileSavePicker();
+        //    saveFile.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+        //    saveFile.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+        //    saveFile.SuggestedFileName = "夏日："+ DetailsEvent.Text;
+        //    StorageFile sFile = await saveFile.PickSaveFileAsync();
+        //    if (sFile == null)
+        //        return;
+
+        //    var pixels = await rtb.GetPixelsAsync();
+        //    using (IRandomAccessStream stream = await sFile.OpenAsync(FileAccessMode.ReadWrite))
+        //    {
+        //        var encoder = await
+        //        BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+        //        byte[] bytes = pixels.ToArray();
+        //        encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+        //                                BitmapAlphaMode.Ignore,
+        //                                (uint)rtb.PixelWidth,
+        //                                (uint)rtb.PixelHeight,
+        //                                200,
+        //                                200,
+        //                                bytes);
+
+        //        await encoder.FlushAsync();
+        //    }
+        //    PopupNotice popupNotice = new PopupNotice("保存成功");
+        //    popupNotice.ShowAPopup();
+        //}
+        public static async Task<IRandomAccessStream> ConvertWriteableBitmapToRandomAccessStream(WriteableBitmap writeableBitmap)
+        {
+            var stream = new InMemoryRandomAccessStream();
+
+            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+            Stream pixelStream = writeableBitmap.PixelBuffer.AsStream();
+            byte[] pixels = new byte[pixelStream.Length];
+            await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+
+            encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)writeableBitmap.PixelWidth, (uint)writeableBitmap.PixelHeight, 96.0, 96.0, pixels);
+            await encoder.FlushAsync();
+
+            return stream;
+        }
+
+
     }
 }

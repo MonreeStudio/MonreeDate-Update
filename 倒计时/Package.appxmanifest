@@ -58,6 +58,14 @@
             <Task Type="timer"/>
           </BackgroundTasks>
         </Extension>
+        <uap:Extension Category="windows.shareTarget">
+          <uap:ShareTarget Description="分享日程">
+            <uap:SupportedFileTypes>
+              <uap:SupportsAnyFileType/>
+            </uap:SupportedFileTypes>
+            <uap:DataFormat>Bitmap</uap:DataFormat>
+          </uap:ShareTarget>
+        </uap:Extension>
       </Extensions>
     </Application>
   </Applications>

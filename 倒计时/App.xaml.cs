@@ -163,7 +163,7 @@ namespace 倒计时
             else
                 throw new Exception("开始日期必须小于结束日期");
         }
-
+        
         public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
         {
             if (!typeof(TEnum).GetTypeInfo().IsEnum)
