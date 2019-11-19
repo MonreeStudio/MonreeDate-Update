@@ -21,6 +21,7 @@
             <RowDefinition Height="2*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+        
         <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
             <AppBarButton x:Name="ShareButton" FocusVisualPrimaryThickness="1" CornerRadius="3" Label="分享" ToolTipService.ToolTip="以卡片形式分享" Foreground="White" Click="ShareButton_Click">
                 <AppBarButton.Icon>
@@ -98,37 +99,35 @@
                         Color="White" />
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
-            
+
             <ContentDialog Title="分享日程"
                            Foreground="CornflowerBlue"
                            DefaultButton="Primary"
-                           Width="800"
-                           Height="400"
                            x:Name="RenderDialog">
                 <StackPanel>
                     <Border x:Name="RenderBorder" x:FieldModifier="public">
-                <Grid x:Name="RenderGrid" Padding="25,10,30,10" Height="Auto" Width="Auto">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="3*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="RenderTitle" Text="夏日——记录你的生活" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="28" Margin="0,10,0,5" FontFamily="FZShuTi"/>
-                    <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="1" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
-                    <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Name="dEvent" Grid.Row="0" FontSize="30" Margin="0,0,0,5" Foreground="SlateGray"/>
-                        <TextBlock x:Name="dCalDate" Grid.Row="1" FontSize="40" Margin="0,0,0,5" Foreground="SlateGray"/>
-                        <TextBlock x:Name="dDate" Grid.Row="2" FontSize="20" Margin="0,0,0,10" Foreground="SlateGray"/>
-                    </Grid>
-                </Grid>
+                        <Grid x:Name="RenderGrid" Padding="25,10,30,10" Height="Auto" Width="Auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="RenderTitle" Text="夏日——记录你的生活" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="28" Margin="0,10,0,5" FontFamily="FZShuTi"/>
+                            <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="1" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
+                            <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="dEvent" Grid.Row="0" FontSize="30" Margin="0,0,0,5" Foreground="SlateGray"/>
+                                <TextBlock x:Name="dCalDate" Grid.Row="1" FontSize="40" Margin="0,0,0,5" Foreground="SlateGray"/>
+                                <TextBlock x:Name="dDate" Grid.Row="2" FontSize="20" Margin="0,0,0,10" Foreground="SlateGray"/>
+                            </Grid>
+                        </Grid>
                     </Border>
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <TextBlock Text="选取背景色：" Margin="0,0,10,0" VerticalAlignment="Center"/>
@@ -146,5 +145,7 @@
             </ContentDialog>
         </Grid>
         <TextBlock Text="——夏日——" Margin="10" Grid.Row="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
+        
     </Grid>
+    
 </Page>
