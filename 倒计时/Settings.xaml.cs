@@ -167,7 +167,7 @@ namespace 倒计时
                     AllPersonPicture.IsOn = false;
             }
             else
-                AllPersonPicture.IsOn = false;
+                AllPersonPicture.IsOn = true;
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];

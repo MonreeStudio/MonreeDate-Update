@@ -458,7 +458,7 @@ namespace 倒计时
                 }
             }
             else
-                AllPicture.Visibility = Visibility.Collapsed;
+                AllPicture.Visibility = Visibility.Visible;
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
             foreach(var item in datalist)
             {
