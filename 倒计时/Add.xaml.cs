@@ -45,7 +45,8 @@ namespace 倒计时
             _Color = "";
             _Tip = "";
             SetThemeColor();
-            MainPage.Current.MyNav.IsBackEnabled = false;
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Add";
         }
 
         private void SetThemeColor()

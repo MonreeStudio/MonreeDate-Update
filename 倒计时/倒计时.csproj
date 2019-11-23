@@ -180,7 +180,6 @@
     <None Include="倒计时_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\03%28With Background%29.png" />
     <Content Include="Assets\03.png" />
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-125.png" />
@@ -231,9 +230,11 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\微信收款码.png" />
+    <Content Include="Assets\微信收款码2.png" />
     <Content Include="Assets\支付宝收款码.jpg" />
     <None Include="Package.StoreAssociation.xml" />
-    <Content Include="Assets\默认头像2.jpg" />
+    <Content Include="Assets\支付宝收款码2.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -315,6 +316,9 @@
     </PackageReference>
     <PackageReference Include="System.Runtime">
       <Version>4.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="XPShadow">
+      <Version>0.1.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

@@ -32,8 +32,8 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             SetThemeColor();
-            MainPage.Current.MyNav.IsBackEnabled = false;
-
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Calculator";
         }
 
         private void SetThemeColor()

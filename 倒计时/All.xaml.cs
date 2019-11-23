@@ -862,6 +862,12 @@ namespace 倒计时
             UserSign.Visibility = Visibility.Collapsed;
         }
 
+        private void AllPicture_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.SettingsItem;
+            Frame.Navigate(typeof(Settings));
+        }
+
         public Color GetColor(string hex)
         {
             hex = hex.Replace("#", string.Empty);

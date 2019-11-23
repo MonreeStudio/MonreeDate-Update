@@ -39,6 +39,7 @@ namespace 倒计时
         public static MainPage Current;
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public bool SelectedPage { get; set; }
+        public string SelectedPageItem { get; set; }
         public IntroPageViewModel ViewModel = new IntroPageViewModel();
         public MainPage()
         {
@@ -58,7 +59,8 @@ namespace 倒计时
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             SetThemeColor();
             GetAppVersion();
-            MainPage.Current.MyNav.IsBackEnabled = false;
+            MyNav.IsBackEnabled = false;
+            SelectedPageItem = "";
         }
 
 
@@ -213,14 +215,25 @@ namespace 倒计时
 
             if (!ContentFrame.CanGoBack)
                 return false;
-
             // Don't go back if the nav pane is overlayed.
             if (MyNav.IsPaneOpen &&
                 (MyNav.DisplayMode == NavigationViewDisplayMode.Compact ||
                  MyNav.DisplayMode == NavigationViewDisplayMode.Minimal))
                 return false;
-            ContentFrame.GoBack();
-            return true;
+            if(SelectedPageItem.Equals("Add")
+                ||SelectedPageItem.Equals("Calculator")
+                ||SelectedPageItem.Equals("Festival")
+                ||SelectedPageItem.Equals("Settings"))
+            {
+                MyNav.SelectedItem = MyNav.MenuItems[0];
+                ContentFrame.Navigate(typeof(All));
+                return true;
+            }
+            else
+            {
+                ContentFrame.GoBack();
+                return true;
+            }
         }
 
         private void MyNav_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)

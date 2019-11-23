@@ -35,6 +35,7 @@ namespace 夏日
             InitialData();
             SetThemeColor();
             MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "EditDetails";
         }
 
         private void SetThemeColor()

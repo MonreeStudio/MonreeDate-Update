@@ -51,6 +51,7 @@ namespace 倒计时
             SetBorderColor();
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
             MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Details";
         }
 
         private void SetBorderColor()

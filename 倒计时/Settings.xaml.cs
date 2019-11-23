@@ -80,7 +80,8 @@ namespace 倒计时
             GetPlatform();
             SetThemeColor();
             SetPersonPicture();
-            MainPage.Current.MyNav.IsBackEnabled = false;
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Settings";
         }
 
         private async void SetPersonPicture()
