@@ -13,6 +13,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource CustomAcrylicBackgroundBrush}">
 
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
+    </Page.Resources>
     <Grid x:Name="DetailsGrid">
         <Grid.RowDefinitions>
             <RowDefinition />

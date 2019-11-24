@@ -107,12 +107,13 @@ namespace 倒计时
                 localSettings.Values["PersonalSex"] = EditSex_Sex;
                 localSettings.Values["BirthDay_Date"] = EditBirthday_Date;
                 Frame.Navigate(typeof(Settings));
+                Settings.Current.ReadSettings();
                 PopupNotice popupNotice = new PopupNotice("个人信息已更新");
                 popupNotice.ShowAPopup();
             }
             else
             {
-                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！");
+                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！","提示");
                 await AboutDialog.ShowAsync();
             }
             

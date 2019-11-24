@@ -82,6 +82,7 @@ namespace 倒计时
             SetPersonPicture();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Settings";
+
         }
 
         private async void SetPersonPicture()
@@ -144,7 +145,7 @@ namespace 倒计时
             }
         }
 
-        private void ReadSettings()
+        public void ReadSettings()
         {
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
@@ -501,6 +502,55 @@ namespace 倒计时
                 }
             }
             toggleSwitch.Toggled += AllPageAcylic_Toggled;
+        }
+
+        private async void BirthCreate_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            await BirthDialog.ShowAsync();
+        }
+
+        private void BirthCreate_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            BirthdayTB.FontSize = 23;
+            PersonalBirthday.FontSize = 23;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void BirthCreate_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            BirthdayTB.FontSize = 13;
+            PersonalBirthday.FontSize = 13;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private async void BirthDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (PersonalBirthday.Text == "未设置")
+            {
+                MessageDialog AboutDialog = new MessageDialog("您还没有设置生日哦，赶紧去设置吧。", "提示");
+                await AboutDialog.ShowAsync();
+                BirthDialog.Hide();
+            }
+            else
+            {
+                try
+                {
+                    DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
+                    string Tip = "";
+                    string _birthday = birthday.ToString("yyyy-MM-dd");
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = "出生日", CalculatedDate = CustomData.Calculator(_birthday), Date = _birthday, BgColor = "#fffbb612", TintOpacity = 0.7, IsTop = "0", AddTime = "" });
+                    localSettings.Values["出生日" + _birthday] = Tip;
+                    MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
+                    Frame.Navigate(typeof(All));
+                    PopupNotice popupNotice = new PopupNotice("添加成功");
+                    popupNotice.ShowAPopup();
+                }
+                catch
+                {
+                    MessageDialog AboutDialog = new MessageDialog("您已经添加过了哦。", "提示");
+                    await AboutDialog.ShowAsync();
+                }
+            }
         }
     }
 }

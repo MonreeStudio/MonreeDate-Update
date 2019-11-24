@@ -8,6 +8,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:夏日="using:夏日"
     xmlns:models="using:夏日.Models"
     xmlns:media="using:Windows.UI.Xaml.Media"
@@ -17,6 +18,7 @@
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue" />
         <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="ThemeColor" x:FieldModifier="public"/>
+        <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
         <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="ThemeColor"/>
     </Page.Resources>
     <Grid>
@@ -67,8 +69,8 @@
                                 <TextBlock x:Name="SexTB" Text="性别：" Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalSex" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未选择" FontSize="13" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="BirthdayTB" Text="生日：" Foreground="{x:Bind TC}" FontSize="13"/>
+                        <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
+                                <TextBlock x:Name="BirthdayTB" Text="生日："  Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalBirthday" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical">
@@ -102,7 +104,7 @@
                       Foreground="{x:Bind TC}"
                       Toggled="AllPageAcylic_Toggled"/>
         <ToggleSwitch x:Name="AllPersonPicture"
-                      Header="首页页显示头像"
+                      Header="首页显示头像"
                       Margin="0,5,0,0"
                       HorizontalAlignment="Left"
                       OnContent="开"
@@ -151,16 +153,14 @@
                    HorizontalAlignment="Center"/>
 
         <ContentDialog x:Name="AboutContent"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   Title="关于“夏日”"
-                   PrimaryButtonText="了解"
-                   SecondaryButtonText="五星好评😝"
-                   CloseButtonText="不了解"
-                   DefaultButton="Primary"
-                   CornerRadius="10"
-                   Background="White"
-                   SecondaryButtonClick="AboutContent_SecondaryButtonClick">
+                       Title="关于“夏日”"
+                       PrimaryButtonText="了解"
+                       SecondaryButtonText="五星好评😝"
+                       CloseButtonText="不了解"
+                       DefaultButton="Primary"
+                       CornerRadius="10"
+                       Background="White"
+                       SecondaryButtonClick="AboutContent_SecondaryButtonClick">
             <ScrollViewer>
             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <TextBlock x:Name="Version" Margin="10,10,0,5" />
@@ -177,7 +177,21 @@
             </StackPanel>
             </ScrollViewer>
         </ContentDialog>
+        <ContentDialog x:Name="BirthDialog"
+                       Title="添加出生日为日程"
+                       PrimaryButtonText="确认"
+                       CloseButtonText="取消"
+                       DefaultButton="Primary"
+                       CornerRadius="10"
+                       Background="White"
+                       PrimaryButtonClick="BirthDialog_PrimaryButtonClick">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock x:Name="BirthText"/>
+                <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
+            TextWrapping="Wrap" />
+            </StackPanel>
 
+        </ContentDialog>
         <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
@@ -206,6 +220,7 @@
                         <Setter Target="SettingsTopText.Margin" Value="20,20,20,0"/>
                     </VisualState.Setters>
                 </VisualState>
+                
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         

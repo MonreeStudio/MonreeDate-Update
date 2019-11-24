@@ -49,11 +49,36 @@ namespace 倒计时
             Current = this;
             LoadData();
             SetBorderColor();
+            SetThemeColor();
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Details";
         }
-
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "DeepSkyBlue":
+                    TC.Color = Colors.DeepSkyBlue;
+                    break;
+                case "Orange":
+                    TC.Color = Colors.Orange;
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                default:
+                    break;
+            }
+        }
         private void SetBorderColor()
         {
             YellowRec.Fill = new SolidColorBrush(Color.FromArgb(255,246,247,231));
