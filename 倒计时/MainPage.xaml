@@ -59,7 +59,8 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version" Foreground="CornflowerBlue"/>
-                    <TextBlock Text="1、新增 设置页面快捷添加出生日为日程；&#x0a;2、修复 解决了一些bug；&#x0a;3、优化 提升了导航视图返回键的体验；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="CornflowerBlue"/>
+                    <TextBlock Text="1、优化 新建和编辑日程页面的背景选项的颜色选取；&#x0a;2、优化 对一些细节进行了小小的修改；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="CornflowerBlue"/>
+                    <TextBlock Text="往期版本：2.1.6.0&#x0a;1、新增 设置页面快捷添加出生日为日程；&#x0a;2、修复 解决了一些bug；&#x0a;3、优化 提升了导航视图返回键的体验；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="CornflowerBlue"/>
                     <TextBlock Text="往期版本：2.1.5.0&#x0a;1、新增 日程分享功能上线！您可以在日程详情页进行分享操作；&#x0a;2、新增 主页指针悬浮头像之上两旁显示昵称和个性签名；&#x0a;3、修复 解决了左侧导航视图返回键可能触发的崩溃问题；&#x0a;3、优化 提升了用户体验；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" />
                     <TextBlock Text="往期版本：2.1.4.0&#x0a;1、新增 头像功能上线！您可以在设置中更换头像，并选择是否显示到主页；&#x0a;2、新增 日程备注功能，您可以在新建日程或编辑日程时为日程添加备注；&#x0a;3、优化 细节进一步优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.1.3.0&#x0a;1、修复 解决了更改日程信息后，置顶日程的置顶失效的问题；&#x0a;2、修复 解决了在没有选中日程的情况下右键菜单可用的问题；&#x0a;3、优化 细节优化；" Margin="0,0,0,5"/>
