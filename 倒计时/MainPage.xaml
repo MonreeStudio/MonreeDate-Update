@@ -99,7 +99,7 @@
                         MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MyNav.PaneDisplayMode" Value="Top"/>
+                        <Setter Target="MyNav.PaneDisplayMode" Value="LeftCompact"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
