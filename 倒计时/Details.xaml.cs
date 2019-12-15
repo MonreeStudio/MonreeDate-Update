@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using 倒计时.Models;
@@ -74,6 +75,9 @@ namespace 倒计时
                     break;
                 case "Gray":
                     TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
                     break;
                 default:
                     break;
@@ -177,7 +181,7 @@ namespace 倒计时
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(EditDetails));
+            Frame.Navigate(typeof(EditDetails),null,new DrillInNavigationTransitionInfo());
         }
 
         private void DetailsDate_PointerEntered(object sender, PointerRoutedEventArgs e)

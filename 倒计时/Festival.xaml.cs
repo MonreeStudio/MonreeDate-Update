@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using 夏日;
 using 夏日.Models;
@@ -64,6 +65,9 @@ namespace 倒计时
                 case "Gray":
                     TC.Color = Color.FromArgb(255, 73, 92, 105);
                     break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
                 default:
                     break;
             }
@@ -91,7 +95,7 @@ namespace 倒计时
                 return;
             }
             MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
-            Frame.Navigate(typeof(All));
+            Frame.Navigate(typeof(All),null,new DrillInNavigationTransitionInfo());
             PopupNotice popupNotice = new PopupNotice("添加成功");
             popupNotice.ShowAPopup();
         }

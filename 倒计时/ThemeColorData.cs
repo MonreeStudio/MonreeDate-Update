@@ -27,11 +27,12 @@ namespace 倒计时
         public ObservableCollection<ThemeColorData> ThemeColorDatas = new ObservableCollection<ThemeColorData>();
         public ThemeColorDataViewModel()
         {
-            ThemeColorDatas.Add(new ThemeColorData() { colorName = "夏日蓝", themeColor = new SolidColorBrush(Colors.CornflowerBlue) });
-            ThemeColorDatas.Add(new ThemeColorData() { colorName = "天空蓝", themeColor = new SolidColorBrush(Colors.DeepSkyBlue) });
-            ThemeColorDatas.Add(new ThemeColorData() { colorName = "寻宝橙", themeColor = new SolidColorBrush(Colors.Orange) });
-            ThemeColorDatas.Add(new ThemeColorData() { colorName = "魅焰红", themeColor = new SolidColorBrush(Colors.Crimson) });
-            ThemeColorDatas.Add(new ThemeColorData() { colorName = "高冷灰", themeColor = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105)) });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "    夏日蓝", themeColor = new SolidColorBrush(Colors.CornflowerBlue) });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "    天空蓝", themeColor = new SolidColorBrush(Colors.DeepSkyBlue) });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "    寻宝橙", themeColor = new SolidColorBrush(Colors.Orange) });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "    魅焰红", themeColor = new SolidColorBrush(Colors.Crimson) });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "    高冷灰", themeColor = new SolidColorBrush(Color.FromArgb(255, 73, 92, 105)) });
+            ThemeColorDatas.Add(new ThemeColorData() { colorName = "    高贵紫", themeColor = new SolidColorBrush(Color.FromArgb(255, 119, 25, 171)) });
         }
     }
 }

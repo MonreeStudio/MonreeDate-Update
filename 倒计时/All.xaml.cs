@@ -134,6 +134,11 @@ namespace 倒计时
                     MyProgressBar.Background = new SolidColorBrush(Colors.Black);
                     MyProgressBar.Foreground = new SolidColorBrush(Colors.Gray);
                     break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    MyProgressBar.Background = new SolidColorBrush(Colors.MediumPurple);
+                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 119, 25, 171));
+                    break;
                 default:
                     break;
             }
@@ -498,7 +503,7 @@ namespace 倒计时
             str4 = _item.Str4;
             BgsColor = _item.BackGroundColor;
             MainPage.Current.SelectedPage = true;
-            Frame.Navigate(typeof(Details));
+            Frame.Navigate(typeof(Details),null,new DrillInNavigationTransitionInfo());
         }
 
         private void MyGirdView_SelectionChanged(object sender, SelectionChangedEventArgs e)

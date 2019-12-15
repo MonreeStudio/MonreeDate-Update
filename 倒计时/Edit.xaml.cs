@@ -69,6 +69,9 @@ namespace 倒计时
                 case "Gray":
                     TC.Color = Color.FromArgb(255, 73, 92, 105);
                     break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
                 default:
                     break;
             }

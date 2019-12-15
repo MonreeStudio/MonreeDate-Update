@@ -25,7 +25,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Button x:Name="RefreshBtn" Content="❔ 无法选择日期？点我！" Style="{StaticResource ButtonRevealStyle}" Foreground="{x:Bind TC}" Grid.Column="1" BorderThickness="0" HorizontalAlignment="Right" CornerRadius="15" Background="Transparent" Margin="50" Click="RefreshBtn_Click"/>
+        <Button x:Name="RefreshBtn" Content="❔ 无法选择日期？点我！" Style="{StaticResource ButtonRevealStyle}" Foreground="{x:Bind TC}" Grid.Column="1" BorderThickness="0" HorizontalAlignment="Right" CornerRadius="15" Background="Transparent" Margin="0,50,10,50" Click="RefreshBtn_Click"/>
         <TextBlock Text="创建一个日程吧！"
                    x:Name="TipTB"
                    Grid.Row="0"

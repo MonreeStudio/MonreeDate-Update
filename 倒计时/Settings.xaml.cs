@@ -32,6 +32,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using 倒计时.Models;
@@ -139,6 +140,11 @@ namespace 倒计时
                     TC.Color = Color.FromArgb(255, 73, 92, 105);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 4;
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 5;
                     break;
                 default:
                     break;
@@ -388,7 +394,7 @@ namespace 倒计时
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Edit));
+            Frame.Navigate(typeof(Edit),null,new DrillInNavigationTransitionInfo());
         }
 
         private async void AboutContent_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -465,6 +471,10 @@ namespace 倒计时
                     break;
                 case 4:
                     localSettings.Values["ThemeColor"] = "Gray";
+                    SetThemeColor();
+                    break;
+                case 5:
+                    localSettings.Values["ThemeColor"] = "Purple";
                     SetThemeColor();
                     break;
                 default:

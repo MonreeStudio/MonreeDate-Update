@@ -35,7 +35,7 @@
             </CommandBar>
         </RelativePanel>
         <Grid>
-        <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited" IsTapEnabled="True" Tapped="AllPicture_Tapped"/>
+            <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited" IsTapEnabled="True" Tapped="AllPicture_Tapped"/>
             <TextBlock x:Name="UserName" Text="我是昵称" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <animations:Implicit.ShowAnimations>
           <animations:TranslationAnimation Duration="0:0:1" From="-30" To="-150,0,0" />
@@ -153,3 +153,4 @@
         </VisualStateManager.VisualStateGroups>
     </StackPanel>
 </Page>
+    
