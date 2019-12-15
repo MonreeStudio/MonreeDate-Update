@@ -209,5 +209,10 @@ namespace 倒计时
         {
             
         }
+
+        private void RefreshBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Add_Picker.IsCalendarOpen = true;
+        }
     }
 }
