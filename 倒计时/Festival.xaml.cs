@@ -54,7 +54,7 @@ namespace 倒计时
                     TC.Color = Colors.CornflowerBlue;
                     break;
                 case "DeepSkyBlue":
-                    TC.Color = Colors.DeepSkyBlue;
+                    TC.Color = Color.FromArgb(255, 2, 136, 235);
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;
@@ -67,6 +67,12 @@ namespace 倒计时
                     break;
                 case "Purple":
                     TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
                     break;
                 default:
                     break;
@@ -95,7 +101,7 @@ namespace 倒计时
                 return;
             }
             MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
-            Frame.Navigate(typeof(All),null,new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(All));
             PopupNotice popupNotice = new PopupNotice("添加成功");
             popupNotice.ShowAPopup();
         }
@@ -129,7 +135,7 @@ namespace 倒计时
             str3 = _item.Str3;
             str4 = _item.Str4;
             MainPage.Current.SelectedPage = false;
-            Frame.Navigate(typeof(Details));
+            Frame.Navigate(typeof(Details), null, new DrillInNavigationTransitionInfo());
         }
 
         public Color GetColor(string hex)

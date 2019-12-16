@@ -48,7 +48,7 @@ namespace 夏日
                     TC.Color = Colors.CornflowerBlue;
                     break;
                 case "DeepSkyBlue":
-                    TC.Color = Colors.DeepSkyBlue;
+                    TC.Color = Color.FromArgb(255, 2, 136, 235);
                     break;
                 case "Orange":
                     TC.Color = Colors.Orange;
@@ -61,6 +61,12 @@ namespace 夏日
                     break;
                 case "Purple":
                     TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
                     break;
                 default:
                     break;
