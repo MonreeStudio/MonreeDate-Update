@@ -127,7 +127,7 @@ namespace 倒计时
                     ThemeColorSelected.SelectedIndex = 1;
                     break;
                 case "Orange":
-                    TC.Color = Colors.Orange;
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 2;
                     break;
@@ -155,6 +155,16 @@ namespace 倒计时
                     TC.Color = Color.FromArgb(255, 124, 178, 56);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 7;
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 8;
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 9;
                     break;
                 default:
                     break;
@@ -493,6 +503,14 @@ namespace 倒计时
                     break;
                 case 7:
                     localSettings.Values["ThemeColor"] = "Green";
+                    SetThemeColor();
+                    break;
+                case 8:
+                    localSettings.Values["ThemeColor"] = "DeepGreen";
+                    SetThemeColor();
+                    break;
+                case 9:
+                    localSettings.Values["ThemeColor"] = "Coffee";
                     SetThemeColor();
                     break;
                 default:

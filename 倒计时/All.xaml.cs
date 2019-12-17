@@ -120,9 +120,9 @@ namespace 倒计时
                     MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 2, 136, 235));
                     break;
                 case "Orange":
-                    TC.Color = Colors.Orange;
-                    MyProgressBar.Background = new SolidColorBrush(Colors.Orange);
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Gold);
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
+                    MyProgressBar.Background = new SolidColorBrush(Colors.Gold);
+                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 229, 103, 44));
                     break;
                 case "Crimson":
                     TC.Color = Colors.Crimson;
@@ -148,6 +148,16 @@ namespace 倒计时
                     TC.Color = Color.FromArgb(255, 124, 178, 56);
                     MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 124, 178, 56));
                     MyProgressBar.Foreground = new SolidColorBrush(Colors.ForestGreen);
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 124, 178, 56));
+                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 8, 128, 126));
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 183, 133, 108));
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Brown);
                     break;
                 default:
                     break;

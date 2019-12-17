@@ -78,7 +78,7 @@ namespace 倒计时
                     TC.Color = Color.FromArgb(255, 2, 136, 235);
                     break;
                 case "Orange":
-                    TC.Color = Colors.Orange;
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
                     break;
                 case "Crimson":
                     TC.Color = Colors.Crimson;
@@ -95,6 +95,12 @@ namespace 倒计时
                 case "Green":
                     TC.Color = Color.FromArgb(255, 124, 178, 56);
                     break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    break;  
                 default:
                     break;
             }
@@ -269,10 +275,10 @@ namespace 倒计时
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
             //localSettings.Values["FirstlyOpen"] = null;
-            if (localSettings.Values["2.1.7.0"] == null)
+            if (localSettings.Values["2.1.8.0"] == null)
             { 
                 await MyCD.ShowAsync();
-                localSettings.Values["2.1.7.0"] = "false";
+                localSettings.Values["2.1.8.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 

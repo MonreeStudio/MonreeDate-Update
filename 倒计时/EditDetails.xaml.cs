@@ -51,7 +51,7 @@ namespace 夏日
                     TC.Color = Color.FromArgb(255, 2, 136, 235);
                     break;
                 case "Orange":
-                    TC.Color = Colors.Orange;
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
                     break;
                 case "Crimson":
                     TC.Color = Colors.Crimson;
@@ -67,6 +67,12 @@ namespace 夏日
                     break;
                 case "Green":
                     TC.Color = Color.FromArgb(255, 124, 178, 56);
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
                     break;
                 default:
                     break;

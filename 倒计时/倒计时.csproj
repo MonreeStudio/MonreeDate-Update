@@ -25,7 +25,7 @@
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>3</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>Daily</AppInstallerCheckForUpdateFrequency>
-    <PackageCertificateThumbprint>0617A0CF92143B4C47A0421ECFDFEC8D2C6537AC</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>2B6A9DDADF3BA23CC314CB27C6A328F52B473843</PackageCertificateThumbprint>
     <AppxPackageDir>C:\Users\kaika\Source\Repos\MonreeDate\倒计时\AppPackages</AppxPackageDir>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
