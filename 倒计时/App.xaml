@@ -14,6 +14,5 @@
         TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="PowderBlue" />
             <SolidColorBrush x:Key="GlobalTheme" x:FieldModifier="public"/>
         </ResourceDictionary>
-
     </Application.Resources>
 </Application>

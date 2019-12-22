@@ -13,9 +13,11 @@
     Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
     <Page.Resources>
+        
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
         <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor"/>
+        <!--<StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemControlAcrylicWindowMediumHighBrush" />-->
     </Page.Resources>
     
     <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">

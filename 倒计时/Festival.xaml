@@ -16,8 +16,8 @@
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
     </Page.Resources>
-    
-    <StackPanel Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+
+    <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
