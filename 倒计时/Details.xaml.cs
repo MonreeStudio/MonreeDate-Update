@@ -95,6 +95,9 @@ namespace 倒计时
                     break;
             }
         }
+
+
+
         private void SetBorderColor()
         {
             YellowRec.Fill = new SolidColorBrush(Color.FromArgb(255,246,247,231));

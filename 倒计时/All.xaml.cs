@@ -51,7 +51,6 @@ namespace 倒计时
         public AcrylicBrush str4;
         public Color BgsColor;
         private double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
-
         public static All Current;
         public string Model_event;
         public string Model_Date;
@@ -345,6 +344,8 @@ namespace 倒计时
             var notification = new TileNotification(content.GetXml());
             TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
             localSettings.Values["mainTile"] = _ScheduleName;
+            //var badge = new BadgeNotification(content.GetXml());
+            //BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badge);
         }
 
         private void LoadDateData()
@@ -523,7 +524,7 @@ namespace 倒计时
             str4 = _item.Str4;
             BgsColor = _item.BackGroundColor;
             MainPage.Current.SelectedPage = true;
-            Frame.Navigate(typeof(Details),null,new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Details), null, new DrillInNavigationTransitionInfo());
         }
 
         private void MyGirdView_SelectionChanged(object sender, SelectionChangedEventArgs e)

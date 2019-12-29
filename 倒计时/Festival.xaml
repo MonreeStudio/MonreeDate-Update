@@ -34,7 +34,7 @@
         <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" IsTapEnabled="True" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
             <ListView.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="添加到首页" Click="MenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Icon="Add" Text="添加到首页" Click="MenuFlyoutItem_Click"/>
                 </MenuFlyout>
             </ListView.ContextFlyout>
             <ListView.ItemContainerStyle>
