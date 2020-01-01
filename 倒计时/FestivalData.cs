@@ -81,7 +81,7 @@ namespace 倒计时
                     FestivalDatas.Add(new FestivalData() { Str1 = "七夕❤", Str2 = CustomData.Calculator("2019-08-07"), Str3 = "2019-08-07", Str4 = Colors.LightPink, Str5 = All.Current.ColorfulBrush(Colors.LightPink, 0.7) });
                 else
                     FestivalDatas.Add(new FestivalData() { Str1 = "七夕❤", Str2 = CustomData.Calculator("2020-08-25"), Str3 = "2020-08-25", Str4 = Colors.LightPink, Str5 = All.Current.ColorfulBrush(Colors.LightPink, 0.7) });
-                if (DateTime.Now.Date <= Convert.ToDateTime("2020-09-10"))
+                if (DateTime.Now.Date <= Convert.ToDateTime("2019-09-10"))
                     FestivalDatas.Add(new FestivalData() { Str1 = "教师节", Str2 = CustomData.Calculator("2019-09-10"), Str3 = "2019-09-10", Str4 = Colors.MediumPurple, Str5 = All.Current.ColorfulBrush(Colors.MediumPurple, 0.7) });
                 else
                     FestivalDatas.Add(new FestivalData() { Str1 = "教师节", Str2 = CustomData.Calculator("2020-09-10"), Str3 = "2020-09-10", Str4 = Colors.MediumPurple, Str5 = All.Current.ColorfulBrush(Colors.MediumPurple, 0.7) });
