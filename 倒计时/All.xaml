@@ -21,8 +21,22 @@
     <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <RelativePanel x:FieldModifier="Public">
             <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
-            <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
-                <AppBarButton x:Name="AddABB"  FocusVisualPrimaryThickness="1" FocusVisualSecondaryThickness="2" FocusVisualMargin="-3" FocusVisualPrimaryBrush="SkyBlue" FocusVisualSecondaryBrush="LightSkyBlue" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
+            <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
+                <AppBarButton x:Name="ContentChoise" Label="显示内容" Foreground="{x:Bind TC}" CornerRadius="3" ToolTipService.Placement="Mouse">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets"/>
+                    </AppBarButton.Icon>
+                    <AppBarButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem Text="显示全部" Foreground="{x:Bind TC}"/>
+                            <MenuFlyoutSeparator Foreground="{x:Bind TC}"/>
+                            <MenuFlyoutItem Text="显示已过日程" Foreground="{x:Bind TC}"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Text="显示未过日程" Foreground="{x:Bind TC}"/>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
                     </AppBarButton.Icon>

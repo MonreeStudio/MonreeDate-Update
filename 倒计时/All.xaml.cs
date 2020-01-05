@@ -116,7 +116,7 @@ namespace 倒计时
                 case "DeepSkyBlue":
                     TC.Color = Color.FromArgb(255, 2, 136, 235);
                     MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 2, 136, 235));
+                    MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
                     break;
                 case "Orange":
                     TC.Color = Color.FromArgb(255, 229, 103, 44);
