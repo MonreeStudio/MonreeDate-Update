@@ -34,6 +34,7 @@ namespace 倒计时
         public Color str4;
         public FestivalDataViewModel ViewModel = new FestivalDataViewModel();
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
         //public FestivalData SelectedItem;
         public Festival()
         {
@@ -42,6 +43,7 @@ namespace 倒计时
             SetThemeColor();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Festival";
+            NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private void SetThemeColor()
