@@ -16,57 +16,58 @@
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
     </Page.Resources>
-    
-    <StackPanel Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>  
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
-            <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
-        </Grid>
-        <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" IsTapEnabled="True" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
-            <ListView.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="添加到首页" Click="MenuFlyoutItem_Click"/>
-                </MenuFlyout>
-            </ListView.ContextFlyout>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="Margin" Value="0" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:FestivalData">
-                    <RelativePanel x:Name="FestivalList" Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
-                        <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
-                        <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
-                        <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
-                    </RelativePanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+    <ScrollViewer>
+        <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
+                <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
+            </Grid>
+            <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" IsTapEnabled="True" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
+                <ListView.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Icon="Add" Text="添加到首页" Click="MenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </ListView.ContextFlyout>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0" />
+                    </Style>
+                </ListView.ItemContainerStyle>
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:FestivalData">
+                        <RelativePanel x:Name="FestivalList" Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
+                            <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
+                            <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
+                            <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
+                        </RelativePanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger
                         MinWindowWidth="{x:Bind MinMyNav}"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="FsTop.Margin" Value="20"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-    </StackPanel>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="FsTop.Margin" Value="20"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

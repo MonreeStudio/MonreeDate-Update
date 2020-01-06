@@ -35,7 +35,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="SettingsTopText"
-                   Text="设置"
+                   Text="个性化设置"
                    FontSize="28"
                    Foreground="{x:Bind TC}"
                    Margin="90,30,0,0"
