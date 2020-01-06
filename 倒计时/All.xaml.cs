@@ -382,6 +382,7 @@ namespace 倒计时
             if ((datalist1.Count() + datalist2.Count()) == 0)
             {
                 NewTB.Text = "创建你的第一个日程吧！";
+                NewTB2.Text = "（创建后可右键删除）";
                 NewTB.Visibility = Visibility.Visible;
                 NewTB2.Visibility = Visibility.Visible;
             }
@@ -471,8 +472,9 @@ namespace 倒计时
             if (datalist2.Count() == 0)
             {
                 NewTB.Text = "这里空空如也~";
+                NewTB2.Text = "（暂无已过日程）";
                 NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Collapsed;
+                NewTB2.Visibility = Visibility.Visible;
             }
             else
             {
@@ -538,8 +540,9 @@ namespace 倒计时
             if (datalist2.Count() == 0)
             {
                 NewTB.Text = "这里空空如也~";
+                NewTB2.Text = "（暂无未过日程）";
                 NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Collapsed;
+                NewTB2.Visibility = Visibility.Visible;
             }
             else
             {
@@ -888,13 +891,47 @@ namespace 倒计时
                 PopupNotice popupNotice = new PopupNotice("删除成功");
                 popupNotice.ShowAPopup();
             }
-
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
-            if (datalist.Count() == 0)
+            var dm = localSettings.Values["DisplayMode"].ToString();
+            switch (dm)
             {
-                NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Visible;
+                case "All":
+                    {
+                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+                        if (datalist.Count() == 0)
+                        {
+                            NewTB.Text = "创建你的第一个日程吧！";
+                            NewTB2.Text = "（创建后可右键删除）";
+                            NewTB.Visibility = Visibility.Visible;
+                            NewTB2.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+                case "Past":
+                    {
+                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date < ?", DateTime.Now.ToString("yyyy-MM-dd"));
+                        if(datalist.Count==0)
+                        {
+                            NewTB.Text = "这里空空如也~";
+                            NewTB2.Text = "（暂无已过日程）";
+                            NewTB.Visibility = Visibility.Visible;
+                            NewTB2.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+                case "Future":
+                    {
+                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ?", DateTime.Now.ToString("yyyy-MM-dd"));
+                        if (datalist.Count == 0)
+                        {
+                            NewTB.Text = "这里空空如也~";
+                            NewTB2.Text = "（暂无未过日程）";
+                            NewTB.Visibility = Visibility.Visible;
+                            NewTB2.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
             }
+            
             LoadTile();
         }
 

@@ -43,7 +43,7 @@ namespace 倒计时
             SetThemeColor();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Festival";
-            NavigationCacheMode = NavigationCacheMode.Enabled;
+            //NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private void SetThemeColor()
