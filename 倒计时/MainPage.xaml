@@ -65,10 +65,10 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version" Foreground="CornflowerBlue"/>
-                    <TextBlock Text="1、新增 更多缤纷的主题色已上线！原有的配色进行了微调；&#x0a;2、优化 部分页面的切换动画进行了微调；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="CornflowerBlue"/>
+                    <TextBlock Text="1、新增 主页日程可以按时间类别显示；&#x0a;（可选“显示全部”、“显示已过日程”和“显示未过日程”）&#x0a;2、新增 导航视图完全展开模式下的亚克力效果；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="CornflowerBlue"/>
+                    <TextBlock Text="往期版本：2.1.8.0&#x0a;1、新增 更多缤纷的主题色已上线！原有的配色进行了微调；&#x0a;2、优化 部分页面的切换动画进行了微调；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.1.7.0&#x0a;1、优化 新建和编辑日程页面的背景选项的颜色选取；&#x0a;2、优化 对一些细节进行了小小的修改；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.1.6.0&#x0a;1、新增 设置页面快捷添加出生日为日程；&#x0a;2、修复 解决了一些bug；&#x0a;3、优化 提升了导航视图返回键的体验；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.1.5.0&#x0a;1、新增 日程分享功能上线！您可以在日程详情页进行分享操作；&#x0a;2、新增 主页指针悬浮头像之上两旁显示昵称和个性签名；&#x0a;3、修复 解决了左侧导航视图返回键可能触发的崩溃问题；&#x0a;3、优化 提升了用户体验；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" />
                     <TextBlock Text="开发者的话：&#x0a;因开发者个人精力有限，无法精细地排除bug，若应用出现崩溃等情况，敬请您反馈情况，以便于后期修复，改善体验，谢谢！" TextWrapping="WrapWholeWords" Margin="10"/>
                 </StackPanel>
             </ScrollViewer>

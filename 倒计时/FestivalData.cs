@@ -145,9 +145,9 @@ namespace 倒计时
                 else
                     FestivalDatas.Add(new FestivalData() { Str1 = "七夕❤", Str2 = CustomData.Calculator("2021-08-14"), Str3 = "2021-08-14", Str4 = Colors.LightPink, Str5 = All.Current.ColorfulBrush(Colors.LightPink, 0.7) });
                 if (DateTime.Now.Date <= Convert.ToDateTime("2020-09-10"))
-                    FestivalDatas.Add(new FestivalData() { Str1 = "教师节", Str2 = CustomData.Calculator("2020-09-10"), Str3 = "2020-09-10", Str4 = Colors.MediumPurple, Str5 = All.Current.ColorfulBrush(Colors.Gold, 0.7) });
+                    FestivalDatas.Add(new FestivalData() { Str1 = "教师节", Str2 = CustomData.Calculator("2020-09-10"), Str3 = "2020-09-10", Str4 = Colors.MediumPurple, Str5 = All.Current.ColorfulBrush(Colors.MediumPurple, 0.7) });
                 else
-                    FestivalDatas.Add(new FestivalData() { Str1 = "教师节", Str2 = CustomData.Calculator("2021-09-10"), Str3 = "2021-09-10", Str4 = Colors.MediumPurple, Str5 = All.Current.ColorfulBrush(Colors.Gold, 0.7) });
+                    FestivalDatas.Add(new FestivalData() { Str1 = "教师节", Str2 = CustomData.Calculator("2021-09-10"), Str3 = "2021-09-10", Str4 = Colors.MediumPurple, Str5 = All.Current.ColorfulBrush(Colors.MediumPurple, 0.7) });
                 if (DateTime.Now.Date <= Convert.ToDateTime("2020-10-01"))
                     FestivalDatas.Add(new FestivalData() { Str1 = "中秋节", Str2 = CustomData.Calculator("2020-10-01"), Str3 = "2020-10-01", Str4 = Color.FromArgb(255, 166, 27, 41), Str5 = All.Current.ColorfulBrush(Color.FromArgb(255, 166, 27, 41), 0.7) });
                 else
