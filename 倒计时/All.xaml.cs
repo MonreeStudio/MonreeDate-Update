@@ -59,6 +59,7 @@ namespace 倒计时
         public int _index;
         private double percentage;
         private bool TopTap;
+        private double thumbX = -50, thumbY = -50;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public All()
@@ -78,6 +79,10 @@ namespace 倒计时
             SetThemeColor();
             SetPersonPicture();
             MainPage.Current.MyNav.IsBackEnabled = false;
+            MainPage.Current.SelectedPageItem = "All";
+            NavigationCacheMode = NavigationCacheMode.Enabled;
+
+
         }
 
         private async void SetPersonPicture()
@@ -1032,6 +1037,31 @@ namespace 倒计时
         {
             localSettings.Values["DisplayMode"] = "Future";
             LoadDateData();
+        }
+
+        private void RootThumb_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            AllScrollViewer.ChangeView(null, 0, null);
+        }
+
+        private void AllScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            //var y = AllScrollViewer.VerticalOffset;
+            //if (y == 0)
+            //    RootThumb.Visibility = Visibility.Collapsed;
+            //else
+            //    RootThumb.Visibility = Visibility.Visible;
+            //RootThumb.Margin = new Thickness(0, y, 20, 20);
+        }
+
+        private void AllScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            var y = AllScrollViewer.VerticalOffset;
+            if (y == 0)
+                RootThumb.Visibility = Visibility.Collapsed;
+            else
+                RootThumb.Visibility = Visibility.Visible;
+            RootThumb.Margin = new Thickness(0, y, 20, 20);
         }
 
         public Color GetColor(string hex)

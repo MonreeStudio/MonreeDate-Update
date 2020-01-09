@@ -9,14 +9,53 @@
     xmlns:local="using:倒计时"
     xmlns:local1="using:夏日"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     Background="White">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <Style x:Key="ThumbStyle1" TargetType="Thumb">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ThumbBorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Grid x:Name="RootGrid">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPointerOver"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPressed"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle RadiusY="25" RadiusX="25" Fill="{ThemeResource SystemAccentColor}" Opacity="1" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="3" />
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE11C;" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border x:Name="Background" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
+                            <Border x:Name="BackgroundPointerOver" BorderBrush="{ThemeResource ThumbBorderBrushPointerOver}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
+                            <Border x:Name="BackgroundPressed" BorderBrush="{ThemeResource ThumbBorderBrushPressed}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
-    <ScrollViewer>
+    <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
+        <Grid>
         <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -31,7 +70,7 @@
                 <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
                 <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
             </Grid>
-            <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" IsTapEnabled="True" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
+            <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
                 <ListView.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Icon="Add" Text="添加到首页" Click="MenuFlyoutItem_Click"/>
@@ -69,5 +108,7 @@
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
         </StackPanel>
+        <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Visible" Name="RootThumb" Margin="20" Height="55" Width="55" HorizontalAlignment="Right" Tapped="RootThumb_Tapped"/>
+        </Grid>
     </ScrollViewer>
 </Page>

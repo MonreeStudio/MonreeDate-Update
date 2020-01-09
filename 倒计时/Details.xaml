@@ -17,21 +17,22 @@
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
     </Page.Resources>
-    <Grid x:Name="DetailsGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="DetailsGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-        <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
-            <AppBarButton x:Name="ShareButton" FocusVisualPrimaryThickness="1" CornerRadius="3" Label="分享" ToolTipService.ToolTip="以卡片形式分享" Foreground="White" Click="ShareButton_Click">
-                <AppBarButton.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
-                </AppBarButton.Icon>
-                <!--<AppBarButton.Flyout>
+            <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
+                <AppBarButton x:Name="ShareButton" FocusVisualPrimaryThickness="1" CornerRadius="3" Label="分享" ToolTipService.ToolTip="以卡片形式分享" Foreground="White" Click="ShareButton_Click">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                    </AppBarButton.Icon>
+                    <!--<AppBarButton.Flyout>
                     <Flyout Placement="Bottom">
                     <StackPanel CornerRadius="10">
                         <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="8">
@@ -40,21 +41,21 @@
                     </StackPanel>
                     </Flyout>
                 </AppBarButton.Flyout>-->
-            </AppBarButton>
-            <AppBarButton x:Name="EditButton" CornerRadius="3" Label="编辑" Foreground="White" ToolTipService.ToolTip="编辑以更新日程内容" Click="EditButton_Click" >
-                <AppBarButton.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE104;"/>
-                </AppBarButton.Icon>
-            </AppBarButton>
-        </CommandBar>
-        <TextBlock x:Name="DetailsPickedDate"
+                </AppBarButton>
+                <AppBarButton x:Name="EditButton" CornerRadius="3" Label="编辑" Foreground="White" ToolTipService.ToolTip="编辑以更新日程内容" Click="EditButton_Click" >
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE104;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar>
+            <TextBlock x:Name="DetailsPickedDate"
                    x:FieldModifier="public"
                    Text="2019/6/15"
                    FontSize="30"
                    Foreground="White"
                    HorizontalAlignment="Center" VerticalAlignment="Bottom"
                    Grid.Row="0"/>
-        <TextBlock x:Name="DetailsEvent"
+            <TextBlock x:Name="DetailsEvent"
                    x:FieldModifier="public"
                    TextTrimming="CharacterEllipsis"
                    Text="大学英语六级"
@@ -63,7 +64,7 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Grid.Row="1"/>
-        <TextBlock x:Name="TipText"
+            <TextBlock x:Name="TipText"
                    Text=""
                    FontSize="20"
                    Margin="50,0,50,0"
@@ -73,12 +74,12 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Grid.Row="2"/>
-        <Grid  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Grid  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <TextBlock x:Name="DetailsDate"
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="DetailsDate"
                        x:FieldModifier="public"
                        Text="还有。。。"
                        FontSize="48"
@@ -102,52 +103,53 @@
                         EasingMode="EaseOut"
                         Color="White" />
                 </interactivity:Interaction.Behaviors>
-            </TextBlock>
+                </TextBlock>
 
-            <ContentDialog Title="分享日程"
+                <ContentDialog Title="分享日程"
                            Foreground="CornflowerBlue"
                            DefaultButton="Primary"
                            x:Name="RenderDialog">
-                <StackPanel>
-                    <Border x:Name="RenderBorder" x:FieldModifier="public">
-                        <Grid x:Name="RenderGrid" Padding="25,10,30,10" Height="Auto" Width="Auto">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="3*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="RenderTitle" Text="夏日——记录你的生活" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="28" Margin="0,10,0,5" FontFamily="FZShuTi"/>
-                            <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="1" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
-                            <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
+                    <StackPanel>
+                        <Border x:Name="RenderBorder" x:FieldModifier="public">
+                            <Grid x:Name="RenderGrid" Padding="25,10,30,10" Height="Auto" Width="Auto">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="3*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock x:Name="dEvent" Grid.Row="0" FontSize="25" Margin="0,5,0,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                                <TextBlock x:Name="dCalDate" Grid.Row="1" FontSize="30" Margin="0,0,10,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="SemiBold"/>
-                                <TextBlock x:Name="dDate" Grid.Row="2" FontSize="18" Margin="0,0,0,10" Foreground="SlateGray" VerticalAlignment="Center"/>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="RenderTitle" Text="夏日——记录你的生活" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="28" Margin="0,10,0,5" FontFamily="FZShuTi"/>
+                                <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="1" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
+                                <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="dEvent" Grid.Row="0" FontSize="25" Margin="0,5,0,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="dCalDate" Grid.Row="1" FontSize="30" Margin="0,0,10,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                    <TextBlock x:Name="dDate" Grid.Row="2" FontSize="18" Margin="0,0,0,10" Foreground="SlateGray" VerticalAlignment="Center"/>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Border>
-                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                        <TextBlock Text="选取背景色：" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <Rectangle x:Name="BlueRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="蓝" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="BlueRec_Tapped"/>
-                        <Rectangle x:Name="YellowRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="黄" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="YellowRec_Tapped"/>
-                        <Rectangle x:Name="GreenRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="绿" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="GreenRec_Tapped"/>
-                        <Rectangle x:Name="PinkRec" Width="40" Height="40" ToolTipService.ToolTip="粉" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="PinkRec_Tapped"/>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="选取背景色：" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <Rectangle x:Name="BlueRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="蓝" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="BlueRec_Tapped"/>
+                            <Rectangle x:Name="YellowRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="黄" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="YellowRec_Tapped"/>
+                            <Rectangle x:Name="GreenRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="绿" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="GreenRec_Tapped"/>
+                            <Rectangle x:Name="PinkRec" Width="40" Height="40" ToolTipService.ToolTip="粉" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="PinkRec_Tapped"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                            <Button x:Name="Share" HorizontalAlignment="Center" Height="40" Margin="0,0,30,0" CornerRadius="20" Width="100" Foreground="White" Background="DeepSkyBlue" Content="分享" Click="Share_Click"/>
+                            <Button x:Name="Save" HorizontalAlignment="Center" Height="40" Margin="0,0,30,0" CornerRadius="20" Width="100" Foreground="White" Background="CornflowerBlue" Content="保存" Click="Save_Click"/>
+                            <Button x:Name="Cancel" HorizontalAlignment="Center" Height="40"  Width="100" CornerRadius="20" Content="取消" Foreground="White" Background="LightBlue" Click="Cancel_Click"/>
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                        <Button x:Name="Share" HorizontalAlignment="Center" Height="40" Margin="0,0,30,0" CornerRadius="20" Width="100" Foreground="White" Background="DeepSkyBlue" Content="分享" Click="Share_Click"/>
-                        <Button x:Name="Save" HorizontalAlignment="Center" Height="40" Margin="0,0,30,0" CornerRadius="20" Width="100" Foreground="White" Background="CornflowerBlue" Content="保存" Click="Save_Click"/>
-                        <Button x:Name="Cancel" HorizontalAlignment="Center" Height="40"  Width="100" CornerRadius="20" Content="取消" Foreground="White" Background="LightBlue" Click="Cancel_Click"/>
-                    </StackPanel>
-                </StackPanel>
-            </ContentDialog>
+                </ContentDialog>
+            </Grid>
+            <TextBlock Text="——夏日——" Margin="10" Grid.Row="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
         </Grid>
-        <TextBlock Text="——夏日——" Margin="10" Grid.Row="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
-    </Grid>
+    </ScrollViewer>
 </Page>

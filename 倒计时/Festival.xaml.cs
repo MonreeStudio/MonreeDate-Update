@@ -43,7 +43,7 @@ namespace 倒计时
             SetThemeColor();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Festival";
-            //NavigationCacheMode = NavigationCacheMode.Enabled;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private void SetThemeColor()
@@ -132,6 +132,31 @@ namespace 倒计时
             else
                 s2 = "已过" + days.ToString() + "天";
             return s2;
+        }
+
+        private void FesScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            //var y = FesScrollViewer.VerticalOffset;
+            //if (y == 0)
+            //    RootThumb.Visibility = Visibility.Collapsed;
+            //else
+            //    RootThumb.Visibility = Visibility.Visible;
+            //RootThumb.Margin = new Thickness(0, y, 20, 0);
+        }
+
+        private void RootThumb_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FesScrollViewer.ChangeView(null, 0, null);
+        }
+
+        private void FesScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            var y = FesScrollViewer.VerticalOffset;
+            if (y == 0)
+                RootThumb.Visibility = Visibility.Collapsed;
+            else
+                RootThumb.Visibility = Visibility.Visible;
+            RootThumb.Margin = new Thickness(0, y, 20, 0);
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)

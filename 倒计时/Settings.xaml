@@ -21,20 +21,21 @@
         <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
         <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="ThemeColor"/>
     </Page.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock x:Name="SettingsTopText"
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="SettingsTopText"
                    Text="个性化设置"
                    FontSize="28"
                    Foreground="{x:Bind TC}"
@@ -42,8 +43,8 @@
                    Grid.Row="0"
                    Grid.Column="0" 
                    VerticalAlignment="Top"/>
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,30,20,0">
-            <Grid Padding="10,13,10,13" CornerRadius="10">
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,30,20,0">
+                <Grid Padding="10,13,10,13" CornerRadius="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition />
@@ -69,7 +70,7 @@
                                 <TextBlock x:Name="SexTB" Text="性别：" Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalSex" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未选择" FontSize="13" />
                             </StackPanel>
-                        <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
+                            <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
                                 <TextBlock x:Name="BirthdayTB" Text="生日："  Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalBirthday" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
                             </StackPanel>
@@ -92,9 +93,9 @@
                 Style="{StaticResource ButtonRevealStyle}" 
                 Click="Button_Click"/>
                 </Grid>
-        </Grid>
-        <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
-        <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
+            </Grid>
+            <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
+                <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
                       Header="首页背景亚克力模糊效果"
                       HorizontalAlignment="Left"
                       x:Name="AllPageAcylic"
@@ -103,7 +104,7 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPageAcylic_Toggled"/>
-        <ToggleSwitch x:Name="AllPersonPicture"
+                <ToggleSwitch x:Name="AllPersonPicture"
                       Header="首页显示头像"
                       Margin="0,5,0,0"
                       HorizontalAlignment="Left"
@@ -111,48 +112,48 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPersonPicture_Toggled"/>
-        </StackPanel>
-        <StackPanel Grid.Row="3" Margin="20,0,0,0" VerticalAlignment="Top">
-            <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
-            <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="local:ThemeColorData"> 
-                        <StackPanel Orientation="Horizontal">
-                            <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25"/>
-                            <TextBlock Text="{x:Bind colorName}" Margin="2" Foreground="{x:Bind themeColor}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-        </ComboBox>
-        </StackPanel>
-        <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,0,0,0">
-            <Button x:Name="PinButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
-            <Button x:Name="PinTaskbarButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
-            <Button x:Name="SupportButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="支持开发者❤" Click="SupportButton_Click">
-                <Button.Flyout>
-                    <Flyout>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="10">
-                                <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码.jpg"/>
-                                <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
-                                <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码2.jpg"/>
+            </StackPanel>
+            <StackPanel Grid.Row="3" Margin="20,0,0,0" VerticalAlignment="Top">
+                <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
+                <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:ThemeColorData">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25"/>
+                                <TextBlock Text="{x:Bind colorName}" Margin="2" Foreground="{x:Bind themeColor}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="10">
-                                <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码.png"/>
-                                <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
-                                <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码2.png"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,10,0,0">
+                <Button x:Name="PinButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
+                <Button x:Name="PinTaskbarButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
+                <Button x:Name="SupportButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="支持开发者❤" Click="SupportButton_Click">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10">
+                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码.jpg"/>
+                                    <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
+                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码2.jpg"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10">
+                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码.png"/>
+                                    <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
+                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码2.png"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-        </StackPanel>
-        <TextBlock x:Name="TestTb"
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+            <TextBlock x:Name="TestTb"
                    Grid.Row="3"
                    Grid.Column="0"
                    HorizontalAlignment="Center"/>
 
-        <ContentDialog x:Name="AboutContent"
+            <ContentDialog x:Name="AboutContent"
                        Title="关于“夏日”"
                        PrimaryButtonText="了解"
                        SecondaryButtonText="五星好评😝"
@@ -161,23 +162,23 @@
                        CornerRadius="10"
                        Background="White"
                        SecondaryButtonClick="AboutContent_SecondaryButtonClick">
-            <ScrollViewer>
-            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock x:Name="Version" Margin="10,10,0,5" />
-                <TextBlock x:Name="SystemVersion" Margin="10,0,0,5" />
-                <TextBlock x:Name="Platform" Margin="10,0,0,10"/>
-                    <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
+                <ScrollViewer>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <TextBlock x:Name="Version" Margin="10,10,0,5" />
+                        <TextBlock x:Name="SystemVersion" Margin="10,0,0,5" />
+                        <TextBlock x:Name="Platform" Margin="10,0,0,10"/>
+                        <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
             TextWrapping="Wrap" Margin="10"/>
-                <Image Source="Assets/03.png" Width="350" Height="350"/>
-                <TextBlock Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
-                <TextBlock Text="若发现Bug请发邮箱：monreestudio@outlook.com" Margin="10" />
-                <HyperlinkButton Content="Github开源项目" 
+                        <Image Source="Assets/03.png" Width="350" Height="350"/>
+                        <TextBlock Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
+                        <TextBlock Text="若发现Bug请发邮箱：monreestudio@outlook.com" Margin="10" />
+                        <HyperlinkButton Content="Github开源项目" 
                                  Margin="10"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
-            </StackPanel>
-            </ScrollViewer>
-        </ContentDialog>
-        <ContentDialog x:Name="BirthDialog"
+                    </StackPanel>
+                </ScrollViewer>
+            </ContentDialog>
+            <ContentDialog x:Name="BirthDialog"
                        Title="添加出生日为日程"
                        PrimaryButtonText="确认"
                        CloseButtonText="取消"
@@ -185,14 +186,14 @@
                        CornerRadius="10"
                        Background="White"
                        PrimaryButtonClick="BirthDialog_PrimaryButtonClick">
-            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock x:Name="BirthText"/>
-                <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
+                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <TextBlock x:Name="BirthText"/>
+                    <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
             TextWrapping="Wrap" />
-            </StackPanel>
+                </StackPanel>
 
-        </ContentDialog>
-        <Button x:Name="AboutButton"
+            </ContentDialog>
+            <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
                 Grid.Column="1"
@@ -207,22 +208,23 @@
                 Width="100"
                 Click="AboutButton_Click"/>
 
-        <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
+            <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger
                         MinWindowWidth="{x:Bind MinMyNav}"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="SettingsTopText.Margin" Value="20,20,20,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-                
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        
-    </Grid>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="SettingsTopText.Margin" Value="20,20,20,0"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+        </Grid>
+    </ScrollViewer>
 </Page>

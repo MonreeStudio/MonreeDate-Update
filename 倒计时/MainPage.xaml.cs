@@ -241,10 +241,25 @@ namespace 倒计时
             {
                 MyNav.SelectedItem = MyNav.MenuItems[0];
                 ContentFrame.Navigate(typeof(All));
+                SelectedPageItem = "All";
+                MyNav.IsBackEnabled = false;
                 return true;
             }
             else
             {
+                if (SelectedPageItem.Equals("Details") && SelectedPage == false)
+                {
+                    ContentFrame.Navigate(typeof(Festival));
+                    SelectedPageItem = "Festival";
+                    return true;
+                }
+                if(SelectedPageItem.Equals("Details")&&SelectedPage==true)
+                {
+                    ContentFrame.Navigate(typeof(All));
+                    SelectedPageItem = "All";
+                    MyNav.IsBackEnabled = false;
+                    return true;
+                }
                 ContentFrame.GoBack();
                 return true;
             }
