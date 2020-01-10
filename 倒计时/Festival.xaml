@@ -93,21 +93,20 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup>
-                        <VisualState>
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="{x:Bind MinMyNav}"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="FsTop.Margin" Value="20"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
             </StackPanel>
         </ScrollViewer>
-        <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Visible" Name="RootThumb" Margin="50" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped"/>
+        <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" Name="RootThumb" Margin="50" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped"/>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind MinMyNav}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FsTop.Margin" Value="20"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

@@ -55,12 +55,9 @@
         </Style>
     </Page.Resources>
 
+    <Grid>
     <ScrollViewer x:Name="AllScrollViewer" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                 <RelativePanel x:FieldModifier="Public">
                     <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
                     <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
@@ -209,8 +206,21 @@
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
             </StackPanel>
-            <Thumb Grid.Row="0" Visibility="Collapsed" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Margin="20" Height="55" Width="55" HorizontalAlignment="Right" Canvas.ZIndex="101" Tapped="RootThumb_Tapped"/>
-        </Grid>
     </ScrollViewer>
+        <Thumb Grid.Row="0" Visibility="Collapsed" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Margin="50" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped"/>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger
+                        MinWindowWidth="{x:Bind MinMyNav}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Today.Margin" Value="20,55,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
 </Page>
     

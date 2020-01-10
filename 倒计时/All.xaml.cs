@@ -1061,7 +1061,6 @@ namespace 倒计时
                 RootThumb.Visibility = Visibility.Collapsed;
             else
                 RootThumb.Visibility = Visibility.Visible;
-            RootThumb.Margin = new Thickness(0, y, 20, 20);
         }
 
         public Color GetColor(string hex)

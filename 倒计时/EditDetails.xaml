@@ -13,6 +13,7 @@
         <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
     </Page.Resources>
 
+    <Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel x:FieldModifier="Public">
             <TextBlock Text="编辑"
@@ -124,19 +125,19 @@
                        CloseButtonClick="TipDialog_CloseButtonClick">
                 <TextBox x:Name="TipTextbox" Margin="10" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="10"/>
             </ContentDialog>
-
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup>
-                    <VisualState>
-                        <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="{x:Bind MinMyNav}"/>
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter Target="title.Margin" Value="20"/>
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
         </StackPanel>
     </ScrollViewer>
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{x:Bind MinMyNav}"/>
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="title.Margin" Value="20"/>
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+    </Grid>
 </Page>

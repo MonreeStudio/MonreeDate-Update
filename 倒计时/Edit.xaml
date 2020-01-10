@@ -12,6 +12,7 @@
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
     </Page.Resources>
 
+    <Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -27,7 +28,7 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="EditTopText" Text="编辑个人信息" Grid.Row="0" FontSize="28" Margin="90,30,0,0" Foreground="Black" />
+            <TextBlock x:Name="EditTopText" Text="编辑个人信息" Grid.Row="0" FontSize="28" Margin="90,30,0,0" Foreground="{x:Bind TC}" />
             <StackPanel Grid.Row="1" Margin="20">
                 <TextBlock Text="昵称" Foreground="Black"  FontSize="20" Margin="0,0,0,5"/>
                 <TextBox x:Name="EditNickName" x:FieldModifier="Public" Width="300" BorderBrush="{x:Bind TC}" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
@@ -69,19 +70,22 @@
                 Click="SaveButton_Click"
                 />
 
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup>
-                    <VisualState>
-                        <VisualState.StateTriggers>
-                            <AdaptiveTrigger
-                        MinWindowWidth="{x:Bind MinMyNav}"/>
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter Target="EditTopText.Margin" Value="20"/>
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
+            
         </Grid>
     </ScrollViewer>
+    
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger
+                        MinWindowWidth="{x:Bind MinMyNav}"/>
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="EditTopText.Margin" Value="20"/>
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+    </Grid>
 </Page>
