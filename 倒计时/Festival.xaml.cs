@@ -156,7 +156,7 @@ namespace 倒计时
                 RootThumb.Visibility = Visibility.Collapsed;
             else
                 RootThumb.Visibility = Visibility.Visible;
-            RootThumb.Margin = new Thickness(0, y, 20, 0);
+            // RootThumb.Margin = new Thickness(0, y, 20, 0);
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
