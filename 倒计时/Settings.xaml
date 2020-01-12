@@ -36,13 +36,14 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="SettingsTopText"
-                   Text="个性化设置"
-                   FontSize="28"
-                   Foreground="{x:Bind TC}"
-                   Margin="90,30,0,0"
-                   Grid.Row="0"
-                   Grid.Column="0" 
-                   VerticalAlignment="Top"/>
+                       Text="个性化设置"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="{x:Bind TC}"
+                       Margin="90,30,0,0"
+                       Grid.Row="0"
+                       Grid.Column="0" 
+                       VerticalAlignment="Top"/>
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,30,20,0">
                 <Grid Padding="10,13,10,13" CornerRadius="10">
                     <Grid.ColumnDefinitions>
@@ -127,9 +128,9 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,10,0,0">
-                <Button x:Name="PinButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
-                <Button x:Name="PinTaskbarButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
-                <Button x:Name="SupportButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Content="支持开发者❤" Click="SupportButton_Click">
+                <Button x:Name="PinButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
+                <Button x:Name="PinTaskbarButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
+                <Button x:Name="SupportButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="支持开发者❤" Click="SupportButton_Click">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>

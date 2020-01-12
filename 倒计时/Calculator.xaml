@@ -32,10 +32,10 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="StartDate" Grid.Row="1" Grid.Column="0" FontSize="25" Text="开始日期:"  Foreground="{x:Bind TC}"  HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <TextBlock x:Name="StartDate" Grid.Row="1" Grid.Column="0" FontSize="25" Text="开始日期："  Foreground="{x:Bind TC}"  HorizontalAlignment="Center" VerticalAlignment="Center" >
             </TextBlock>
             <!--<TextBox x:Name="StartTime" BorderThickness="0" Grid.Row="0" Grid.Column="2" Width="100" Height="30"/>-->
-            <TextBlock x:Name="EndDate" Grid.Row="2" Grid.Column="0" FontSize="25" Text="结束日期:"  Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock x:Name="EndDate" Grid.Row="2" Grid.Column="0" FontSize="25" Text="结束日期："  Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <!--<TextBox x:Name="EndTime" BorderThickness="0" Grid.Row="3" Grid.Column="2" Width="100" Height="30"/>-->
             <Button  Content="计算"
                  x:Name="CalButton"
@@ -52,6 +52,7 @@
                  Click="Button_Click"/>
             <TextBox CornerRadius="8"
                  PlaceholderText="计算结果"
+                     IsReadOnly="True"
                  x:Name="SpanTime"
                  BorderThickness="1"
                  BorderBrush="{x:Bind TC}"

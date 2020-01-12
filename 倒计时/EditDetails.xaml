@@ -16,13 +16,14 @@
     <Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel x:FieldModifier="Public">
-            <TextBlock Text="编辑"
-                   x:Name="title"
-                   Margin="90,30,0,0"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   FontSize="28"
-                   Foreground="{x:Bind TC}" />
+            <TextBlock Text="编辑日程"
+                       x:Name="title"
+                       FontWeight="Bold"
+                       Margin="90,30,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       FontSize="28"
+                       Foreground="{x:Bind TC}" />
             <StackPanel>
                 <TextBlock Text="提示：若该日程已被固定到开始菜单，则更改信息后需重新固定。" TextTrimming="Clip" Margin="20,5,0,10" FontSize="15" Foreground="Gray"/>
                 <TextBlock Text="日程名称" Margin="20,0,0,10" FontSize="20"/>
@@ -54,6 +55,7 @@
                     x:Name="BgsButton"
                     HorizontalAlignment="Left"
                     CornerRadius="15"
+                        Width="80"
                     Foreground="White"
                     Background="{x:Bind TC}"
                     Click="BgsButton_Click"/>
@@ -66,7 +68,7 @@
                         Background="{x:Bind TC}"
                         HorizontalAlignment="Left"
                         CornerRadius="15"
-                        Width="{x:Bind BgsButton.Width}"
+                        Width="80"
                         Click="TipButton_Click"/>
                 <TextBlock x:Name="TTB" Margin="10,0,0,0" Width="200" FontSize="15" Foreground="Gray" TextWrapping="Wrap" VerticalAlignment="Top"/>
             </StackPanel>

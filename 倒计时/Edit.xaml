@@ -28,13 +28,13 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="EditTopText" Text="编辑个人信息" Grid.Row="0" FontSize="28" Margin="90,30,0,0" Foreground="{x:Bind TC}" />
+            <TextBlock x:Name="EditTopText" Text="编辑个人信息" FontWeight="Bold" Grid.Row="0" FontSize="28" Margin="90,30,0,0" Foreground="{x:Bind TC}" />
             <StackPanel Grid.Row="1" Margin="20">
-                <TextBlock Text="昵称" Foreground="Black"  FontSize="20" Margin="0,0,0,5"/>
+                <TextBlock Text="昵称" Foreground="{x:Bind TC}"  FontSize="20" Margin="0,0,0,5"/>
                 <TextBox x:Name="EditNickName" x:FieldModifier="Public" Width="300" BorderBrush="{x:Bind TC}" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
             </StackPanel>
             <StackPanel Grid.Row="2" Margin="20,0,0,0">
-                <ComboBox x:Name="EditSex" x:FieldModifier="Public" BorderBrush="{x:Bind TC}" CornerRadius="8" BorderThickness="1" SelectionChanged="ComboBox_SelectionChanged"  Header="性别" FontSize="20" >
+                <ComboBox x:Name="EditSex" Foreground="{x:Bind TC}" x:FieldModifier="Public" BorderBrush="{x:Bind TC}" CornerRadius="8" BorderThickness="1" SelectionChanged="ComboBox_SelectionChanged"  Header="性别" FontSize="20" >
                     <x:String>男</x:String>
                     <x:String>女</x:String>
                 </ComboBox>
@@ -43,7 +43,7 @@
                 <CalendarDatePicker BorderThickness="1"
                                 x:Name="EditBirthday"
                                 x:FieldModifier="Public"
-                                Foreground="Black"
+                                Foreground="{x:Bind TC}"
                                 BorderBrush="{x:Bind TC}"
                                 Header="生日"
                                 FontSize="20"
@@ -52,7 +52,7 @@
                                 DateChanged="Add_Picker_DateChanged"/>
             </StackPanel>
             <StackPanel Grid.Row="4" Margin="20">
-                <TextBlock Text="个性签名"  Foreground="Black"  FontSize="20" Margin="0,0,0,5"/>
+                <TextBlock Text="个性签名"  Foreground="{x:Bind TC}"  FontSize="20" Margin="0,0,0,5"/>
                 <TextBox Width="300" x:Name="EditSign" x:FieldModifier="Public" BorderBrush="{x:Bind TC}" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left"/>
             </StackPanel>
             <Button x:Name="SaveButton"

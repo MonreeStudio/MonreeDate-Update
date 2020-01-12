@@ -72,7 +72,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
+                                <TextBlock x:Name="FsTop" Text="节日" FontWeight="Bold" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
                                 <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
                             </Grid>
                         </controls:ScrollHeader>
