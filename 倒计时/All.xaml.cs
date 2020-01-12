@@ -81,8 +81,6 @@ namespace 倒计时
             MainPage.Current.MyNav.IsBackEnabled = false;
             MainPage.Current.SelectedPageItem = "All";
             NavigationCacheMode = NavigationCacheMode.Enabled;
-
-
         }
 
         private async void SetPersonPicture()
@@ -353,9 +351,10 @@ namespace 倒计时
             //BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badge);
         }
 
-        private void LoadDateData()
+        public void LoadDateData()
         {
-            ContentChoise.LabelPosition = CommandBarLabelPosition.Default;
+            AllProgressRing.IsActive = true;
+            AllScrollViewer.ChangeView(null, 0, null);
             if (localSettings.Values["DisplayMode"] == null)
                 localSettings.Values["DisplayMode"] = "All";
             var dm = localSettings.Values["DisplayMode"].ToString();
@@ -373,6 +372,7 @@ namespace 倒计时
                 default:
                     break;
             }
+            AllProgressRing.IsActive = false;
         }
 
         private void LoadAll()
@@ -472,8 +472,8 @@ namespace 倒计时
             if (localSettings.Values["YMD"] == null)
                 localSettings.Values["YMD"] = true;
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date < ? order by Date desc", "1", DateTime.Now.ToString("yyyy - MM - dd"));
-            List <DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date < ? order by AddTime desc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
             if (datalist2.Count() == 0)
             {
                 NewTB.Text = "这里空空如也~";
@@ -540,7 +540,7 @@ namespace 倒计时
             if (localSettings.Values["YMD"] == null)
                 localSettings.Values["YMD"] = true;
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date >= ? order by Date asc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date >= ? order by AddTime desc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
             List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
             if (datalist2.Count() == 0)
             {
@@ -1058,9 +1058,15 @@ namespace 倒计时
         {
             var y = AllScrollViewer.VerticalOffset;
             if (y == 0)
+            {
+                AllThumbShadow.Visibility = Visibility.Collapsed;
                 RootThumb.Visibility = Visibility.Collapsed;
+            }
             else
+            {
+                AllThumbShadow.Visibility = Visibility.Visible;
                 RootThumb.Visibility = Visibility.Visible;
+            }
         }
 
         public Color GetColor(string hex)

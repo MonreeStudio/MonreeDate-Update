@@ -153,9 +153,15 @@ namespace 倒计时
         {
             var y = FesScrollViewer.VerticalOffset;
             if (y == 0)
+            {
+                FesThumbShadow.Visibility = Visibility.Collapsed;
                 RootThumb.Visibility = Visibility.Collapsed;
+            }
             else
+            {
+                FesThumbShadow.Visibility = Visibility.Visible;
                 RootThumb.Visibility = Visibility.Visible;
+            }
             // RootThumb.Margin = new Thickness(0, y, 20, 0);
         }
 

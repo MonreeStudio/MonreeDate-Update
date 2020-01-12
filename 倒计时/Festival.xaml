@@ -56,21 +56,27 @@
     </Page.Resources>
     <Grid>
         <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
-            <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
-                    <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
-                </Grid>
-                <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                
+                <ListView x:Name="FesList" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
+                    
+                    <ListView.Header>
+                        <controls:ScrollHeader Mode="Sticky">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
+                                <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
+                            </Grid>
+                        </controls:ScrollHeader>
+                    </ListView.Header>
                     <ListView.ContextFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Icon="Add" Text="添加到首页" Click="MenuFlyoutItem_Click"/>
@@ -82,20 +88,30 @@
                             <Setter Property="Margin" Value="0" />
                         </Style>
                     </ListView.ItemContainerStyle>
-
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="local:FestivalData">
-                            <RelativePanel x:Name="FestivalList" Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
-                                <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
-                                <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
-                                <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
-                            </RelativePanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:FestivalData">
+                        <RelativePanel x:Name="FestivalList" Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
+                            <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
+                            <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
+                            <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
+                        </RelativePanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            </Grid>
         </ScrollViewer>
-        <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" Name="RootThumb" Margin="50" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped"/>
+        <controls:DropShadowPanel BlurRadius="55"
+                                  x:Name="FesThumbShadow"
+                                  ShadowOpacity=".8"
+                                  OffsetX="0"
+                                  OffsetY="0"
+                                  Color="DimGray"
+                                  Margin="50,50,50,100"
+                                  VerticalAlignment="Bottom"
+                                  HorizontalAlignment="Right"
+                                  IsMasked="True">
+            <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" Name="RootThumb"  Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped"/>
+        </controls:DropShadowPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
