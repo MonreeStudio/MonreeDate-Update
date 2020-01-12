@@ -285,6 +285,17 @@ namespace 倒计时
             {
                 var navItemTag = args.SelectedItemContainer.Tag.ToString();
                 MyNav_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
+                if (navItemTag == "All")
+                {
+                    MyNav.IsBackEnabled = false;
+                    SelectedPageItem = "All";
+                    return;
+                }
+                if(navItemTag == "Festival")
+                {
+                    MyNav.IsBackEnabled = true;
+                    SelectedPageItem = "Festival";
+                }
             }
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)

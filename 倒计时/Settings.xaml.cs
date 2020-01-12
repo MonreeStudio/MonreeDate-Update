@@ -120,51 +120,111 @@ namespace 倒计时
                     TC.Color = Colors.CornflowerBlue;
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 0;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "DeepSkyBlue":
                     TC.Color = Color.FromArgb(255,2,136,235);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 1;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Orange":
                     TC.Color = Color.FromArgb(255, 229, 103, 44);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 2;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Crimson":
                     TC.Color = Colors.Crimson;
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 3;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Gray":
                     TC.Color = Color.FromArgb(255, 73, 92, 105);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 4;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Purple":
                     TC.Color = Color.FromArgb(255, 119, 25, 171);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 5;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Pink":
                     TC.Color = Color.FromArgb(255, 239, 130, 160);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 6;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Green":
                     TC.Color = Color.FromArgb(255, 124, 178, 56);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 7;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "DeepGreen":
                     TC.Color = Color.FromArgb(255, 8, 128, 126);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 8;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 case "Coffee":
                     TC.Color = Color.FromArgb(255, 183, 133, 108);
                     MainPage.Current.SetThemeColor();
                     ThemeColorSelected.SelectedIndex = 9;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
                     break;
                 default:
                     break;

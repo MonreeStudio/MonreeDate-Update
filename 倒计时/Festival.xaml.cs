@@ -46,7 +46,7 @@ namespace 倒计时
             NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
-        private void SetThemeColor()
+        public void SetThemeColor()
         {
             if (localSettings.Values["ThemeColor"] == null)
                 localSettings.Values["ThemeColor"] = "CornflowerBlue";

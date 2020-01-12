@@ -61,12 +61,13 @@
             </StackPanel>
             <StackPanel Margin="20,50,0,0" Orientation="Horizontal">
                 <Button Content="备注"
-                x:Name="TipButton"
-                Foreground="White"
-                Background="{x:Bind TC}"
-                HorizontalAlignment="Left"
-                CornerRadius="15"
-                Click="TipButton_Click"/>
+                        x:Name="TipButton"
+                        Foreground="White"
+                        Background="{x:Bind TC}"
+                        HorizontalAlignment="Left"
+                        CornerRadius="15"
+                        Width="{x:Bind BgsButton.Width}"
+                        Click="TipButton_Click"/>
                 <TextBlock x:Name="TTB" Margin="10,0,0,0" Width="200" FontSize="15" Foreground="Gray" TextWrapping="Wrap" VerticalAlignment="Top"/>
             </StackPanel>
             <Button Content="确认修改"

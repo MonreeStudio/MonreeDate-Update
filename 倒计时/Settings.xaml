@@ -210,8 +210,6 @@
 
             <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
 
-            
-
         </Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -224,7 +222,6 @@
                         <Setter Target="SettingsTopText.Margin" Value="20,20,20,0"/>
                     </VisualState.Setters>
                 </VisualState>
-
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </ScrollViewer>

@@ -105,7 +105,7 @@ namespace 倒计时
             }
             catch { }
         }
-        private void SetThemeColor()
+        public void SetThemeColor()
         {
             if (localSettings.Values["ThemeColor"] == null)
                 localSettings.Values["ThemeColor"] = "CornflowerBlue";
