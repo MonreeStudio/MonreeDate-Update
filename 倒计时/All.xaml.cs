@@ -70,6 +70,14 @@ namespace 倒计时
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             Current = this;
             TopTap = true;
+            LoadAllPage();
+            MainPage.Current.MyNav.IsBackEnabled = false;
+            MainPage.Current.SelectedPageItem = "All";
+            NavigationCacheMode = NavigationCacheMode.Enabled;
+        }
+
+        public void LoadAllPage()
+        {
             SetToptext();
             SetTitle();
             LoadSettings();
@@ -77,9 +85,6 @@ namespace 倒计时
             LoadTile();
             SetThemeColor();
             SetPersonPicture();
-            MainPage.Current.MyNav.IsBackEnabled = false;
-            MainPage.Current.SelectedPageItem = "All";
-            NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private async void SetPersonPicture()

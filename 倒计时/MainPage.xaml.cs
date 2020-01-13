@@ -242,6 +242,7 @@ namespace 倒计时
                 MyNav.SelectedItem = MyNav.MenuItems[0];
                 ContentFrame.Navigate(typeof(All));
                 SelectedPageItem = "All";
+                All.Current.LoadAllPage();
                 MyNav.IsBackEnabled = false;
                 return true;
             }
@@ -257,6 +258,7 @@ namespace 倒计时
                 {
                     ContentFrame.Navigate(typeof(All));
                     SelectedPageItem = "All";
+                    All.Current.LoadAllPage();
                     MyNav.IsBackEnabled = false;
                     return true;
                 }
@@ -289,6 +291,7 @@ namespace 倒计时
                 {
                     MyNav.IsBackEnabled = false;
                     SelectedPageItem = "All";
+                    All.Current.LoadAllPage();
                     return;
                 }
                 if(navItemTag == "Festival")
@@ -301,10 +304,10 @@ namespace 倒计时
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
             //localSettings.Values["FirstlyOpen"] = null;
-            if (localSettings.Values["2.2.0.0"] == null)
+            if (localSettings.Values["2.2.1.0"] == null)
             { 
                 await MyCD.ShowAsync();
-                localSettings.Values["2.2.0.0"] = "false";
+                localSettings.Values["2.2.1.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
