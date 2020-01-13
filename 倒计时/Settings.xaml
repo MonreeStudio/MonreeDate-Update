@@ -71,7 +71,7 @@
                                 <TextBlock x:Name="SexTB" Text="性别：" Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalSex" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未选择" FontSize="13" />
                             </StackPanel>
-                            <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
+                            <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" ToolTipService.ToolTip="点我看看？" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
                                 <TextBlock x:Name="BirthdayTB" Text="生日："  Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalBirthday" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
                             </StackPanel>

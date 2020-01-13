@@ -59,7 +59,6 @@ namespace 倒计时
         public int _index;
         private double percentage;
         private bool TopTap;
-        private double thumbX = -50, thumbY = -50;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public All()
@@ -639,6 +638,7 @@ namespace 倒计时
                 if (localSettings.Values["SetAllPersonPicture"].Equals(true))
                 {
                     AllPicture.Visibility = Visibility.Visible;
+                    AllCommandBar.Margin = new Thickness(0, 50, 10, 2);
                     MarginText.Height = 30;
                     TopText.Margin = new Thickness(0);
                     MyProgressBar.Margin = new Thickness(0, 0, 0, 10);
@@ -646,6 +646,7 @@ namespace 倒计时
                 else
                 {
                     AllPicture.Visibility = Visibility.Collapsed;
+                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 25);
                     MarginText.Height = 50;
                     TopText.Margin = new Thickness(0, 25, 0, 0);
                     MyProgressBar.Margin = new Thickness(0);

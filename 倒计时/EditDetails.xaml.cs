@@ -24,7 +24,6 @@ namespace 夏日
         private string _Date;
         private string _Color;
         private double _TintOpacity;
-        private string tempDate;
         private string _isTop;
         private string _tip;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;

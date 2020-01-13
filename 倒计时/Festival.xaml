@@ -43,7 +43,7 @@
                                     <VisualState x:Name="Disabled"/>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Rectangle RadiusY="25" RadiusX="25" Fill="{ThemeResource SystemAccentColor}" Opacity="1" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="3" />
+                            <Rectangle RadiusY="55" RadiusX="55" Fill="Gray" Opacity="0.8" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="0" />
                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE11C;" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <Border x:Name="Background" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
                             <Border x:Name="BackgroundPointerOver" BorderBrush="{ThemeResource ThumbBorderBrushPointerOver}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
@@ -57,9 +57,8 @@
     <Grid>
         <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
             <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-                
+
                 <ListView x:Name="FesList" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
-                    
                     <ListView.Header>
                         <controls:ScrollHeader Mode="Sticky">
                             <Grid>
@@ -102,15 +101,28 @@
         </ScrollViewer>
         <controls:DropShadowPanel BlurRadius="55"
                                   x:Name="FesThumbShadow"
-                                  ShadowOpacity=".8"
+                                  ShadowOpacity="0"
                                   OffsetX="0"
                                   OffsetY="0"
-                                  Color="DimGray"
+                                  Color="White"
                                   Margin="50,50,50,100"
                                   VerticalAlignment="Bottom"
                                   HorizontalAlignment="Right"
                                   IsMasked="True">
-            <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" Name="RootThumb"  Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped"/>
+            <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" x:Name="RootThumb" ToolTipService.ToolTip="返回顶部" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped">
+                <animations:Implicit.ShowAnimations>
+                    <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
+                    <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
+                </animations:Implicit.ShowAnimations>
+
+                <animations:Implicit.HideAnimations>
+                    <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
+                    <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
+                        <animations:ScalarKeyFrame Key="0.1" Value="0.0"></animations:ScalarKeyFrame>
+                        <animations:ScalarKeyFrame Key="0.3" Value="0.0"></animations:ScalarKeyFrame>
+                    </animations:ScalarAnimation>
+                </animations:Implicit.HideAnimations>
+            </Thumb>
         </controls:DropShadowPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

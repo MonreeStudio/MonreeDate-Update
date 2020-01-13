@@ -597,12 +597,14 @@ namespace 倒计时
                 if (AllPersonPicture.IsOn == true)
                 {
                     All.Current.AllPicture.Visibility = Visibility.Visible;
+                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 2);
                     All.Current.MarginText.Height = 30;
                     localSettings.Values["SetAllPersonPicture"] = true;
                 }
                 else
                 {
                     All.Current.AllPicture.Visibility = Visibility.Collapsed;
+                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 25);
                     All.Current.MarginText.Height = 60;
                     localSettings.Values["SetAllPersonPicture"] = false;
                 }

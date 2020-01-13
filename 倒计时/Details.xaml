@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     Background="{ThemeResource CustomAcrylicBackgroundBrush}">
 
@@ -59,6 +60,7 @@
                    x:FieldModifier="public"
                    TextTrimming="CharacterEllipsis"
                    Text="大学英语六级"
+                       FontWeight="Bold"
                    FontSize="40"
                    Foreground="White"
                    HorizontalAlignment="Center"
@@ -111,18 +113,18 @@
                            x:Name="RenderDialog">
                     <StackPanel>
                         <Border x:Name="RenderBorder" x:FieldModifier="public">
-                            <Grid x:Name="RenderGrid" Padding="25,10,30,10" Height="Auto" Width="Auto">
+                            <Grid x:Name="RenderGrid" Padding="25,10,30,10"  Height="Auto" Width="Auto">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="1*"/>
                                     <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="RenderTitle" Text="夏日——记录你的生活" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="28" Margin="0,10,0,5" FontFamily="FZShuTi"/>
-                                <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="1" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
-                                <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock x:Name="RenderTitle" Text="——夏日——" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="15" Margin="0,0,0,5"/>
+                                <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="0" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
+                                <Grid Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
@@ -149,7 +151,7 @@
                     </StackPanel>
                 </ContentDialog>
             </Grid>
-            <TextBlock Text="——夏日——" Margin="10" Grid.Row="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
+            <TextBlock Text="——夏日——" Margin="20" Grid.Row="5" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
         </Grid>
     </ScrollViewer>
 </Page>

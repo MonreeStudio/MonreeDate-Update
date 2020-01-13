@@ -43,11 +43,11 @@
                                         <VisualState x:Name="Disabled"/>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Rectangle RadiusY="25" RadiusX="25" Fill="{ThemeResource SystemAccentColor}" Opacity="1" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="3" />
+                                <Rectangle RadiusY="55" RadiusX="55" Fill="Gray"  Opacity="0.6" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="0" />
                                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE11C;" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Border x:Name="Background" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
-                                <Border x:Name="BackgroundPointerOver" BorderBrush="{ThemeResource ThumbBorderBrushPointerOver}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
-                                <Border x:Name="BackgroundPressed" BorderBrush="{ThemeResource ThumbBorderBrushPressed}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
+                                <Border x:Name="Background" BorderBrush="White" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
+                                <Border x:Name="BackgroundPointerOver" BorderBrush="White" BorderThickness="0" Background="Transparent" Opacity="0"/>
+                                <Border x:Name="BackgroundPressed" BorderBrush="{ThemeResource ThumbBorderBrushPressed}" BorderThickness="0" Background="Transparent" Opacity="0"/>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
@@ -60,7 +60,7 @@
         <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                 <RelativePanel x:FieldModifier="Public">
                     <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
-                    <CommandBar Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
+                    <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
                         <AppBarButton x:Name="ContentChoise" Label="显示全部" Foreground="{x:Bind TC}" CornerRadius="3" ToolTipService.Placement="Mouse">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets"/>
@@ -88,7 +88,7 @@
                     </CommandBar>
                 </RelativePanel>
                 <Grid>
-                    <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited" IsTapEnabled="True" Tapped="AllPicture_Tapped"/>
+                    <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" Margin="20" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited" IsTapEnabled="True" Tapped="AllPicture_Tapped"/>
                     <TextBlock x:Name="UserName" Text="我是昵称" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <animations:Implicit.ShowAnimations>
           <animations:TranslationAnimation Duration="0:0:1" From="-30" To="-150,0,0" />
@@ -130,7 +130,7 @@
         </animations:Implicit.HideAnimations>
                     </TextBlock>
                 </Grid>
-                <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Margin="0,5,0,0" Foreground="{x:Bind TC}" FontSize="30" FontFamily="FZShuTi" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
+                <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Margin="0,0,0,0" Foreground="{x:Bind TC}" FontSize="30" FontFamily="FZShuTi" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
                 <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" Margin="0,0,0,20"/>
                 <TextBlock x:Name="MarginText" x:FieldModifier="public" Height="30"/>
                 <ContentDialog x:Name="DeleteDialog"
@@ -165,8 +165,8 @@
                     </GridView.ContextFlyout>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="local:CustomData" x:Name="gw">
-                            <StackPanel x:Name="GridViewStackPanel" PointerEntered="GridViewStackPanel_PointerEntered" PointerExited="GridViewStackPanel_PointerExited" CornerRadius="15" Background="{x:Bind Str4}" Height="250" Width="225">
-                                <TextBlock TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
+                                <StackPanel x:Name="GridViewStackPanel" PointerEntered="GridViewStackPanel_PointerEntered" PointerExited="GridViewStackPanel_PointerExited" CornerRadius="15" Background="{x:Bind Str4}" Height="250" Width="225">
+                                    <TextBlock TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
                                 <TextBlock HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" FontWeight="Bold"  TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                             </StackPanel>
@@ -174,27 +174,11 @@
 
                     </GridView.ItemTemplate>
 
-                    <animations:Implicit.ShowAnimations>
-                        <animations:TranslationAnimation Duration="0:0:1" From="0, -200, 0" To="0" ></animations:TranslationAnimation>
-                        <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
-                    </animations:Implicit.ShowAnimations>
-
-                    <animations:Implicit.HideAnimations>
-                        <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
-                        <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="-200">
-                            <animations:ScalarKeyFrame Key="0.1" Value="30"></animations:ScalarKeyFrame>
-                            <animations:ScalarKeyFrame Key="0.5" Value="0.0"></animations:ScalarKeyFrame>
-                        </animations:ScalarAnimation>
-                    </animations:Implicit.HideAnimations>
-
-                    <animations:Implicit.Animations>
-                        <animations:Vector3Animation Target="Offset"  Duration="0:0:1"></animations:Vector3Animation>
-                        <animations:ScalarAnimation Target="GridViewStackPanel" ImplicitTarget="Offset"  Duration="0:0:1.2" From="0" To="0">
-                            <animations:ScalarKeyFrame Key="0.9" Value="80"></animations:ScalarKeyFrame>
-                        </animations:ScalarAnimation>
-                        <animations:Vector3Animation Target="Scale" Duration="0:0:1"></animations:Vector3Animation>
-                    </animations:Implicit.Animations>
-                </GridView>
+                        <animations:Implicit.ShowAnimations>
+                            <animations:TranslationAnimation Duration="0:0:1" From="0, -200, 0" To="0" ></animations:TranslationAnimation>
+                            <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
+                        </animations:Implicit.ShowAnimations>
+                    </GridView>
                 </Grid>
                 <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
                 <TextBlock x:Name="NewTB2" x:FieldModifier="public" Visibility="Collapsed" Text="（创建后可右键删除）" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -215,15 +199,28 @@
     </ScrollViewer>
         <controls:DropShadowPanel BlurRadius="55"
                                   x:Name="AllThumbShadow"
-                                  ShadowOpacity=".8"
-                                  OffsetX="0"
-                                  OffsetY="0"
-                                  Color="DimGray"
+                                  ShadowOpacity="0"
+                                  OffsetX="10"
+                                  OffsetY="10"
+                                  Color="Gray"
                                   Margin="50,50,50,80"
                                   VerticalAlignment="Bottom"
                                   HorizontalAlignment="Right"
                                   IsMasked="True">
-            <Thumb Grid.Row="0" Visibility="Collapsed" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped"/>
+            <Thumb Grid.Row="0" Visibility="Collapsed" ToolTipService.ToolTip="返回顶部" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped">
+                <animations:Implicit.ShowAnimations>
+                    <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
+                    <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
+                </animations:Implicit.ShowAnimations>
+
+                <animations:Implicit.HideAnimations>
+                    <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
+                    <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
+                        <animations:ScalarKeyFrame Key="0.1" Value="0.0"></animations:ScalarKeyFrame>
+                        <animations:ScalarKeyFrame Key="0.3" Value="0.0"></animations:ScalarKeyFrame>
+                    </animations:ScalarAnimation>
+                </animations:Implicit.HideAnimations>
+            </Thumb>
         </controls:DropShadowPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
