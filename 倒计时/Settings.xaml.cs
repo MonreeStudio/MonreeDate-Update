@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Platform.WinRT;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +10,7 @@ using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Contacts;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -20,15 +22,21 @@ using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Shell;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using 倒计时.Models;
+using 夏日.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -46,26 +54,184 @@ namespace 倒计时
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         private StorageFile Picture_file;//UWP 采用StorageFile来读写文件
-        public int index = 0;
-
+        public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
+        public Color color;
       //  private StorageFile sampleFile;
       //  private string filename = "sampleFile.dat";
         StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
+        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        public SQLite.Net.SQLiteConnection conn;
+
 
         public Settings()
         {
+            //建立数据库连接   
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<PersonPictures>(); //默认表名同范型参数  
+            color = Colors.SkyBlue;
             this.InitializeComponent();
             Current = this;
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += OnSettingsPageLoaded;
             ReadSettings();
             GetAppVersion();
             GetSystemVersion();
             GetPlatform();
+            SetThemeColor();
+            SetPersonPicture();
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Settings";
+
         }
-        
-        private void ReadSettings()
+
+        private async void SetPersonPicture()
+        {
+            List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+            foreach (var item in datalist)
+            {
+                if (item != null)
+                {
+                    try
+                    {
+                        MemoryStream stream = new MemoryStream(item.picture);
+                        BitmapImage bitmap = new BitmapImage();
+
+                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                        MyPersonPicture.ProfilePicture = bitmap;
+                        All.Current.AllPicture.ProfilePicture = bitmap;
+
+                    }
+                    catch
+                    {
+                        //throw ex;
+                    }
+                }
+            }
+        }
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 0;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "DeepSkyBlue":
+                    TC.Color = Color.FromArgb(255,2,136,235);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 1;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Orange":
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 2;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 3;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 4;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 5;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 6;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 7;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 8;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    MainPage.Current.SetThemeColor();
+                    ThemeColorSelected.SelectedIndex = 9;
+                    try
+                    {
+                        All.Current.SetThemeColor();
+                        Festival.Current.SetThemeColor();
+                    }
+                    catch { }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void ReadSettings()
         {
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
@@ -81,6 +247,15 @@ namespace 倒计时
             else
                 AllPageAcylic.IsOn = true;
 
+            if (localSettings.Values["SetAllPersonPicture"] != null)
+            {
+                if (localSettings.Values["SetAllPersonPicture"].Equals(true))
+                    AllPersonPicture.IsOn = true;
+                else
+                    AllPersonPicture.IsOn = false;
+            }
+            else
+                AllPersonPicture.IsOn = true;
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
@@ -121,11 +296,6 @@ namespace 倒计时
             ulong v3 = (v & 0x00000000FFFF0000L) >> 16;
             ulong v4 = (v & 0x000000000000FFFFL);
             var reminder = $"{v1}.{v2}.{v3}.{v4}";
-            //Package package = Package.Current;
-            //reminder = package.Id.Architecture.ToString();
-            //reminder = package.DisplayName;
-            //EasClientDeviceInformation eas = new EasClientDeviceInformation();
-            //reminder = eas.SystemManufacturer;
             SystemVersion.Text = "系统版本：Windows "+ reminder;
         }
 
@@ -135,48 +305,41 @@ namespace 倒计时
             Platform.Text = "平台架构：" + package.Id.Architecture.ToString();
         }
 
-        private static async Task<BitmapImage> OpenWriteableBitmapFile(StorageFile file)
-        {
+        //private static async Task<BitmapImage> OpenWriteableBitmapFile(StorageFile file)
+        //{
 
-            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
-            {
-                //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                //WriteableBitmap image = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                //image.SetSource(stream);
+        //    using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+        //    {
+        //        var fileStream = await file.OpenReadAsync();
+        //        var bitmap = new BitmapImage();
+        //        await bitmap.SetSourceAsync(fileStream);
+        //        return bitmap;
+        //    }
+        //}
 
-                //return image;
+        //public static object GetSetting(string name)
+        //{
+        //    if (localSettings.Values.ContainsKey(name))
+        //    {
+        //        return localSettings.Values[name];
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
-                var fileStream = await file.OpenReadAsync();
-                var bitmap = new BitmapImage();
-                await bitmap.SetSourceAsync(fileStream);
-                return bitmap;
-                
-            }
-        }
-
-        public static object GetSetting(string name)
-        {
-            if (localSettings.Values.ContainsKey(name))
-            {
-                return localSettings.Values[name];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static void RemoveSetting(string name)
-        {
-            if (localSettings.Values.ContainsKey(name))
-            {
-                localSettings.Values.Remove(name);
-            }
-            else
-            {
-                //
-            }
-        }
+        //public static void RemoveSetting(string name)
+        //{
+        //    if (localSettings.Values.ContainsKey(name))
+        //    {
+        //        localSettings.Values.Remove(name);
+        //    }
+        //    else
+        //    {
+        //        //
+        //    }
+        //}
 
         private void OnSettingsPageLoaded(object sender, RoutedEventArgs e)
         {
@@ -186,8 +349,6 @@ namespace 倒计时
         private async void AboutButton_Click(object sender, RoutedEventArgs e)
         {
             await AboutContent.ShowAsync();
-            //MessageDialog AboutDialog = new MessageDialog("emmmmm\n...........");
-            //await AboutDialog.ShowAsync();
         }
 
         private void AllPageAcylic_Toggled(object sender, RoutedEventArgs e)
@@ -238,23 +399,17 @@ namespace 倒计时
             (sender as UIElement).StartAnimation(_springAnimation);
         }
 
-        private void element_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            // Scale back down to 1.0
-            CreateOrUpdateSpringAnimation(1.0f);
+        //private void element_PointerExited(object sender, PointerRoutedEventArgs e)
+        //{
+        //    // Scale back down to 1.0
+        //    CreateOrUpdateSpringAnimation(1.0f);
 
-            (sender as UIElement).StartAnimation(_springAnimation);
-        }
+        //    (sender as UIElement).StartAnimation(_springAnimation);
+        //}
 
-        // Gets the rectangle of the element 
 
         private async void MyPersonPicture_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MessageDialog AboutDialog = new MessageDialog("更换头像的功能正在紧急开发中，\n您依旧可以在本地选择头像，但暂时不会被保存。\n","非常抱歉！");
-            AboutDialog.Commands.Add(new UICommand("继续加油", cmd => { }, commandId: 0));
-            AboutDialog.Commands.Add(new UICommand("好的收到", cmd => { }, commandId: 1));
-            await AboutDialog.ShowAsync();
-            
             var srcImage = new BitmapImage();
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.Thumbnail;
@@ -270,9 +425,6 @@ namespace 倒计时
                 {
                     await srcImage.SetSourceAsync(stream);
                     await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-                    MyPersonPicture.ProfilePicture = srcImage;
-                    //localSettings.Values["PersonPicture"] = srcImage;
-
                 }
 
             }
@@ -291,38 +443,26 @@ namespace 倒计时
                 parameters.Add("CropWidthPixals", 300);
                 parameters.Add("CropHeightPixals", 300);
                 var result = await Launcher.LaunchUriForResultsAsync(new Uri("microsoft.windows.photos.crop:"), options, parameters);
-                //Guid bitmapEncoderGuid = BitmapEncoder.JpegEncoderId;
-                //using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
-                //{
-                //    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(bitmapEncoderGuid, stream);
-                //    WriteableBitmap bmp = new WriteableBitmap(srcImage.PixelWidth, srcImage.PixelHeight);
-                //    Stream pixelStream = bmp.PixelBuffer.AsStream();
-
-                //    byte[] pixels = new byte[pixelStream.Length];
-                //    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-
-                //    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                //              (uint)bmp.PixelWidth,
-                //              (uint)bmp.PixelHeight,
-                //              96.0,
-                //              96.0,
-                //              pixels);
-                //    await encoder.FlushAsync();
-                //}
-
-                if (result.Status == LaunchUriStatus.Success && result.Result != null)
+                if (result.Status.Equals(LaunchUriStatus.Success) && result.Result != null)
                 {
                     try
                     {
                         var stream = await destination.OpenReadAsync();
                         var bitmap = new BitmapImage();
-                        await bitmap.SetSourceAsync(stream);
-                        MyPersonPicture.ProfilePicture = bitmap;
-                        index++;
-
+                        using (var dataRender = new DataReader(stream))
+                        {
+                            if (stream.Size == 0)
+                                return;
+                            var imgBytes = new byte[stream.Size];
+                            await dataRender.LoadAsync((uint)stream.Size);
+                            dataRender.ReadBytes(imgBytes);
+                            List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+                            if (datalist != null)
+                                conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
+                            conn.Insert(new PersonPictures() { pictureName = "picture", picture = imgBytes });
+                            SetPersonPicture();
+                        }
                         await localFolder.CreateFileAsync("PersonPicture", CreationCollisionOption.ReplaceExisting);
-                        localSettings.Values["PersonPicture"] = bitmap;
-                      
                     }
                     catch (Exception ex)
                     {
@@ -334,13 +474,191 @@ namespace 倒计时
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Edit));
+            Frame.Navigate(typeof(Edit),null,new DrillInNavigationTransitionInfo());
         }
 
         private async void AboutContent_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
             await Launcher.LaunchUriAsync(Uri);
+        }
+
+        private async void PinButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get your own app list entry
+            AppListEntry entry = (await Package.Current.GetAppListEntriesAsync())[0];
+            bool isPinned1 = await StartScreenManager.GetDefault().ContainsAppListEntryAsync(entry);
+            // And pin it to Start
+            bool isPinned = await StartScreenManager.GetDefault().RequestAddAppListEntryAsync(entry);
+            if (isPinned1 == true)
+            {
+                PopupNotice popupNotice = new PopupNotice("应用已固定在开始菜单");
+                popupNotice.ShowAPopup();
+            }
+            else
+            {
+                if (isPinned == true)
+                {
+                    PopupNotice popupNotice = new PopupNotice("固定成功");
+                    popupNotice.ShowAPopup();
+                }
+            }
+        }
+
+        private async void PinTaskbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isPinned1 = await TaskbarManager.GetDefault().IsCurrentAppPinnedAsync();
+            if (isPinned1)
+            {
+                PopupNotice popupNotice = new PopupNotice("应用已固定在任务栏");
+                popupNotice.ShowAPopup();
+            }
+            else
+            {
+                bool isPinned = await TaskbarManager.GetDefault().RequestPinCurrentAppAsync();
+                if (isPinned)
+                {
+                    PopupNotice popupNotice = new PopupNotice("固定成功");
+                    popupNotice.ShowAPopup();
+                }  
+            }
+        }
+
+        private void SupportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (ThemeColorSelected.SelectedIndex)
+            {
+                case 0:
+                    localSettings.Values["ThemeColor"]="CornflowerBlue";
+                    SetThemeColor();
+                    break;
+                case 1:
+                    localSettings.Values["ThemeColor"] = "DeepSkyBlue";
+                    SetThemeColor();
+                    break;
+                case 2:
+                    localSettings.Values["ThemeColor"] = "Orange";
+                    SetThemeColor();
+                    break;
+                case 3:
+                    localSettings.Values["ThemeColor"] = "Crimson";
+                    SetThemeColor();
+                    break;
+                case 4:
+                    localSettings.Values["ThemeColor"] = "Gray";
+                    SetThemeColor();
+                    break;
+                case 5:
+                    localSettings.Values["ThemeColor"] = "Purple";
+                    SetThemeColor();
+                    break;
+                case 6:
+                    localSettings.Values["ThemeColor"] = "Pink";
+                    SetThemeColor();
+                    break;
+                case 7:
+                    localSettings.Values["ThemeColor"] = "Green";
+                    SetThemeColor();
+                    break;
+                case 8:
+                    localSettings.Values["ThemeColor"] = "DeepGreen";
+                    SetThemeColor();
+                    break;
+                case 9:
+                    localSettings.Values["ThemeColor"] = "Coffee";
+                    SetThemeColor();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void MyPersonPicture_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void MyPersonPicture_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private void AllPersonPicture_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+
+            if (toggleSwitch != null)
+            {
+                if (AllPersonPicture.IsOn == true)
+                {
+                    All.Current.AllPicture.Visibility = Visibility.Visible;
+                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 2);
+                    All.Current.MarginText.Height = 30;
+                    localSettings.Values["SetAllPersonPicture"] = true;
+                }
+                else
+                {
+                    All.Current.AllPicture.Visibility = Visibility.Collapsed;
+                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 25);
+                    All.Current.MarginText.Height = 60;
+                    localSettings.Values["SetAllPersonPicture"] = false;
+                }
+            }
+            toggleSwitch.Toggled += AllPageAcylic_Toggled;
+        }
+
+        private async void BirthCreate_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            await BirthDialog.ShowAsync();
+        }
+
+        private void BirthCreate_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            BirthdayTB.FontSize = 23;
+            PersonalBirthday.FontSize = 23;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void BirthCreate_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            BirthdayTB.FontSize = 13;
+            PersonalBirthday.FontSize = 13;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private async void BirthDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (PersonalBirthday.Text == "未设置")
+            {
+                MessageDialog AboutDialog = new MessageDialog("您还没有设置生日哦，赶紧去设置吧。", "提示");
+                await AboutDialog.ShowAsync();
+                BirthDialog.Hide();
+            }
+            else
+            {
+                try
+                {
+                    DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
+                    string Tip = "";
+                    string _birthday = birthday.ToString("yyyy-MM-dd");
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = "出生日", CalculatedDate = CustomData.Calculator(_birthday), Date = _birthday, BgColor = "#fffbb612", TintOpacity = 0.7, IsTop = "0", AddTime = "" });
+                    localSettings.Values["出生日" + _birthday] = Tip;
+                    MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
+                    Frame.Navigate(typeof(All));
+                    PopupNotice popupNotice = new PopupNotice("添加成功");
+                    popupNotice.ShowAPopup();
+                }
+                catch
+                {
+                    MessageDialog AboutDialog = new MessageDialog("您已经添加过了哦。", "提示");
+                    await AboutDialog.ShowAsync();
+                }
+            }
         }
     }
 }

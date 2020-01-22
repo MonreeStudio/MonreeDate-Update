@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,9 +32,61 @@ namespace 倒计时
         public Edit()
         {
             this.InitializeComponent();
+            SetThemeColor();
             EditNickName.Text = Settings.Current.PersonalNickName.Text;
             EditSign.Text = Settings.Current.PersonalSign.Text;
-            EditSex.Text = Settings.Current.PersonalSex.Text;
+            if(Settings.Current.PersonalSex.Text != "未选择")
+            {
+                if (Settings.Current.PersonalSex.Text == "男")
+                    EditSex.SelectedIndex = 0;
+                else
+                    EditSex.SelectedIndex = 1;
+            }
+            if(Settings.Current.PersonalBirthday.Text!="未设置")
+                EditBirthday.Date = Convert.ToDateTime(Settings.Current.PersonalBirthday.Text);
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Edit";
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "DeepSkyBlue":
+                    TC.Color = Color.FromArgb(255, 2, 136, 235);
+                    break;
+                case "Orange":
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -69,12 +122,13 @@ namespace 倒计时
                 localSettings.Values["PersonalSex"] = EditSex_Sex;
                 localSettings.Values["BirthDay_Date"] = EditBirthday_Date;
                 Frame.Navigate(typeof(Settings));
+                Settings.Current.ReadSettings();
                 PopupNotice popupNotice = new PopupNotice("个人信息已更新");
                 popupNotice.ShowAPopup();
             }
             else
             {
-                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！");
+                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！","提示");
                 await AboutDialog.ShowAsync();
             }
             

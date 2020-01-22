@@ -29,17 +29,65 @@ namespace 倒计时
     public sealed partial class Add : Page
     {
         public static Add Current;
-        public string _Event;
-        public string _PickDate;
-        public string _Date;
-        public string _Color;
-        public double _TintOpacity;
+        private string _Event { get; set; }
+        private string _PickDate { get; set; }
+        private string _Date { get; set; }
+        private string _Color { get; set; }
+        private double _TintOpacity { get; set; }
+        private string _Tip { get; set; }
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Add()
         {  
             this.InitializeComponent();
             Current = this;
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             _TintOpacity = 0;
+            _Color = "";
+            _Tip = "";
+            SetThemeColor();
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Add";
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "DeepSkyBlue":
+                    TC.Color = Color.FromArgb(255, 2, 136, 235);
+                    break;
+                case "Orange":
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private string Calculator(string s1)
@@ -93,12 +141,13 @@ namespace 倒计时
             string _event = AddEvent.Text.Trim();
             _Event = _event;
             //All.Current.Model_event = _event;
-            if (_Date != null&&_event!=""&&_Color!=""&&_TintOpacity>0)
+            if (_Date != null&&_event!=""&&_Color!=""&&_TintOpacity>=0)
             {
                 try
                 {
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity });
-                    All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0",AddTime = "" });
+                    //All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
+                    localSettings.Values[_event+_PickDate] = _Tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
@@ -110,13 +159,33 @@ namespace 倒计时
                 }
                 MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                 Frame.Navigate(typeof(All));
+                All.Current.LoadDateData();
                 PopupNotice popupNotice = new PopupNotice("添加成功");
                 popupNotice.ShowAPopup();
             }
             else
             {
-                MessageDialog AboutDialog = new MessageDialog("请确保填入完整的信息！","提示");
-                await AboutDialog.ShowAsync();
+                if (_Event == "")
+                {
+                    MessageDialog AboutDialog = new MessageDialog("你还未填写日程名哦。", "温馨提示");
+                    await AboutDialog.ShowAsync();
+                }
+                else
+                {
+                    if (_Date == null)
+                    {
+                        MessageDialog AboutDialog = new MessageDialog("你还未选择日程的日期哦。", "温馨提示");
+                        await AboutDialog.ShowAsync();
+                    }
+                    else
+                    {
+                        if (_Color == "")
+                        {
+                            MessageDialog AboutDialog = new MessageDialog("你还未更改背景选项，快选择你喜欢的背景颜色吧！", "温馨提示");
+                            await AboutDialog.ShowAsync();
+                        }
+                    }
+                }
             }
         }
 
@@ -139,6 +208,27 @@ namespace 倒计时
             byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
             byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
             return Color.FromArgb(a, r, g, b);
+        }
+
+        private async void TipButton_Click(object sender, RoutedEventArgs e)
+        {
+            await TipDialog.ShowAsync();
+        }
+
+        private void TipDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            _Tip = TipTextbox.Text;
+            TTB.Text = _Tip;
+        }
+
+        private void TipDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            
+        }
+
+        private void RefreshBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Add_Picker.IsCalendarOpen = true;
         }
     }
 }

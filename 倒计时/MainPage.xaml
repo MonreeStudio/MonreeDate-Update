@@ -5,11 +5,25 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:models="using:倒计时.Models"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     x:Name="MPage"
     Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
+    <Page.Resources>
+        <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
+                  BackgroundSource="Backdrop" TintColor="{ThemeResource SystemChromeMediumColor}" TintOpacity="0.5"/>
+        <AcrylicBrush x:Key="NavigationViewTopPaneBackground"
+                  BackgroundSource="Backdrop" TintColor="{ThemeResource SystemChromeMediumColor}" TintOpacity="0.5"/>
+        <AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
+                  BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemChromeMediumColor}" TintOpacity="0.7"/>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
+        <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor"/>
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
         <NavigationView x:Name="MyNav"
                         Loaded="MyNav_Loaded"
@@ -19,27 +33,45 @@
                         PaneDisplayMode="Auto"
                         PaneTitle="夏日 —— 记录你的生活"
                         AlwaysShowHeader="True"
-                        Foreground="CornflowerBlue"
+                        Foreground="{x:Bind TC}"
+                        CornerRadius="10"
                         x:FieldModifier="Public"
-                        Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
                         >
-                <NavigationView.MenuItems>
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="All" Icon="Home" Content="首页"/>
-                <NavigationViewItemSeparator  />
-                <!--<NavigationViewItemHeader Foreground="DeepSkyBlue" Content="分类"/>-->
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="New" Icon="Add" Content="新建"/>
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="首页"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="Calculator" Icon="Calculator" Content="计算"/>
+                <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Foreground="CornflowerBlue" Tag="Festival" Icon="CalendarDay" Content="节日"/>
+                <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
+                <NavigationViewItemSeparator />
+                <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
             </NavigationView.MenuItems>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
                 <Frame x:Name="ContentFrame"
                    NavigationFailed="ContentFrame_NavigationFailed"
                        x:FieldModifier="Public"/>
-            </ScrollViewer>
+            <!--</ScrollViewer>-->
         </NavigationView>
 
+        <ContentDialog x:Name="MyCD" 
+                       CornerRadius="10"
+                       Title="新功能！"
+                       PrimaryButtonText="确定"
+                       SecondaryButtonText="好评鼓励！"
+                       SecondaryButtonClick="MyCD_SecondaryButtonClick"
+                       DefaultButton="Primary"
+                       Background="White">
+            <ScrollViewer>
+            <StackPanel>
+                <TextBlock x:Name="Version" Foreground="CornflowerBlue"/>
+                    <TextBlock Text="1、优化 增强了页面滚动浏览体验；&#x0a;2、优化 对UI的部分细节进行了调整；&#x0a;3、修复 解决了某些情况下日程显示出现乱序的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="CornflowerBlue"/>
+                    <TextBlock Text="往期版本：2.2.0.0&#x0a;1、新增 主页日程可以按时间类别显示；&#x0a;（可选“显示全部”、“显示已过日程”和“显示未过日程”）&#x0a;2、新增 导航视图完全展开模式下的亚克力效果；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="往期版本：2.1.8.0&#x0a;1、新增 更多缤纷的主题色已上线！原有的配色进行了微调；&#x0a;2、优化 部分页面的切换动画进行了微调；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="往期版本：2.1.7.0&#x0a;1、优化 新建和编辑日程页面的背景选项的颜色选取；&#x0a;2、优化 对一些细节进行了小小的修改；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="开发者的话：&#x0a;因开发者个人精力有限，无法精细地排除bug，若应用出现崩溃等情况，敬请您反馈情况，以便于后期修复，改善体验，谢谢！" TextWrapping="WrapWholeWords" Margin="10"/>
+                </StackPanel>
+            </ScrollViewer>
+        </ContentDialog>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -48,7 +80,7 @@
                         MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MyNav.PaneDisplayMode" Value="Top"/>
+                        <Setter Target="MyNav.PaneDisplayMode" Value="LeftCompact"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -61,20 +93,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <!--<VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger
-                        MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        --><!-- Leave the next line for left-only navigation. --><!--
-                        <Setter Target="ContentFrame.Padding" Value="24,54,24,24"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>-->
     </Grid>
 </Page>

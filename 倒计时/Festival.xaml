@@ -1,158 +1,134 @@
 ﻿<Page
     x:Class="倒计时.Festival"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:local="using:倒计时"
     xmlns:local1="using:夏日"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     Background="White">
 
-    <StackPanel Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>  
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="FsTop" Text="节日" Margin="90,30,0,0" Foreground="CornflowerBlue" FontSize="28" Height="100" />
-            <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
-        </Grid>
-        <ListView ItemClick="GridView_ItemClick" IsItemClickEnabled="True" IsTapEnabled="True" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
-            <ListView.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="添加到首页" Click="MenuFlyoutItem_Click"/>
-                </MenuFlyout>
-            </ListView.ContextFlyout>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="Margin" Value="0" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local1:FestivalData">
-                    <RelativePanel Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
-                        <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
-                        <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
-                        <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
-                    </RelativePanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <!--<ListViewItem Margin="0,0,0,2" x:FieldModifier="Public" Background="PaleVioletRed" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name1" Text="元旦" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date1" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
-                    <TextBlock x:Name="StartName1" RelativePanel.Below="Name1" x:FieldModifier="Public" Text="2019/1/1"  FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="OrangeRed" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name2" Text="春节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock  x:Name="Date2" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName2" x:FieldModifier="Public" RelativePanel.Below="Name2" Text="2019/2/5" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="LightPink" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name3" Text="情人节❤" x:FieldModifier="Public"  FontSize="20" Foreground="White"/>
-                    <TextBlock  x:Name="Date3" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"  FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName3"   x:FieldModifier="Public" RelativePanel.Below="Name3" Text="2019/2/14"  FontSize="20"  Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="Gold" Height="130">
-               <RelativePanel>
-                    <TextBlock x:Name="Name4" Text="元宵节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date4" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"  FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName4" x:FieldModifier="Public" RelativePanel.Below="Name4" Text="2019/2/19" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="HotPink" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name5" Text="妇女节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date5" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName5" x:FieldModifier="Public" RelativePanel.Below="Name5"  Text="2019/3/8" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="LightGreen" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name6" Text="清明节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date6" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName6" x:FieldModifier="Public" RelativePanel.Below="Name6" Text="2019/4/4" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="Gold" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name7" Text="劳动节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date7" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName7" x:FieldModifier="Public" RelativePanel.Below="Name7" Text="2019/5/1" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="Orange" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name8" Text="儿童节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date8" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName8" x:FieldModifier="Public" RelativePanel.Below="Name8" Text="2019/6/1" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="ForestGreen" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name9" Text="端午节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date9" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName9" x:FieldModifier="Public" RelativePanel.Below="Name9" Text="2019/6/7" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="LightPink" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name10" Text="七夕❤" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date10" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName10" x:FieldModifier="Public" RelativePanel.Below="Name10" Text="2019/8/7" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="MediumPurple" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name11" Text="中秋节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date11" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName11" x:FieldModifier="Public" RelativePanel.Below="Name11" Text="2019/9/13" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="OrangeRed" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name12" Text="国庆节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date12" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName12" x:FieldModifier="Public" RelativePanel.Below="Name12" Text="2019/10/1" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="DarkOrange" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name13" Text="重阳节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date13" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName13" x:FieldModifier="Public" RelativePanel.Below="Name13" Text="2019/10/7" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>
-            <ListViewItem Margin="0,0,0,2" Background="Crimson" Height="130">
-                <RelativePanel>
-                    <TextBlock x:Name="Name14" Text="圣诞节" x:FieldModifier="Public" FontSize="20" Foreground="White"/>
-                    <TextBlock x:Name="Date14" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="25" Foreground="White"/>
-                    <TextBlock x:Name="StartName14" x:FieldModifier="Public" RelativePanel.Below="Name14" Text="2019/12/25" FontSize="20" Foreground="White"/>
-                </RelativePanel>
-            </ListViewItem>-->
-        </ListView>
-        
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <Style x:Key="ThumbStyle1" TargetType="Thumb">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ThumbBorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Grid x:Name="RootGrid">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPointerOver"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPressed"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle RadiusY="55" RadiusX="55" Fill="Gray" Opacity="0.8" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="0" />
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE11C;" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border x:Name="Background" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
+                            <Border x:Name="BackgroundPointerOver" BorderBrush="{ThemeResource ThumbBorderBrushPointerOver}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
+                            <Border x:Name="BackgroundPressed" BorderBrush="{ThemeResource ThumbBorderBrushPressed}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Opacity="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
+                <ListView x:Name="FesList" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
+                    <ListView.Header>
+                        <controls:ScrollHeader Mode="Sticky">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="FsTop" Text="节日" FontWeight="Bold" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
+                                <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
+                            </Grid>
+                        </controls:ScrollHeader>
+                    </ListView.Header>
+                    <ListView.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Icon="Add" Text="添加到首页" Click="MenuFlyoutItem_Click"/>
+                        </MenuFlyout>
+                    </ListView.ContextFlyout>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:FestivalData">
+                        <RelativePanel x:Name="FestivalList" Background="{x:Bind Str5}" Height="130" CornerRadius="10" Margin="0,0,0,2">
+                            <TextBlock x:Name="Name" Text="{x:Bind Str1}" x:FieldModifier="Public"  FontSize="20" Foreground="White" Margin="10,30,0,10"/>
+                            <TextBlock x:Name="Date" Text="{x:Bind Str2}" x:FieldModifier="Public" RelativePanel.AlignRightWithPanel="True" Margin="0,0,20,0" FontSize="25" RelativePanel.AlignVerticalCenterWithPanel="True" Foreground="White"/>
+                            <TextBlock x:Name="StartDate" RelativePanel.Below="Name" x:FieldModifier="Public" Text="{x:Bind Str3}" Margin="10,0,0,0" FontSize="20" Foreground="White"/>
+                        </RelativePanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            </Grid>
+        </ScrollViewer>
+        <controls:DropShadowPanel BlurRadius="55"
+                                  x:Name="FesThumbShadow"
+                                  ShadowOpacity="0"
+                                  OffsetX="0"
+                                  OffsetY="0"
+                                  Color="White"
+                                  Margin="50,50,50,100"
+                                  VerticalAlignment="Bottom"
+                                  HorizontalAlignment="Right"
+                                  IsMasked="True">
+            <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" x:Name="RootThumb" ToolTipService.ToolTip="返回顶部" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped">
+                <animations:Implicit.ShowAnimations>
+                    <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
+                    <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
+                </animations:Implicit.ShowAnimations>
+
+                <animations:Implicit.HideAnimations>
+                    <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
+                    <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
+                        <animations:ScalarKeyFrame Key="0.1" Value="0.0"></animations:ScalarKeyFrame>
+                        <animations:ScalarKeyFrame Key="0.3" Value="0.0"></animations:ScalarKeyFrame>
+                    </animations:ScalarAnimation>
+                </animations:Implicit.HideAnimations>
+            </Thumb>
+        </controls:DropShadowPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger
-                        MinWindowWidth="{x:Bind MinMyNav}"/>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind MinMyNav}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="FsTop.Margin" Value="20"/>
@@ -160,6 +136,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-    </StackPanel>
+    </Grid>
 </Page>

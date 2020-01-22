@@ -7,6 +7,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -21,6 +23,9 @@ namespace 倒计时
 {
     public sealed partial class PopupNotice : UserControl
     {
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+
         //存放弹出框中的信息
         private string _popupContent;
 
@@ -29,6 +34,7 @@ namespace 倒计时
         public PopupNotice()
         {
             this.InitializeComponent();
+            SetThemeColor();
             //将当前的长和框 赋值给控件
             this.Width = Window.Current.Bounds.Width;
             this.Height = Window.Current.Bounds.Height;
@@ -45,6 +51,47 @@ namespace 倒计时
         public PopupNotice(string popupContentString) : this()
         {
             _popupContent = popupContentString;
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "DeepSkyBlue":
+                    TC.Color = Color.FromArgb(255, 2, 136, 235);
+                    break;
+                case "Orange":
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>

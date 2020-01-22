@@ -26,6 +26,8 @@ using SQLitePCL;
 using SQLite.Net.Platform.WinRT;
 using SQLite.Net.Interop;
 using SQLite.Net.Attributes;
+using 夏日;
+using Windows.UI;
 
 namespace 倒计时
 {
@@ -37,6 +39,8 @@ namespace 倒计时
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
         private const string SelectedAppThemeKey = "SelectedAppTheme";
+        public static CustomData AllItem;
+        public static FestivalData FestivalItem;
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -99,7 +103,7 @@ namespace 倒计时
             e.Handled = true;
         }
 
-        static public string term(DateTime b, DateTime e)
+        static public string Term(DateTime b, DateTime e)
         {
             if (b < e)
             {
@@ -159,7 +163,7 @@ namespace 倒计时
             else
                 throw new Exception("开始日期必须小于结束日期");
         }
-
+        
         public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
         {
             if (!typeof(TEnum).GetTypeInfo().IsEnum)
@@ -169,44 +173,7 @@ namespace 倒计时
             return (TEnum)Enum.Parse(typeof(TEnum), text);
         }
 
-        public class CustomData
-        {
-            public string Str1 { get; set; }
-            public string Str2 { get; set; }
-            public string Str3 { get; set; }
-            public int ItemWidth { get; set; }
-            public string BackGroundColor { get; set; }
-
-            public CustomData()
-            {
-                this.Str1 = "string 1";
-                this.Str2 = "string 2";
-                this.Str3 = "string 3";
-                this.BackGroundColor = "SkyBlue";
-            }
-
-            
-        }
-
-        public class CustomDataViewModel
-        {
-            public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
-
-            public CustomDataViewModel()
-            {
-                CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX", BackGroundColor = "SkyBlue" });
-                CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX", BackGroundColor = "Pink" });
-                CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX", BackGroundColor = "CornFlowerBlue" });
-                CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX", BackGroundColor = "Lavender" });
-                CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX", BackGroundColor = "Azure" });
-                CustomDatas.Add(new CustomData() { Str1 = "测试测试", Str2 = "已过xx天", Str3 = "201X/XX/XX", BackGroundColor = "Purple" });
-            }
-
-            public void AddData(CustomData data)
-            {
-                CustomDatas.Add(data);
-            }
-        }
+        
         /// <summary>
         /// 在应用程序由最终用户正常启动时进行调用。
         /// 将在启动应用程序以打开特定文件等情况下使用。

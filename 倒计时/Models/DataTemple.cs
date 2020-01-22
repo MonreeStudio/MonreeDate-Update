@@ -18,6 +18,7 @@ namespace 夏日.Models
         public string Date { get; set; }
         public string BgColor { get; set; }
         public double TintOpacity { get; set; }
-        
+        public string IsTop { get; set; }
+        public string AddTime { get; set; }
     }
 }

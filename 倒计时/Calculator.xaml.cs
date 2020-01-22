@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,12 +25,56 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Calculator : Page
     {
-        public static Calculator Current; 
+        public static Calculator Current;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Calculator()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
+            SetThemeColor();
+            MainPage.Current.MyNav.IsBackEnabled = true;
+            MainPage.Current.SelectedPageItem = "Calculator";
+        }
+
+        private void SetThemeColor()
+        {
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    TC.Color = Colors.CornflowerBlue;
+                    break;
+                case "DeepSkyBlue":
+                    TC.Color = Color.FromArgb(255, 2, 136, 235);
+                    break;
+                case "Orange":
+                    TC.Color = Color.FromArgb(255, 229, 103, 44);
+                    break;
+                case "Crimson":
+                    TC.Color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    TC.Color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                case "Purple":
+                    TC.Color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    TC.Color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    TC.Color = Color.FromArgb(255, 124, 178, 56);
+                    break;
+                case "DeepGreen":
+                    TC.Color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    TC.Color = Color.FromArgb(255, 183, 133, 108);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public class Str
@@ -48,9 +94,9 @@ namespace 倒计时
                 DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
                 int days = (d4 - d3).Days;
                 if (d4 > d3)
-                    t = App.term(d3, d4);
+                    t = App.Term(d3, d4);
                 else
-                    t = App.term(d4, d3);
+                    t = App.Term(d4, d3);
                 if (days < 0)
                     days=Math.Abs(days);
                 int week, week_date;
