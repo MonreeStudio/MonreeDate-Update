@@ -148,6 +148,11 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <Button x:Name="CheckUpdate" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,10,0"  Width="120" Content="检查更新" Click="CheckUpdate_Click"/>
+                    <ProgressRing x:Name="UpdateRing" Foreground="{x:Bind TC}" IsActive="False"/>
+                </StackPanel>
+                <!--<ProgressBar x:Name="downloadProgressBar" Visibility="Collapsed" Width="200"/>-->
             </StackPanel>
             <TextBlock x:Name="TestTb"
                    Grid.Row="3"

@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Contacts;
 using Windows.ApplicationModel.Core;
@@ -16,6 +17,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Security.ExchangeActiveSyncProvisioning;
+using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -63,6 +65,8 @@ namespace 倒计时
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
 
+        private StoreContext context = null;
+        private int current = 0;
 
         public Settings()
         {
@@ -658,6 +662,102 @@ namespace 倒计时
                     MessageDialog AboutDialog = new MessageDialog("您已经添加过了哦。", "提示");
                     await AboutDialog.ShowAsync();
                 }
+            }
+        }
+
+        private void timer_Tick(object sender,EventArgs e)
+        {
+            current++;
+        }
+
+        private async void CheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            //int timeout = 10000;
+            //var task = DownloadAndInstallAllUpdatesAsync();
+            //if(await Task.WhenAny(task,Task.Delay(timeout))==task)
+            //{
+            //    try
+            //    {
+            //        await task;
+            //    }
+            //    catch
+            //    {
+            //        MessageDialog dialog = new MessageDialog(
+            //        "网络请求发生超时，请检查网络连接。", "网络请求超时！");
+            //        await dialog.ShowAsync();
+            //        UpdateRing.IsActive = false;
+            //    }
+            //}
+            //else
+            //{
+            //    MessageDialog dialog = new MessageDialog(
+            //        "网络请求发生超时，请检查网络连接。", "网络请求超时！");
+            //    await dialog.ShowAsync();
+            //    UpdateRing.IsActive = false;
+            //}
+            try
+            {
+                await DownloadAndInstallAllUpdatesAsync();
+            }
+            catch
+            {
+                MessageDialog dialog = new MessageDialog(
+                    "网络请求发生超时，请检查网络连接。", "网络请求超时！");
+                await dialog.ShowAsync();
+                UpdateRing.IsActive = false;
+            }
+        }
+        public async Task DownloadAndInstallAllUpdatesAsync()
+        {
+            UpdateRing.IsActive = true;
+            if (context == null)
+            {
+                context = StoreContext.GetDefault();
+            }
+
+            // Get the updates that are available.
+            IReadOnlyList<StorePackageUpdate> updates =
+                await context.GetAppAndOptionalStorePackageUpdatesAsync();
+            
+            if (updates.Count > 0)
+            {
+                // Alert the user that updates are available and ask for their consent
+                // to start the updates.
+                MessageDialog dialog = new MessageDialog(
+                    "立即下载并安装更新吗? 此过程应用可能会关闭。", "发现新版本的夏日！");
+                dialog.Commands.Add(new UICommand("更新"));
+                dialog.Commands.Add(new UICommand("取消"));
+                IUICommand command = await dialog.ShowAsync();
+                if (command.Label.Equals("Yes", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //downloadProgressBar.Visibility = Visibility.Visible;
+                    // Download and install the updates.
+                    IAsyncOperationWithProgress<StorePackageUpdateResult, StorePackageUpdateStatus> downloadOperation =
+                        context.RequestDownloadAndInstallStorePackageUpdatesAsync(updates);
+
+                    // The Progress async method is called one time for each step in the download
+                    // and installation process for each package in this request.
+
+                    //downloadOperation.Progress = async (asyncInfo, progress) =>
+                    //{
+                    //    await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    //    () =>
+                    //    {
+                    //        downloadProgressBar.Value = progress.PackageDownloadProgress;
+                    //    });
+                    //};
+                    //downloadProgressBar.Visibility = Visibility.Collapsed;
+                    StorePackageUpdateResult result = await downloadOperation.AsTask();
+                    UpdateRing.IsActive = false;
+                }
+                else
+                    UpdateRing.IsActive = false;
+            }
+            else
+            {
+                UpdateRing.IsActive = false;
+                PopupNotice popupNotice = new PopupNotice("已是最新版本！");
+                popupNotice.ShowAPopup();
             }
         }
     }

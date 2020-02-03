@@ -146,18 +146,13 @@ namespace 夏日
         {
             string _event = AddEvent.Text.Trim();
             _Event = _event;
-            //All.Current.Model_event = _event;
             if (_Date != null && _event != "" && _Color != "" && _TintOpacity >= 0)
             {
                 List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", All.Current.str1);
                 try
                 {
-                   // ViewModel.CustomDatas.Remove(SelectedItem);
                     All.Current.conn.Execute("delete from DataTemple where Schedule_name = ?", All.Current.str1);
-                    //All.Current.ViewModel.CustomDatas.Remove(App.AllItem);
-
                     All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = _isTop, AddTime = "" });
-                    //All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color), _TintOpacity), BackGroundColor = GetColor(_Color) });
                     localSettings.Values[_event + _PickDate] = _tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
@@ -170,7 +165,6 @@ namespace 夏日
                     foreach(var item in datalist)
                     {
                         All.Current.conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity,IsTop = "0",AddTime = "" });
-                        //All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = item.CalculatedDate, Str3 = item.Date, Str4 = All.Current.ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
                     return;
                 }

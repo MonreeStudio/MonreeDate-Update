@@ -863,11 +863,12 @@ namespace 倒计时
 
         private void SetTop_Click(object sender, RoutedEventArgs e)
         {
+            //            conn.Execute("update DataTemple set IsTop = ? where Schedule_name = ?", "1", AllItem.Str1);
             List<DataTemple> _datalist = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", AllItem.Str1);
             conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
             foreach (var item in _datalist)
             {
-                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1" ,AddTime = DateTime.Now.ToString()});
+                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1", AddTime = DateTime.Now.ToString() });
             }
             LoadDateData();
             LoadSettings();
@@ -875,11 +876,12 @@ namespace 倒计时
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
+            //conn.Execute("update DataTemple set IsTop = ? where Schedule_name = ?", "0", AllItem.Str1);
             List<DataTemple> _datalist = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", AllItem.Str1);
             conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
             foreach (var item in _datalist)
             {
-                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0",AddTime = "" });
+                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0", AddTime = "" });
             }
             LoadDateData();
             LoadSettings();
