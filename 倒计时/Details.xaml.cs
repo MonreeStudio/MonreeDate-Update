@@ -51,9 +51,19 @@ namespace 倒计时
             LoadData();
             SetBorderColor();
             SetThemeColor();
+            SetAlertEnabled();
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Details";
+        }
+
+        private void SetAlertEnabled()
+        {
+            var selectedDate = Convert.ToDateTime(DetailsPickedDate.Text);
+            if (selectedDate > DateTime.Now)
+                AlertButton.IsEnabled = true;
+            else
+                AlertButton.IsEnabled = false;
         }
         private void SetThemeColor()
         {
@@ -363,6 +373,48 @@ namespace 倒计时
         {
             RenderGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 246, 239));
             RenderTitle.Foreground = new SolidColorBrush(Color.FromArgb(255, 230, 129, 111));
+        }
+
+        private void AlertToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            //ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            var AlertName = "Alert" + DetailsEvent.Text;
+            if (AlertToggleSwitch!=null)
+            {
+                if (AlertToggleSwitch.IsOn == true)
+                {
+                    localSettings.Values[AlertName] = "1";
+
+                }
+                else
+                {
+                    localSettings.Values[AlertName] = "0";
+                }
+            }
+            //toggleSwitch.Toggled += AlertToggleSwitch_Toggled;
+        }
+
+        private async void AlertButton_Click(object sender, RoutedEventArgs e)
+        {
+            var AlertName = "Alert" + DetailsEvent.Text;
+            if (localSettings.Values[AlertName] != null)
+            {
+                if (localSettings.Values[AlertName].ToString() == "1")
+                    AlertToggleSwitch.IsOn = true;
+                else
+                    AlertToggleSwitch.IsOn = false;
+            }
+            else
+            {
+                AlertToggleSwitch.IsOn = false;
+                localSettings.Values[AlertName] = "0";
+            }
+            await AlertContentDialog.ShowAsync();
+        }
+
+        private void CloseContentDialogBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AlertContentDialog.Hide();
         }
     }
 }

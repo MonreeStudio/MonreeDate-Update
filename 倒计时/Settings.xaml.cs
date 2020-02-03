@@ -613,7 +613,7 @@ namespace 倒计时
                     localSettings.Values["SetAllPersonPicture"] = false;
                 }
             }
-            toggleSwitch.Toggled += AllPageAcylic_Toggled;
+            //toggleSwitch.Toggled += AllPageAcylic_Toggled;
         }
 
         private async void BirthCreate_Tapped(object sender, TappedRoutedEventArgs e)
