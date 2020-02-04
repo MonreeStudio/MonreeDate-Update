@@ -16,6 +16,8 @@ using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.Web.Syndication;
 using 夏日.Models;
+using Microsoft.QueryStringDotNET; // QueryString.NET
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace BackgroundTasks
 {
@@ -23,6 +25,7 @@ namespace BackgroundTasks
     {
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -32,6 +35,7 @@ namespace BackgroundTasks
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
             UpdateTile();
+            LoadToast();
             deferral.Complete();
         }
 
@@ -43,7 +47,7 @@ namespace BackgroundTasks
             if(LoadTile()!=null)
                 updater.Update(LoadTile());
         }
-        static public string Calculator(string s1)
+        public static string Calculator(string s1)
         {
             string str1 = s1;
             string str2 = DateTime.Now.ToShortDateString().ToString();
@@ -380,6 +384,65 @@ namespace BackgroundTasks
 
                 updater.Update(notification);
             }
+        }
+
+        private void LoadToast()
+        {
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
+            foreach (var item in datalist0)
+            {
+                var AlertName = "Alect" + item.Schedule_name;
+                if (localSettings.Values[AlertName] != null && localSettings.Values[AlertName].ToString()=="1")
+                {
+                    string tipText;
+                    var tipTextContainer = localSettings.Values[item.Schedule_name + item.Date];
+                    if (tipTextContainer != null && tipTextContainer.ToString() != "")
+                        tipText = "日程备注：" + tipTextContainer.ToString();
+                    else
+                        tipText = "日程备注：无备注。";
+                    CreateToast(item.Schedule_name, tipText);
+                }
+            }
+        }
+
+        private void CreateToast(string Schedule_name,string tipText)
+        {
+            var toastContent = new ToastContent()
+            {
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+            {
+                new AdaptiveText()
+                {
+                    Text = "日程到期提醒："+ Schedule_name
+                },
+                new AdaptiveText()
+                {
+                    Text = tipText
+                }
+            }
+                    }
+                }, 
+                Actions = new ToastActionsCustom()
+                {
+                    Buttons =
+        {
+            new ToastButton("确认", "action=acceptFriendRequest&userId=49183")
+            {
+                ActivationType = ToastActivationType.Background
+            }
+        }
+                },
+            };
+
+            // Create the toast notification
+            var toastNotif = new ToastNotification(toastContent.GetXml());
+            toastNotif.ExpirationTime = DateTime.Now.AddDays(1);
+            // And send the notification
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
         }
     }
 }
