@@ -419,5 +419,50 @@ namespace 倒计时
             AlertContentDialog.Hide();
         }
 
+        private void ToastTestButton_Click(object sender, RoutedEventArgs e)
+        {
+            var toastContent = new ToastContent()
+            {
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+            {
+                new AdaptiveText()
+                {
+                    Text = "日程到期提醒："+ DetailsEvent.Text
+                },
+                new AdaptiveText()
+                {
+                    Text = "备注："+TipText.Text
+                }
+            }
+                    }
+                },
+                Actions = new ToastActionsCustom()
+                {
+                    Buttons =
+        {
+            new ToastButton("打开夏日", "action")
+            {
+                ActivationType = ToastActivationType.Foreground
+            }
+        }
+                },
+                Audio = new ToastAudio()
+                {
+                    Src = new Uri("ms-winsoundevent:Notification.Looping.Alarm")
+                }
+            };
+
+            // Create the toast notification
+            
+            var toastNotif = new ToastNotification(toastContent.GetXml());
+            toastNotif.ExpirationTime = DateTime.Now.AddDays(1);
+            
+            // And send the notification
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+        }
     }
 }

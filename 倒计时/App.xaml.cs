@@ -28,6 +28,7 @@ using SQLite.Net.Interop;
 using SQLite.Net.Attributes;
 using 夏日;
 using Windows.UI;
+using Microsoft.QueryStringDotNET;
 
 namespace 倒计时
 {
@@ -96,6 +97,28 @@ namespace 倒计时
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
             }
             this.FocusVisualKind = FocusVisualKind.Reveal;
+        }
+
+        protected override void OnActivated(IActivatedEventArgs e)
+        {
+            //判断是否为Toast所激活
+            if (e.Kind == ActivationKind.ToastNotification)
+            {
+                // 转换参数类型
+                ToastNotificationActivatedEventArgs toastargs = (ToastNotificationActivatedEventArgs)e;
+                // 获取页面引用
+                Frame root = Window.Current.Content as Frame;
+                if (root == null)
+                {
+                    root = new Frame();
+                    Window.Current.Content = root;
+                }
+                if (root.Content == null)
+                {
+                    root.Navigate(typeof(MainPage));
+                }
+            }
+            Window.Current.Activate();
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)

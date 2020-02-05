@@ -331,6 +331,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <CommandBar x:Name="DetailsCommandBar" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
+                <AppBarButton x:Name="ToastTestButton" Icon="Send" Label="通知测试" CornerRadius="3" Foreground="White" Click="ToastTestButton_Click"/>
                 <AppBarButton x:Name="AlertButton" Icon="Clock" Label="设置提醒" CornerRadius="3" ToolTipService.ToolTip="为日程设置一个到期提醒" Foreground="White" Click="AlertButton_Click"/>
                 <AppBarButton x:Name="ShareButton" CornerRadius="3" Label="分享" ToolTipService.ToolTip="以卡片形式分享" Foreground="White" Click="ShareButton_Click">
                     <AppBarButton.Icon>

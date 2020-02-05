@@ -56,6 +56,7 @@
         <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTasks.BlogFeedBackgroundTask">
           <BackgroundTasks>
             <Task Type="timer"/>
+            <Task Type="pushNotification"/>
           </BackgroundTasks>
         </Extension>
         <uap:Extension Category="windows.shareTarget">

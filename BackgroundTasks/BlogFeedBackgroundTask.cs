@@ -34,8 +34,8 @@ namespace BackgroundTasks
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
-            UpdateTile();
-            LoadToast();
+            UpdateTile();   //更新磁贴
+            LoadToast();    //加载通知
             deferral.Complete();
         }
 
@@ -430,12 +430,16 @@ namespace BackgroundTasks
                 {
                     Buttons =
         {
-            new ToastButton("确认", "action=acceptFriendRequest&userId=49183")
+            new ToastButton("打开夏日", "action")
             {
                 ActivationType = ToastActivationType.Background
             }
         }
                 },
+                Audio = new ToastAudio()
+                {
+                    Src = new Uri("ms-winsoundevent:Notification.Looping.Alarm")
+                }
             };
 
             // Create the toast notification
