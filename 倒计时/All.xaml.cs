@@ -382,8 +382,8 @@ namespace 倒计时
         private void LoadAll()
         {
             ContentChoise.Label = "显示全部";
-            if (localSettings.Values["YMD"] == null)
-                localSettings.Values["YMD"] = true;
+            if (localSettings.Values["DateMode"] == null)
+                localSettings.Values["DateMode"] = "Day";
             ViewModel.CustomDatas.Clear();
             List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? order by AddTime desc", "1");
             List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
@@ -400,81 +400,117 @@ namespace 倒计时
                 NewTB.Visibility = Visibility.Collapsed;
                 NewTB2.Visibility = Visibility.Collapsed;
             }
-            if (localSettings.Values["YMD"].Equals(false))
+            var DateMode = localSettings.Values["DateMode"].ToString();
+            switch (DateMode)
             {
-                foreach (var item in datalist0)
-                {
+                case "Day":
+                    ChangeABB.Label = "天数模式";
+                    foreach (var item in datalist0)
+                    {
+                        if (item != null)
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    }
+                    if (datalist0.Count() == 0)
+                    {
+                        foreach (var item in datalist1)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist1)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
+                case "Week":
+                    ChangeABB.Label = "周数模式";
+                    foreach (var item in datalist0)
+                    {
+                        if (item != null)
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    }
+                    if (datalist0.Count() == 0)
+                    {
+                        foreach (var item in datalist1)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist1)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
+                case "Year":
+                    ChangeABB.Label = "年数模式";
+                    foreach (var item in datalist0)
+                    {
 
-                    if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                }
-                if (datalist0.Count() == 0)
-                {
-                    foreach (var item in datalist1)
-                    {
-                        if (item.CalculatedDate == "就在今天")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        else
+                        if (item != null)
                             ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
-                    foreach (var item in datalist2)
+                    if (datalist0.Count() == 0)
                     {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-                else
-                {
-                    foreach (var item in datalist1)
-                    {
-                        if (item.IsTop == "0")
+                        foreach (var item in datalist1)
+                        {
+                            if (item.CalculatedDate == "就在今天")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            else
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                        foreach (var item in datalist2)
+                        {
                             ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
                     }
-                    foreach (var item in datalist2)
+                    else
                     {
-                        if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        foreach (var item in datalist1)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
                     }
-                }
-            }
-            else
-            {
-                foreach (var item in datalist0)
-                {
-                    if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                }
-                if (datalist0.Count() == 0)
-                {
-                    foreach (var item in datalist1)
-                    {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    foreach (var item in datalist2)
-                    {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-                else
-                {
-                    foreach (var item in datalist1)
-                    {
-                        if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    foreach (var item in datalist2)
-                    {
-                        if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
+                    break;
             }
         }
         
         private void LoadPast()
         {
             ContentChoise.Label = "显示已过日程";
-            if (localSettings.Values["YMD"] == null)
-                localSettings.Values["YMD"] = true;
+            if (localSettings.Values["DateMode"] == null)
+                localSettings.Values["DateMode"] = "Day";
             ViewModel.CustomDatas.Clear();
             List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date < ? order by AddTime desc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
             List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
@@ -490,59 +526,86 @@ namespace 倒计时
                 NewTB.Visibility = Visibility.Collapsed;
                 NewTB2.Visibility = Visibility.Collapsed;
             }
-            if (localSettings.Values["YMD"].Equals(false))
+            var DateMode = localSettings.Values["DateMode"].ToString();
+            switch (DateMode)
             {
-                foreach (var item in datalist1)
-                {
-                    if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                }
-                if (datalist1.Count() == 0)
-                {
-                    foreach (var item in datalist2)
+                case "Day":
+                    ChangeABB.Label = "天数模式";
+                    foreach (var item in datalist1)
                     {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-                else
-                {
-                    foreach (var item in datalist2)
-                    {
-                        if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in datalist1)
-                {
-                    if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                }
-                if (datalist1.Count() == 0)
-                {
-                    foreach (var item in datalist2)
-                    {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-                else
-                {
-                    foreach (var item in datalist2)
-                    {
-                        if (item.IsTop == "0")
+                        if (item != null)
                             ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
-                }
+                    if (datalist1.Count() == 0)
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
+                case "Week":
+                    ChangeABB.Label = "周数模式";
+                    foreach (var item in datalist1)
+                    {
+                        if (item != null)
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    }
+                    if (datalist1.Count() == 0)
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
+                case "Year":
+                    ChangeABB.Label = "年数模式";
+                    foreach (var item in datalist1)
+                    {
+                        if (item != null)
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    }
+                    if (datalist1.Count() == 0)
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
             }
         }
 
         private void LoadFuture()
         {
             ContentChoise.Label = "显示未过日程";
-            if (localSettings.Values["YMD"] == null)
-                localSettings.Values["YMD"] = true;
+            if (localSettings.Values["DateMode"] == null)
+                localSettings.Values["DateMode"] = "Day";
             ViewModel.CustomDatas.Clear();
             List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date >= ? order by AddTime desc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
             List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
@@ -558,54 +621,81 @@ namespace 倒计时
                 NewTB.Visibility = Visibility.Collapsed;
                 NewTB2.Visibility = Visibility.Collapsed;
             }
-            if (localSettings.Values["YMD"].Equals(false))
+            var DateMode = localSettings.Values["DateMode"].ToString();
+            switch (DateMode)
             {
-                foreach (var item in datalist1)
-                {
-                    if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                }
-                if (datalist1.Count() == 0)
-                {
-                    foreach (var item in datalist2)
+                case "Day":
+                    ChangeABB.Label = "天数模式";
+                    foreach (var item in datalist1)
                     {
-                        if (item.CalculatedDate == "就在今天")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        else
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-                else
-                {
-                    foreach (var item in datalist2)
-                    {
-                        if (item.IsTop == "0")
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in datalist1)
-                {
-                    if (item != null)
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                }
-                if (datalist1.Count() == 0)
-                {
-                    foreach (var item in datalist2)
-                    {
-                        ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                }
-                else
-                {
-                    foreach (var item in datalist2)
-                    {
-                        if (item.IsTop == "0")
+                        if (item != null)
                             ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
                     }
-                }
+                    if (datalist1.Count() == 0)
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
+                case "Week":
+                    ChangeABB.Label = "周数模式";
+                    foreach (var item in datalist1)
+                    {
+                        if (item != null)
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    }
+                    if (datalist1.Count() == 0)
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
+                case "Year":
+                    ChangeABB.Label = "年数模式";
+                    foreach (var item in datalist1)
+                    {
+                        if (item != null)
+                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                    }
+                    if (datalist1.Count() == 0)
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.CalculatedDate == "就在今天")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                            else
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in datalist2)
+                        {
+                            if (item.IsTop == "0")
+                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
+                        }
+                    }
+                    break;
             }
         }
         private void LoadSettings()
@@ -728,18 +818,55 @@ namespace 倒计时
             return CDate;
         }
 
-        private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
+        public string ConvertToWeek(string _date)
         {
-            if (localSettings.Values["YMD"].Equals(true))
+            string CDate = "";
+            DateTime d1 = Convert.ToDateTime(_date);
+            DateTime d2 = DateTime.Now;
+            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
+            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
+            if (d4 > d3)
             {
-                localSettings.Values["YMD"] = false;
-                LoadDateData();
+                int days = (d4 - d3).Days;
+                int week, week_date;
+                week = days / 7;
+                week_date = days % 7;
+                if (week != 0)
+                {
+                    if (week_date == 0)
+                        CDate = "已过" + week.ToString() + "周";
+                    else
+                        CDate = "已过" + week.ToString() + "周" + week_date.ToString() + "天";
+                }
+                else
+                {
+                    CDate = "已过" + week_date.ToString() + "天";
+                }
             }
             else
             {
-                localSettings.Values["YMD"] = true;
-                LoadDateData();
+                if (d4 < d3)
+                {
+                    int days = (d3 - d4).Days;
+                    int week, week_date;
+                    week = days / 7;
+                    week_date = days % 7;
+                    if (week != 0)
+                    {
+                        if (week_date == 0)
+                            CDate = "还有" + week.ToString() + "周";
+                        else
+                            CDate = "还有" + week.ToString() + "周" + week_date.ToString() + "天";
+                    }
+                    else
+                    {
+                        CDate = "还有" + week_date.ToString() + "天";
+                    }
+                }
+                else
+                    CDate = "就在今天";
             }
+            return CDate;
         }
 
         private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -1075,6 +1202,27 @@ namespace 倒计时
                 AllThumbShadow.Visibility = Visibility.Visible;
                 RootThumb.Visibility = Visibility.Visible;
             }
+        }
+
+        private void DayMode_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeABB.Label = "天数模式";
+            localSettings.Values["DateMode"] = "Day";
+            LoadDateData();
+        }
+
+        private void WeekMode_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeABB.Label = "周数模式";
+            localSettings.Values["DateMode"] = "Week";
+            LoadDateData();
+        }
+
+        private void YearMode_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeABB.Label = "年数模式";
+            localSettings.Values["DateMode"] = "Year";
+            LoadDateData();
         }
 
         public Color GetColor(string hex)

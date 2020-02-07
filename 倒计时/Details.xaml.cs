@@ -46,6 +46,8 @@ namespace 倒计时
         public SQLite.Net.SQLiteConnection conn;
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
         IRandomAccessStream Bitmap;
+        string DetailsDateMode;
+        string FestivalDateMode;
         public Details()
         {
             this.InitializeComponent();
@@ -57,6 +59,8 @@ namespace 倒计时
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Details";
+            DetailsDateMode = localSettings.Values["DateMode"].ToString();
+            FestivalDateMode = "Day";
         }
 
         private void SetAlertEnabled()
@@ -162,24 +166,32 @@ namespace 倒计时
         {
             if (MainPage.Current.SelectedPage)
             {
-                
                 DateTime d1 = Convert.ToDateTime(All.Current.str3);
                 DateTime d2 = DateTime.Now;
                 DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
                 DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-
-                if (DetailsDate.Text == CustomData.Calculator(All.Current.str3))
+                switch (DetailsDateMode)
                 {
-                    if (d4 > d3)
-                        DetailsDate.Text = "已过" + App.Term(d3, d4);
-                    else
-                    {
-                        if (d4 < d3)
-                            DetailsDate.Text = "还有" + App.Term(d4, d3);
-                    }
+                    case "Day":
+                        DetailsDate.Text = All.Current.ConvertToWeek(All.Current.str3);
+                        DetailsDateMode = "Week";
+                        break;
+                    case "Week":
+                        if (d4 > d3)
+                            DetailsDate.Text = "已过" + App.Term(d3, d4);
+                        else
+                        {
+                            if (d4 < d3)
+                                DetailsDate.Text = "还有" + App.Term(d4, d3);
+                        }
+                        DetailsDateMode = "Year";
+                        break;
+                    case "Year":
+                        DetailsDate.Text = CustomData.Calculator(All.Current.str3);
+                        DetailsDateMode = "Day";
+                        break;
                 }
-                else
-                    DetailsDate.Text = CustomData.Calculator(All.Current.str3);
+                dCalDate.Text = DetailsDate.Text;
             }
             else
             {
@@ -188,20 +200,29 @@ namespace 倒计时
                 DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
                 DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
 
-                if (DetailsDate.Text == Festival.Current.str2)
+                switch (FestivalDateMode)
                 {
-                    if (d4 > d3)
-                        DetailsDate.Text = "已过" + App.Term(d3, d4);
-                    else
-                    {
-                        if (d4 < d3)
-                            DetailsDate.Text = "还有" + App.Term(d4, d3);
-                    }
+                    case "Day":
+                        DetailsDate.Text = All.Current.ConvertToWeek(Festival.Current.str3);
+                        FestivalDateMode = "Week";
+                        break;
+                    case "Week":
+                        if (d4 > d3)
+                            DetailsDate.Text = "已过" + App.Term(d3, d4);
+                        else
+                        {
+                            if (d4 < d3)
+                                DetailsDate.Text = "还有" + App.Term(d4, d3);
+                        }
+                        FestivalDateMode = "Year";
+                        break;
+                    case "Year":
+                        DetailsDate.Text = CustomData.Calculator(Festival.Current.str3);
+                        FestivalDateMode = "Day";
+                        break;
                 }
-                else
-                    DetailsDate.Text = Festival.Current.str2;
+                dCalDate.Text = DetailsDate.Text;
             }
-            dCalDate.Text = DetailsDate.Text;
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -224,7 +245,6 @@ namespace 倒计时
         private async void ShareButton_Click(object sender, RoutedEventArgs e)
         {
             await RenderDialog.ShowAsync();
-            
         }
 
         public static async Task<WriteableBitmap> RenderUIElement(UIElement element)

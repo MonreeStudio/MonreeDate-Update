@@ -61,6 +61,11 @@
                 <RelativePanel x:FieldModifier="Public">
                     <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" x:Name="Today" Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
                     <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
+                        <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
+                            <AppBarButton.Icon>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                         <AppBarButton x:Name="ContentChoise" Label="显示全部" Foreground="{x:Bind TC}" CornerRadius="3" ToolTipService.Placement="Mouse">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets"/>
@@ -75,15 +80,20 @@
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
-                        <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
-                            <AppBarButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
-                            </AppBarButton.Icon>
-                        </AppBarButton>
-                        <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="切换日期显示模式" ToolTipService.Placement="Mouse" ToolTipService.ToolTip="天数/年月日" Foreground="{x:Bind TC}" Click="AppBarButton_Click_1">
+                        
+                        <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="天数模式" Foreground="{x:Bind TC}">
                             <AppBarButton.Icon>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
                             </AppBarButton.Icon>
+                            <AppBarButton.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuFlyoutItem x:Name="DayMode" Text="天数模式" Foreground="{x:Bind TC}" Click="DayMode_Click"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Name="WeekMode" Text="周数模式" Foreground="{x:Bind TC}" Click="WeekMode_Click"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Name="YearMode" Text="年数模式" Foreground="{x:Bind TC}" Click="YearMode_Click"/>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
                         </AppBarButton>
                     </CommandBar>
                 </RelativePanel>
