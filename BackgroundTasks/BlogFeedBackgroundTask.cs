@@ -34,6 +34,7 @@ namespace BackgroundTasks
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
+            
             UpdateTile();   //更新磁贴
             LoadToast();    //加载通知
             deferral.Complete();
@@ -391,7 +392,7 @@ namespace BackgroundTasks
             List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
             foreach (var item in datalist0)
             {
-                var AlertName = "Alect" + item.Schedule_name;
+                var AlertName = "Alert" + item.Schedule_name;
                 if (localSettings.Values[AlertName] != null && localSettings.Values[AlertName].ToString()=="1")
                 {
                     string tipText;
@@ -401,6 +402,7 @@ namespace BackgroundTasks
                     else
                         tipText = "日程备注：无备注。";
                     CreateToast(item.Schedule_name, tipText);
+                    localSettings.Values[AlertName] = "0";
                 }
             }
         }
@@ -432,7 +434,7 @@ namespace BackgroundTasks
         {
             new ToastButton("打开夏日", "action")
             {
-                ActivationType = ToastActivationType.Background
+                ActivationType = ToastActivationType.Foreground
             }
         }
                 },
