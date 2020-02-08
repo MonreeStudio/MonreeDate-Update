@@ -37,6 +37,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.Connectivity;
 using 倒计时.Models;
 using 夏日.Models;
 
@@ -695,17 +696,28 @@ namespace 倒计时
             //    await dialog.ShowAsync();
             //    UpdateRing.IsActive = false;
             //}
-            try
+            if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                await DownloadAndInstallAllUpdatesAsync();
+                try
+                {
+                    await DownloadAndInstallAllUpdatesAsync();
+                }
+                catch
+                {
+                    MessageDialog dialog = new MessageDialog(
+                        "网络请求发生超时，请确保网络畅通。", "网络请求超时！");
+                    await dialog.ShowAsync();
+                    UpdateRing.IsActive = false;
+                }
             }
-            catch
+            else
             {
                 MessageDialog dialog = new MessageDialog(
-                    "网络请求发生超时，请检查网络连接。", "网络请求超时！");
+                        "无网络连接，请联网后再试。", "无网络连接！");
                 await dialog.ShowAsync();
                 UpdateRing.IsActive = false;
             }
+            
         }
         public async Task DownloadAndInstallAllUpdatesAsync()
         {
