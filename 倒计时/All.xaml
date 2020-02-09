@@ -108,9 +108,6 @@
         <animations:Implicit.HideAnimations>
           <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
           <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0">
-              
-            <animations:ScalarKeyFrame Key="0.1" Value="30"/>
-            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
           </animations:ScalarAnimation>
             <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
               
@@ -120,7 +117,7 @@
         </animations:Implicit.HideAnimations>
 
                     </TextBlock>
-                    <TextBlock x:Name="UserSign" Text="我是个性签名" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock x:Name="UserSign" Text="我是个性签名" FontSize="15" Width="180" MaxLines="3" TextTrimming="CharacterEllipsis"  TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <animations:Implicit.ShowAnimations>
           <animations:TranslationAnimation Duration="0:0:1" From="30" To="150,0,0" />
           <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
@@ -226,8 +223,6 @@
                 <animations:Implicit.HideAnimations>
                     <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
                     <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
-                        <animations:ScalarKeyFrame Key="0.1" Value="0.0"></animations:ScalarKeyFrame>
-                        <animations:ScalarKeyFrame Key="0.3" Value="0.0"></animations:ScalarKeyFrame>
                     </animations:ScalarAnimation>
                 </animations:Implicit.HideAnimations>
             </Thumb>

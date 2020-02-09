@@ -118,8 +118,6 @@
                 <animations:Implicit.HideAnimations>
                     <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
                     <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
-                        <animations:ScalarKeyFrame Key="0.1" Value="0.0"></animations:ScalarKeyFrame>
-                        <animations:ScalarKeyFrame Key="0.3" Value="0.0"></animations:ScalarKeyFrame>
                     </animations:ScalarAnimation>
                 </animations:Implicit.HideAnimations>
             </Thumb>
