@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -18,6 +19,7 @@ using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -483,6 +485,29 @@ namespace 倒计时
             
             // And send the notification
             ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+        }
+
+        private async void DesktopToolButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> DetailsList = new List<string>();
+            DetailsList.Add(DetailsEvent.Text);
+            DetailsList.Add(DetailsDate.Text);
+            DetailsList.Add(DetailsPickedDate.Text);
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(DesktopTool), DetailsList, new SuppressNavigationTransitionInfo());
+                Window.Current.Content = frame;
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            var DesktopName = "Desktop" + DetailsEvent.Text;
+            localSettings.Values[DesktopName] = false;
         }
     }
 }

@@ -61,6 +61,8 @@ namespace 倒计时
             GetAppVersion();
             MyNav.IsBackEnabled = false;
             SelectedPageItem = "";
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
         }
 
 

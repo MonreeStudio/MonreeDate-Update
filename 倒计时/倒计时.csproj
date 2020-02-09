@@ -144,6 +144,9 @@
       <DependentUpon>Calculator.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomData.cs" />
+    <Compile Include="DesktopTool.xaml.cs">
+      <DependentUpon>DesktopTool.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Details.xaml.cs">
       <DependentUpon>Details.xaml</DependentUpon>
     </Compile>
@@ -176,6 +179,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\CalcMDL2.ttf" />
     <None Include="倒计时_StoreKey.pfx" />
     <None Include="倒计时_TemporaryKey.pfx" />
   </ItemGroup>
@@ -257,6 +261,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Calculator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DesktopTool.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

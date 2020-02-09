@@ -7,12 +7,13 @@
     <Application.Resources>
         <ResourceDictionary>
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush" BackgroundSource="HostBackdrop"
-        TintOpacity="0.6" TintColor="CornflowerBlue" FallbackColor="SkyBlue" />
+        TintOpacity="0.6" TintColor="CornflowerBlue" FallbackColor="CornflowerBlue"/>
             <AcrylicBrush x:Key="CustomAcrylicInAppBrush" BackgroundSource="HostBackdrop"
         TintOpacity="0.9" TintColor="White" FallbackColor="White" />
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush2" BackgroundSource="HostBackdrop"
         TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="PowderBlue" />
             <SolidColorBrush x:Key="GlobalTheme" x:FieldModifier="public"/>
+            <FontFamily x:Key="CalculatorFontFamily">ms-appx:///Assets/CalcMDL2.ttf#Calculator MDL2 Assets</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
