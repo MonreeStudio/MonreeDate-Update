@@ -493,6 +493,7 @@ namespace 倒计时
             DetailsList.Add(DetailsEvent.Text);
             DetailsList.Add(DetailsDate.Text);
             DetailsList.Add(DetailsPickedDate.Text);
+            var num =  CoreApplication.Views.Count();
             CoreApplicationView newView = CoreApplication.CreateNewView();
             int newViewId = 0;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -500,12 +501,12 @@ namespace 倒计时
                 Frame frame = new Frame();
                 frame.Navigate(typeof(DesktopTool), DetailsList, new SuppressNavigationTransitionInfo());
                 Window.Current.Content = frame;
-                // You have to activate the window in order to show it later.
                 Window.Current.Activate();
-
                 newViewId = ApplicationView.GetForCurrentView().Id;
             });
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            MessageDialog message = new MessageDialog(num.ToString());
+            await message.ShowAsync();
             var DesktopName = "Desktop" + DetailsEvent.Text;
             localSettings.Values[DesktopName] = false;
         }

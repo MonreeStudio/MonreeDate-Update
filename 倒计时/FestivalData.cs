@@ -132,7 +132,7 @@ namespace 倒计时
                     FestivalDatas.Add(new FestivalData() { Str1 = "劳动节", Str2 = CustomData.Calculator("2020-05-01"), Str3 = "2020-05-01", Str4 = Color.FromArgb(255, 251, 185, 87), Str5 = All.Current.ColorfulBrush(Color.FromArgb(255, 251, 185, 87), 0.7) });
                 else
                     FestivalDatas.Add(new FestivalData() { Str1 = "劳动节", Str2 = CustomData.Calculator("2021-05-01"), Str3 = "2021-05-01", Str4 = Color.FromArgb(255, 251, 185, 87), Str5 = All.Current.ColorfulBrush(Color.FromArgb(255, 251, 185, 87), 0.7) });
-                if (DateTime.Now.Date <= Convert.ToDateTime("2019-12-25"))
+                if (DateTime.Now.Date <= Convert.ToDateTime("2020-06-01"))
                     FestivalDatas.Add(new FestivalData() { Str1 = "儿童节", Str2 = CustomData.Calculator("2020-06-01"), Str3 = "2020-06-01", Str4 = Colors.Orange, Str5 = All.Current.ColorfulBrush(Colors.Orange, 0.7) });
                 else
                     FestivalDatas.Add(new FestivalData() { Str1 = "儿童节", Str2 = CustomData.Calculator("2021-06-01"), Str3 = "2021-06-01", Str4 = Colors.Orange, Str5 = All.Current.ColorfulBrush(Colors.Orange, 0.7) });

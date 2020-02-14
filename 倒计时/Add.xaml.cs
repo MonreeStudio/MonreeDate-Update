@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -45,6 +46,7 @@ namespace 倒计时
             _Color = "";
             _Tip = "";
             SetThemeColor();
+            SetDateDialogTitle();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Add";
         }
@@ -90,6 +92,12 @@ namespace 倒计时
             }
         }
 
+        private void SetDateDialogTitle()
+        {
+            var today = DateTime.Now;
+            //DateTime todayFormat = Convert.ToDateTime(string.Format("{0}年{1}月{2}日", today.Year, today.Month, today.Day));
+            TodayDate.Text = "今天是" + string.Format("{0}年{1}月{2}日", today.Year, today.Month, today.Day);
+        }
         private string Calculator(string s1)
         {
             string str1 = s1;
@@ -223,12 +231,55 @@ namespace 倒计时
 
         private void TipDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            
+            TipTextbox.Text = "";
         }
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
         {
             Add_Picker.IsCalendarOpen = true;
+        }
+
+        private async void DateChooseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            await DateDialog.ShowAsync();
+        }
+
+        private async void DateDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var count = Convert.ToInt32(DaysTextBox.Text);
+                if (today.AddDays(count) > Convert.ToDateTime("2120/12/31"))
+                {
+                    PopupNotice popupNotice = new PopupNotice("超出了最大范围");
+                    popupNotice.ShowAPopup();
+                }
+                var res = today.AddDays(count);
+                Add_Picker.Date = Convert.ToDateTime(res);
+            }
+            catch
+            {
+                MessageDialog message = new MessageDialog("发生异常！");
+                await message.ShowAsync();
+            }
+            DaysTextBox.Text = "";
+        }
+
+        private void DateDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            DaysTextBox.Text = "";
+        }
+
+        private void DaysTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textbox = (TextBox)sender;
+            if (!Regex.IsMatch(textbox.Text, "^\\d*\\.?\\d*$") && textbox.Text != "")
+            {
+                int pos = textbox.SelectionStart - 1;
+                textbox.Text = textbox.Text.Remove(pos, 1);
+                textbox.SelectionStart = pos;
+            }
         }
     }
 }

@@ -92,6 +92,7 @@ namespace 倒计时
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
             this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+            RequestedTheme = ApplicationTheme.Light;
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
             {
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
