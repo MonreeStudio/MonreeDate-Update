@@ -350,6 +350,7 @@
                             DateFormat="{}{year.full}/{month.integer}/{day.integer}"
                             CornerRadius="8"
                             PlaceholderText="选择一个日期"
+                                    IsGroupLabelVisible="True"
                             DateChanged="Add_Picker_DateChanged"
                             />
             </StackPanel>
@@ -430,7 +431,7 @@
                        Background="White"
                        PrimaryButtonClick="TipDialog_PrimaryButtonClick"
                        CloseButtonClick="TipDialog_CloseButtonClick">
-                <TextBox x:Name="TipTextbox" Margin="10" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="10"/>
+                <TextBox x:Name="TipTextbox" Margin="5" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="8"/>
             </ContentDialog>
         </StackPanel>
     </ScrollViewer>

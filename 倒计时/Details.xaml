@@ -492,6 +492,7 @@
                 <ContentDialog Title="分享日程"
                            Foreground="CornflowerBlue"
                            DefaultButton="Primary"
+                               CornerRadius="10"
                            x:Name="RenderDialog">
                     <StackPanel>
                         <Border x:Name="RenderBorder" x:FieldModifier="public">
@@ -534,7 +535,7 @@
                 </ContentDialog>
             </Grid>
             <TextBlock Text="——夏日——" Margin="20" Grid.Row="5" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
-            <ContentDialog x:Name="AlertContentDialog" Style="{ThemeResource CloseContentDialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ContentDialog x:Name="AlertContentDialog" CornerRadius="10" Style="{ThemeResource CloseContentDialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <StackPanel VerticalAlignment="Stretch">
                     <Button x:Name="CloseContentDialogBtn" Click="CloseContentDialogBtn_Click" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" BorderThickness="0" Padding="10" HorizontalAlignment="Right" Background="Transparent"/>
                     <TextBlock Text="设置提醒" Margin="20,10,0,20" FontWeight="Bold" FontSize="20" Foreground="{x:Bind TC}"/>

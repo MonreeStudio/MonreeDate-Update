@@ -114,6 +114,7 @@
                                             <Setter Target="PrimaryButton.(Grid.Column)" Value="2" />
                                             <Setter Target="PrimaryButton.(Grid.ColumnSpan)" Value="2" />
                                             <Setter Target="PrimaryButton.Margin" Value="2,0,0,0" />
+                                            <Setter Target="PrimaryButton.CornerRadius" Value="5"/>
                                             <Setter Target="SecondaryButton.Visibility" Value="Collapsed" />
                                             <Setter Target="CloseButton.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
@@ -123,6 +124,7 @@
                                             <Setter Target="SecondaryButton.(Grid.Column)" Value="2" />
                                             <Setter Target="SecondaryButton.(Grid.ColumnSpan)" Value="2" />
                                             <Setter Target="SecondaryButton.Margin" Value="2,0,0,0" />
+                                            <Setter Target="SecondaryButton.ConerRadius" Value="5"/>
                                             <Setter Target="PrimaryButton.Visibility" Value="Collapsed" />
                                             <Setter Target="CloseButton.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
@@ -132,6 +134,7 @@
                                             <Setter Target="CloseButton.(Grid.Column)" Value="2" />
                                             <Setter Target="CloseButton.(Grid.ColumnSpan)" Value="2" />
                                             <Setter Target="CloseButton.Margin" Value="2,0,0,0" />
+                                            <Setter Target="CloseButton.ConerRadius" Value="5"/>
                                             <Setter Target="PrimaryButton.Visibility" Value="Collapsed" />
                                             <Setter Target="SecondaryButton.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
@@ -148,9 +151,11 @@
                                     <VisualState x:Name="PrimaryAndCloseVisible">
                                         <VisualState.Setters>
                                             <Setter Target="PrimaryButton.(Grid.ColumnSpan)" Value="2" />
+                                            <Setter Target="PrimaryButton.CornerRadius" Value="5"/>
                                             <Setter Target="CloseButton.(Grid.Column)" Value="2" />
                                             <Setter Target="CloseButton.(Grid.ColumnSpan)" Value="2" />
                                             <Setter Target="CloseButton.Margin" Value="2,0,0,0" />
+                                            <Setter Target="CloseButton.CornerRadius" Value="5"/>
                                             <Setter Target="SecondaryButton.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
                                     </VisualState>
@@ -159,9 +164,11 @@
                                             <Setter Target="SecondaryButton.(Grid.Column)" Value="0" />
                                             <Setter Target="SecondaryButton.(Grid.ColumnSpan)" Value="2" />
                                             <Setter Target="SecondaryButton.Margin" Value="0,0,2,0" />
+                                            <Setter Target="SecondaryButton.CornerRadius" Value="5"/>
                                             <Setter Target="CloseButton.(Grid.Column)" Value="2" />
                                             <Setter Target="CloseButton.(Grid.ColumnSpan)" Value="2" />
                                             <Setter Target="CloseButton.Margin" Value="2,0,0,0" />
+                                            <Setter Target="CloseButton.ConerRadius" Value="5"/>
                                             <Setter Target="PrimaryButton.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
                                     </VisualState>

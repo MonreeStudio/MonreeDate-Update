@@ -64,8 +64,8 @@
                  FontSize="20"
                  Foreground="Black"
                  HorizontalAlignment="Left"/>
-            <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True"/>
+            <CalendarDatePicker CornerRadius="8" Width="200" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True"/>
         </Grid>
     </ScrollViewer>
 </Page>

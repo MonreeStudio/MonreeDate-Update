@@ -49,6 +49,7 @@
                                 FontSize="20"
                                 CornerRadius="8"
                                 Height="70"
+                                    IsGroupLabelVisible="True"
                                 DateChanged="Add_Picker_DateChanged"/>
             </StackPanel>
             <StackPanel Grid.Row="4" Margin="20">
