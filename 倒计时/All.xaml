@@ -476,9 +476,14 @@
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="local:CustomData" x:Name="gw">
                                 <StackPanel x:Name="GridViewStackPanel" PointerEntered="GridViewStackPanel_PointerEntered" PointerExited="GridViewStackPanel_PointerExited" CornerRadius="15" Background="{x:Bind Str4}" Height="250" Width="225">
+                                    <StackPanel.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <EntranceThemeTransition IsStaggeringEnabled="True" />
+                                        </TransitionCollection>
+                                    </StackPanel.ChildrenTransitions>
                                     <TextBlock TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
-                                <TextBlock HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" FontWeight="Bold"  TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
+                                    <TextBlock HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" FontWeight="Bold"  TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
                             </StackPanel>
                         </DataTemplate>
 

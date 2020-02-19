@@ -144,6 +144,9 @@
       <DependentUpon>Calculator.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomData.cs" />
+    <Compile Include="Desktop.xaml.cs">
+      <DependentUpon>Desktop.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DesktopTool.xaml.cs">
       <DependentUpon>DesktopTool.xaml</DependentUpon>
     </Compile>
@@ -261,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Calculator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Desktop.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

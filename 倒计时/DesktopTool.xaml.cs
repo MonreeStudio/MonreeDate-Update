@@ -43,8 +43,8 @@ namespace 倒计时
             title.ButtonHoverBackgroundColor = Colors.White;
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(220, 220));
-            ApplicationView.PreferredLaunchViewSize = new Size(220, 220);
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(220, 120));
+            ApplicationView.PreferredLaunchViewSize = new Size(220, 120);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             Pip();
             LoadData();
@@ -82,7 +82,7 @@ namespace 倒计时
         private async void Pip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
-            preferences.CustomSize = new Size(220, 220);
+            preferences.CustomSize = new Size(320, 120);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences);
             var DesktopName = "Desktop" + _Event;
             if (localSettings.Values[DesktopName] == null)
@@ -93,7 +93,7 @@ namespace 倒计时
                 Frame.Navigate(typeof(DesktopTool),null, new SuppressNavigationTransitionInfo());
                 
             }
-            ApplicationView.PreferredLaunchViewSize = new Size(2114, 1662);
+            ApplicationView.PreferredLaunchViewSize = new Size(320, 120);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             ////返回默认模式
             //var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
@@ -103,9 +103,9 @@ namespace 倒计时
         private async void Unpip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
-            preferences.CustomSize = new Size(220, 200);
+            preferences.CustomSize = new Size(320, 120);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
-            ApplicationView.PreferredLaunchViewSize = new Size(2114, 1662);
+            ApplicationView.PreferredLaunchViewSize = new Size(320, 120);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             var DesktopName = "Desktop" + _Event;
             localSettings.Values[DesktopName] = false;

@@ -345,9 +345,12 @@
                 <NavigationViewItemSeparator />
                 <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator />
+                <NavigationViewItemHeader Content="工具"/>
                 <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
                 <NavigationViewItemSeparator />
                 <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
+                <NavigationViewItemSeparator />
+                <NavigationViewItem x:Name="DesktopItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="GoToStart" Tag="Desktop" Content="桌面"/>
             </NavigationView.MenuItems>
             <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
                 <Frame x:Name="ContentFrame"

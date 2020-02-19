@@ -146,6 +146,7 @@ namespace 倒计时
           ("Calculator", typeof(Calculator)),
           ("Festival", typeof(Festival)),
           ("Details",typeof(Details)),
+          ("Desktop",typeof(Desktop)),
         };
 
         private void MyNav_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
@@ -239,7 +240,8 @@ namespace 倒计时
             if(SelectedPageItem.Equals("Add")
                 ||SelectedPageItem.Equals("Calculator")
                 ||SelectedPageItem.Equals("Festival")
-                ||SelectedPageItem.Equals("Settings"))
+                ||SelectedPageItem.Equals("Settings")
+                ||SelectedPageItem.Equals("Desktop"))
             {
                 MyNav.SelectedItem = MyNav.MenuItems[0];
                 ContentFrame.Navigate(typeof(All));
