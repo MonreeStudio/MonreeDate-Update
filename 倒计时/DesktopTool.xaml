@@ -11,31 +11,85 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="White">
+    <Grid MinWidth="320">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="夏日" FontWeight="ExtraBlack" Grid.Row="0" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
-        <Grid Grid.Row="1" Background="White" MinWidth="350" MaxWidth="350" Height="80">
-            <controls:DropShadowPanel BlurRadius="18"
-                                  ShadowOpacity="0.2"
-                                  OffsetX="2"
-                                  OffsetY="2"
-                                  Color="Black"
-                                      Margin="10"
-                                  IsMasked="True">
-                <Grid Background="White" Width="300" CornerRadius="15" HorizontalAlignment="Center">
-                    <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
-                        <TextBlock x:Name="DT_ScheduleName" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
-                        <TextBlock x:Name="DT_Date" FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
-                    </StackPanel>
-                    <TextBlock x:Name="DT_CalDate" Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
-                </Grid>
-            </controls:DropShadowPanel>
+        <TextBlock Text="夏日" FontWeight="ExtraBlack" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
+
+        <Grid Grid.Row="1" Height="Auto" >
+            <ListView SelectionMode ="None" HorizontalAlignment="Center">
+                <ListView.Header>
+                    <controls:ScrollHeader Mode="Sticky">
+                        <Grid x:Name="MyHeaderGrid" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                            
+                        </Grid>
+                    </controls:ScrollHeader>
+                </ListView.Header>
+                <ListViewItem>
+                    
+                    <Grid>
+                        <controls:DropShadowPanel BlurRadius="18"
+                                                  ShadowOpacity="0.2"
+                                                  OffsetX="2"
+                                                  OffsetY="2"
+                                                  Color="Black"
+                                                  Margin="10"
+                                                  IsMasked="True">
+                            <Grid Width="280" Background="White" CornerRadius="15" HorizontalAlignment="Center">
+                                <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
+                                    <TextBlock x:Name="DT_ScheduleName" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
+                                    <TextBlock x:Name="DT_Date" FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
+                                </StackPanel>
+                                <TextBlock x:Name="DT_CalDate" Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
+                            </Grid>
+                        </controls:DropShadowPanel>
+                    </Grid>
+                </ListViewItem>
+                <ListViewItem>
+                    <Grid>
+                        <controls:DropShadowPanel BlurRadius="18"
+                                                  ShadowOpacity="0.2"
+                                                  OffsetX="2"
+                                                  OffsetY="2"
+                                                  Color="Black"
+                                                  Margin="10"
+                                                  IsMasked="True">
+                            <Grid Width="280" Background="White" CornerRadius="15" HorizontalAlignment="Center">
+                                <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
+                                    <TextBlock Text="测试" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
+                                    <TextBlock Text="20XX-XX-XX"  FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
+                                </StackPanel>
+                                <TextBlock Text="还剩100天"  Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
+                            </Grid>
+                        </controls:DropShadowPanel>
+                    </Grid>
+                </ListViewItem>
+                <ListViewItem>
+                    <Grid>
+                        <controls:DropShadowPanel BlurRadius="18"
+                                                  ShadowOpacity="0.2"
+                                                  OffsetX="2"
+                                                  OffsetY="2"
+                                                  Color="Black"
+                                                  Margin="10"
+                                                  IsMasked="True">
+                            <Grid Width="280" Background="White" CornerRadius="15" HorizontalAlignment="Center">
+                                <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
+                                    <TextBlock Text="测试" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
+                                    <TextBlock Text="20XX-XX-XX"  FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
+                                </StackPanel>
+                                <TextBlock Text="还剩100天"  Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
+                            </Grid>
+                        </controls:DropShadowPanel>
+                    </Grid>
+                </ListViewItem>
+                
+            </ListView>
         </Grid>
-        <Button x:Name="SetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE49;" Visibility="Collapsed" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
-        <Button x:Name="DeSetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE47;" Visibility="Visible" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
+        <Button x:Name="SetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE49;" Visibility="Collapsed" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
+        <Button x:Name="DeSetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE47;" Visibility="Visible" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
     </Grid>
 </Page>

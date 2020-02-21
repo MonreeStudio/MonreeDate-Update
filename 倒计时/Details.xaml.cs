@@ -505,8 +505,6 @@ namespace 倒计时
                 newViewId = ApplicationView.GetForCurrentView().Id;
             });
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
-            MessageDialog message = new MessageDialog(num.ToString());
-            await message.ShowAsync();
             var DesktopName = "Desktop" + DetailsEvent.Text;
             localSettings.Values[DesktopName] = false;
         }
