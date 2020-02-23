@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Platform.WinRT;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using 倒计时.Models;
+using 夏日.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -25,11 +28,20 @@ namespace 倒计时
     public sealed partial class Desktop : Page
     {
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
+        public DesktopEventsViewModel DesViewModel = new DesktopEventsViewModel();
+        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        public SQLite.Net.SQLiteConnection conn;
         public Desktop()
         {
             this.InitializeComponent();
+            // 建立数据库连接
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
+            InitialData();
         }
 
         private void SetThemeColor()
@@ -71,6 +83,16 @@ namespace 倒计时
                 default:
                     break;
             }
+        }
+        
+        private void InitialData()
+        {
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            foreach(var item in datalist0)
+            {
+                DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name});
+            }
+            
         }
     }
 }
