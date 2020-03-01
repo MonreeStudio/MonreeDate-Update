@@ -14,6 +14,7 @@
         TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="PowderBlue" />
             <SolidColorBrush x:Key="GlobalTheme" x:FieldModifier="public"/>
             <FontFamily x:Key="CalculatorFontFamily">ms-appx:///Assets/CalcMDL2.ttf#Calculator MDL2 Assets</FontFamily>
+            <AcrylicBrush x:Key="ModuleBackground" BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemChromeMediumColor}" TintOpacity="0.5"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

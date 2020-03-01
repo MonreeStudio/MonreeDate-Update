@@ -6,6 +6,9 @@
     xmlns:local1="using:倒计时.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
     <Page.Resources>
@@ -27,27 +30,56 @@
                        Grid.Row="0"
                        Grid.Column="0" 
                        VerticalAlignment="Top"/>
-        <StackPanel Grid.Row="1" Margin="10,50,10,0" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <TextBlock Text="日程列表" HorizontalAlignment="Center" />
-            <Border HorizontalAlignment="Center" Width="500" BorderBrush="{x:Bind TC}" BorderThickness="3" CornerRadius="10">
-                <ListView x:Name="DesktopList" ItemsSource="{x:Bind DesViewModel.DesktopDatas}" IsItemClickEnabled="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Padding" Value="0" />
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="local1:DesktopEvents">
-                            <StackPanel>
-                                <TextBlock Margin="20,0,0,0" Text="{x:Bind EventName}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Border>
-            
-        </StackPanel>
+        <controls:DropShadowPanel BlurRadius="15"
+                                  ShadowOpacity="0.5"
+                                  OffsetX="2"
+                                  OffsetY="2"
+                                  Color="Gray"
+                                  VerticalAlignment="Top"
+                                  HorizontalAlignment="Center"
+                                  Grid.Row="1"
+                                  Margin="10,50,10,0"
+                                  IsMasked="True"
+                                  Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+            <StackPanel x:Name="ListBackgroundPanel" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"  CornerRadius="10" Grid.Row="1" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <TextBlock Text="日程列表" HorizontalAlignment="Left" FontWeight="Bold" FontSize="23" Margin="0,10,0,20" />
+                <controls:DropShadowPanel BlurRadius="10"
+                                  ShadowOpacity="0.6"
+                                  OffsetX="2"
+                                  OffsetY="2"
+                                  Color="Gray"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"
+                                  IsMasked="True">
+                    <Border HorizontalAlignment="Center" Width="420" Background="White" BorderBrush="DarkGray" BorderThickness="0" CornerRadius="5">
+                        <ListView x:Name="DesktopList" Height="200" ItemsSource="{x:Bind DesViewModel.DesktopDatas}" IsItemClickEnabled="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" SelectionChanged="DesktopList_SelectionChanged" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="BorderThickness" Value="0.3"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local1:DesktopEvents">
+                                    <StackPanel>
+                                        <TextBlock Margin="20,0,0,0" Text="{x:Bind EventName}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Border>
+                </controls:DropShadowPanel>
+                <TextBlock x:Name="SelectedCountTextBlock" Text="计数" Margin="10"/>
+                <StackPanel Orientation="Horizontal" Margin="30" HorizontalAlignment="Center">
+                    <Button Content="测试按钮1" CornerRadius="15" Background="{x:Bind TC}" Foreground="White" Margin="0,0,30,0"/>
+                    <Button Content="测试按钮2" CornerRadius="15" Background="{x:Bind TC}" Foreground="White" Margin="30,0,0,0"/>
+                </StackPanel>
+                
+            </StackPanel>
+        </controls:DropShadowPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

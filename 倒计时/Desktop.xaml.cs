@@ -41,6 +41,7 @@ namespace 倒计时
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
+            SetThemeColor();
             InitialData();
         }
 
@@ -87,12 +88,25 @@ namespace 倒计时
         
         private void InitialData()
         {
+            DesktopList.SelectRange(new ItemIndexRange(0,2));
+            //ListBackgroundPanel.Background = new SolidColorBrush(Color.FromArgb(255, 241, 241, 241));
             List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
             foreach(var item in datalist0)
             {
                 DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name});
             }
             
+        }
+
+        private void DesktopList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var count = DesktopList.SelectedItems.Count;
+            SelectedCountTextBlock.Text = count.ToString();
+            if (count > 3)
+            {
+                DesktopList.SelectedItems[3] = null;
+                count--;
+            }
         }
     }
 }
