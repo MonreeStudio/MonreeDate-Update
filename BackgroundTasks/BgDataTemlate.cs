@@ -1,15 +1,13 @@
-﻿using System;
+﻿using SQLite.Net.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SQLite.Net.Attributes;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
 
-namespace 夏日.Models
+namespace BackgroundTasks
 {
-    class DataTemple
+    public class BgDataTemlate
     {
         [PrimaryKey]
         public string Schedule_name { get; set; }

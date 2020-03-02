@@ -40,7 +40,7 @@
                                   Grid.Row="1"
                                   Margin="10,50,10,0"
                                   IsMasked="True"
-                                  Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                  >
             <StackPanel x:Name="ListBackgroundPanel" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"  CornerRadius="10" Grid.Row="1" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <TextBlock Text="日程列表" HorizontalAlignment="Left" FontWeight="Bold" FontSize="23" Margin="0,10,0,20" />
                 <controls:DropShadowPanel BlurRadius="10"
@@ -52,7 +52,7 @@
                                   HorizontalAlignment="Center"
                                   IsMasked="True">
                     <Border HorizontalAlignment="Center" Width="420" Background="White" BorderBrush="DarkGray" BorderThickness="0" CornerRadius="5">
-                        <ListView x:Name="DesktopList" Height="200" ItemsSource="{x:Bind DesViewModel.DesktopDatas}" IsItemClickEnabled="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" SelectionChanged="DesktopList_SelectionChanged" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                        <ListView x:Name="DesktopList" Height="200" ItemsSource="{x:Bind DesViewModel.DesktopDatas}" IsItemClickEnabled="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" SelectionChanged="DesktopList_SelectionChanged" Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemClick="DesktopList_ItemClick">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Padding" Value="0" />
@@ -73,9 +73,10 @@
                     </Border>
                 </controls:DropShadowPanel>
                 <TextBlock x:Name="SelectedCountTextBlock" Text="计数" Margin="10"/>
+                <TextBlock x:Name="SelectedEvents" Text="记事" Margin="10"/>
                 <StackPanel Orientation="Horizontal" Margin="30" HorizontalAlignment="Center">
-                    <Button Content="测试按钮1" CornerRadius="15" Background="{x:Bind TC}" Foreground="White" Margin="0,0,30,0"/>
-                    <Button Content="测试按钮2" CornerRadius="15" Background="{x:Bind TC}" Foreground="White" Margin="30,0,0,0"/>
+                    <Button x:Name="TestButton1" Content="测试按钮1" CornerRadius="15" Background="{x:Bind TC}" Foreground="White" Margin="0,0,30,0" Click="TestButton1_Click"/>
+                    <Button x:Name="TestButton2" Content="测试按钮2" CornerRadius="15" Background="{x:Bind TC}" Foreground="White" Margin="30,0,0,0" Click="TestButton2_Click"/>
                 </StackPanel>
                 
             </StackPanel>

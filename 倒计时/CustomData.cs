@@ -59,7 +59,7 @@ namespace 倒计时
             };
         }
 
-       static public string Calculator(string s1)
+        static public string Calculator(string s1)
         {
             string str1 = s1;
             string str2 = DateTime.Now.ToShortDateString().ToString();

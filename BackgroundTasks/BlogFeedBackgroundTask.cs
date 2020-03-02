@@ -7,17 +7,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-// Added during quickstart
 using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
 using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.Web.Syndication;
-using 夏日.Models;
 using Microsoft.QueryStringDotNET; // QueryString.NET
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml;
+using Windows.UI.ViewManagement;
 
 namespace BackgroundTasks
 {
@@ -32,7 +35,7 @@ namespace BackgroundTasks
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            conn.CreateTable<BgDataTemlate>(); //默认表名同范型参数    
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
             
             UpdateTile();   //更新磁贴
@@ -40,7 +43,43 @@ namespace BackgroundTasks
             deferral.Complete();
         }
 
-        private static void UpdateTile()
+        public async void CreateTool(List<string> datas)
+        {
+            List<BgDataTemlate> datalist = new List<BgDataTemlate>();
+            switch (datas.Count)
+            {
+                case 1:
+                    datalist = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?",datas[0]);
+                    break;
+                case 2:
+                    datalist = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?", datas[0],datas[1]);
+                    break;
+                case 3:
+                    datalist = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?", datas[0], datas[1],datas[2]);
+                    break;
+                default:
+                    break;
+            }
+            //List<string> DetailsList = new List<string>();
+            //DetailsList.Add(_event);
+            //DetailsList.Add(_pickedDate);
+            //DetailsList.Add(_date);
+            var num = CoreApplication.Views.Count();
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(Tool), datalist, new SuppressNavigationTransitionInfo());
+                Window.Current.Content = frame;
+                Window.Current.Activate();
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            localSettings.Values["DesktopPin"] = false;
+        }
+
+        public static void UpdateTile()
         {
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
             updater.EnableNotificationQueue(true);
@@ -77,7 +116,7 @@ namespace BackgroundTasks
 
         private static TileNotification LoadTile()
         {
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            List<BgDataTemlate> datalist0 = conn.Query<BgDataTemlate>("select * from DataTemple");
             foreach (var item in datalist0)
             {
                 if (SecondaryTile.Exists(item.Schedule_name))
@@ -85,7 +124,7 @@ namespace BackgroundTasks
                     CreateSecondaryTile(item.Schedule_name, Calculator(item.Date), item.Date);
                 }
             }
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<BgDataTemlate> datalist = conn.Query<BgDataTemlate>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
             string _CaculatedDate = "";
             string _Date = "";
@@ -387,9 +426,9 @@ namespace BackgroundTasks
             }
         }
 
-        private void LoadToast()
+        public void LoadToast()
         {
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<BgDataTemlate> datalist0 = conn.Query<BgDataTemlate>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
             foreach (var item in datalist0)
             {
                 var AlertName = "Alert" + item.Schedule_name;

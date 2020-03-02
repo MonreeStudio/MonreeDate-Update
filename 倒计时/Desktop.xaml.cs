@@ -17,6 +17,11 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using 倒计时.Models;
 using 夏日.Models;
+using BackgroundTasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml.Media.Animation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -32,13 +37,15 @@ namespace 倒计时
         public DesktopEventsViewModel DesViewModel = new DesktopEventsViewModel();
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
+        List<string> list;
         public Desktop()
         {
             this.InitializeComponent();
             // 建立数据库连接
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            list = new List<string>();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
             SetThemeColor();
@@ -101,12 +108,43 @@ namespace 倒计时
         private void DesktopList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var count = DesktopList.SelectedItems.Count;
-            SelectedCountTextBlock.Text = count.ToString();
+            
+            SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + count.ToString()+"/3";
             if (count > 3)
             {
                 DesktopList.SelectedItems[3] = null;
                 count--;
             }
+        }
+
+        private void TestButton2_Click(object sender, RoutedEventArgs e)
+        {
+            //(new BlogFeedBackgroundTask()).LoadToast();
+        }
+
+        private void TestButton1_Click(object sender, RoutedEventArgs e)
+        {
+            if(list.Count > 0)
+                (new BlogFeedBackgroundTask()).CreateTool(list);
+        }
+
+        private void DesktopList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var count = DesktopList.SelectedItems.Count;
+            var item = (DesktopEvents)e.ClickedItem;
+            if (list.Contains(item.EventName))
+                list.Remove(item.EventName);
+            else
+            {
+                if (list.Count < 3)
+                {
+                    list.Add(item.EventName);
+                    list.Distinct();
+                }
+            }
+            SelectedEvents.Text = "已选中：";
+            foreach (var name in list)
+                SelectedEvents.Text += (name + " ");
         }
     }
 }

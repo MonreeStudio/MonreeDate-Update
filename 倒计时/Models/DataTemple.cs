@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Media;
 
 namespace 夏日.Models
 {
-    class DataTemple
+    public class DataTemple
     {
         [PrimaryKey]
         public string Schedule_name { get; set; }
