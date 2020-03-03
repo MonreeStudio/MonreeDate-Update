@@ -124,8 +124,16 @@ namespace 倒计时
 
         private void TestButton1_Click(object sender, RoutedEventArgs e)
         {
-            if(list.Count > 0)
-                (new BlogFeedBackgroundTask()).CreateTool(list);
+            if (list.Count > 0)
+            {
+                localSettings.Values["ItemCount"] = list.Count;
+                for(int i = 0; i < list.Count; i++)
+                {
+                    var desktopItemKey = "DesktopKey" + i;
+                    localSettings.Values[desktopItemKey] = list[i];
+                }
+            }
+            (new BlogFeedBackgroundTask()).CreateTool();
         }
 
         private void DesktopList_ItemClick(object sender, ItemClickEventArgs e)

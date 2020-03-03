@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackgroundTasks
 {
-    public class BgDataTemlate
+    class DataTemple
     {
         [PrimaryKey]
         public string Schedule_name { get; set; }

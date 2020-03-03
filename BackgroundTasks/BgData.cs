@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackgroundTasks
 {
-    public class BgData
+    public sealed class BgData
     {
         public string ScheduleName { get; set; }
         public string Date { get; set; }
@@ -19,13 +19,8 @@ namespace BackgroundTasks
         }
 
     }
-
-    public class BgDataViewModel
+    class BgDataViewModel
     {
         public ObservableCollection<BgData> BgDatas = new ObservableCollection<BgData>();
-        public BgDataViewModel()
-        {
-            
-        }
     }
 }

@@ -24,7 +24,7 @@
                 <ListView.Header>
                     <controls:ScrollHeader Mode="Sticky">
                         <Grid x:Name="MyHeaderGrid" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                            
+
                         </Grid>
                     </controls:ScrollHeader>
                 </ListView.Header>

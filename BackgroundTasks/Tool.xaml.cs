@@ -34,16 +34,17 @@ namespace BackgroundTasks
         static SQLite.Net.SQLiteConnection conn;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-        List<BgDataTemlate> list;
-        public BgDataViewModel ViewModel = new BgDataViewModel();
+        List<DataTemple> list;
+        BgDataViewModel ViewModel;
         public Tool()
         {
             this.InitializeComponent();
-            list = new List<BgDataTemlate>();
+            list = new List<DataTemple>();
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
-            conn.CreateTable<BgDataTemlate>(); //默认表名同范型参数 
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            ViewModel = new BgDataViewModel();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
             title.BackgroundColor = Colors.SkyBlue;
@@ -55,42 +56,88 @@ namespace BackgroundTasks
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, 320));
             ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            Pip();
             LoadData();
+            Pip();
         }
 
         private void LoadData()
         {
-            try
+            int count = (int)localSettings.Values["ItemCount"];
+            List<DataTemple> datalist = new List<DataTemple>();
+            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            switch (count)
             {
-                switch (list.Count())
-                {
-                    case 1:
-                        List<BgDataTemlate> datalist1 = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?",list[0]);
-                        foreach(var item in datalist1)
-                        {
-                            ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                        }
-                        break;
-                    case 2:
-                        List<BgDataTemlate> datalist2 = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?", list[0],list[1]);
-                        foreach(var item in datalist2)
-                        {
-                            ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                        }
-                        break;
-                    case 3:
-                        List<BgDataTemlate> datalist3 = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?", list[0], list[1],list[2]);
-                        foreach (var item in datalist3)
-                        {
-                            ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                case 1:
+                    string a1 = localSettings.Values["DesktopKey0"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == a1)
+                            datalist.Add(item);
+                    }
+                    break;
+                case 2:
+                    string b1 = localSettings.Values["DesktopKey0"].ToString();
+                    string b2 = localSettings.Values["DesktopKey1"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
+                            datalist.Add(item);
+                    }
+                    break;
+                case 3:
+                    string c1 = localSettings.Values["DesktopKey0"].ToString();
+                    string c2 = localSettings.Values["DesktopKey1"].ToString();
+                    string c3 = localSettings.Values["DesktopKey2"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
+                            datalist.Add(item);
+                    }
+                    break;
+                default:
+                    break;
             }
-            catch { }
+            switch (count)
+            {
+                case 1:
+                    List<DataTemple> a1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
+                    foreach (var item in a1)
+                    {
+                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                    }
+                    break;
+                case 2:
+                    List<DataTemple> b1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
+                    foreach (var item in b1)
+                    {
+                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                    }
+                    List<DataTemple> b2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[1].Schedule_name);
+                    foreach (var item in b2)
+                    {
+                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                    }
+                    break;
+                case 3:
+                    List<DataTemple> c1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
+                    foreach (var item in c1)
+                    {
+                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                    }
+                    List<DataTemple> c2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[1].Schedule_name);
+                    foreach (var item in c2)
+                    {
+                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                    }
+                    List<DataTemple> c3 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[2].Schedule_name);
+                    foreach (var item in c3)
+                    {
+                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         public string Calculator(string s1)
@@ -125,9 +172,9 @@ namespace BackgroundTasks
             {
                 try
                 {
-                    list = (List<BgDataTemlate>)e.Parameter;
-                    
-                    localSettings.Values["DesktopPin"] = false;
+                    list = (List<DataTemple>)e.Parameter;
+
+                    //localSettings.Values["DesktopPin"] = false;
                 }
                 catch { }
             }
@@ -142,10 +189,11 @@ namespace BackgroundTasks
             if (localSettings.Values["DesktopPin"].Equals(false))
             {
                 localSettings.Values["DesktopPin"] = true;
-                Frame.Navigate(typeof(Tool), null, new SuppressNavigationTransitionInfo()); ;
+                Frame.Navigate(typeof(Tool), null, new SuppressNavigationTransitionInfo()); 
             }
             ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
             ////返回默认模式
             //var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
             //await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
