@@ -361,7 +361,7 @@
     <ScrollViewer x:Name="AllScrollViewer" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
         <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                 <RelativePanel x:FieldModifier="Public">
-                    <TextBlock  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold" x:Name="Today" Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
+                    <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
                     <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
                         <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
                             <AppBarButton.Icon>

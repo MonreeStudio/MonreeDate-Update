@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
+using Windows.UI.Popups;
 
 namespace BackgroundTasks
 {
@@ -29,7 +30,7 @@ namespace BackgroundTasks
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
+        DispatcherTimer timer;
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             //建立数据库连接   
@@ -37,7 +38,6 @@ namespace BackgroundTasks
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
-            
             UpdateTile();   //更新磁贴
             LoadToast();    //加载通知
             deferral.Complete();
@@ -45,58 +45,69 @@ namespace BackgroundTasks
 
         public async void CreateTool()
         {
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
-            int count = (int)localSettings.Values["ItemCount"];
-            List<DataTemple> datalist = new List<DataTemple>();
-            var allData = conn.Query<DataTemple>("select *from DataTemple");
-            switch (count)
-            {
-                case 1:
-                    string a1 = localSettings.Values["DesktopKey0"].ToString();
-                    foreach(var item in allData)
-                    {
-                        if (item.Schedule_name == a1)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 2:
-                    string b1 = localSettings.Values["DesktopKey0"].ToString();
-                    string b2 = localSettings.Values["DesktopKey1"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 3:
-                    string c1 = localSettings.Values["DesktopKey0"].ToString();
-                    string c2 = localSettings.Values["DesktopKey1"].ToString();
-                    string c3 = localSettings.Values["DesktopKey2"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3) 
-                            datalist.Add(item);
-                    }
-                    break;
-                default:
-                    break;
-            }
             var num = CoreApplication.Views.Count();
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            int newViewId = 0;
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            if (num <= 1)
             {
-                Frame frame = new Frame();
-                frame.Navigate(typeof(Tool), datalist, new SuppressNavigationTransitionInfo());
-                Window.Current.Content = frame;
-                Window.Current.Activate();
-                newViewId = ApplicationView.GetForCurrentView().Id;
-            });
-            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
-            localSettings.Values["DesktopPin"] = false;
+                //建立数据库连接   
+                conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+                //建表              
+                conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+                int count = (int)localSettings.Values["ItemCount"];
+                List<DataTemple> datalist = new List<DataTemple>();
+                var allData = conn.Query<DataTemple>("select *from DataTemple");
+                switch (count)
+                {
+                    case 1:
+                        string a1 = localSettings.Values["DesktopKey0"].ToString();
+                        foreach (var item in allData)
+                        {
+                            if (item.Schedule_name == a1)
+                                datalist.Add(item);
+                        }
+                        break;
+                    case 2:
+                        string b1 = localSettings.Values["DesktopKey0"].ToString();
+                        string b2 = localSettings.Values["DesktopKey1"].ToString();
+                        foreach (var item in allData)
+                        {
+                            if (item.Schedule_name == b1 || item.Schedule_name == b2)
+                                datalist.Add(item);
+                        }
+                        break;
+                    case 3:
+                        string c1 = localSettings.Values["DesktopKey0"].ToString();
+                        string c2 = localSettings.Values["DesktopKey1"].ToString();
+                        string c3 = localSettings.Values["DesktopKey2"].ToString();
+                        foreach (var item in allData)
+                        {
+                            if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
+                                datalist.Add(item);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                //var num = CoreApplication.Views.Count();
+                //coreWindow.Activate();
+                //CoreApplication.GetCurrentView();
+                CoreApplicationView newView = CoreApplication.CreateNewView();
+                int newViewId = 0;
+                await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    Frame frame = new Frame();
+                    frame.Navigate(typeof(Tool), datalist, new SuppressNavigationTransitionInfo());
+                    Window.Current.Content = frame;
+                    Window.Current.Activate();
+                    newViewId = ApplicationView.GetForCurrentView().Id;
+                });
+                bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+                localSettings.Values["DesktopPin"] = false;
+            }
+            else
+            {
+                MessageDialog message = new MessageDialog("您已创建桌面显示工具，无需重复创建。", "温馨提示"+num);
+                await message.ShowAsync();
+            }
         }
 
         public static void UpdateTile()

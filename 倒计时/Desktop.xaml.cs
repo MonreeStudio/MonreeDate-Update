@@ -37,10 +37,12 @@ namespace 倒计时
         public DesktopEventsViewModel DesViewModel = new DesktopEventsViewModel();
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
+        public static Desktop Current;
         List<string> list;
         public Desktop()
         {
             this.InitializeComponent();
+            Current = this;
             // 建立数据库连接
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              

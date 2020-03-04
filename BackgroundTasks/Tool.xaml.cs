@@ -33,8 +33,8 @@ namespace BackgroundTasks
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
         List<DataTemple> list;
+        DispatcherTimer timer;
         BgDataViewModel ViewModel;
         public Tool()
         {
@@ -44,6 +44,10 @@ namespace BackgroundTasks
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+            timer.Start();
             ViewModel = new BgDataViewModel();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
@@ -60,7 +64,28 @@ namespace BackgroundTasks
             Pip();
         }
 
-        private void LoadData()
+        private void Timer_Tick(object sender, object e)
+        {
+            RefreshData();
+        }
+
+        private void RefreshData()
+        {
+            //localSettings.Values["DateTimeNow"] = null;
+            //ViewModel.BgDatas.Clear();
+            //LoadData();
+            var timeNow = DateTime.Now;
+            TestTextBlock.Text = "时间：" + timeNow;
+            if (Convert.ToInt32(timeNow.Second) == 0
+                && Convert.ToInt32(timeNow.Minute) == 0
+                && Convert.ToInt32(timeNow.Second) == 0)
+            {
+                ViewModel.BgDatas.Clear();
+                LoadData();
+            }
+        }
+
+        public void LoadData()
         {
             int count = (int)localSettings.Values["ItemCount"];
             List<DataTemple> datalist = new List<DataTemple>();
@@ -179,7 +204,7 @@ namespace BackgroundTasks
                 catch { }
             }
         }
-        private async void Pip()
+        public async void Pip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
             preferences.CustomSize = new Size(330, 320);
@@ -189,7 +214,10 @@ namespace BackgroundTasks
             if (localSettings.Values["DesktopPin"].Equals(false))
             {
                 localSettings.Values["DesktopPin"] = true;
-                Frame.Navigate(typeof(Tool), null, new SuppressNavigationTransitionInfo()); 
+                Frame.Navigate(typeof(Tool), null, new SuppressNavigationTransitionInfo());
+                timer = new DispatcherTimer();
+                timer.Interval = new TimeSpan(0, 0, 1);
+                timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
             }
             ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
@@ -199,7 +227,7 @@ namespace BackgroundTasks
             //await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
         }
 
-        private async void Unpip()
+        public async void Unpip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
             preferences.CustomSize = new Size(330, 320);
@@ -207,6 +235,9 @@ namespace BackgroundTasks
             ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             localSettings.Values["DesktopPin"] = false;
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
         }
 
         private void SetTopBtn_Click(object sender, RoutedEventArgs e)
@@ -221,6 +252,13 @@ namespace BackgroundTasks
             Unpip();
             SetTopBtn.Visibility = Visibility.Visible;
             DeSetTopBtn.Visibility = Visibility.Collapsed;
+        }
+
+        private void RefreshBtn_Click(object sender, RoutedEventArgs e)
+        {
+            LoadData();
+            Unpip();
+            Pip();
         }
     }
 }

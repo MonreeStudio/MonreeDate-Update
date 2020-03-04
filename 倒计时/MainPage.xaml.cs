@@ -25,6 +25,8 @@ using 夏日.Models;
 using Microsoft.Toolkit.Uwp.Notifications;
 using 倒计时.Models;
 using Windows.ApplicationModel;
+using BackgroundTasks;
+using Windows.UI.Popups;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -41,6 +43,7 @@ namespace 倒计时
         public bool SelectedPage { get; set; }
         public string SelectedPageItem { get; set; }
         public IntroPageViewModel ViewModel = new IntroPageViewModel();
+        
         public MainPage()
         {
             this.InitializeComponent();
@@ -63,9 +66,10 @@ namespace 倒计时
             SelectedPageItem = "";
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            
         }
 
-
+        
 
         public void SetThemeColor()
         {
@@ -307,6 +311,7 @@ namespace 倒计时
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
+            
             //localSettings.Values["FirstlyOpen"] = null;
             if (localSettings.Values["2.2.3.0"] == null)
             { 

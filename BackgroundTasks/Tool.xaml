@@ -53,5 +53,6 @@
         </Grid>
         <Button x:Name="SetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE49;" Visibility="Collapsed" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
         <Button x:Name="DeSetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE47;" Visibility="Visible" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
+        <TextBlock x:Name="TestTextBlock" Grid.Row="2" Margin="35,0,0,3" Text="计数"/>
     </Grid>
 </Page>
