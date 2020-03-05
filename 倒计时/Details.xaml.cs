@@ -487,26 +487,5 @@ namespace 倒计时
             ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
         }
 
-        private async void DesktopToolButton_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> DetailsList = new List<string>();
-            DetailsList.Add(DetailsEvent.Text);
-            DetailsList.Add(DetailsDate.Text);
-            DetailsList.Add(DetailsPickedDate.Text);
-            var num =  CoreApplication.Views.Count();
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            int newViewId = 0;
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                Frame frame = new Frame();
-                frame.Navigate(typeof(DesktopTool), DetailsList, new SuppressNavigationTransitionInfo());
-                Window.Current.Content = frame;
-                Window.Current.Activate();
-                newViewId = ApplicationView.GetForCurrentView().Id;
-            });
-            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
-            var DesktopName = "Desktop" + DetailsEvent.Text;
-            localSettings.Values[DesktopName] = false;
-        }
     }
 }
