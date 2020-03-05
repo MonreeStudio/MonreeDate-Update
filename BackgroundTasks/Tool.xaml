@@ -51,8 +51,8 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Grid>
-        <Button x:Name="SetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE49;" Visibility="Collapsed" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
-        <Button x:Name="DeSetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="{StaticResource CalculatorFontFamily}" Content="&#xEE47;" Visibility="Visible" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
-        <TextBlock x:Name="TestTextBlock" Grid.Row="2" Margin="35,0,0,3" Text="计数"/>
+        <Button x:Name="SetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE840;" Visibility="Visible" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
+        <Button x:Name="DeSetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE196;" Visibility="Collapsed" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
+        <Button x:Name="DisplayMainViewBtn" Grid.Row="2" Margin="0,0,3,3" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" Content="&#xE10F;" FontFamily="Segoe MDL2 Assets" ToolTipService.ToolTip="显示主视图" Click="DisplayMainViewBtn_Click"/>
     </Grid>
 </Page>

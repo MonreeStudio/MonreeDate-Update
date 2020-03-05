@@ -58,8 +58,8 @@ namespace BackgroundTasks
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, 320));
-            ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            //ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             LoadData();
             Pip();
         }
@@ -75,7 +75,6 @@ namespace BackgroundTasks
             //ViewModel.BgDatas.Clear();
             //LoadData();
             var timeNow = DateTime.Now;
-            TestTextBlock.Text = "时间：" + timeNow;
             if (Convert.ToInt32(timeNow.Second) == 0
                 && Convert.ToInt32(timeNow.Minute) == 0
                 && Convert.ToInt32(timeNow.Second) == 0)
@@ -218,8 +217,19 @@ namespace BackgroundTasks
                 timer = new DispatcherTimer();
                 timer.Interval = new TimeSpan(0, 0, 1);
                 timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+
             }
-            ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
+            {
+                SetTopBtn.Visibility = Visibility.Collapsed;
+                DeSetTopBtn.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                SetTopBtn.Visibility = Visibility.Visible;
+                DeSetTopBtn.Visibility = Visibility.Collapsed;
+            }
+            ApplicationView.PreferredLaunchViewSize = new Size(3000, 3000);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             ////返回默认模式
@@ -230,28 +240,36 @@ namespace BackgroundTasks
         public async void Unpip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
-            preferences.CustomSize = new Size(330, 320);
+            preferences.CustomSize = new Size(330, 300);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
-            ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
+            ApplicationView.PreferredLaunchViewSize = new Size(330, 300);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             localSettings.Values["DesktopPin"] = false;
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default)
+            {
+                SetTopBtn.Visibility = Visibility.Visible;
+                DeSetTopBtn.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                SetTopBtn.Visibility = Visibility.Collapsed;
+                DeSetTopBtn.Visibility = Visibility.Visible;
+            }
         }
 
         private void SetTopBtn_Click(object sender, RoutedEventArgs e)
         {
             Pip();
-            SetTopBtn.Visibility = Visibility.Collapsed;
-            DeSetTopBtn.Visibility = Visibility.Visible;
+            
         }
 
         private void DeSetTopBtn_Click(object sender, RoutedEventArgs e)
         {
             Unpip();
-            SetTopBtn.Visibility = Visibility.Visible;
-            DeSetTopBtn.Visibility = Visibility.Collapsed;
+            
         }
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
@@ -259,6 +277,15 @@ namespace BackgroundTasks
             LoadData();
             Unpip();
             Pip();
+        }
+
+        private async void DisplayMainViewBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Pip();
+            int mainViewId = Convert.ToInt32(localSettings.Values["mainViewId"].ToString());
+            await ApplicationViewSwitcher.TryShowAsStandaloneAsync(mainViewId);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
         }
     }
 }
