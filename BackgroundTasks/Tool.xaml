@@ -18,7 +18,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="夏日" FontWeight="ExtraBlack" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
-
         <Grid Grid.Row="1" Height="Auto" >
             <ListView SelectionMode ="None" HorizontalAlignment="Center" ItemsSource="{x:Bind ViewModel.BgDatas}">
                 <ListView.Header>
@@ -40,7 +39,7 @@
                                                   IsMasked="True">
                                 <Grid Width="280" Background="White" CornerRadius="15" HorizontalAlignment="Center">
                                     <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
-                                        <TextBlock x:Name="DT_ScheduleName" Text="{x:Bind ScheduleName}" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
+                                        <TextBlock x:Name="DT_ScheduleName" Width="150" Text="{x:Bind ScheduleName}" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
                                         <TextBlock x:Name="DT_Date" Text="{x:Bind Date}" FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
                                     </StackPanel>
                                     <TextBlock x:Name="DT_CalDate" Text="{x:Bind CalDate}" Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
@@ -51,8 +50,9 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Grid>
-        <Button x:Name="SetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE840;" Visibility="Visible" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
-        <Button x:Name="DeSetTopBtn" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE196;" Visibility="Collapsed" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
-        <Button x:Name="DisplayMainViewBtn" Grid.Row="2" Margin="0,0,3,3" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" Content="&#xE10F;" FontFamily="Segoe MDL2 Assets" ToolTipService.ToolTip="显示主视图" Click="DisplayMainViewBtn_Click"/>
+        <Button x:Name="SetTopBtn" Style="{StaticResource ButtonRevealStyle}" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE840;" Visibility="Visible" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
+        <Button x:Name="DeSetTopBtn" Style="{StaticResource ButtonRevealStyle}" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE196;" Visibility="Collapsed" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
+        <Button x:Name="RefreshBtn" Visibility="Collapsed" Style="{StaticResource ButtonRevealStyle}" Grid.Row="2" Margin="40,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE149;" ToolTipService.ToolTip="刷新" Click="RefreshBtn_Click_1"/>
+        <Button x:Name="DisplayMainViewBtn" Style="{StaticResource ButtonRevealStyle}"  Grid.Row="2" Margin="0,0,3,3" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" Content="&#xE10F;" FontFamily="Segoe MDL2 Assets" ToolTipService.ToolTip="显示主视图" Click="DisplayMainViewBtn_Click"/>
     </Grid>
 </Page>

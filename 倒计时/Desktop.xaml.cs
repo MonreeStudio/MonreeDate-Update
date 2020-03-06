@@ -22,6 +22,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Popups;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -35,6 +36,7 @@ namespace 倒计时
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public DesktopEventsViewModel DesViewModel = new DesktopEventsViewModel();
+        public DesktopEventsViewModel DesViewModel2 = new DesktopEventsViewModel();
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
         public static Desktop Current;
@@ -97,64 +99,123 @@ namespace 倒计时
         
         private void InitialData()
         {
-            DesktopList.SelectRange(new ItemIndexRange(0,2));
-            //ListBackgroundPanel.Background = new SolidColorBrush(Color.FromArgb(255, 241, 241, 241));
+            int num = 0;
             List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
             foreach(var item in datalist0)
             {
-                DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name});
+                var pinToDesktopFlag = "DesktopFlag" + item.Schedule_name;
+                if (localSettings.Values[pinToDesktopFlag] != null && localSettings.Values[pinToDesktopFlag].ToString() == "1")
+                {
+                    list.Add(item.Schedule_name);
+                    DesViewModel2.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name });
+                    num++;
+                    SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + num.ToString() + "/3";
+                }
+                else
+                {
+                    DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name });
+                }
             }
-            
         }
 
         private void DesktopList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var count = DesktopList.SelectedItems.Count;
-            
-            SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + count.ToString()+"/3";
-            if (count > 3)
-            {
-                DesktopList.SelectedItems[3] = null;
-                count--;
-            }
+            //var count = DesktopList.SelectedItems.Count;
+            //SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + count.ToString() + "/3";
+            //if (count > 3)
+            //{
+            //    DesktopList.SelectedItems[3] = null;
+            //    count--;
+            //}
         }
 
         private void TestButton2_Click(object sender, RoutedEventArgs e)
         {
-            //(new BlogFeedBackgroundTask()).LoadToast();
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            foreach (var _item in datalist0)
+            {
+                var pinToDesktopFlag = "DesktopFlag" + _item.Schedule_name;
+                if (localSettings.Values[pinToDesktopFlag] != null && localSettings.Values[pinToDesktopFlag].ToString() == "1")
+                {
+                    localSettings.Values[pinToDesktopFlag] = "0";
+                }
+            }
+            DesViewModel.DesktopDatas.Clear();
+            DesViewModel2.DesktopDatas.Clear();
+            SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
+            InitialData();
         }
 
-        private void TestButton1_Click(object sender, RoutedEventArgs e)
+        private async void TestButton1_Click(object sender, RoutedEventArgs e)
         {
+            list.Clear();
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            foreach (var _item in datalist0)
+            {
+                var pinToDesktopFlag = "DesktopFlag" + _item.Schedule_name;
+                if (localSettings.Values[pinToDesktopFlag] != null && localSettings.Values[pinToDesktopFlag].ToString() == "1")
+                    list.Add(_item.Schedule_name);
+            }
+            localSettings.Values["ItemCount"] = list.Count;
             if (list.Count > 0)
             {
-                localSettings.Values["ItemCount"] = list.Count;
                 for(int i = 0; i < list.Count; i++)
                 {
                     var desktopItemKey = "DesktopKey" + i;
+                    var pinToDesktopFlag = "DesktopFlag" + list[i];
                     localSettings.Values[desktopItemKey] = list[i];
+                    localSettings.Values[pinToDesktopFlag] = "1";
                 }
+                (new BlogFeedBackgroundTask()).CreateTool();
             }
-            (new BlogFeedBackgroundTask()).CreateTool();
+            else
+            {
+                MessageDialog messageDialog = new MessageDialog("您尚未选择任何日程。", "温馨提示");
+                await messageDialog.ShowAsync();
+            }
+            //DesViewModel.DesktopDatas.Clear();
+            //DesViewModel2.DesktopDatas.Clear();
+            //InitialData();
         }
 
         private void DesktopList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var count = DesktopList.SelectedItems.Count;
             var item = (DesktopEvents)e.ClickedItem;
-            if (list.Contains(item.EventName))
-                list.Remove(item.EventName);
-            else
+            if (DesktopList2.Items.Count() < 3)
             {
-                if (list.Count < 3)
-                {
-                    list.Add(item.EventName);
-                    list.Distinct();
-                }
+                //list.Add(item.EventName);
+                var pinToDesktopFlag = "DesktopFlag" + item.EventName;
+                localSettings.Values[pinToDesktopFlag] = "1";
+                DesViewModel2.DesktopDatas.Add(new DesktopEvents() { EventName = item.EventName });
+                DesViewModel.DesktopDatas.Remove(item);
+                SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
             }
-            SelectedEvents.Text = "已选中：";
-            foreach (var name in list)
-                SelectedEvents.Text += (name + " ");
+            //var count = DesktopList.SelectedItems.Count;
+            //var item = (DesktopEvents)e.ClickedItem;
+            //if (list.Contains(item.EventName))
+            //    list.Remove(item.EventName);
+            //else
+            //{
+            //    if (list.Count < 3)
+            //    {
+            //        list.Add(item.EventName);
+            //        list.Distinct();
+            //    }
+            //}
+            //SelectedEvents.Text = "已选中：";
+            //foreach (var name in list)
+            //    SelectedEvents.Text += (name + " ");
+        }
+
+        private void DesktopList2_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = (DesktopEvents)e.ClickedItem;
+            //list.Remove(item.EventName);
+            var pinToDesktopFlag = "DesktopFlag" + item.EventName;
+            localSettings.Values[pinToDesktopFlag] = "0";
+            DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.EventName });
+            DesViewModel2.DesktopDatas.Remove(item);
+            SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
         }
     }
 }

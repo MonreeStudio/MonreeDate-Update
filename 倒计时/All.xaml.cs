@@ -84,7 +84,14 @@ namespace 倒计时
 
         private void Timer_Tick(object sender, object e)
         {
-            Today.Text = DateTime.Now.ToString();
+            SetToptext();
+            var timeNow = DateTime.Now;
+            if (Convert.ToInt32(timeNow.Hour) == 0
+                && Convert.ToInt32(timeNow.Minute) == 0
+                && Convert.ToInt32(timeNow.Second) == 0)
+            {
+                LoadAllPage();
+            }
             //(new BlogFeedBackgroundTask()).CreateTool();
             //try
             //{
@@ -192,7 +199,7 @@ namespace 倒计时
 
         private void SetToptext()
         {
-            Today.Text = DateTime.Now.ToShortDateString().ToString();
+            Today.Text = DateTime.Now.ToString("yyyy/MM/dd");
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
         }
@@ -1116,7 +1123,7 @@ namespace 倒计时
                 displayName,
                 arguments,
                 new Uri("ms-appx:///Assets/Square150x150Logo.scale-150.png"),
-                TileSize.Default);
+                Windows.UI.StartScreen.TileSize.Default);
             tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.scale-400.png");
             tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTIle.scale-400.png");
             tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.scale-400.png");

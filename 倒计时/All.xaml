@@ -448,9 +448,10 @@
                        CloseButtonText="手滑了"
                                CornerRadius="8"
                        DefaultButton="Primary"
+
                        PrimaryButtonClick="DeleteDialog_PrimaryButtonClick">
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="300">
-                        <TextBlock TextWrapping="Wrap">
+                        <TextBlock TextWrapping="Wrap" Foreground="DarkSlateGray">
                     删除后该日程将在你的首页中移除，你可以在“新建”页面重新添加。
                         </TextBlock>
                     </StackPanel>

@@ -418,7 +418,7 @@
                    Background="White"
                    PrimaryButtonClick="BgsDialog_PrimaryButtonClick">
                 <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TextBlock Text="建议选择较为温和的颜色" Margin="5,0,0,0" TextWrapping="Wrap"/>
+                    <TextBlock Text="建议选择较为温和的颜色" Foreground="DarkSlateGray" Margin="5,0,0,0" TextWrapping="Wrap"/>
                     <ColorPicker x:Name="MyColorPicker"
                              Margin="5"
                              IsColorSliderVisible="True"

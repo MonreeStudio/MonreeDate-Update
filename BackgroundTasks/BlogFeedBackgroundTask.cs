@@ -85,7 +85,7 @@ namespace BackgroundTasks
                     }
                     break;
                 default:
-                    break;
+                    return;
             }
             //var num = CoreApplication.Views.Count();
             //coreWindow.Activate();

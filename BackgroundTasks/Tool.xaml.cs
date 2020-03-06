@@ -36,6 +36,7 @@ namespace BackgroundTasks
         List<DataTemple> list;
         DispatcherTimer timer;
         BgDataViewModel ViewModel;
+        private int viewHeight;
         public Tool()
         {
             this.InitializeComponent();
@@ -54,12 +55,9 @@ namespace BackgroundTasks
             title.BackgroundColor = Colors.SkyBlue;
             title.ForegroundColor = Colors.Transparent;
             title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
-            title.ButtonHoverBackgroundColor = Colors.White;
-            title.ButtonPressedBackgroundColor = Colors.White;
+            title.ButtonHoverBackgroundColor = Colors.Gray;
+            title.ButtonPressedBackgroundColor = Colors.Gray;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, 320));
-            //ApplicationView.PreferredLaunchViewSize = new Size(330, 320);
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             LoadData();
             Pip();
         }
@@ -71,11 +69,8 @@ namespace BackgroundTasks
 
         private void RefreshData()
         {
-            //localSettings.Values["DateTimeNow"] = null;
-            //ViewModel.BgDatas.Clear();
-            //LoadData();
             var timeNow = DateTime.Now;
-            if (Convert.ToInt32(timeNow.Second) == 0
+            if (Convert.ToInt32(timeNow.Hour) == 0
                 && Convert.ToInt32(timeNow.Minute) == 0
                 && Convert.ToInt32(timeNow.Second) == 0)
             {
@@ -92,6 +87,8 @@ namespace BackgroundTasks
             switch (count)
             {
                 case 1:
+                    viewHeight = 110;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
                     string a1 = localSettings.Values["DesktopKey0"].ToString();
                     foreach (var item in allData)
                     {
@@ -100,6 +97,8 @@ namespace BackgroundTasks
                     }
                     break;
                 case 2:
+                    viewHeight = 230;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
                     string b1 = localSettings.Values["DesktopKey0"].ToString();
                     string b2 = localSettings.Values["DesktopKey1"].ToString();
                     foreach (var item in allData)
@@ -109,6 +108,8 @@ namespace BackgroundTasks
                     }
                     break;
                 case 3:
+                    viewHeight = 315;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
                     string c1 = localSettings.Values["DesktopKey0"].ToString();
                     string c2 = localSettings.Values["DesktopKey1"].ToString();
                     string c3 = localSettings.Values["DesktopKey2"].ToString();
@@ -119,6 +120,8 @@ namespace BackgroundTasks
                     }
                     break;
                 default:
+                    viewHeight = 110;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
                     break;
             }
             switch (count)
@@ -206,7 +209,7 @@ namespace BackgroundTasks
         public async void Pip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
-            preferences.CustomSize = new Size(330, 320);
+            preferences.CustomSize = new Size(330, viewHeight);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences);
             if (localSettings.Values["DesktopPin"] == null)
                 localSettings.Values["DesktopPin"] = false;
@@ -240,9 +243,9 @@ namespace BackgroundTasks
         public async void Unpip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
-            preferences.CustomSize = new Size(330, 300);
+            preferences.CustomSize = new Size(330, viewHeight - 20);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
-            ApplicationView.PreferredLaunchViewSize = new Size(330, 300);
+            ApplicationView.PreferredLaunchViewSize = new Size(330, viewHeight - 20);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             localSettings.Values["DesktopPin"] = false;
             timer = new DispatcherTimer();
@@ -263,13 +266,11 @@ namespace BackgroundTasks
         private void SetTopBtn_Click(object sender, RoutedEventArgs e)
         {
             Pip();
-            
         }
 
         private void DeSetTopBtn_Click(object sender, RoutedEventArgs e)
         {
             Unpip();
-            
         }
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
@@ -286,6 +287,12 @@ namespace BackgroundTasks
             await ApplicationViewSwitcher.TryShowAsStandaloneAsync(mainViewId);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+        }
+
+        private void RefreshBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            ViewModel.BgDatas.Clear();
+            LoadData();
         }
     }
 }
