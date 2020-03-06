@@ -418,8 +418,23 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPersonPicture_Toggled"/>
+                <ToggleSwitch x:Name="ToolAutoStartSwitch"
+                              Header="桌面显示小工具随应用自启动&#x0a;（已选择日程不为空时有效）"
+                              Margin="0,5,0,0"
+                              HorizontalAlignment="Left"
+                              OnContent="开"
+                              OffContent="关"
+                              Foreground="{x:Bind TC}"
+                              Toggled="ToolAutoStartSwitch_Toggled"/>
+                <TextBlock x:Name="AppAutoStartTip"
+                           TextDecorations="Underline"
+                           Text="点击查看如何设置应用开机自启动"
+                           extensions:Mouse.Cursor="Hand"
+                           Foreground="{x:Bind TC}"
+                           Margin="0,15,0,20"
+                           Tapped="AppAutoStartTip_Tapped"/>
             </StackPanel>
-            <StackPanel Grid.Row="3" Margin="20,0,0,0" VerticalAlignment="Top">
+            <StackPanel Grid.Row="3" Margin="20,0,0,10" VerticalAlignment="Top">
                 <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
                 <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
@@ -475,14 +490,14 @@
                        SecondaryButtonClick="AboutContent_SecondaryButtonClick">
                 <ScrollViewer>
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <TextBlock x:Name="Version" Margin="10,10,0,5" />
-                        <TextBlock x:Name="SystemVersion" Margin="10,0,0,5" />
-                        <TextBlock x:Name="Platform" Margin="10,0,0,10"/>
-                        <TextBlock Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
+                        <TextBlock Foreground="DarkSlateGray" x:Name="Version" Margin="10,10,0,5" />
+                        <TextBlock Foreground="DarkSlateGray" x:Name="SystemVersion" Margin="10,0,0,5" />
+                        <TextBlock Foreground="DarkSlateGray" x:Name="Platform" Margin="10,0,0,10"/>
+                        <TextBlock Foreground="DarkSlateGray" Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
             TextWrapping="Wrap" Margin="10"/>
                         <Image Source="Assets/03.png" Width="350" Height="350"/>
-                        <TextBlock Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
-                        <TextBlock Text="若发现Bug请发邮箱：monreestudio@outlook.com" Margin="10" />
+                        <TextBlock Foreground="DarkSlateGray" Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
+                        <TextBlock  Foreground="DarkSlateGray" Text="若发现Bug请发邮箱：monreestudio@outlook.com" Margin="10" />
                         <HyperlinkButton Content="Github开源项目" 
                                  Margin="10"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
@@ -500,15 +515,29 @@
                 <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <TextBlock x:Name="BirthText"/>
                     <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
-            TextWrapping="Wrap" />
+                                TextWrapping="Wrap" />
                 </StackPanel>
-
+            </ContentDialog>
+            <ContentDialog x:Name="AutoStartTipDialog"
+                           Title="设置应用开机自启动"
+                       PrimaryButtonText="学会了！"
+                       DefaultButton="Primary"
+                       CornerRadius="10"
+                       Background="White">
+                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <TextBlock TextWrapping="WrapWholeWords" Foreground="Gray" Width="400">
+                        夏日暂不支持一键设置应用开机自启动，但可以通过您手动设置实现。只需以下简单几步：
+                    </TextBlock>
+                    <TextBlock Text="1、右击屏幕左下角的开始按钮，选择 运行；&#x0a;2、在 运行 内输入shell:startup，此时会打开一个文件夹窗口；&#x0a;3、打开开始菜单，在左侧的列表中找到夏日；&#x0a;4、将夏日拖拽到刚刚打开的文件夹窗口；" 
+                               Foreground="DarkSlateGray"
+                               Margin="10"/>
+                </StackPanel>
             </ContentDialog>
             <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
                 Grid.Column="1"
-                Margin="0,0,20,0"
+                Margin="0,0,20,10"
                 Foreground="White"
                 Background="{x:Bind TC}"
                 HorizontalAlignment="Right"

@@ -29,6 +29,8 @@ using SQLite.Net.Attributes;
 using 夏日;
 using Windows.UI;
 using Microsoft.QueryStringDotNET;
+using BackgroundTasks;
+using Windows.UI.Popups;
 
 namespace 倒计时
 {
@@ -42,6 +44,7 @@ namespace 倒计时
         private const string SelectedAppThemeKey = "SelectedAppTheme";
         public static CustomData AllItem;
         public static FestivalData FestivalItem;
+        
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -89,6 +92,7 @@ namespace 倒计时
         public App()
         {
             this.InitializeComponent();
+            
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
             this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
@@ -99,6 +103,8 @@ namespace 倒计时
             }
             this.FocusVisualKind = FocusVisualKind.Reveal;
         }
+
+        
 
         protected override void OnActivated(IActivatedEventArgs e)
         {

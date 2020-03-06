@@ -261,6 +261,15 @@ namespace 倒计时
             }
             else
                 AllPersonPicture.IsOn = true;
+            if (localSettings.Values["ToolAutoStart"] != null)
+            {
+                if (localSettings.Values["ToolAutoStart"].ToString() == "1")
+                    ToolAutoStartSwitch.IsOn = true;
+                else
+                    ToolAutoStartSwitch.IsOn = false;
+            }
+            else
+                ToolAutoStartSwitch.IsOn = false;
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
@@ -740,7 +749,7 @@ namespace 倒计时
                 dialog.Commands.Add(new UICommand("更新"));
                 dialog.Commands.Add(new UICommand("取消"));
                 IUICommand command = await dialog.ShowAsync();
-                if (command.Label.Equals("Yes", StringComparison.CurrentCultureIgnoreCase))
+                if (command.Label.Equals("更新", StringComparison.CurrentCultureIgnoreCase))
                 {
                     //downloadProgressBar.Visibility = Visibility.Visible;
                     // Download and install the updates.
@@ -750,14 +759,12 @@ namespace 倒计时
                     // The Progress async method is called one time for each step in the download
                     // and installation process for each package in this request.
 
-                    //downloadOperation.Progress = async (asyncInfo, progress) =>
-                    //{
-                    //    await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                    //    () =>
-                    //    {
-                    //        downloadProgressBar.Value = progress.PackageDownloadProgress;
-                    //    });
-                    //};
+                    downloadOperation.Progress = async (asyncInfo, progress) =>
+                    {
+                        await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                        () =>
+                        { });
+                    };
                     //downloadProgressBar.Visibility = Visibility.Collapsed;
                     StorePackageUpdateResult result = await downloadOperation.AsTask();
                     UpdateRing.IsActive = false;
@@ -771,6 +778,27 @@ namespace 倒计时
                 PopupNotice popupNotice = new PopupNotice("已是最新版本！");
                 popupNotice.ShowAPopup();
             }
+        }
+
+        private void ToolAutoStartSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ToolAutoStartSwitch != null)
+            {
+                if (ToolAutoStartSwitch.IsOn == true)
+                {
+                    localSettings.Values["ToolAutoStart"] = "1";
+
+                }
+                else
+                {
+                    localSettings.Values["ToolAutoStart"] = "0";
+                }
+            }
+        }
+
+        private async void AppAutoStartTip_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            await AutoStartTipDialog.ShowAsync();
         }
     }
 }

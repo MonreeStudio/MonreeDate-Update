@@ -34,6 +34,7 @@ using Windows.UI.StartScreen;
 using Windows.UI.Core;
 using 倒计时.Models;
 using Windows.UI.Xaml.Media.Imaging;
+using BackgroundTasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -59,6 +60,7 @@ namespace 倒计时
         public int _index;
         private double percentage;
         private bool TopTap;
+        DispatcherTimer timer;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public All()
@@ -74,6 +76,31 @@ namespace 倒计时
             MainPage.Current.MyNav.IsBackEnabled = false;
             MainPage.Current.SelectedPageItem = "All";
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            SetToptext();
+            var timeNow = DateTime.Now;
+            if (Convert.ToInt32(timeNow.Hour) == 0
+                && Convert.ToInt32(timeNow.Minute) == 0
+                && Convert.ToInt32(timeNow.Second) == 0)
+            {
+                LoadAllPage();
+            }
+            //(new BlogFeedBackgroundTask()).CreateTool();
+            //try
+            //{
+            //    (new BlogFeedBackgroundTask()).CreateTool();
+            //}
+            //catch (Exception)
+            //{
+            //    MessageDialog message = new MessageDialog(new Exception().Message);
+            //}
         }
 
         public void LoadAllPage()
@@ -172,7 +199,7 @@ namespace 倒计时
 
         private void SetToptext()
         {
-            Today.Text = DateTime.Now.ToShortDateString().ToString();
+            Today.Text = DateTime.Now.ToString("yyyy/MM/dd");
             TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
         }
@@ -226,54 +253,64 @@ namespace 倒计时
             {
                 Visual = new TileVisual()
                 {
+                    DisplayName = "夏日",
                     TileMedium = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
+                            TextStacking = TileTextStacking.Center,
                             Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = from
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    }
-                }
+                            {
+                                new AdaptiveText()
+                                {
+                                    Text = from,
+                                    HintStyle = AdaptiveTextStyle.Base,
+                                    HintAlign = AdaptiveTextAlign.Center
+                                },
+                                new AdaptiveText()
+                                {
+                                    Text = subject,
+                                    HintStyle = AdaptiveTextStyle.Body,
+                                    HintAlign = AdaptiveTextAlign.Center
+                                }
+                            }
                         }
                     },
 
                     TileWide = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
                 {
-                    new AdaptiveText()
+                    new AdaptiveGroup()
                     {
-                        Text = from,
-                        HintStyle = AdaptiveTextStyle.Subtitle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                        Children =
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children =
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = from,
+                                        HintStyle = AdaptiveTextStyle.Base
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body
+                                    }
+                                },
+                                HintTextStacking = AdaptiveSubgroupTextStacking.Center
+                            }
+                        }
                     }
                 }
                         }
@@ -281,6 +318,7 @@ namespace 倒计时
 
                     TileLarge = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
@@ -300,22 +338,22 @@ namespace 倒计时
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = body,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Title
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        Text = body,
+                                        HintStyle = AdaptiveTextStyle.BodySubtle
                                     }
                                 }
                             }
                         }
                     },
-                    new AdaptiveText()
-                    {
-                        Text = ""
-                    },
+                    //new AdaptiveText()
+                    //{
+                    //    Text = ""
+                    //},
                     new AdaptiveGroup()
                     {
                         Children =
@@ -331,14 +369,14 @@ namespace 倒计时
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = "脚踏实地，仰望星空。",
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = "永远相信美好的事情即将发生！",
+                                        Text = "脚踏实地，仰望星空。\n永远相信美好的事情即将发生！",
                                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
+                                    //new AdaptiveText()
+                                    //{
+                                    //    Text = "永远相信美好的事情即将发生！",
+                                    //    HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    //}
                                 }
                             }
                         }
@@ -1085,7 +1123,7 @@ namespace 倒计时
                 displayName,
                 arguments,
                 new Uri("ms-appx:///Assets/Square150x150Logo.scale-150.png"),
-                TileSize.Default);
+                Windows.UI.StartScreen.TileSize.Default);
             tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.scale-400.png");
             tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTIle.scale-400.png");
             tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.scale-400.png");
@@ -1237,6 +1275,7 @@ namespace 倒计时
 
         public static void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
+
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
@@ -1247,27 +1286,26 @@ namespace 倒计时
             {
                 Visual = new TileVisual()
                 {
+                    DisplayName = "夏日",
                     TileMedium = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
+                            TextStacking = TileTextStacking.Center,
                             Children =
-                {
+                    {
                     new AdaptiveText()
                     {
-                        Text = from
+                        Text = from,
+                        HintStyle = AdaptiveTextStyle.Base,
+                        HintAlign = AdaptiveTextAlign.Center
                     },
-
                     new AdaptiveText()
                     {
                         Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                        HintStyle = AdaptiveTextStyle.Body,
+                        HintAlign = AdaptiveTextAlign.Center
                     }
                 }
                         }
@@ -1275,26 +1313,37 @@ namespace 倒计时
 
                     TileWide = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
                 {
-                    new AdaptiveText()
+                    new AdaptiveGroup()
                     {
-                        Text = from,
-                        HintStyle = AdaptiveTextStyle.Subtitle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                        Children =
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children =
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = from,
+                                        HintStyle = AdaptiveTextStyle.Base
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body
+                                    }
+                                },
+                                HintTextStacking = AdaptiveSubgroupTextStacking.Center
+                            }
+                        }
                     }
                 }
                         }
@@ -1302,6 +1351,7 @@ namespace 倒计时
 
                     TileLarge = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
@@ -1321,22 +1371,22 @@ namespace 倒计时
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = body,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Title
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        Text = body,
+                                        HintStyle = AdaptiveTextStyle.BodySubtle
                                     }
                                 }
                             }
                         }
                     },
-                    new AdaptiveText()
-                    {
-                        Text = ""
-                    },
+                    //new AdaptiveText()
+                    //{
+                    //    Text = ""
+                    //},
                     new AdaptiveGroup()
                     {
                         Children =
@@ -1352,14 +1402,14 @@ namespace 倒计时
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = "脚踏实地，仰望星空。",
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = "永远相信美好的事情即将发生！",
+                                        Text = "脚踏实地，仰望星空。\n永远相信美好的事情即将发生！",
                                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
+                                    //new AdaptiveText()
+                                    //{
+                                    //    Text = "永远相信美好的事情即将发生！",
+                                    //    HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    //}
                                 }
                             }
                         }

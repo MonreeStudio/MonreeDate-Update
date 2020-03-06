@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
+using Windows.UI.Popups;
 
 namespace BackgroundTasks
 {
@@ -29,42 +30,66 @@ namespace BackgroundTasks
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
-            conn.CreateTable<BgDataTemlate>(); //默认表名同范型参数    
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
-            
             UpdateTile();   //更新磁贴
             LoadToast();    //加载通知
             deferral.Complete();
         }
 
-        public async void CreateTool(List<string> datas)
+        public async void CreateTool()
         {
-            List<BgDataTemlate> datalist = new List<BgDataTemlate>();
-            switch (datas.Count)
+            var num = CoreApplication.Views.Count();
+            //if (localSettings.Values["newViewId"] != null)
+            //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();
+
+            //建立数据库连接   
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            int count = (int)localSettings.Values["ItemCount"];
+            List<DataTemple> datalist = new List<DataTemple>();
+            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            switch (count)
             {
                 case 1:
-                    datalist = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?",datas[0]);
+                    string a1 = localSettings.Values["DesktopKey0"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == a1)
+                            datalist.Add(item);
+                    }
                     break;
                 case 2:
-                    datalist = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?", datas[0],datas[1]);
+                    string b1 = localSettings.Values["DesktopKey0"].ToString();
+                    string b2 = localSettings.Values["DesktopKey1"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
+                            datalist.Add(item);
+                    }
                     break;
                 case 3:
-                    datalist = conn.Query<BgDataTemlate>("select * from BgDataTemlate where Schedule_name = ?", datas[0], datas[1],datas[2]);
+                    string c1 = localSettings.Values["DesktopKey0"].ToString();
+                    string c2 = localSettings.Values["DesktopKey1"].ToString();
+                    string c3 = localSettings.Values["DesktopKey2"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
+                            datalist.Add(item);
+                    }
                     break;
                 default:
-                    break;
+                    return;
             }
-            //List<string> DetailsList = new List<string>();
-            //DetailsList.Add(_event);
-            //DetailsList.Add(_pickedDate);
-            //DetailsList.Add(_date);
-            var num = CoreApplication.Views.Count();
+            //var num = CoreApplication.Views.Count();
+            //coreWindow.Activate();
+            //CoreApplication.GetCurrentView();
             CoreApplicationView newView = CoreApplication.CreateNewView();
             int newViewId = 0;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -74,10 +99,12 @@ namespace BackgroundTasks
                 Window.Current.Content = frame;
                 Window.Current.Activate();
                 newViewId = ApplicationView.GetForCurrentView().Id;
+                localSettings.Values["newViewId"] = newViewId;
             });
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
             localSettings.Values["DesktopPin"] = false;
         }
+        
 
         public static void UpdateTile()
         {
@@ -116,7 +143,7 @@ namespace BackgroundTasks
 
         private static TileNotification LoadTile()
         {
-            List<BgDataTemlate> datalist0 = conn.Query<BgDataTemlate>("select * from DataTemple");
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
             foreach (var item in datalist0)
             {
                 if (SecondaryTile.Exists(item.Schedule_name))
@@ -124,7 +151,7 @@ namespace BackgroundTasks
                     CreateSecondaryTile(item.Schedule_name, Calculator(item.Date), item.Date);
                 }
             }
-            List<BgDataTemlate> datalist = conn.Query<BgDataTemlate>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
             string _CaculatedDate = "";
             string _Date = "";
@@ -157,54 +184,64 @@ namespace BackgroundTasks
             {
                 Visual = new TileVisual()
                 {
+                    DisplayName = "夏日",
                     TileMedium = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
+                            TextStacking = TileTextStacking.Center,
                             Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = from
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    }
-                }
+                            {
+                                new AdaptiveText()
+                                {
+                                    Text = from,
+                                    HintStyle = AdaptiveTextStyle.Base,
+                                    HintAlign = AdaptiveTextAlign.Center
+                                },
+                                new AdaptiveText()
+                                {
+                                    Text = subject,
+                                    HintStyle = AdaptiveTextStyle.Body,
+                                    HintAlign = AdaptiveTextAlign.Center
+                                }
+                            }
                         }
                     },
 
                     TileWide = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
                 {
-                    new AdaptiveText()
+                    new AdaptiveGroup()
                     {
-                        Text = from,
-                        HintStyle = AdaptiveTextStyle.Subtitle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                        Children =
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children =
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = from,
+                                        HintStyle = AdaptiveTextStyle.Base
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body
+                                    }
+                                },
+                                HintTextStacking = AdaptiveSubgroupTextStacking.Center
+                            }
+                        }
                     }
                 }
                         }
@@ -212,6 +249,7 @@ namespace BackgroundTasks
 
                     TileLarge = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
@@ -231,22 +269,22 @@ namespace BackgroundTasks
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = body,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Title
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        Text = body,
+                                        HintStyle = AdaptiveTextStyle.BodySubtle
                                     }
                                 }
                             }
                         }
                     },
-                    new AdaptiveText()
-                    {
-                        Text = ""
-                    },
+                    //new AdaptiveText()
+                    //{
+                    //    Text = ""
+                    //},
                     new AdaptiveGroup()
                     {
                         Children =
@@ -262,14 +300,14 @@ namespace BackgroundTasks
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = "脚踏实地，仰望星空。",
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = "永远相信美好的事情即将发生！",
+                                        Text = "脚踏实地，仰望星空。\n永远相信美好的事情即将发生！",
                                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
+                                    //new AdaptiveText()
+                                    //{
+                                    //    Text = "永远相信美好的事情即将发生！",
+                                    //    HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    //}
                                 }
                             }
                         }
@@ -295,61 +333,34 @@ namespace BackgroundTasks
             {
                 Visual = new TileVisual()
                 {
+                    DisplayName = "夏日",
                     TileMedium = new TileBinding()
                     {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
+                            TextStacking = TileTextStacking.Center,
                             Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = from
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    }
-                }
+                            {
+                                new AdaptiveText()
+                                {
+                                    Text = from,
+                                    HintStyle = AdaptiveTextStyle.Base,
+                                    HintAlign = AdaptiveTextAlign.Center
+                                },
+                                new AdaptiveText()
+                                {
+                                    Text = subject,
+                                    HintStyle = AdaptiveTextStyle.Body,
+                                    HintAlign = AdaptiveTextAlign.Center
+                                }
+                            }
                         }
                     },
 
                     TileWide = new TileBinding()
                     {
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = from,
-                        HintStyle = AdaptiveTextStyle.Subtitle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = body,
-                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                    }
-                }
-                        }
-                    },
-
-                    TileLarge = new TileBinding()
-                    {
+                        Branding = TileBranding.Name,
                         Content = new TileBindingContentAdaptive()
                         {
                             Children =
@@ -365,26 +376,64 @@ namespace BackgroundTasks
                                     new AdaptiveText()
                                     {
                                         Text = from,
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = body,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        HintStyle = AdaptiveTextStyle.Base
                                     },
                                     new AdaptiveText()
                                     {
                                         Text = subject,
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                        HintStyle = AdaptiveTextStyle.Subtitle
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body
+                                    }
+                                },
+                                HintTextStacking = AdaptiveSubgroupTextStacking.Center
+                            }
+                        }
+                    }
+                }
+                        }
+                    },
+
+                    TileLarge = new TileBinding()
+                    {
+                        Branding = TileBranding.Name,
+                        Content = new TileBindingContentAdaptive()
+                        {
+                            Children =
+                {
+                    new AdaptiveGroup()
+                    {
+                        Children =
+                        {
+                            new AdaptiveSubgroup()
+                            {
+                                Children =
+                                {
+                                    new AdaptiveText()
+                                    {
+                                        Text = from,
+                                        HintStyle = AdaptiveTextStyle.Base
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = subject,
+                                        HintStyle = AdaptiveTextStyle.Title
+                                    },
+                                    new AdaptiveText()
+                                    {
+                                        Text = body,
+                                        HintStyle = AdaptiveTextStyle.BodySubtle
                                     }
                                 }
                             }
                         }
                     },
-                    new AdaptiveText()
-                    {
-                        Text = ""
-                    },
+                    //new AdaptiveText()
+                    //{
+                    //    Text = ""
+                    //},
                     new AdaptiveGroup()
                     {
                         Children =
@@ -400,14 +449,14 @@ namespace BackgroundTasks
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = "脚踏实地，仰望星空。",
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = "永远相信美好的事情即将发生！",
+                                        Text = "脚踏实地，仰望星空。\n永远相信美好的事情即将发生！",
                                         HintStyle = AdaptiveTextStyle.CaptionSubtle
                                     }
+                                    //new AdaptiveText()
+                                    //{
+                                    //    Text = "永远相信美好的事情即将发生！",
+                                    //    HintStyle = AdaptiveTextStyle.CaptionSubtle
+                                    //}
                                 }
                             }
                         }
@@ -428,7 +477,7 @@ namespace BackgroundTasks
 
         public void LoadToast()
         {
-            List<BgDataTemlate> datalist0 = conn.Query<BgDataTemlate>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
             foreach (var item in datalist0)
             {
                 var AlertName = "Alert" + item.Schedule_name;

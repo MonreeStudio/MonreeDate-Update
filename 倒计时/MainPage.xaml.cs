@@ -25,6 +25,8 @@ using 夏日.Models;
 using Microsoft.Toolkit.Uwp.Notifications;
 using 倒计时.Models;
 using Windows.ApplicationModel;
+using BackgroundTasks;
+using Windows.UI.Popups;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -41,6 +43,7 @@ namespace 倒计时
         public bool SelectedPage { get; set; }
         public string SelectedPageItem { get; set; }
         public IntroPageViewModel ViewModel = new IntroPageViewModel();
+        
         public MainPage()
         {
             this.InitializeComponent();
@@ -61,11 +64,15 @@ namespace 倒计时
             GetAppVersion();
             MyNav.IsBackEnabled = false;
             SelectedPageItem = "";
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
+            ToolAutoStart();
         }
 
-
+        private void ToolAutoStart()
+        {
+            if(localSettings.Values["ToolAutoStart"]!=null&&localSettings.Values["ToolAutoStart"].ToString()=="1")
+                (new BlogFeedBackgroundTask()).CreateTool();
+        }
 
         public void SetThemeColor()
         {
@@ -306,12 +313,12 @@ namespace 倒计时
             }
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)
-        {
+        {       
             //localSettings.Values["FirstlyOpen"] = null;
-            if (localSettings.Values["2.2.3.0"] == null)
+            if (localSettings.Values["2.2.4.0"] == null)
             { 
                 await MyCD.ShowAsync();
-                localSettings.Values["2.2.3.0"] = "false";
+                localSettings.Values["2.2.4.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
