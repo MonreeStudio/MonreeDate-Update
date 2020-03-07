@@ -413,15 +413,6 @@ namespace 倒计时
             (sender as UIElement).StartAnimation(_springAnimation);
         }
 
-        //private void element_PointerExited(object sender, PointerRoutedEventArgs e)
-        //{
-        //    // Scale back down to 1.0
-        //    CreateOrUpdateSpringAnimation(1.0f);
-
-        //    (sender as UIElement).StartAnimation(_springAnimation);
-        //}
-
-
         private async void MyPersonPicture_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var srcImage = new BitmapImage();
