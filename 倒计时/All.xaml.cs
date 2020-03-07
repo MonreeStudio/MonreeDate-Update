@@ -76,15 +76,19 @@ namespace 倒计时
             MainPage.Current.MyNav.IsBackEnabled = false;
             MainPage.Current.SelectedPageItem = "All";
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            localSettings.Values["newMainId"] = "0";
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
             timer.Start();
+            localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
+            localSettings.Values["newMain"] = "0";
         }
 
         private void Timer_Tick(object sender, object e)
         {
-            SetToptext();
+            //SetToptext();
+            
             var timeNow = DateTime.Now;
             if (Convert.ToInt32(timeNow.Hour) == 0
                 && Convert.ToInt32(timeNow.Minute) == 0
@@ -92,15 +96,6 @@ namespace 倒计时
             {
                 LoadAllPage();
             }
-            //(new BlogFeedBackgroundTask()).CreateTool();
-            //try
-            //{
-            //    (new BlogFeedBackgroundTask()).CreateTool();
-            //}
-            //catch (Exception)
-            //{
-            //    MessageDialog message = new MessageDialog(new Exception().Message);
-            //}
         }
 
         public void LoadAllPage()

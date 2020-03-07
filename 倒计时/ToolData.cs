@@ -5,22 +5,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackgroundTasks
+namespace 倒计时
 {
-    public sealed class BgData
+    public class ToolData
     {
         public string ScheduleName { get; set; }
         public string Date { get; set; }
         public string CalDate { get; set; }
-
-        public BgData()
+        public ToolData()
         {
 
         }
-
     }
-    class BgDataViewModel
+
+    public class ToolDataViewModel
     {
-        public ObservableCollection<BgData> BgDatas = new ObservableCollection<BgData>();
+        public ObservableCollection<ToolData> ToolDatas = new ObservableCollection<ToolData>();
+
+        public ToolDataViewModel()
+        {
+
+        }
     }
 }

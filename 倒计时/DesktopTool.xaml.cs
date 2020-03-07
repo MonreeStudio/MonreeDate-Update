@@ -9,7 +9,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Popups;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,27 +19,30 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using 夏日;
+using 夏日.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace BackgroundTasks
+namespace 倒计时
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    /// 
-    public sealed partial class Tool : Page
+    public sealed partial class DesktopTool : Page
     {
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         List<DataTemple> list;
         DispatcherTimer timer;
-        BgDataViewModel ViewModel;
+        public ToolDataViewModel ToolViewModel = new ToolDataViewModel();
         private int viewHeight;
-        public Tool()
+        public static DesktopTool Current;
+        public DesktopTool()
         {
             this.InitializeComponent();
+            Current = this;
             list = new List<DataTemple>();
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
@@ -49,7 +52,6 @@ namespace BackgroundTasks
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
             timer.Start();
-            ViewModel = new BgDataViewModel();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
             title.BackgroundColor = Colors.SkyBlue;
@@ -65,18 +67,6 @@ namespace BackgroundTasks
         private void Timer_Tick(object sender, object e)
         {
             RefreshData();
-        }
-
-        private void RefreshData()
-        {
-            var timeNow = DateTime.Now;
-            if (Convert.ToInt32(timeNow.Hour) == 0
-                && Convert.ToInt32(timeNow.Minute) == 0
-                && Convert.ToInt32(timeNow.Second) == 0)
-            {
-                ViewModel.BgDatas.Clear();
-                LoadData();
-            }
         }
 
         public void LoadData()
@@ -130,36 +120,36 @@ namespace BackgroundTasks
                     List<DataTemple> a1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
                     foreach (var item in a1)
                     {
-                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 case 2:
                     List<DataTemple> b1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
                     foreach (var item in b1)
                     {
-                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     List<DataTemple> b2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[1].Schedule_name);
                     foreach (var item in b2)
                     {
-                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 case 3:
                     List<DataTemple> c1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
                     foreach (var item in c1)
                     {
-                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     List<DataTemple> c2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[1].Schedule_name);
                     foreach (var item in c2)
                     {
-                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     List<DataTemple> c3 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[2].Schedule_name);
                     foreach (var item in c3)
                     {
-                        ViewModel.BgDatas.Add(new BgData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
+                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 default:
@@ -193,6 +183,7 @@ namespace BackgroundTasks
             }
             return s2;
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e != null)
@@ -206,6 +197,20 @@ namespace BackgroundTasks
                 catch { }
             }
         }
+
+
+        private void RefreshData()
+        {
+            var timeNow = DateTime.Now;
+            if (Convert.ToInt32(timeNow.Hour) == 0
+                && Convert.ToInt32(timeNow.Minute) == 0
+                && Convert.ToInt32(timeNow.Second) == 0)
+            {
+                ToolViewModel.ToolDatas.Clear();
+                LoadData();
+            }
+        }
+
         public async void Pip()
         {
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
@@ -216,7 +221,7 @@ namespace BackgroundTasks
             if (localSettings.Values["DesktopPin"].Equals(false))
             {
                 localSettings.Values["DesktopPin"] = true;
-                Frame.Navigate(typeof(Tool), null, new SuppressNavigationTransitionInfo());
+                Frame.Navigate(typeof(DesktopTool), null, new SuppressNavigationTransitionInfo());
                 timer = new DispatcherTimer();
                 timer.Interval = new TimeSpan(0, 0, 1);
                 timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
@@ -275,24 +280,14 @@ namespace BackgroundTasks
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
         {
+            ToolViewModel.ToolDatas.Clear();
             LoadData();
-            Unpip();
-            Pip();
         }
 
         private async void DisplayMainViewBtn_Click(object sender, RoutedEventArgs e)
         {
-            Pip();
-            int mainViewId = Convert.ToInt32(localSettings.Values["mainViewId"].ToString());
-            await ApplicationViewSwitcher.TryShowAsStandaloneAsync(mainViewId);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
-        }
-
-        private void RefreshBtn_Click_1(object sender, RoutedEventArgs e)
-        {
-            ViewModel.BgDatas.Clear();
-            LoadData();
+            localSettings.Values["ReStart"] = "1";
+            await CoreApplication.RequestRestartAsync(string.Empty);
         }
     }
 }

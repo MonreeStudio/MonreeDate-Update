@@ -166,7 +166,7 @@ namespace 倒计时
                     localSettings.Values[desktopItemKey] = list[i];
                     localSettings.Values[pinToDesktopFlag] = "1";
                 }
-                (new BlogFeedBackgroundTask()).CreateTool();
+                MainPage.Current.CreateTool();
             }
             else
             {
@@ -217,5 +217,7 @@ namespace 倒计时
             DesViewModel2.DesktopDatas.Remove(item);
             SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
         }
+
+        
     }
 }
