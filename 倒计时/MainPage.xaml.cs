@@ -387,12 +387,12 @@ namespace 倒计时
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
-            
+            //localSettings.Values["2.2.5.0"] = null;
             //localSettings.Values["FirstlyOpen"] = null;
-            if (localSettings.Values["2.2.4.0"] == null)
+            if (localSettings.Values["2.2.5.0"] == null)
             { 
                 await MyCD.ShowAsync();
-                localSettings.Values["2.2.4.0"] = "false";
+                localSettings.Values["2.2.5.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
