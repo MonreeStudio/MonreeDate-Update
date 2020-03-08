@@ -67,10 +67,30 @@ namespace 倒计时
         private void Timer_Tick(object sender, object e)
         {
             RefreshData();
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
+            {
+                SetTopBtn.Visibility = Visibility.Collapsed;
+                DeSetTopBtn.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                SetTopBtn.Visibility = Visibility.Visible;
+                DeSetTopBtn.Visibility = Visibility.Collapsed;
+            }
         }
 
         public void LoadData()
         {
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
+            {
+                SetTopBtn.Visibility = Visibility.Collapsed;
+                DeSetTopBtn.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                SetTopBtn.Visibility = Visibility.Visible;
+                DeSetTopBtn.Visibility = Visibility.Collapsed;
+            }
             int count = (int)localSettings.Values["ItemCount"];
             List<DataTemple> datalist = new List<DataTemple>();
             var allData = conn.Query<DataTemple>("select *from DataTemple");
@@ -232,7 +252,7 @@ namespace 倒计时
                 SetTopBtn.Visibility = Visibility.Collapsed;
                 DeSetTopBtn.Visibility = Visibility.Visible;
             }
-            else
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default)
             {
                 SetTopBtn.Visibility = Visibility.Visible;
                 DeSetTopBtn.Visibility = Visibility.Collapsed;

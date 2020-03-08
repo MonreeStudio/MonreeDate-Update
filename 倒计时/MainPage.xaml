@@ -370,11 +370,11 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="1、修复 解决了桌面显示工具“显示主界面”按钮造成的主页右键菜单无法显示的问题；&#x0a;2、优化 部分细节优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="1、新增 更新了头像裁切组件，体验更加流畅；&#x0a;2、修复 解决了头像可能无法更换的问题；&#x0a;3、修复 解决了主页日期进度条上方的文字显示问题；&#x0a;4、优化 部分细节优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="往期版本：2.2.5.0&#x0a;1、修复 解决了桌面显示工具“显示主界面”按钮造成的主页右键菜单无法显示的问题；&#x0a;2、优化 部分细节优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.2.4.0&#x0a;1、新增 桌面显示小工具上线；&#x0a;2、优化 改进了磁贴的显示效果；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.2.3.0&#x0a;1、新增 新建页面可以选择新建多少天后的日程；&#x0a;2、优化 部分细节优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.2.2.0&#x0a;1、新增 未过日程提醒功能；&#x0a;2、新增 主页和日程详情页的周数显示模式；&#x0a;3、新增 设置页面的检查更新功能；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="开发者的话：&#x0a;近两个版本的代码修改量有点大，所以大家在使用过程中可能会遇到某些薛定谔的bug，若出现意外情况，请通过评论区或邮箱反馈。独自一人开发不易，您的好评将会是一份动力，感谢大家支持！" TextWrapping="WrapWholeWords" Margin="10"/>
+                    <TextBlock Text="开发者的话：&#x0a;近几个版本的代码修改量有点大，所以大家在使用过程中可能会遇到某些薛定谔的bug，若出现意外情况，请通过评论区或邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！" TextWrapping="WrapWholeWords" Margin="10"/>
                 </StackPanel>
             </ScrollViewer>
         </ContentDialog>

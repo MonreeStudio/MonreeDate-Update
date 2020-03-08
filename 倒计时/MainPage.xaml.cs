@@ -93,7 +93,8 @@ namespace 倒计时
             var num = CoreApplication.Views.Count();
             //if (localSettings.Values["newViewId"] != null)
             //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();
-
+            if (localSettings.Values["ItemCount"] == null)
+                localSettings.Values["ItemCount"] = 0;
             int count = (int)localSettings.Values["ItemCount"];
             List<DataTemple> datalist = new List<DataTemple>();
             var allData = conn.Query<DataTemple>("select *from DataTemple");
@@ -387,12 +388,12 @@ namespace 倒计时
         }
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
-            //localSettings.Values["2.2.5.0"] = null;
+            //localSettings.Values["2.2.6.0"] = null;
             //localSettings.Values["FirstlyOpen"] = null;
-            if (localSettings.Values["2.2.5.0"] == null)
+            if (localSettings.Values["2.2.6.0"] == null)
             { 
                 await MyCD.ShowAsync();
-                localSettings.Values["2.2.5.0"] = "false";
+                localSettings.Values["2.2.6.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
