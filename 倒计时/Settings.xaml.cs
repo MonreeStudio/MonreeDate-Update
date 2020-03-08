@@ -41,6 +41,8 @@ using Microsoft.Toolkit.Uwp.Connectivity;
 using 倒计时.Models;
 using 夏日.Models;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using HHChaosToolkit.UWP.Picker;
+using 倒计时.ViewModels;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -379,86 +381,8 @@ namespace 倒计时
 
         private async void MyPersonPicture_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            imageCropper.CropShape = CropShape.Circular;
-            var openPicker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.PicturesLibrary
-            };
-            openPicker.FileTypeFilter.Add(".png");
-            openPicker.FileTypeFilter.Add(".jpg");
-            openPicker.FileTypeFilter.Add(".jpeg");
-            var file = await openPicker.PickSingleFileAsync();
-            if (file != null)
-            {
-                pictureFile = file;
-                await imageCropper.LoadImageFromFile(file);
-                await CropperDialog.ShowAsync();
-            }
-           
-            
-            //var srcImage = new BitmapImage();
-            //FileOpenPicker openPicker = new FileOpenPicker();
-            //openPicker.ViewMode = PickerViewMode.Thumbnail;
-            //openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            //openPicker.FileTypeFilter.Add(".jpg");
-            //openPicker.FileTypeFilter.Add(".jpeg");
-            //openPicker.FileTypeFilter.Add(".png");
-            //StorageFile file = await openPicker.PickSingleFileAsync();
-            //if (file != null)
-            //{
-            //    //ImageCropper.CropShape = CropShape.Circular;
-            //    using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
-            //    {
-            //        //await ImageCropper.SaveAsync(stream, BitmapFileFormat.Png);
-
-            //        await srcImage.SetSourceAsync(stream);
-            //        await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-            //    }
-
-            //    //}
-            //    await imageCropper.LoadImageFromFile(file);
-
-                //var inputFile = SharedStorageAccessManager.AddFile(file);
-                //var destination = await ApplicationData.Current.LocalFolder.CreateFileAsync("Cropped.jpg", CreationCollisionOption.ReplaceExisting);
-                //var destinationFile = SharedStorageAccessManager.AddFile(destination);
-                //var options = new LauncherOptions();
-                //options.TargetApplicationPackageFamilyName = "Microsoft.Windows.Photos_8wekyb3d8bbwe";
-                //var parameters = new ValueSet();
-                //parameters.Add("InputToken", inputFile);
-                //parameters.Add("DestinationToken", destinationFile);
-                //parameters.Add("ShowCamera", false);
-                //parameters.Add("EllipticalCrop", true);
-                //parameters.Add("CropWidthPixals", 300);
-                //parameters.Add("CropHeightPixals", 300);
-                //var result = await Launcher.LaunchUriForResultsAsync(new Uri("microsoft.windows.photos.crop:"), options, parameters);
-                //if (result.Status.Equals(LaunchUriStatus.Success) && result.Result != null)
-                //{
-                //    try
-                //    {
-                //        var stream = await destination.OpenReadAsync();
-                //        var bitmap = new BitmapImage();
-                //        using (var dataRender = new DataReader(stream))
-                //        {
-                //            if (stream.Size == 0)
-                //                return;
-                //            var imgBytes = new byte[stream.Size];
-                //            await dataRender.LoadAsync((uint)stream.Size);
-                //            dataRender.ReadBytes(imgBytes);
-                //            List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
-                //            if (datalist != null)
-                //                conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
-                //            conn.Insert(new PersonPictures() { pictureName = "picture", picture = imgBytes });
-                //            SetPersonPicture();
-                //        }
-                //        await localFolder.CreateFileAsync("PersonPicture", CreationCollisionOption.ReplaceExisting);
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Debug.WriteLine(ex.Message + ex.StackTrace);
-                //    }
-                //}
-            //}
+            TempPicture.ProfilePicture = MyPersonPicture.ProfilePicture;
+            await CropperDialog.ShowAsync();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -753,55 +677,67 @@ namespace 倒计时
             await AutoStartTipDialog.ShowAsync();
         }
 
-        private async void PickImgButton_Click(object sender, RoutedEventArgs e)
-        {
-            var openPicker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.PicturesLibrary
-            };
-            openPicker.FileTypeFilter.Add(".png");
-            openPicker.FileTypeFilter.Add(".jpg");
-            openPicker.FileTypeFilter.Add(".jpeg");
-            var file = await openPicker.PickSingleFileAsync();
-            if (file != null)
-            {
-                await imageCropper.LoadImageFromFile(file);
-            }
-            pictureFile = file;
-        }
-
-        private void ResetButton_Click(object sender, RoutedEventArgs e)
-        {
-            imageCropper.Reset();
-        }
-
         private async void CropperDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if (pictureFile != null)
+            var imageSource = EditPicture.ProfilePicture;
+            byte[] imageBuffer;
+            var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("temp.jpg", CreationCollisionOption.ReplaceExisting);
+            try
             {
-                using (var stream = await pictureFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
+                using (var ras = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
                 {
-                    //await imageCropper.SaveAsync(stream, BitmapFileFormat.Png);
-                    var bitmap = new BitmapImage();
-                    using (var dataRender = new DataReader(stream))
-                    {
-                        if (stream.Size == 0)
-                            return;
-                        var imgBytes = new byte[stream.Size];
-                        await dataRender.LoadAsync((uint)stream.Size);
-                        dataRender.ReadBytes(imgBytes);
-                        List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
-                        if (datalist != null)
-                            conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
-                        conn.Insert(new PersonPictures() { pictureName = "picture", picture = imgBytes });
-                        SetPersonPicture();
-                    }
-                    await localFolder.CreateFileAsync("PersonPicture", CreationCollisionOption.ReplaceExisting);
+                    WriteableBitmap bitmap = imageSource as WriteableBitmap;
+                    var stream = bitmap.PixelBuffer.AsStream();
+                    byte[] buffer = new byte[stream.Length];
+                    await stream.ReadAsync(buffer, 0, buffer.Length);
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, ras);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
+                    await encoder.FlushAsync();
+                    var imageStream = ras.AsStream();
+                    imageStream.Seek(0, SeekOrigin.Begin);
+                    imageBuffer = new byte[imageStream.Length];
+                    var re = await imageStream.ReadAsync(imageBuffer, 0, imageBuffer.Length);
                 }
+                await file.DeleteAsync(StorageDeleteOption.Default);
+                List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+                if (datalist != null)
+                    conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
+                conn.Insert(new PersonPictures() { pictureName = "picture", picture = imageBuffer });
+                SetPersonPicture();
+                PopupNotice popupNotice = new PopupNotice("头像已更新");
+                popupNotice.ShowAPopup();
             }
-            PopupNotice popupNotice = new PopupNotice("头像已更新");
-            popupNotice.ShowAPopup();
+            catch 
+            {
+                TempPicture.Visibility = Visibility.Visible;
+                EditPicture.Visibility = Visibility.Collapsed;
+            };
+            
+        }
+
+        
+
+        private async Task<ImageSource> CropImage(ImageCropperConfig config)
+        {
+            var startOption = new PickerOpenOption
+            {
+                VerticalAlignment = VerticalAlignment.Stretch,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+            };
+            var ret = await ViewModelLocator.Current.ObjectPickerService.PickSingleObjectAsync<WriteableBitmap>(
+                typeof(ImageCropperPickerViewModel).FullName, config, startOption);
+            if (!ret.Canceled)
+            {
+                return ret.Result;
+            }
+            return null;
+        }
+
+        private void PickImgButton_Click(object sender, RoutedEventArgs e)
+        {
+            TempPicture.Visibility = Visibility.Collapsed;
+            EditPicture.Visibility = Visibility.Visible;
         }
     }
 }
