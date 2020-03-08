@@ -12,6 +12,7 @@
     xmlns:夏日="using:夏日"
     xmlns:models="using:夏日.Models"
     xmlns:media="using:Windows.UI.Xaml.Media"
+    DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
@@ -534,13 +535,14 @@
                 </StackPanel>
             </ContentDialog>
             <ContentDialog x:Name="CropperDialog"
-                           Title="头像裁切"
+                           Title="编辑头像"
                            CornerRadius="10"
                            Background="White"
                            PrimaryButtonText="确认"
                            DefaultButton="Primary"
                            CloseButtonText="取消"
                            PrimaryButtonClick="CropperDialog_PrimaryButtonClick"
+                           
                           >
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -557,7 +559,10 @@
                                   HorizontalAlignment="Center"
                                   IsMasked="True">
                         <Border CornerRadius="10">-->
-                            <controls:ImageCropper x:Name="imageCropper" Width="350" Height="350"/>
+
+                    <PersonPicture x:Name="EditPicture" Width="150" Visibility="Collapsed" Height="150" ProfilePicture="{Binding CroppedCircularImage}"/>
+                    <PersonPicture x:Name="TempPicture" Visibility="Visible" Width="150" Height="150"/>
+                    <!--<controls:ImageCropper x:Name="imageCropper" Width="350" Height="350"/>-->
                         <!--</Border>-->
                     <!--</controls:DropShadowPanel>-->
                     <StackPanel Grid.Column="1" Padding="50" VerticalAlignment="Center">
@@ -567,14 +572,8 @@
                                 Foreground="White"
                                 Background="{x:Bind TC}"
                                 Click="PickImgButton_Click"
-                                Content="重新选取"/>
-                        <Button x:Name="ResetButton"
-                                Margin="0,10"
-                                CornerRadius="8"
-                                Foreground="White"
-                                Background="{x:Bind TC}"
-                                Click="ResetButton_Click"
-                                Content="恢复原始" />
+                                Command="{Binding CropCircularImageCommand}"
+                                Content="选取图片"/>
                     </StackPanel>
                 </Grid>
             </ContentDialog>
