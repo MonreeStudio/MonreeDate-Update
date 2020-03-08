@@ -71,7 +71,6 @@ namespace 倒计时
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数    
             Current = this;
-            TopTap = true;
             LoadAllPage();
             MainPage.Current.MyNav.IsBackEnabled = false;
             MainPage.Current.SelectedPageItem = "All";
@@ -194,8 +193,19 @@ namespace 倒计时
 
         private void SetToptext()
         {
+            if (localSettings.Values["TopTap"] == null)
+                localSettings.Values["TopTap"] = "1";
             Today.Text = DateTime.Now.ToString("yyyy/MM/dd");
-            TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
+            if (localSettings.Values["TopTap"].ToString() == "0")
+            {
+                percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+                percentage = (int)percentage;
+                TopText.Text = "今年你已经走过了" + percentage.ToString() + "%啦！";
+            }
+            else
+            {
+                TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
+            }
             MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
         }
 
@@ -1007,9 +1017,9 @@ namespace 倒计时
 
         private void TopText_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (TopTap == true)
+            if (localSettings.Values["TopTap"].ToString() == "1")
             {
-                TopTap = false;
+                localSettings.Values["TopTap"] = "0";
                 percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
                 percentage = (int)percentage;
                 TopText.Text = "今年你已经走过了" + percentage.ToString() + "%啦！";
@@ -1017,7 +1027,7 @@ namespace 倒计时
             else
             {
                 TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
-                TopTap = true;
+                localSettings.Values["TopTap"] = "1";
             }
         }
 

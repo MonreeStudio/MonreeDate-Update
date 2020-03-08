@@ -235,7 +235,7 @@ namespace 倒计时
         private void DetailsDate_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
-            DetailsDate.FontSize = 58;
+            DetailsDate.FontSize = 52;
         }
 
         private void DetailsDate_PointerExited(object sender, PointerRoutedEventArgs e)
