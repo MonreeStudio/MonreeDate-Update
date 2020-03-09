@@ -15,7 +15,7 @@
 
 # Monree Date  
 ## 安装方式        
-2.2.6正式版已上架Microsoft Store，请直接搜索安装。  
+2.2.7正式版已上架Microsoft Store，请直接搜索安装。  
 [微软应用商店传送门](https://www.microsoft.com/store/productId/9PKBWKPCCFJ8)      
     
 ## 其他介绍：  
