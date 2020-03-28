@@ -118,9 +118,10 @@ namespace BackgroundTasks
             string displayName;
             if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
             {
-                displayName = localSettings.Values[_ScheduleName + _Date].ToString();
-                if (displayName == "")
+                if (localSettings.Values[_ScheduleName + _Date] == null)
                     displayName = "无备注";
+                else
+                    displayName = localSettings.Values[_ScheduleName + _Date].ToString();
             }
             else
                 displayName = "夏日";
@@ -275,9 +276,10 @@ namespace BackgroundTasks
             string displayName;
             if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
             {
-                displayName = localSettings.Values[_ScheduleName + _Date].ToString();
-                if (displayName == "")
+                if (localSettings.Values[_ScheduleName + _Date] == null)
                     displayName = "无备注";
+                else
+                    displayName = localSettings.Values[_ScheduleName + _Date].ToString();
             }
             else
                 displayName = "夏日";
