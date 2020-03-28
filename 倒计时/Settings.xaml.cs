@@ -272,6 +272,15 @@ namespace 倒计时
             }
             else
                 ToolAutoStartSwitch.IsOn = false;
+            if (localSettings.Values["TileTip"] != null)
+            {
+                if (localSettings.Values["TileTip"].ToString() == "1")
+                    TileTip.IsOn = true;
+                else
+                    TileTip.IsOn = false;
+            }
+            else
+                TileTip.IsOn = false;
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
@@ -738,6 +747,24 @@ namespace 倒计时
         {
             TempPicture.Visibility = Visibility.Collapsed;
             EditPicture.Visibility = Visibility.Visible;
+        }
+
+        private void TileTip_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (TileTip != null)
+            {
+                if (TileTip.IsOn == true)
+                {
+                    localSettings.Values["TileTip"] = "1";
+
+                }
+                else
+                {
+                    localSettings.Values["TileTip"] = "0";
+                }
+                All.Current.LoadSettings();
+                All.Current.LoadTile();
+            }
         }
     }
 }

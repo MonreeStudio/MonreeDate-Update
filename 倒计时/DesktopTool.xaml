@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
+    Loaded="Page_Loaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid MinWidth="320">
@@ -15,9 +16,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="夏日" FontWeight="ExtraBlack" Margin="3" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
-        <Grid Grid.Row="1" Height="Auto" >
-            <ListView SelectionMode ="None" HorizontalAlignment="Center" ItemsSource="{x:Bind ToolViewModel.ToolDatas}">
+        <Grid Grid.RowSpan="3" x:Name="rootGrid" Margin="0"/>
+        <TextBlock Text="夏日" Margin="10,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
+        <Grid Grid.Row="1" Height="Auto">
+            <ListView x:Name="DesktopListView" SelectionMode ="None" HorizontalAlignment="Center" Margin="0,8,0,0" ItemsSource="{x:Bind ToolViewModel.ToolDatas}">
                 <ListView.Header>
                     <controls:ScrollHeader Mode="Sticky">
                         <Grid x:Name="MyHeaderGrid" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
@@ -27,20 +29,24 @@
                 </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:ToolData">
+                        
                         <Grid>
                             <controls:DropShadowPanel BlurRadius="18"
                                                   ShadowOpacity="0.2"
                                                   OffsetX="2"
                                                   OffsetY="2"
                                                   Color="Black"
-                                                  Margin="10"
+                                                  Margin="7"
                                                   IsMasked="True">
-                                <Grid Width="280" Background="White" CornerRadius="15" HorizontalAlignment="Center">
-                                    <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
+                                <Grid CornerRadius="10">
+                                    <Grid x:Name="ListGrid" CornerRadius="15"/>
+                                    <Grid Width="280" x:FieldModifier="public" CornerRadius="15" HorizontalAlignment="Center">
+                                    <StackPanel HorizontalAlignment="Left" Margin="8,10,8,10" VerticalAlignment="Center">
                                         <TextBlock x:Name="DT_ScheduleName" Width="150" Text="{x:Bind ScheduleName}" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
                                         <TextBlock x:Name="DT_Date" Text="{x:Bind Date}" FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
                                     </StackPanel>
                                     <TextBlock x:Name="DT_CalDate" Text="{x:Bind CalDate}" Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
+                                    </Grid>
                                 </Grid>
                             </controls:DropShadowPanel>
                         </Grid>

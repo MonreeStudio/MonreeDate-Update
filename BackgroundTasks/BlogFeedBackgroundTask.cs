@@ -42,7 +42,7 @@ namespace BackgroundTasks
             deferral.Complete();
         }
 
-        public static void UpdateTile()
+        public void UpdateTile()
         {
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
             updater.EnableNotificationQueue(true);
@@ -77,7 +77,7 @@ namespace BackgroundTasks
             return s2;
         }
 
-        private static TileNotification LoadTile()
+        private TileNotification LoadTile()
         {
             List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
             foreach (var item in datalist0)
@@ -108,19 +108,27 @@ namespace BackgroundTasks
                 return null;
         }
 
-        private static TileNotification CreateTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        private TileNotification CreateTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;
             string body = _Date;
-
+            string displayName;
+            if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
+            {
+                displayName = localSettings.Values[_ScheduleName + _Date].ToString();
+                if (displayName == "")
+                    displayName = "无备注";
+            }
+            else
+                displayName = "夏日";
             TileContent content = new TileContent()
             {
                 Visual = new TileVisual()
                 {
-                    DisplayName = "夏日",
+                    DisplayName = displayName,
                     TileMedium = new TileBinding()
                     {
                         Branding = TileBranding.Name,
@@ -257,19 +265,27 @@ namespace BackgroundTasks
             return notification;
         }
 
-        private static void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        private void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;
             string body = _Date;
-
+            string displayName;
+            if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
+            {
+                displayName = localSettings.Values[_ScheduleName + _Date].ToString();
+                if (displayName == "")
+                    displayName = "无备注";
+            }
+            else
+                displayName = "夏日";
             TileContent content = new TileContent()
             {
                 Visual = new TileVisual()
                 {
-                    DisplayName = "夏日",
+                    DisplayName = displayName,
                     TileMedium = new TileBinding()
                     {
                         Branding = TileBranding.Name,

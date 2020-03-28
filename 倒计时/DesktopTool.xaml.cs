@@ -1,4 +1,5 @@
-﻿using SQLite.Net.Platform.WinRT;
+﻿using Microsoft.Graphics.Canvas.Effects;
+using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,12 +10,15 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -60,6 +64,8 @@ namespace 倒计时
             title.ButtonHoverBackgroundColor = Colors.Gray;
             title.ButtonPressedBackgroundColor = Colors.Gray;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+            InitializeFrostedGlass(rootGrid, 0);
+            
             LoadData();
             Pip();
         }
@@ -78,6 +84,7 @@ namespace 倒计时
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
         }
+
 
         public void LoadData()
         {
@@ -175,6 +182,85 @@ namespace 倒计时
                 default:
                     break;
             }
+        }
+
+        private void InitializeFrostedGlass(UIElement glassHost, int selectionCode)
+        {
+            Visual hostVisual = ElementCompositionPreview.GetElementVisual(glassHost);
+            Compositor compositor = hostVisual.Compositor;
+            GaussianBlurEffect glassEffect;
+            if (selectionCode == 0)
+            {
+                glassEffect = new GaussianBlurEffect
+                {
+                    BlurAmount = 10f,
+                    BorderMode = EffectBorderMode.Hard,
+                    Source = new ArithmeticCompositeEffect
+                    {
+                        MultiplyAmount = 0,
+                        Source1Amount = 0.7f,
+                        Source2Amount = 0.3f,
+                        Source1 = new CompositionEffectSourceParameter("backdropBrush"),
+                        Source2 = new ColorSourceEffect
+                        {
+                            Color = Color.FromArgb(255, 245, 245, 245)
+                        }
+                    }
+                };
+            }
+            else
+            {
+                glassEffect = new GaussianBlurEffect
+                {
+                    BlurAmount = 15f,
+                    BorderMode = EffectBorderMode.Hard,
+                    Source = new ArithmeticCompositeEffect
+                    {
+                        MultiplyAmount = 0,
+                        Source1Amount = 0.5f,
+                        Source2Amount = 0.5f,
+                        Source1 = new CompositionEffectSourceParameter("backdropBrush"),
+                        Source2 = new ColorSourceEffect
+                        {
+                            Color = Color.FromArgb(255, 245, 245, 245)
+                        }
+                    }
+                };
+            }
+            var effectFactory = compositor.CreateEffectFactory(glassEffect);
+            
+            var backdropBrush = compositor.CreateHostBackdropBrush();
+            var effectBrush = effectFactory.CreateBrush();
+            effectBrush.SetSourceParameter("backdropBrush", backdropBrush);
+            var glassVisual = compositor.CreateSpriteVisual();
+            glassVisual.Brush = effectBrush;
+            ElementCompositionPreview.SetElementChildVisual(glassHost, glassVisual);
+            var bindSizeAnimation = compositor.CreateExpressionAnimation("hostVisual.Size");
+            bindSizeAnimation.SetReferenceParameter("hostVisual", hostVisual);
+            glassVisual.StartAnimation("Size", bindSizeAnimation);
+        }
+
+        public static List<T> MyFindListBoxChildOfType<T>(DependencyObject root) where T : class
+        {
+            var MyQueue = new Queue<DependencyObject>();
+            MyQueue.Enqueue(root);
+            List<T> list = new List<T>();
+            while (MyQueue.Count > 0)
+            {
+                DependencyObject current = MyQueue.Dequeue();
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(current); i++)
+                {
+                    var child = VisualTreeHelper.GetChild(current, i);
+                    var typedChild = child as T;
+                    if (typedChild != null)
+                    {
+                        list.Add(typedChild);
+                        //return typedChild;
+                    }
+                    MyQueue.Enqueue(child);
+                }
+            }
+            return list;
         }
 
         public string Calculator(string s1)
@@ -308,6 +394,16 @@ namespace 倒计时
         {
             localSettings.Values["ReStart"] = "1";
             await CoreApplication.RequestRestartAsync(string.Empty);
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            var gridList = MyFindListBoxChildOfType<Grid>(DesktopListView);
+            foreach(var item in gridList)
+            {
+                if (item.Name == "ListGrid")
+                    InitializeFrostedGlass(item, 1);
+            }
         }
     }
 }

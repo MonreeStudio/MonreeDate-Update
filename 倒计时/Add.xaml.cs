@@ -122,7 +122,7 @@ namespace 倒计时
                 return s2;
         }
 
-        private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string Picker = Add_Picker.Date.ToString();
             try
@@ -133,8 +133,8 @@ namespace 倒计时
             }
             catch
             {
-                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
-                await AboutDialog.ShowAsync();
+                //MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                //await AboutDialog.ShowAsync();
             }
             _Date = Calculator(_PickDate);
         }

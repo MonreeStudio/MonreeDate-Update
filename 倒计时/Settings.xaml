@@ -419,6 +419,14 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPersonPicture_Toggled"/>
+                <ToggleSwitch x:Name="TileTip"
+                              Header="磁贴显示日程备注"
+                              Margin="0,5,0,0"
+                              HorizontalAlignment="Left"
+                              OnContent="开"
+                              OffContent="关"
+                              Foreground="{x:Bind TC}"
+                              Toggled="TileTip_Toggled"/>
                 <ToggleSwitch x:Name="ToolAutoStartSwitch"
                               Header="桌面显示小工具随应用自启动&#x0a;（已选择日程不为空时有效）"
                               Margin="0,5,0,0"
@@ -494,11 +502,11 @@
                         <TextBlock Foreground="DarkSlateGray" x:Name="Version" Margin="10,10,0,5" />
                         <TextBlock Foreground="DarkSlateGray" x:Name="SystemVersion" Margin="10,0,0,5" />
                         <TextBlock Foreground="DarkSlateGray" x:Name="Platform" Margin="10,0,0,10"/>
-                        <TextBlock Foreground="DarkSlateGray" Text="一款简约设计的纪念日/倒计时记录应用。&#x0a;现已支持固定日程到开始菜单。" 
+                        <TextBlock Foreground="DarkSlateGray" Text="一款简约设计的纪念日/倒计时记录应用。" 
             TextWrapping="Wrap" Margin="10"/>
                         <Image Source="Assets/03.png" Width="350" Height="350"/>
                         <TextBlock Foreground="DarkSlateGray" Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
-                        <TextBlock  Foreground="DarkSlateGray" Text="若发现Bug请发邮箱：monreestudio@outlook.com" Margin="10" />
+                        <TextBlock  Foreground="DarkSlateGray" Text="开发者邮箱：monreestudio@outlook.com" Margin="10" />
                         <HyperlinkButton Content="Github开源项目" 
                                  Margin="10"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>

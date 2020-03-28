@@ -14,7 +14,7 @@ namespace 倒计时
         public string CalDate { get; set; }
         public ToolData()
         {
-
+            
         }
     }
 
@@ -24,7 +24,7 @@ namespace 倒计时
 
         public ToolDataViewModel()
         {
-
+            
         }
     }
 }

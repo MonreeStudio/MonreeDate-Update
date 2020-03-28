@@ -130,6 +130,7 @@ namespace 倒计时
             }
             catch { }
         }
+
         public void SetThemeColor()
         {
             if (localSettings.Values["ThemeColor"] == null)
@@ -221,7 +222,8 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.White;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
         }
-        private async void LoadTile()
+
+        public async void LoadTile()
         {
             List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
@@ -240,7 +242,8 @@ namespace 倒计时
             }
 
             bool isPinned = SecondaryTile.Exists(_ScheduleName);
-            if(isPinned)            {
+            if(isPinned)            
+            {
                 SecondaryTile toBeDeleted = new SecondaryTile(_ScheduleName);
                 await toBeDeleted.RequestDeleteAsync();
             }
@@ -253,12 +256,21 @@ namespace 倒计时
             string from = _ScheduleName;
             string subject = _CaculatedDate;
             string body = _Date;
-
-            TileContent content = new TileContent()
+            string displayName;
+            if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
+            {
+                displayName = localSettings.Values[_ScheduleName + _Date].ToString();
+                if (displayName == "")
+                    displayName = "无备注";
+            }
+            else
+                displayName = "夏日";
+                TileContent content = new TileContent()
             {
                 Visual = new TileVisual()
                 {
-                    DisplayName = "夏日",
+                    
+                    DisplayName = displayName,
                     TileMedium = new TileBinding()
                     {
                         Branding = TileBranding.Name,
@@ -741,7 +753,7 @@ namespace 倒计时
                     break;
             }
         }
-        private void LoadSettings()
+        public void LoadSettings()
         {
             UserName.Visibility = Visibility.Collapsed;
             UserSign.Visibility = Visibility.Collapsed;
@@ -1278,7 +1290,7 @@ namespace 倒计时
             return Color.FromArgb(a, r, g, b);
         }
 
-        public static void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        public void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
 
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
@@ -1286,12 +1298,20 @@ namespace 倒计时
             string from = _ScheduleName;
             string subject = _CaculatedDate;
             string body = _Date;
-
+            string displayName;
+            if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
+            {
+                displayName = localSettings.Values[_ScheduleName + _Date].ToString();
+                if (displayName == "")
+                    displayName = "无备注";
+            }
+            else
+                displayName = "夏日";
             TileContent content = new TileContent()
             {
                 Visual = new TileVisual()
                 {
-                    DisplayName = "夏日",
+                    DisplayName = displayName,
                     TileMedium = new TileBinding()
                     {
                         Branding = TileBranding.Name,

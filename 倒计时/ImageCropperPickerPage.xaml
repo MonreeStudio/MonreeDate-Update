@@ -27,6 +27,7 @@
             <StackPanel Padding="55,67" VerticalAlignment="Center">
                 <AppBarButton
                     Margin="0,15"
+                    Foreground="White"
                     Click="Button_Click"
                     Icon="Accept"
                     Label="OK" />

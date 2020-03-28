@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock x:Name="DesktopTopText"
-                       Text="桌面显示(Beta)"
+                       Text="桌面显示"
                        FontSize="28"
                        FontWeight="Bold"
                        Foreground="{x:Bind TC}"
