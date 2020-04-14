@@ -238,7 +238,7 @@ namespace 倒计时
             }
         }
 
-        public void ReadSettings()
+        public async void ReadSettings()
         {
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
@@ -281,6 +281,13 @@ namespace 倒计时
             }
             else
                 TileTip.IsOn = false;
+            //if(localSettings.Values["AutoStart"] != null)
+            //{
+            //    if (localSettings.Values["AutoStart"].ToString() == "1")
+            //        AutoStartSwitch.IsOn = true;
+            //    else
+            //        AutoStartSwitch.IsOn = false;
+            //}
             var _NickName = localSettings.Values["NickName"];
             var _Sex = localSettings.Values["PersonalSex"];
             var _sign = localSettings.Values["Sign"];
@@ -296,6 +303,37 @@ namespace 倒计时
 
                 //MyPersonPicture.ProfilePicture = new BitmapImage(new Uri(localFolder.Path + "/" + desiredName));
                 //MyPersonPicture.ProfilePicture = (BitmapImage)_PersonPicture;
+            }
+            await LoadState();
+        }
+
+        public async Task LoadState()
+        {
+            var task = await StartupTask.GetAsync("AppAutoRun");
+            AutoStartTipButton.Visibility = Visibility.Collapsed;
+            switch (task.State)
+            {
+                case StartupTaskState.Disabled:
+                    // 禁用状态
+                    AutoStartSwitch.OnContent = "关";
+                    AutoStartSwitch.IsOn = false;
+                    break;
+                case StartupTaskState.DisabledByPolicy:
+                    // 由管理员或组策略禁用
+                    AutoStartSwitch.OffContent = "被系统策略禁用";
+                    AutoStartSwitch.IsOn = false;
+                    break;
+                case StartupTaskState.DisabledByUser:
+                    // 由用户手工禁用
+                    AutoStartSwitch.OffContent = "被用户禁用";
+                    AutoStartSwitch.IsOn = false;
+                    AutoStartTipButton.Visibility = Visibility.Visible;
+                    break;
+                case StartupTaskState.Enabled:
+                    // 当前状态为已启用
+                    AutoStartSwitch.OnContent = "开";
+                    AutoStartSwitch.IsOn = true;
+                    break;
             }
         }
 
@@ -765,6 +803,32 @@ namespace 倒计时
                 All.Current.LoadSettings();
                 All.Current.LoadTile();
             }
+        }
+
+        private async void AutoStartSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (AutoStartSwitch != null)
+            {
+                if (AutoStartSwitch.IsOn == true)
+                {
+                    localSettings.Values["AutoStart"] = "1";
+                    var task = await StartupTask.GetAsync("AppAutoRun");
+                    if (task.State == StartupTaskState.Disabled)
+                    {
+                        await task.RequestEnableAsync();
+                    }
+
+                    // 重新加载状态
+                    await LoadState();
+                }
+                else
+                {
+                    localSettings.Values["AutoStart"] = "0";
+                    var task = await StartupTask.GetAsync("AppAutoRun");
+                    task.Disable();
+                } 
+            }
+            await LoadState();
         }
     }
 }

@@ -120,9 +120,13 @@ namespace 倒计时
                     root = new Frame();
                     Window.Current.Content = root;
                 }
+                if (e.Kind == ActivationKind.StartupTask)
+                {
+                    var startupArgs = e as StartupTaskActivatedEventArgs;
+                }
                 if (root.Content == null)
                 {
-                    root.Navigate(typeof(MainPage));
+                    root.Navigate(typeof(MainPage),e.Kind);
                 }
             }
             Window.Current.Activate();

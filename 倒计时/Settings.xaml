@@ -427,15 +427,43 @@
                               OffContent="关"
                               Foreground="{x:Bind TC}"
                               Toggled="TileTip_Toggled"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <ToggleSwitch x:Name="AutoStartSwitch"
+                              Header="开机自启动"
+                              HorizontalAlignment="Left"
+                              OnContent="开"
+                              OffContent="关"
+                              Foreground="{x:Bind TC}"
+                              Toggled="AutoStartSwitch_Toggled"/>
+                    <Button x:Name="AutoStartTipButton"
+                            Content="&#xE82F;"
+                            FontFamily="Segoe MDL2 Assets"
+                            CornerRadius="20"
+                            Foreground="White"
+                            Background="{x:Bind TC}"
+                            Width="33"
+                            Height="33"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Visibility="Collapsed">
+                        <Button.Flyout>
+                            <Flyout Placement="TopEdgeAlignedLeft">
+                                <TextBlock Text="自启动已被用户手动关闭，无法自动打开。&#x0a;请转至“设置”→“应用”→“启动”手动打开。"/>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
                 <ToggleSwitch x:Name="ToolAutoStartSwitch"
-                              Header="桌面显示小工具随应用自启动&#x0a;（已选择日程不为空时有效）"
+                              Header="桌面小工具随应用启动"
                               Margin="0,5,0,0"
                               HorizontalAlignment="Left"
                               OnContent="开"
                               OffContent="关"
                               Foreground="{x:Bind TC}"
+                              ToolTipService.ToolTip="已选择日程不为空时有效"
                               Toggled="ToolAutoStartSwitch_Toggled"/>
                 <TextBlock x:Name="AppAutoStartTip"
+                           Visibility="Collapsed"
                            TextDecorations="Underline"
                            Text="点击查看如何设置应用开机自启动"
                            extensions:Mouse.Cursor="Hand"

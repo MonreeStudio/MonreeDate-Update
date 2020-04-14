@@ -203,6 +203,7 @@ namespace 倒计时
                         Source1 = new CompositionEffectSourceParameter("backdropBrush"),
                         Source2 = new ColorSourceEffect
                         {
+                            //Color = Color.FromArgb(255, 82, 163, 242)
                             Color = Color.FromArgb(255, 245, 245, 245)
                         }
                     }
