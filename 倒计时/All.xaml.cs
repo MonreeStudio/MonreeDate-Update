@@ -1250,12 +1250,12 @@ namespace 倒计时
             var y = AllScrollViewer.VerticalOffset;
             if (y == 0)
             {
-                AllThumbShadow.Visibility = Visibility.Collapsed;
+                //AllThumbShadow.Visibility = Visibility.Collapsed;
                 RootThumb.Visibility = Visibility.Collapsed;
             }
             else
             {
-                AllThumbShadow.Visibility = Visibility.Visible;
+                //AllThumbShadow.Visibility = Visibility.Visible;
                 RootThumb.Visibility = Visibility.Visible;
             }
         }

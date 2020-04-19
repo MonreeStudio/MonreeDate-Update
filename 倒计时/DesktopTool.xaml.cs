@@ -43,6 +43,7 @@ namespace 倒计时
         public ToolDataViewModel ToolViewModel = new ToolDataViewModel();
         private int viewHeight;
         public static DesktopTool Current;
+
         public DesktopTool()
         {
             this.InitializeComponent();
@@ -65,13 +66,41 @@ namespace 倒计时
             title.ButtonPressedBackgroundColor = Colors.Gray;
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             InitializeFrostedGlass(rootGrid, 0);
-            
+            localSettings.Values["FirstlyStart"] = "1";
             LoadData();
-            Pip();
+            if (localSettings.Values["Pip"] == null)
+                localSettings.Values["Pip"] = "1";
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default 
+                && 
+                localSettings.Values["Pip"].ToString() == "1")
+            {
+                Pip();
+            }
+            //Pip();
+            
+        }
+
+        private async void ToCompactOverlay()
+        {
+            var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+            preferences.CustomSize = new Size(330, viewHeight);
+            await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences);
+            ApplicationView.PreferredLaunchViewSize = new Size(3000, 3000);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         private void Timer_Tick(object sender, object e)
         {
+            //if (localSettings.Values["Pip"].ToString() == "1"
+            //    &&
+            //    localSettings.Values["FirstlyStart"].ToString() == "1"
+            //    &&
+            //    ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default)
+            //{
+            //    localSettings.Values["FirstlyStart"] = "0";
+            //    //Pip();
+            //    ToCompactOverlay();
+            //}
             RefreshData();
             if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
             {
@@ -80,14 +109,22 @@ namespace 倒计时
             }
             else
             {
+                
                 SetTopBtn.Visibility = Visibility.Visible;
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
         }
 
-
         public void LoadData()
         {
+            if (localSettings.Values["CornerName"] == null)
+            {
+                CornerNameTextBlock.Text = "夏日";
+            }
+            else
+            {
+                CornerNameTextBlock.Text = localSettings.Values["CornerName"].ToString();
+            }
             if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
             {
                 SetTopBtn.Visibility = Visibility.Collapsed;
@@ -184,8 +221,37 @@ namespace 倒计时
             }
         }
 
+        public Color GetColor(string hex)
+        {
+            hex = hex.Replace("#", string.Empty);
+            byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
+            byte r = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
+            byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
+            byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
+            return Color.FromArgb(a, r, g, b);
+        }
+
         private void InitializeFrostedGlass(UIElement glassHost, int selectionCode)
         {
+            Color color;
+            float amount1, amount2;
+            if (localSettings.Values["Colorful"] != null 
+                &&
+                localSettings.Values["ToolColor"]!=null
+                &&
+                localSettings.Values["Colorful"].ToString() == "1")
+            {
+                string _color = localSettings.Values["ToolColor"].ToString();
+                color = GetColor(_color);
+                amount1 = 0.5f;
+                amount2 = 0.5f;
+            }
+            else
+            {
+                color = Color.FromArgb(255, 245, 245, 245);
+                amount1 = 0.7f;
+                amount2 = 0.3f;
+            }
             Visual hostVisual = ElementCompositionPreview.GetElementVisual(glassHost);
             Compositor compositor = hostVisual.Compositor;
             GaussianBlurEffect glassEffect;
@@ -198,13 +264,19 @@ namespace 倒计时
                     Source = new ArithmeticCompositeEffect
                     {
                         MultiplyAmount = 0,
-                        Source1Amount = 0.7f,
-                        Source2Amount = 0.3f,
+                        Source1Amount = amount1,
+                        Source2Amount = amount2,
                         Source1 = new CompositionEffectSourceParameter("backdropBrush"),
                         Source2 = new ColorSourceEffect
                         {
+                            Color = color
+                            //Color = Color.FromArgb(255, 236, 155, 173)
+                            //Color = Color.FromArgb(255, 119, 25, 171)
+                            //Color = Colors.CornflowerBlue
+                            //Color = Color.FromArgb(255, 73, 92, 105)
+                            //Color = Color.FromArgb(255, 2, 136, 235)
                             //Color = Color.FromArgb(255, 82, 163, 242)
-                            Color = Color.FromArgb(255, 245, 245, 245)
+                            //Color = Color.FromArgb(255, 245, 245, 245)
                         }
                     }
                 };
@@ -218,12 +290,18 @@ namespace 倒计时
                     Source = new ArithmeticCompositeEffect
                     {
                         MultiplyAmount = 0,
-                        Source1Amount = 0.5f,
-                        Source2Amount = 0.5f,
+                        Source1Amount = amount1,
+                        Source2Amount = amount2,
                         Source1 = new CompositionEffectSourceParameter("backdropBrush"),
                         Source2 = new ColorSourceEffect
                         {
-                            Color = Color.FromArgb(255, 245, 245, 245)
+                            Color = color
+                            //Color = Color.FromArgb(255, 236, 155, 173)
+                            //Color = Color.FromArgb(255, 119, 25, 171)
+                            //Color = Colors.CornflowerBlue
+                            //Color = Color.FromArgb(255, 73, 92, 105)
+                            //Color = Color.FromArgb(255, 2, 136, 235)
+                            //Color = Color.FromArgb(255, 245, 245, 245)
                         }
                     }
                 };
@@ -305,7 +383,6 @@ namespace 倒计时
             }
         }
 
-
         private void RefreshData()
         {
             var timeNow = DateTime.Now;
@@ -320,20 +397,21 @@ namespace 倒计时
 
         public async void Pip()
         {
+            localSettings.Values["Pip"] = "1";
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
             preferences.CustomSize = new Size(330, viewHeight);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences);
-            if (localSettings.Values["DesktopPin"] == null)
-                localSettings.Values["DesktopPin"] = false;
-            if (localSettings.Values["DesktopPin"].Equals(false))
-            {
-                localSettings.Values["DesktopPin"] = true;
+            //if (localSettings.Values["DesktopPin"] == null)
+            //    localSettings.Values["DesktopPin"] = false;
+            //if (localSettings.Values["DesktopPin"].Equals(false))
+            //{
+            //    localSettings.Values["DesktopPin"] = true;
                 Frame.Navigate(typeof(DesktopTool), null, new SuppressNavigationTransitionInfo());
-                timer = new DispatcherTimer();
-                timer.Interval = new TimeSpan(0, 0, 1);
-                timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+                //timer = new DispatcherTimer();
+                //timer.Interval = new TimeSpan(0, 0, 1);
+                //timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
 
-            }
+            //}
             if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
             {
                 SetTopBtn.Visibility = Visibility.Collapsed;
@@ -354,15 +432,16 @@ namespace 倒计时
 
         public async void Unpip()
         {
+            localSettings.Values["Pip"] = "0";
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
             preferences.CustomSize = new Size(330, viewHeight - 20);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
             ApplicationView.PreferredLaunchViewSize = new Size(330, viewHeight - 20);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            localSettings.Values["DesktopPin"] = false;
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 1);
-            timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+            Frame.Navigate(typeof(DesktopTool), null, new SuppressNavigationTransitionInfo());
+            //timer = new DispatcherTimer();
+            //timer.Interval = new TimeSpan(0, 0, 1);
+            //timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
             if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default)
             {
                 SetTopBtn.Visibility = Visibility.Visible;
@@ -373,6 +452,7 @@ namespace 倒计时
                 SetTopBtn.Visibility = Visibility.Collapsed;
                 DeSetTopBtn.Visibility = Visibility.Visible;
             }
+
         }
 
         private void SetTopBtn_Click(object sender, RoutedEventArgs e)

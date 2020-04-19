@@ -521,15 +521,56 @@
             </Grid>
             <TextBlock Text="——夏日——" Margin="20" Grid.Row="5" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
             <ContentDialog x:Name="AlertContentDialog" CornerRadius="10" Style="{ThemeResource CloseContentDialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel VerticalAlignment="Stretch">
+                <StackPanel VerticalAlignment="Stretch" Margin="0,0,0,20">
                     <Button x:Name="CloseContentDialogBtn" Click="CloseContentDialogBtn_Click" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" BorderThickness="0" Padding="10" HorizontalAlignment="Right" Background="Transparent"/>
-                    <TextBlock Text="设置提醒" Margin="20,10,0,20" FontWeight="Bold" FontSize="20" Foreground="{x:Bind TC}"/>
-                    <ToggleSwitch Margin="20,2,0,0" x:Name="AlertToggleSwitch" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch_Toggled"/>
+                    <TextBlock Text="设置提醒" Margin="20,0,0,20" FontWeight="Bold" FontSize="20" Foreground="{x:Bind TC}"/>
+                    <StackPanel Orientation="Horizontal" Margin="10,0,0,10">
+                        <ToggleSwitch x:Name="AlertToggleSwitch" Header="当天" Margin="20,2,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch_Toggled"/>
+                        <ToggleSwitch x:Name="AlertToggleSwitch2" Header="提前一天" Margin="20,2,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch2_Toggled"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                        <ToggleSwitch x:Name="AlertToggleSwitch3" Header="提前三天" Margin="20,16,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch3_Toggled"/>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,5,0,0">
+                                <TextBlock Text="提前"  VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="DayComboBox" CornerRadius="8" BorderThickness="1" TextSubmitted="DayComboBox_TextSubmitted" SelectionChanged="DayComboBox_SelectionChanged">
+                                    <x:String>2</x:String>
+                                    <x:String>4</x:String>
+                                    <x:String>5</x:String>
+                                    <x:String>6</x:String>
+                                    <x:String>7</x:String>
+                                    <x:String>8</x:String>
+                                    <x:String>9</x:String>
+                                    <x:String>10</x:String>
+                                    <x:String>11</x:String>
+                                    <x:String>12</x:String>
+                                    <x:String>13</x:String>
+                                    <x:String>14</x:String>
+                                    <x:String>15</x:String>
+                                    <x:String>16</x:String>
+                                    <x:String>17</x:String>
+                                    <x:String>18</x:String>
+                                    <x:String>19</x:String>
+                                    <x:String>20</x:String>
+                                    <x:String>21</x:String>
+                                    <x:String>22</x:String>
+                                    <x:String>23</x:String>
+                                    <x:String>24</x:String>
+                                    <x:String>25</x:String>
+                                    <x:String>26</x:String>
+                                    <x:String>27</x:String>
+                                    <x:String>28</x:String>
+                                    <x:String>29</x:String>
+                                    <x:String>30</x:String>
+                                </ComboBox>
+                                <TextBlock Text="天" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            </StackPanel>
+                            <ToggleSwitch x:Name="AlertToggleSwitch4" Margin="20,2,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch4_Toggled"/>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
-
             </ContentDialog>
         </Grid>
-        
     </ScrollViewer>
     
 </Page>

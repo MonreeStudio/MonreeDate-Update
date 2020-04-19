@@ -50,6 +50,7 @@ namespace 倒计时
         IRandomAccessStream Bitmap;
         string DetailsDateMode;
         string FestivalDateMode;
+        string dayNum;
         public Details()
         {
             this.InitializeComponent();
@@ -63,6 +64,7 @@ namespace 倒计时
             MainPage.Current.SelectedPageItem = "Details";
             DetailsDateMode = localSettings.Values["DateMode"].ToString();
             FestivalDateMode = "Day";
+            
         }
 
         private void SetAlertEnabled()
@@ -125,6 +127,8 @@ namespace 倒计时
         }
         private void LoadData()
         {
+            
+                
             sp = MainPage.Current.SelectedPage;
             if (sp == true)
             {
@@ -276,6 +280,7 @@ namespace 倒计时
         {
             DataTransferManager.GetForCurrentView().DataRequested -= DataTransferManager_DataRequested;
         }
+
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             
@@ -433,6 +438,55 @@ namespace 倒计时
                 AlertToggleSwitch.IsOn = false;
                 localSettings.Values[AlertName] = "0";
             }
+            var AlertName2 = "Alert" + DetailsEvent.Text + 1;
+            if (localSettings.Values[AlertName2] != null)
+            {
+                if (localSettings.Values[AlertName2].ToString() == "1")
+                    AlertToggleSwitch2.IsOn = true;
+                else
+                    AlertToggleSwitch2.IsOn = false;
+            }
+            else
+            {
+                AlertToggleSwitch2.IsOn = false;
+                localSettings.Values[AlertName2] = "0";
+            }
+            var AlertName3 = "Alert" + DetailsEvent.Text + 3;
+            if (localSettings.Values[AlertName3] != null)
+            {
+                if (localSettings.Values[AlertName3].ToString() == "1")
+                    AlertToggleSwitch3.IsOn = true;
+                else
+                    AlertToggleSwitch3.IsOn = false;
+            }
+            else
+            {
+                AlertToggleSwitch3.IsOn = false;
+                localSettings.Values[AlertName3] = "0";
+            }
+            var AlertName4 = "Alert" + DetailsEvent.Text + "Personal";
+            if (localSettings.Values[AlertName4] != null)
+            {
+                if (localSettings.Values[AlertName4].ToString() != "0")
+                {
+                    AlertToggleSwitch4.IsOn = true;
+                    DayComboBox.IsEnabled = true;
+                    var indexValue = localSettings.Values[AlertName4].ToString();
+                    if (indexValue == "2")
+                        DayComboBox.SelectedIndex = 0;
+                    else
+                    {
+                        DayComboBox.SelectedIndex = Convert.ToInt32(indexValue) - 3;
+                    }
+                }
+
+                else
+                {
+                    AlertToggleSwitch4.IsOn = false;
+                    DayComboBox.IsEnabled = false;
+                }
+                    
+            }
             await AlertContentDialog.ShowAsync();
         }
 
@@ -487,5 +541,73 @@ namespace 倒计时
             ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
         }
 
+        private void AlertToggleSwitch2_Toggled(object sender, RoutedEventArgs e)
+        {
+            var AlertName = "Alert" + DetailsEvent.Text + 1;
+            if (AlertToggleSwitch2 != null)
+            {
+                if (AlertToggleSwitch2.IsOn == true)
+                {
+                    localSettings.Values[AlertName] = "1";
+                }
+                else
+                {
+                    localSettings.Values[AlertName] = "0";
+                }
+            }
+        }
+
+        private void AlertToggleSwitch3_Toggled(object sender, RoutedEventArgs e)
+        {
+            var AlertName = "Alert" + DetailsEvent.Text + 3;
+            if (AlertToggleSwitch3 != null)
+            {
+                if (AlertToggleSwitch3.IsOn == true)
+                {
+                    localSettings.Values[AlertName] = "1";
+
+                }
+                else
+                {
+                    localSettings.Values[AlertName] = "0";
+                }
+            }
+        }
+
+        private void AlertToggleSwitch4_Toggled(object sender, RoutedEventArgs e)
+        {
+            
+            var AlertName = "Alert" + DetailsEvent.Text + "Personal";
+            if (AlertToggleSwitch4 != null)
+            {
+                if (AlertToggleSwitch4.IsOn == true)
+                {
+                    //localSettings.Values[AlertName] = dayNum;
+                    DayComboBox.IsEnabled = true;
+                }
+                else
+                {
+                    localSettings.Values[AlertName] = "0";
+                    DayComboBox.IsEnabled = false;
+                }
+            }
+            else
+                AlertToggleSwitch4.IsOn = false;
+        }
+
+        private void DayComboBox_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+        {
+            
+        }
+
+        private void DayComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            dayNum = e.AddedItems[0].ToString();
+            if (AlertToggleSwitch4 != null && AlertToggleSwitch4.IsOn == true)
+            {
+                var AlertName = "Alert" + DetailsEvent.Text + "Personal";
+                localSettings.Values[AlertName] = dayNum;
+            }
+        }
     }
 }

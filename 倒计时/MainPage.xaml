@@ -370,10 +370,10 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="1、新增 磁贴显示日程备注；&#x0a;（可在设置页面中打开或关闭。）&#x0a;2、优化 桌面显示工具背景添加了亚克力模糊效果；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="1、新增 自定义桌面小工具背景颜色；&#x0a;2、新增 自定义桌面小工具左上角标题；&#x0a;3、新增 自定义日程提醒时间（提前n天提醒）；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="往期版本：2.2.7.0&#x0a;1、新增 磁贴显示日程备注；&#x0a;（可在设置页面中打开或关闭。）&#x0a;2、优化 桌面显示工具背景添加了亚克力模糊效果；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.2.7.0&#x0a;1、修复 清除了大部分可能存在的bug；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.2.6.0&#x0a;1、新增 更新了头像裁切组件，体验更加流畅；&#x0a;2、修复 解决了头像可能无法更换的问题；&#x0a;3、修复 解决了主页日期进度条上方的文字显示问题；&#x0a;4、优化 部分细节优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.2.5.0&#x0a;1、修复 解决了桌面显示工具“显示主界面”按钮造成的主页右键菜单无法显示的问题；&#x0a;2、优化 部分细节优化；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="开发者的话：&#x0a;欢迎大家使用最新版本！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！" TextWrapping="WrapWholeWords" Margin="10"/>
                 </StackPanel>
             </ScrollViewer>

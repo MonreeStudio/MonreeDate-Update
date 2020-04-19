@@ -443,14 +443,65 @@ namespace BackgroundTasks
                         tipText = "日程备注：" + tipTextContainer.ToString();
                     else
                         tipText = "日程备注：无备注。";
-                    CreateToast(item.Schedule_name, tipText);
+                    CreateToast(item.Schedule_name, tipText, 0);
                     localSettings.Values[AlertName] = "0";
+                }               
+            }
+            for (int i = 1; i <= 3; i += 2)
+            {
+                string temp = DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd");
+                var datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
+                foreach(var item in datalist1)
+                {
+                    var AlertName = "Alert" + item.Schedule_name + i;
+                    if(localSettings.Values[AlertName]!=null && localSettings.Values[AlertName].ToString() == "1")
+                    {
+                        string tipText;
+                        var tipTextContainer = localSettings.Values[item.Schedule_name + item.Date];
+                        if (tipTextContainer != null && tipTextContainer.ToString() != "")
+                            tipText = "日程备注：" + tipTextContainer.ToString();
+                        else
+                            tipText = "日程备注：无备注。";
+                        CreateToast(item.Schedule_name, tipText, i);
+                        localSettings.Values[AlertName] = "0";
+                    }
+                }
+            }
+            var datalist2 = conn.Query<DataTemple>("select * from DataTemple");
+            foreach(var item in datalist2)
+            {
+                var AlertName = "Alert" + item.Schedule_name + "Personal";
+                
+                if(localSettings.Values[AlertName]!=null && localSettings.Values[AlertName].ToString() != "0")
+                {
+                    string tipText;
+                    string dayNumString = localSettings.Values[AlertName].ToString();
+                    int dayNum = Convert.ToInt32(dayNumString);
+                    if(item.Date == DateTime.Now.AddDays(dayNum).ToString("yyyy-MM-dd"))
+                    {
+                        var tipTextContainer = localSettings.Values[item.Schedule_name + item.Date];
+                        if (tipTextContainer != null && tipTextContainer.ToString() != "")
+                            tipText = "日程备注：" + tipTextContainer.ToString();
+                        else
+                            tipText = "日程备注：无备注。";
+                        CreateToast(item.Schedule_name, tipText, dayNum);
+                        localSettings.Values[AlertName] = "0";
+                    }
                 }
             }
         }
 
-        private void CreateToast(string Schedule_name,string tipText)
+        private void CreateToast(string Schedule_name,string tipText,int dayNum)
         {
+            string text;
+            if(dayNum == 0)
+            {
+                text = "日程到期提醒：" + Schedule_name;
+            }
+            else
+            {
+                text = Schedule_name + "，还有" + dayNum + "天";
+            }
             var toastContent = new ToastContent()
             {
                 Visual = new ToastVisual()
@@ -461,7 +512,7 @@ namespace BackgroundTasks
             {
                 new AdaptiveText()
                 {
-                    Text = "日程到期提醒："+ Schedule_name
+                    Text = text
                 },
                 new AdaptiveText()
                 {

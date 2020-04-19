@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.RowSpan="3" x:Name="rootGrid" Margin="0"/>
-        <TextBlock Text="夏日" Margin="10,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
+        <TextBlock x:Name="CornerNameTextBlock" Text="夏日" Width="180" TextTrimming="CharacterEllipsis" Margin="10,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black"/>
         <Grid Grid.Row="1" Height="Auto">
             <ListView x:Name="DesktopListView" SelectionMode ="None" HorizontalAlignment="Center" Margin="0,8,0,0" ItemsSource="{x:Bind ToolViewModel.ToolDatas}">
                 <ListView.Header>
@@ -32,9 +32,9 @@
                         
                         <Grid>
                             <controls:DropShadowPanel BlurRadius="18"
-                                                  ShadowOpacity="0.2"
+                                                  ShadowOpacity="0.1"
                                                   OffsetX="2"
-                                                  OffsetY="2"
+                                                  OffsetY="3"
                                                   Color="Black"
                                                   Margin="7"
                                                   IsMasked="True">

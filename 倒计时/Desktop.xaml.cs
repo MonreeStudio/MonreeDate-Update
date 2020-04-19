@@ -40,6 +40,7 @@ namespace 倒计时
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
         public static Desktop Current;
+        private string color;
         List<string> list;
         public Desktop()
         {
@@ -52,6 +53,7 @@ namespace 倒计时
             list = new List<string>();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
+            
             SetThemeColor();
             InitialData();
         }
@@ -99,6 +101,30 @@ namespace 倒计时
         
         private void InitialData()
         {
+            if (localSettings.Values["Colorful"] != null && localSettings.Values["Colorful"].ToString() == "1")
+            {
+                ColorfulSwitch.IsOn = true;
+                ColorfulButton.IsEnabled = true;
+                if (localSettings.Values["ToolColor"] != null)
+                {
+                    color = localSettings.Values["ToolColor"].ToString();
+                    ColorfulEllipse.Fill = new SolidColorBrush(GetColor(color));
+                    ColorfulEllipse.Visibility = Visibility.Visible;
+                    ColorfulBcakgroundPicker.Color = GetColor(color);
+                }
+                else
+                {
+                    ColorfulEllipse.Visibility = Visibility.Collapsed;
+                }
+            }                      
+            if (localSettings.Values["CornerName"] == null)
+            {
+                CornerNameTextBox.Text = "夏日";
+            }
+            else
+            {
+                CornerNameTextBox.Text = localSettings.Values["CornerName"].ToString();
+            }
             int num = 0;
             List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
             foreach(var item in datalist0)
@@ -218,6 +244,62 @@ namespace 倒计时
             SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
         }
 
-        
+        private void EditCornerNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(EditCornerNameButton.Content.ToString() == "修改")
+            {
+                EditCornerNameButton.Content = "锁定";
+                CornerNameTextBox.IsReadOnly = false;
+            }
+            else
+            {
+                localSettings.Values["CornerName"] = CornerNameTextBox.Text.Trim();
+                EditCornerNameButton.Content = "修改";
+                CornerNameTextBox.IsReadOnly = true;
+            }
+        }
+
+        private async void ColorfulButton_Click(object sender, RoutedEventArgs e)
+        {
+            localSettings.Values["ToolColor"] = ColorfulBcakgroundPicker.Color.ToString();
+            await ColorfulDialog.ShowAsync();
+        }
+
+        private void ColorfulDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            color = ColorfulBcakgroundPicker.Color.ToString();
+            ColorfulEllipse.Fill = new SolidColorBrush(GetColor(color));
+            ColorfulEllipse.Visibility = Visibility.Visible;
+            localSettings.Values["ToolColor"] = color;
+        }
+
+        public Color GetColor(string hex)
+        {
+            hex = hex.Replace("#", string.Empty);
+            byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
+            byte r = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
+            byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
+            byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
+            return Color.FromArgb(a, r, g, b);
+        }
+
+        private void ColorfulSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ColorfulSwitch != null)
+            {
+                if (ColorfulSwitch.IsOn == true)
+                {
+                    localSettings.Values["Colorful"] = "1";
+                    ColorfulButton.IsEnabled = true;
+                    ColorfulEllipse.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    localSettings.Values["Colorful"] = "0";
+                    ColorfulButton.IsEnabled = false;
+                    ColorfulEllipse.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
     }
 }

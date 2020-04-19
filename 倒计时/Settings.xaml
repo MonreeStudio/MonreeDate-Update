@@ -434,6 +434,7 @@
                               OnContent="开"
                               OffContent="关"
                               Foreground="{x:Bind TC}"
+                                  Visibility="Collapsed"
                               Toggled="AutoStartSwitch_Toggled"/>
                     <Button x:Name="AutoStartTipButton"
                             Content="&#xE82F;"
@@ -463,9 +464,9 @@
                               ToolTipService.ToolTip="已选择日程不为空时有效"
                               Toggled="ToolAutoStartSwitch_Toggled"/>
                 <TextBlock x:Name="AppAutoStartTip"
-                           Visibility="Collapsed"
+                           Visibility="Visible"
                            TextDecorations="Underline"
-                           Text="点击查看如何设置应用开机自启动"
+                           Text="设置应用开机自启动"
                            extensions:Mouse.Cursor="Hand"
                            Foreground="{x:Bind TC}"
                            Margin="0,15,0,20"
@@ -568,6 +569,7 @@
                     <TextBlock Text="1、右击屏幕左下角的开始按钮，选择 运行；&#x0a;2、在 运行 内输入shell:startup，此时会打开一个文件夹窗口；&#x0a;3、打开开始菜单，在左侧的列表中找到夏日；&#x0a;4、将夏日拖拽到刚刚打开的文件夹窗口；" 
                                Foreground="DarkSlateGray"
                                Margin="10"/>
+                    
                 </StackPanel>
             </ContentDialog>
             <ContentDialog x:Name="CropperDialog"

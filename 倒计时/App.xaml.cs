@@ -31,6 +31,10 @@ using Windows.UI;
 using Microsoft.QueryStringDotNET;
 using BackgroundTasks;
 using Windows.UI.Popups;
+using Windows.ApplicationModel.Core;
+using 夏日.Models;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace 倒计时
 {
@@ -41,10 +45,12 @@ namespace 倒计时
     {
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public ObservableCollection<CustomData> CustomDatas = new ObservableCollection<CustomData>();
+        public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         private const string SelectedAppThemeKey = "SelectedAppTheme";
         public static CustomData AllItem;
         public static FestivalData FestivalItem;
-        
+        static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        static SQLite.Net.SQLiteConnection conn;
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -96,6 +102,10 @@ namespace 倒计时
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
             this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+            //建立数据库连接   
+            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+            //建表              
+            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
             RequestedTheme = ApplicationTheme.Light;
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
             {
@@ -104,32 +114,27 @@ namespace 倒计时
             this.FocusVisualKind = FocusVisualKind.Reveal;
         }
 
-        
-
         protected override void OnActivated(IActivatedEventArgs e)
         {
-            //判断是否为Toast所激活
+            Frame root = Window.Current.Content as Frame;
+            if (root == null)
+            {
+                root = new Frame();
+                Window.Current.Content = root;
+            }
             if (e.Kind == ActivationKind.ToastNotification)
             {
-                // 转换参数类型
-                ToastNotificationActivatedEventArgs toastargs = (ToastNotificationActivatedEventArgs)e;
-                // 获取页面引用
-                Frame root = Window.Current.Content as Frame;
-                if (root == null)
-                {
-                    root = new Frame();
-                    Window.Current.Content = root;
-                }
-                if (e.Kind == ActivationKind.StartupTask)
-                {
-                    var startupArgs = e as StartupTaskActivatedEventArgs;
-                }
-                if (root.Content == null)
-                {
-                    root.Navigate(typeof(MainPage),e.Kind);
-                }
+                var toastargs =  e as ToastNotificationActivatedEventArgs;
+                root.Navigate(typeof(MainPage));
+                Window.Current.Activate();
             }
-            Window.Current.Activate();
+            if (e.Kind == ActivationKind.StartupTask)
+            {
+                var startupArgs = e as StartupTaskActivatedEventArgs;
+                root.Navigate(typeof(MainPage));
+                Window.Current.Activate();
+                
+            }
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -137,7 +142,79 @@ namespace 倒计时
             e.Handled = true;
         }
 
-        static public string Term(DateTime b, DateTime e)
+        private void ToolAutoStart()
+        {
+            if (localSettings.Values["ReStart"] != null && localSettings.Values["ReStart"].ToString() == "1")
+            {
+                CreateTool();
+                localSettings.Values["ReStart"] = "0";
+                return;
+            }
+            if (localSettings.Values["ToolAutoStart"] != null && localSettings.Values["ToolAutoStart"].ToString() == "1")
+                CreateTool();
+        }
+
+        public async void CreateTool()
+        {
+            var num = CoreApplication.Views.Count();
+            //if (localSettings.Values["newViewId"] != null)
+            //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();
+            if (localSettings.Values["ItemCount"] == null)
+                localSettings.Values["ItemCount"] = 0;
+            int count = (int)localSettings.Values["ItemCount"];
+            List<DataTemple> datalist = new List<DataTemple>();
+            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            switch (count)
+            {
+                case 1:
+                    string a1 = localSettings.Values["DesktopKey0"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == a1)
+                            datalist.Add(item);
+                    }
+                    break;
+                case 2:
+                    string b1 = localSettings.Values["DesktopKey0"].ToString();
+                    string b2 = localSettings.Values["DesktopKey1"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
+                            datalist.Add(item);
+                    }
+                    break;
+                case 3:
+                    string c1 = localSettings.Values["DesktopKey0"].ToString();
+                    string c2 = localSettings.Values["DesktopKey1"].ToString();
+                    string c3 = localSettings.Values["DesktopKey2"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
+                            datalist.Add(item);
+                    }
+                    break;
+                default:
+                    return;
+            }
+            //var num = CoreApplication.Views.Count();
+            //coreWindow.Activate();
+            //CoreApplication.GetCurrentView();
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(DesktopTool), datalist, new SuppressNavigationTransitionInfo());
+                Window.Current.Content = frame;
+                Window.Current.Activate();
+                newViewId = ApplicationView.GetForCurrentView().Id;
+                localSettings.Values["newViewId"] = newViewId;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            localSettings.Values["DesktopPin"] = false;
+        }
+
+        public static string Term(DateTime b, DateTime e)
         {
             if (b < e)
             {

@@ -208,6 +208,7 @@ namespace 倒计时
             MyEllipse.Fill = new SolidColorBrush(GetColor(_Color));
             _TintOpacity = MySlider.Value/100;
         }
+
         public Color GetColor(string hex)
         {
             hex = hex.Replace("#", string.Empty);

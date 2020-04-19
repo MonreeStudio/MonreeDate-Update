@@ -47,6 +47,7 @@ namespace 倒计时
         public IntroPageViewModel ViewModel = new IntroPageViewModel();
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
+        private int viewHeight;
 
         public MainPage()
         {
@@ -73,11 +74,59 @@ namespace 倒计时
             MyNav.IsBackEnabled = false;
             SelectedPageItem = "";
             localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
-            ToolAutoStart();
+            localSettings.Values["hasBeenOpened"] = "0";
+        }
+
+        private void GetViewHeight()
+        {
+            int count = (int)localSettings.Values["ItemCount"];
+            List<DataTemple> datalist = new List<DataTemple>();
+            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            switch (count)
+            {
+                case 1:
+                    viewHeight = 110;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
+                    string a1 = localSettings.Values["DesktopKey0"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == a1)
+                            datalist.Add(item);
+                    }
+                    break;
+                case 2:
+                    viewHeight = 230;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
+                    string b1 = localSettings.Values["DesktopKey0"].ToString();
+                    string b2 = localSettings.Values["DesktopKey1"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
+                            datalist.Add(item);
+                    }
+                    break;
+                case 3:
+                    viewHeight = 315;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
+                    string c1 = localSettings.Values["DesktopKey0"].ToString();
+                    string c2 = localSettings.Values["DesktopKey1"].ToString();
+                    string c3 = localSettings.Values["DesktopKey2"].ToString();
+                    foreach (var item in allData)
+                    {
+                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
+                            datalist.Add(item);
+                    }
+                    break;
+                default:
+                    viewHeight = 110;
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
+                    break;
+            }
         }
 
         private void ToolAutoStart()
         {
+            localSettings.Values["hasBeenOpened"] = "1";
             if (localSettings.Values["ReStart"] != null && localSettings.Values["ReStart"].ToString() == "1")
             {
                 CreateTool();
@@ -90,6 +139,8 @@ namespace 倒计时
 
         public async void CreateTool()
         {
+            //GetViewHeight();
+            localSettings.Values["Pip"] = "1";
             var num = CoreApplication.Views.Count();
             //if (localSettings.Values["newViewId"] != null)
             //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();
@@ -262,7 +313,7 @@ namespace 倒计时
 
         private void MyNav_Loaded(object sender, RoutedEventArgs e)
         {
-
+            //ToolAutoStart();
             // Add handler for ContentFrame navigation.
             ContentFrame.Navigated += On_Navigated;
 
@@ -386,14 +437,20 @@ namespace 倒计时
                 }
             }
         }
+
+
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
-            //localSettings.Values["2.2.6.0"] = null;
-            //localSettings.Values["FirstlyOpen"] = null;
-            if (localSettings.Values["2.2.8.0"] == null)
-            { 
-                await MyCD.ShowAsync();
-                localSettings.Values["2.2.8.0"] = "false";
+            if (localSettings.Values["hasBeenOpened"] == null)
+                localSettings.Values["hasBeenOpened"] = "0";
+            if (localSettings.Values["hasBeenOpened"].ToString() == "0")
+                ToolAutoStart();
+            await MyCD.ShowAsync();
+            localSettings.Values["2.2.9.0"] = null;
+            if (localSettings.Values["2.2.9.0"] == null)
+            {
+
+                localSettings.Values["2.2.9.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 

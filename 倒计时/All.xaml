@@ -358,8 +358,8 @@
     </Page.Resources>
 
     <Grid>
-    <ScrollViewer x:Name="AllScrollViewer" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <ScrollViewer x:Name="AllScrollViewer" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                 <RelativePanel x:FieldModifier="Public">
                     <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
                     <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
@@ -382,7 +382,7 @@
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
-                        
+
                         <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="天数模式" Foreground="{x:Bind TC}">
                             <AppBarButton.Icon>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
@@ -463,19 +463,19 @@
                     <ProgressRing x:Name="AllProgressRing" IsActive="False"/>
                     <GridView SelectionMode="None" Margin="20,0,0,0" x:Name="MyGridView" x:FieldModifier="public" ItemsSource="{x:Bind ViewModel.CustomDatas}" RightTapped="MyGirdView_RightTapped" ItemClick="MyGirdView_ItemClick" SelectionChanged="MyGirdView_SelectionChanged" IsItemClickEnabled="True" Loaded="MyGridView_Loaded" animations:ReorderGridAnimation.Duration="650">
                         <GridView.ContextFlyout>
-                        <MenuFlyout x:Name="MyMenuFlyout">
-                            <MenuFlyoutItem x:Name="SetTop" Icon="Upload" Text="置顶" Foreground="{x:Bind TC}" Visibility="Visible" Click="SetTop_Click"/>
-                            <MenuFlyoutItem x:Name="Cancel" Icon="Redo" Text="取消置顶" Foreground="{x:Bind TC}" Visibility="Collapsed" Click="Cancel_Click"/>
-                            <MenuFlyoutSeparator x:Name="FS" Background="{x:Bind TC}"/>
-                            <MenuFlyoutItem x:Name="MyFlyout" Icon="Delete" Foreground="{x:Bind TC}" Text="删除日程" Click="MenuFlyoutItem_Click" IsEnabled="False"/>
-                            <MenuFlyoutSeparator x:Name="FS2" Background="{x:Bind TC}"/>
-                            <MenuFlyoutItem x:Name="PinToSC" Icon="Pin" Foreground="{x:Bind TC}" Text="固定日程到开始菜单" Visibility="Visible" Click="PinToSC_Click"/>
-                            <MenuFlyoutItem x:Name="unPinToSC" Icon="Unpin" Foreground="{x:Bind TC}" Text="从开始菜单中取消固定" Visibility="Collapsed" Click="unPinToSC_Click"/>
-                            <MenuFlyoutItem x:Name="MainTile" Icon="Accept" Foreground="{x:Bind TC}" Text="该日程已被自动设为主磁贴&#x0a;将应用固定到开始菜单后自动启用" IsEnabled="False" Visibility="Collapsed"/>
-                        </MenuFlyout>
-                    </GridView.ContextFlyout>
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="local:CustomData" x:Name="gw">
+                            <MenuFlyout x:Name="MyMenuFlyout">
+                                <MenuFlyoutItem x:Name="SetTop" Icon="Upload" Text="置顶" Foreground="{x:Bind TC}" Visibility="Visible" Click="SetTop_Click"/>
+                                <MenuFlyoutItem x:Name="Cancel" Icon="Redo" Text="取消置顶" Foreground="{x:Bind TC}" Visibility="Collapsed" Click="Cancel_Click"/>
+                                <MenuFlyoutSeparator x:Name="FS" Background="{x:Bind TC}"/>
+                                <MenuFlyoutItem x:Name="MyFlyout" Icon="Delete" Foreground="{x:Bind TC}" Text="删除日程" Click="MenuFlyoutItem_Click" IsEnabled="False"/>
+                                <MenuFlyoutSeparator x:Name="FS2" Background="{x:Bind TC}"/>
+                                <MenuFlyoutItem x:Name="PinToSC" Icon="Pin" Foreground="{x:Bind TC}" Text="固定日程到开始菜单" Visibility="Visible" Click="PinToSC_Click"/>
+                                <MenuFlyoutItem x:Name="unPinToSC" Icon="Unpin" Foreground="{x:Bind TC}" Text="从开始菜单中取消固定" Visibility="Collapsed" Click="unPinToSC_Click"/>
+                                <MenuFlyoutItem x:Name="MainTile" Icon="Accept" Foreground="{x:Bind TC}" Text="该日程已被自动设为主磁贴&#x0a;将应用固定到开始菜单后自动启用" IsEnabled="False" Visibility="Collapsed"/>
+                            </MenuFlyout>
+                        </GridView.ContextFlyout>
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="local:CustomData" x:Name="gw">
                                 <StackPanel x:Name="GridViewStackPanel" PointerEntered="GridViewStackPanel_PointerEntered" PointerExited="GridViewStackPanel_PointerExited" CornerRadius="15" Background="{x:Bind Str4}" Height="250" Width="225">
                                     <StackPanel.ChildrenTransitions>
                                         <TransitionCollection>
@@ -485,10 +485,10 @@
                                     <TextBlock TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Text="{x:Bind Str1}"  Margin="0,20,0,0" FontSize="20" Foreground="White"/>
                                     <TextBlock HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" Text="{x:Bind Str2}" FontWeight="Bold"  TextTrimming="CharacterEllipsis" FontSize="25" Foreground="White"/>
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Bind Str3}" FontSize="20" Margin="0,70,0,0" Foreground="White"/>
-                            </StackPanel>
-                        </DataTemplate>
+                                </StackPanel>
+                            </DataTemplate>
 
-                    </GridView.ItemTemplate>
+                        </GridView.ItemTemplate>
 
                         <animations:Implicit.ShowAnimations>
                             <animations:TranslationAnimation Duration="0:0:1" From="0, -200, 0" To="0" ></animations:TranslationAnimation>
@@ -512,18 +512,8 @@
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
             </StackPanel>
-    </ScrollViewer>
-        <controls:DropShadowPanel BlurRadius="55"
-                                  x:Name="AllThumbShadow"
-                                  ShadowOpacity="0"
-                                  OffsetX="10"
-                                  OffsetY="10"
-                                  Color="Gray"
-                                  Margin="50,50,50,80"
-                                  VerticalAlignment="Bottom"
-                                  HorizontalAlignment="Right"
-                                  IsMasked="True">
-            <Thumb Grid.Row="0" Visibility="Collapsed" ToolTipService.ToolTip="返回顶部" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped">
+        </ScrollViewer>
+        <Thumb Margin="50,50,50,80"  Grid.Row="0" Visibility="Collapsed" ToolTipService.ToolTip="返回顶部" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped">
                 <animations:Implicit.ShowAnimations>
                     <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
                     <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
@@ -535,7 +525,6 @@
                     </animations:ScalarAnimation>
                 </animations:Implicit.HideAnimations>
             </Thumb>
-        </controls:DropShadowPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

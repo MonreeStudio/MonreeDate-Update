@@ -68,7 +68,7 @@
             <uap:DataFormat>Bitmap</uap:DataFormat>
           </uap:ShareTarget>
         </uap:Extension>
-        <uap5:Extension Category="windows.startupTask" EntryPoint="AppAutoRun.App" Executable="AppAutoRun.exe">
+        <uap5:Extension Category="windows.startupTask" EntryPoint="倒计时.App" Executable="夏日.exe">
           <uap5:StartupTask DisplayName="夏日" Enabled="true" TaskId="AppAutoRun"/>
         </uap5:Extension>
       </Extensions>
