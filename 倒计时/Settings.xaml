@@ -419,6 +419,14 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPersonPicture_Toggled"/>
+                <ToggleSwitch x:Name="LunarSwitch"
+                              Header="日程详情页显示农历"
+                              Margin="0,5,0,0"
+                              HorizontalAlignment="Left"
+                              OnContent="开"
+                              OffContent="关"
+                              Foreground="{x:Bind TC}"
+                              Toggled="LunarSwitch_Toggled"/>
                 <ToggleSwitch x:Name="TileTip"
                               Header="磁贴显示日程备注"
                               Margin="0,5,0,0"

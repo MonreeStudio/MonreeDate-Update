@@ -135,6 +135,7 @@ namespace 倒计时
                 DetailsPickedDate.Text = App.AllItem.Str3;
                 DetailsEvent.Text = App.AllItem.Str1;
                 DetailsDate.Text = App.AllItem.Str2;
+                LunarDate.Text = LunarCalendar.GetChineseDateTime(Convert.ToDateTime(App.AllItem.Str3));
                 DetailsGrid.Background = App.AllItem.Str4;
                 DetailsDate.Foreground = new SolidColorBrush(App.AllItem.BackGroundColor);
                 if (localSettings.Values[App.AllItem.Str1 + App.AllItem.Str3] != null)
@@ -146,10 +147,20 @@ namespace 倒计时
                 DetailsEvent.Text = App.FestivalItem.Str1;
                 DetailsDate.Text = App.FestivalItem.Str2;
                 DetailsPickedDate.Text = App.FestivalItem.Str3;
+                LunarDate.Text = LunarCalendar.GetChineseDateTime(Convert.ToDateTime(App.FestivalItem.Str3));
                 DetailsGrid.Background = ColorfulBrush(App.FestivalItem.Str4);
                 DetailsDate.Foreground = new SolidColorBrush(App.FestivalItem.Str4);
                 TipText.Text = "节日";
             }
+            if (localSettings.Values["Lunar"] != null)
+            {
+                if (localSettings.Values["Lunar"].ToString() == "1")
+                    LunarDate.Visibility = Visibility.Visible;
+                else
+                    LunarDate.Visibility = Visibility.Collapsed;
+            }
+            else
+                LunarDate.Visibility = Visibility.Collapsed;
             dEvent.Text = DetailsEvent.Text;
             dCalDate.Text = DetailsDate.Text;
             dDate.Text = DetailsPickedDate.Text;
@@ -485,8 +496,9 @@ namespace 倒计时
                     AlertToggleSwitch4.IsOn = false;
                     DayComboBox.IsEnabled = false;
                 }
-                    
             }
+            else
+                DayComboBox.IsEnabled = false;
             await AlertContentDialog.ShowAsync();
         }
 

@@ -281,6 +281,15 @@ namespace 倒计时
             }
             else
                 TileTip.IsOn = false;
+            if (localSettings.Values["Lunar"] != null)
+            {
+                if (localSettings.Values["Lunar"].ToString() == "1")
+                    LunarSwitch.IsOn = true;
+                else
+                    LunarSwitch.IsOn = false;
+            }
+            else
+                LunarSwitch.IsOn = true;
             //if(localSettings.Values["AutoStart"] != null)
             //{
             //    if (localSettings.Values["AutoStart"].ToString() == "1")
@@ -829,6 +838,24 @@ namespace 倒计时
                 } 
             }
             await LoadState();
+        }
+
+        private void LunarSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (LunarSwitch != null)
+            {
+                if (LunarSwitch.IsOn == true)
+                {
+                    localSettings.Values["Lunar"] = "1";
+
+                }
+                else
+                {
+                    localSettings.Values["Lunar"] = "0";
+                }
+                All.Current.LoadSettings();
+                All.Current.LoadTile();
+            }
         }
     }
 }

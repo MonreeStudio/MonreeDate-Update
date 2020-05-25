@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:倒计时.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
@@ -366,7 +366,55 @@
                             CornerRadius="8"
                             PlaceholderText="选择一个日期"
                             DateChanged="Add_Picker_DateChanged"
-                            />
+                            >
+                    <CalendarDatePicker.CalendarViewStyle>
+                        <Style TargetType="CalendarView" BasedOn="{StaticResource CalendarViewRevealStyle}">
+                            <Setter Property="CalendarViewDayItemStyle">
+                                <Setter.Value>
+                                    <Style TargetType="CalendarViewDayItem">
+                                        <Setter Property="Padding" Value="0, 0, 0, 18" />
+                                        <Setter Property="MinWidth" Value="44" />
+                                        <Setter Property="MinHeight" Value="48" />
+                                        <Setter Property="Margin" Value="1" />
+                                        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+                                        <Setter Property="FocusVisualMargin" Value="-2" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="CalendarViewDayItem">
+                                                    <!-- For CalendarViewDayItem, TextBlock visual is created and handled by code and we can't see it from the style. -->
+                                                    <!-- CCalendarViewBaseItemChrome creates and appends a TextBlock in the visual after the ControlTemplate is applied -->
+                                                    <!-- VSM needs a container and that's why Grid is added. But we don't need the rendering of Grid so We set width to 0 -->
+                                                    <Grid x:Name="Root">
+
+                                                        <VisualStateManager.VisualStateGroups>
+                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                <VisualState x:Name="Normal" />
+
+                                                                <VisualState x:Name="PointerOver">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Target="Root.(RevealBrush.State)" Value="PointerOver" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+
+                                                                <VisualState x:Name="Pressed">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Target="Root.(RevealBrush.State)" Value="Pressed" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+                                                            </VisualStateGroup>
+
+                                                        </VisualStateManager.VisualStateGroups>
+                                                        <control:CalendarViewDayLunarItem Date="{TemplateBinding Date}" Foreground="DarkGray" Margin="0,0,0,-14" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </CalendarDatePicker.CalendarViewStyle>
+                </CalendarDatePicker>
                 <TextBlock Text="或" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 <Button x:Name="DateChooseBtn" Content="&#x1F4A1;" Height="35" Width="35" ToolTipService.ToolTip="试一试选择多少天后的日子" Foreground="Orange" FontSize="18" FontFamily="Segoe UI Emoji" BorderThickness="0" Background="Transparent" Margin="2,10,20,10" CornerRadius="100" Click="DateChooseBtn_Click"/>
                 <StackPanel Grid.Row="2" Grid.Column="1" Margin="20" Orientation="Horizontal">

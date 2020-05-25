@@ -445,10 +445,10 @@ namespace 倒计时
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["2.2.9.0"] == null)
+            if (localSettings.Values["2.2.10.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["2.2.9.0"] = "false";
+                localSettings.Values["2.2.10.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
