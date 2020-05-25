@@ -127,8 +127,6 @@ namespace 倒计时
         }
         private void LoadData()
         {
-            
-                
             sp = MainPage.Current.SelectedPage;
             if (sp == true)
             {

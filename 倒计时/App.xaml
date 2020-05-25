@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <viewModels:ViewModelLocator x:Name="Locator" />
-            <Color x:Key="SystemAccentColor">#F9FAFE</Color>
+            <Color x:Key="NavigationViewBackgroundColor">#F9FAFE</Color>
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush" BackgroundSource="HostBackdrop"
         TintOpacity="0.6" TintColor="CornflowerBlue" FallbackColor="CornflowerBlue"/>
             <AcrylicBrush x:Key="CustomAcrylicInAppBrush" BackgroundSource="HostBackdrop"

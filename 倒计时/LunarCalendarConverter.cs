@@ -364,21 +364,26 @@ namespace 倒计时
         /// <returns></returns>
         public static string GetDayOrTermString(DateTimeOffset date)
         {
-            var year = calendar.GetYear(date.LocalDateTime);
-            var month = calendar.GetMonth(date.LocalDateTime);
-            var day = calendar.GetDayOfMonth(date.LocalDateTime);
-            if (LunarFestivals.TryGetValue((month, day), out var festival))
+            try
             {
-                return festival;
+                var year = calendar.GetYear(date.LocalDateTime);
+                var month = calendar.GetMonth(date.LocalDateTime);
+                var day = calendar.GetDayOfMonth(date.LocalDateTime);
+                if (LunarFestivals.TryGetValue((month, day), out var festival))
+                {
+                    return festival;
+                }
+
+                var term = GetTerm(date.Year, date.Month, date.Day);
+                if (!string.IsNullOrEmpty(term))
+                    return term;
+
+                var leapMonth = calendar.GetLeapMonth(year);
+
+                return GetLunarDateString(month, day, leapMonth);
             }
-
-            var term = GetTerm(date.Year, date.Month, date.Day);
-            if (!string.IsNullOrEmpty(term))
-                return term;
-
-            var leapMonth = calendar.GetLeapMonth(year);
-
-            return GetLunarDateString(month, day, leapMonth);
+            catch { };
+            return "超出最大可计算范围";
         }
     }
 }

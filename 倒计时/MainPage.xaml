@@ -14,11 +14,11 @@
 
     <Page.Resources>
         <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
-                  BackgroundSource="Backdrop" TintColor="{ThemeResource SystemAccentColor}" FallbackColor="{ThemeResource SystemAccentColor}" TintOpacity="0.5"/>
+                  BackgroundSource="Backdrop" TintColor="{ThemeResource NavigationViewBackgroundColor}" FallbackColor="{ThemeResource NavigationViewBackgroundColor}" TintOpacity="0.5"/>
         <AcrylicBrush x:Key="NavigationViewTopPaneBackground"
-                  BackgroundSource="Backdrop" TintColor="{ThemeResource SystemAccentColor}" FallbackColor="{ThemeResource SystemAccentColor}" TintOpacity="0.5"/>
+                  BackgroundSource="Backdrop" TintColor="{ThemeResource NavigationViewBackgroundColor}" FallbackColor="{ThemeResource NavigationViewBackgroundColor}" TintOpacity="0.5"/>
         <AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
-                  BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemAccentColor}" FallbackColor="{ThemeResource SystemAccentColor}" TintOpacity="0.7"/>
+                  BackgroundSource="HostBackdrop" TintColor="{ThemeResource NavigationViewBackgroundColor}" FallbackColor="{ThemeResource NavigationViewBackgroundColor}" TintOpacity="0.7"/>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
         <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor"/>

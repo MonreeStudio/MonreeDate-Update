@@ -26,6 +26,7 @@ namespace 倒计时
     public sealed partial class Calculator : Page
     {
         public static Calculator Current;
+        public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public Calculator()
         {
@@ -34,6 +35,12 @@ namespace 倒计时
             SetThemeColor();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
+            InitCalendarView();
+        }
+
+        private void InitCalendarView()
+        {
+            TermTextBlock.Text = "阳历：\n" + DateTime.Now.ToString("yyyy-MM-dd") + "\n\n阴历：\n" + LunarCalendar.GetChineseDateTime(DateTime.Now);
         }
 
         private void SetThemeColor()
@@ -159,6 +166,21 @@ namespace 倒计时
                 MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
                 await AboutDialog.ShowAsync();
             }
+
+        }
+
+        private void TermCalendarView_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+        {
+            try
+            {
+                var dateOffset = TermCalendarView.SelectedDates[0];
+                var date = dateOffset.ToString("yyyy-MM-dd");
+                TermTextBlock.Text = "阳历：\n" + date + "\n\n阴历：\n" + LunarCalendar.GetChineseDateTime(Convert.ToDateTime(date));
+            }
+            catch { }
+            
+            //var date = Convert.ToDateTime(dateOffset);
+            //
 
         }
     }

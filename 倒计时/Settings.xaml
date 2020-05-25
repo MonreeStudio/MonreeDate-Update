@@ -420,7 +420,7 @@
                       Foreground="{x:Bind TC}"
                       Toggled="AllPersonPicture_Toggled"/>
                 <ToggleSwitch x:Name="LunarSwitch"
-                              Header="日程详情页显示农历"
+                              Header="日程详情页显示阴历"
                               Margin="0,5,0,0"
                               HorizontalAlignment="Left"
                               OnContent="开"
@@ -546,6 +546,7 @@
                         <TextBlock  Foreground="DarkSlateGray" Text="开发者邮箱：monreestudio@outlook.com" Margin="10" />
                         <HyperlinkButton Content="Github开源项目" 
                                  Margin="10"
+                                         Visibility="Collapsed"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
                     </StackPanel>
                 </ScrollViewer>
