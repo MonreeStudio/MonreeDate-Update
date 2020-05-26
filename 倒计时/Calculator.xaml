@@ -114,8 +114,104 @@
                                        Foreground="Black"
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
-                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True"/>
-                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True"/>
+                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True">
+                            <CalendarDatePicker.CalendarViewStyle>
+                                <Style TargetType="CalendarView" BasedOn="{StaticResource CalendarViewRevealStyle}">
+                                    <Setter Property="CalendarViewDayItemStyle">
+                                        <Setter.Value>
+                                            <Style TargetType="CalendarViewDayItem">
+                                                <Setter Property="Padding" Value="0, 0, 0, 18" />
+                                                <Setter Property="MinWidth" Value="44" />
+                                                <Setter Property="MinHeight" Value="48" />
+                                                <Setter Property="Margin" Value="1" />
+                                                <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+                                                <Setter Property="FocusVisualMargin" Value="-2" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="CalendarViewDayItem">
+                                                            <!-- For CalendarViewDayItem, TextBlock visual is created and handled by code and we can't see it from the style. -->
+                                                            <!-- CCalendarViewBaseItemChrome creates and appends a TextBlock in the visual after the ControlTemplate is applied -->
+                                                            <!-- VSM needs a container and that's why Grid is added. But we don't need the rendering of Grid so We set width to 0 -->
+                                                            <Grid x:Name="Root">
+
+                                                                <VisualStateManager.VisualStateGroups>
+                                                                    <VisualStateGroup x:Name="CommonStates">
+                                                                        <VisualState x:Name="Normal" />
+
+                                                                        <VisualState x:Name="PointerOver">
+                                                                            <VisualState.Setters>
+                                                                                <Setter Target="Root.(RevealBrush.State)" Value="PointerOver" />
+                                                                            </VisualState.Setters>
+                                                                        </VisualState>
+
+                                                                        <VisualState x:Name="Pressed">
+                                                                            <VisualState.Setters>
+                                                                                <Setter Target="Root.(RevealBrush.State)" Value="Pressed" />
+                                                                            </VisualState.Setters>
+                                                                        </VisualState>
+                                                                    </VisualStateGroup>
+
+                                                                </VisualStateManager.VisualStateGroups>
+                                                                <control:CalendarViewDayLunarItem Date="{TemplateBinding Date}" Foreground="DarkGray" Margin="0,0,0,-14" />
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </CalendarDatePicker.CalendarViewStyle>
+                        </CalendarDatePicker>
+                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True">
+                            <CalendarDatePicker.CalendarViewStyle>
+                                <Style TargetType="CalendarView" BasedOn="{StaticResource CalendarViewRevealStyle}">
+                                    <Setter Property="CalendarViewDayItemStyle">
+                                        <Setter.Value>
+                                            <Style TargetType="CalendarViewDayItem">
+                                                <Setter Property="Padding" Value="0, 0, 0, 18" />
+                                                <Setter Property="MinWidth" Value="44" />
+                                                <Setter Property="MinHeight" Value="48" />
+                                                <Setter Property="Margin" Value="1" />
+                                                <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+                                                <Setter Property="FocusVisualMargin" Value="-2" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="CalendarViewDayItem">
+                                                            <!-- For CalendarViewDayItem, TextBlock visual is created and handled by code and we can't see it from the style. -->
+                                                            <!-- CCalendarViewBaseItemChrome creates and appends a TextBlock in the visual after the ControlTemplate is applied -->
+                                                            <!-- VSM needs a container and that's why Grid is added. But we don't need the rendering of Grid so We set width to 0 -->
+                                                            <Grid x:Name="Root">
+
+                                                                <VisualStateManager.VisualStateGroups>
+                                                                    <VisualStateGroup x:Name="CommonStates">
+                                                                        <VisualState x:Name="Normal" />
+
+                                                                        <VisualState x:Name="PointerOver">
+                                                                            <VisualState.Setters>
+                                                                                <Setter Target="Root.(RevealBrush.State)" Value="PointerOver" />
+                                                                            </VisualState.Setters>
+                                                                        </VisualState>
+
+                                                                        <VisualState x:Name="Pressed">
+                                                                            <VisualState.Setters>
+                                                                                <Setter Target="Root.(RevealBrush.State)" Value="Pressed" />
+                                                                            </VisualState.Setters>
+                                                                        </VisualState>
+                                                                    </VisualStateGroup>
+
+                                                                </VisualStateManager.VisualStateGroups>
+                                                                <control:CalendarViewDayLunarItem Date="{TemplateBinding Date}" Foreground="DarkGray" Margin="0,0,0,-14" />
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </CalendarDatePicker.CalendarViewStyle>
+                        </CalendarDatePicker>
                     </Grid>
                 </controls:DropShadowPanel>
                 <controls:DropShadowPanel BlurRadius="15"
