@@ -82,7 +82,7 @@
                                   Margin="10,50,10,0"
                                   IsMasked="True"
                                   >
-                    <Grid x:Name="DistanceGrid" CornerRadius="10" Padding="20" Width="450" Height="400" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+                    <Grid x:Name="DistanceGrid" CornerRadius="10" Padding="20" Width="450" Height="450" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -110,6 +110,7 @@
                                     BorderThickness="2"
                                     Click="Button_Click"/>
                             <TextBlock x:Name="SpanTime"
+                                       Margin="20"
                                        FontSize="20"
                                        Foreground="Black"
                                        HorizontalAlignment="Center"/>
@@ -240,7 +241,7 @@
                                                       IsMasked="True">
                                 <CalendarView x:Name="TermCalendarView" CornerRadius="8" Width="Auto" BorderThickness="1" Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True" SelectedDatesChanged="TermCalendarView_SelectedDatesChanged"/>
                             </controls:DropShadowPanel>
-                            <TextBlock x:Name="TermTextBlock" TextWrapping="WrapWholeWords" Width="200" Foreground="Black" FontSize="20" Text="阳历：阴历：" Margin="0,20,0,0"/>
+                            <TextBlock x:Name="TermTextBlock" TextWrapping="WrapWholeWords" Width="200" Foreground="Black" FontSize="20" Text="阳历：阴历：" Margin="0,20,0,0" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Grid>
                 </controls:DropShadowPanel>

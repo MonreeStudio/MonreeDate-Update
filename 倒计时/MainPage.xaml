@@ -364,7 +364,7 @@
 
         <ContentDialog x:Name="MyCD" 
                        CornerRadius="10"
-                       Title="新功能！"
+                       Title="欢迎使用新版本的夏日~"
                        PrimaryButtonText="确定"
                        SecondaryButtonText="好评鼓励！"
                        SecondaryButtonClick="MyCD_SecondaryButtonClick"
@@ -373,11 +373,11 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="1、新增 日期选择增加阴历显示；&#x0a;2、新增 日程详情页增加阴历显示；（可在设置中关闭）&#x0a;3、新增 计算页面增加阴历转换工具;&#x0a;4、优化 调整了计算页面的布局；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="1、修复 解决了闰月造成的传统节日显示错误的问题；&#x0a;2、修复 解决了一些界面显示的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="往期版本：2.3.0.0&#x0a;1、新增 日期选择增加阴历显示；&#x0a;2、新增 日程详情页增加阴历显示；（可在设置中关闭）&#x0a;3、新增 计算页面增加阴历转换工具;&#x0a;4、优化 调整了计算页面的布局；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
                     <TextBlock Text="往期版本：2.2.10.0&#x0a;1、修复 解决了一些问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" />
                     <TextBlock Text="往期版本：2.2.9.0&#x0a;1、新增 自定义桌面小工具背景颜色；&#x0a;2、新增 自定义桌面小工具左上角标题；&#x0a;3、新增 自定义日程提醒时间（提前n天提醒）；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.2.8.0&#x0a;1、新增 磁贴显示日程备注；&#x0a;（可在设置页面中打开或关闭。）&#x0a;2、优化 桌面显示工具背景添加了亚克力模糊效果；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="开发者的话：&#x0a;欢迎大家使用最新版本！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！" TextWrapping="WrapWholeWords" Margin="10"/>
+                    <TextBlock Text="&#x0a;感谢大家选择了夏日！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！&#x0a;&#x0a;——Bill夏昕" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
                 </StackPanel>
             </ScrollViewer>
         </ContentDialog>

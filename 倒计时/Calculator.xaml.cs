@@ -110,15 +110,35 @@ namespace 倒计时
                 week = days / 7;
                 week_date = days % 7;
                 if (week_date == 0)
-                    SpanTime.Text = "相差" + days.ToString() + "天\n"
-                                   + "相差" +t 
-                                    + "\n相差" + week.ToString() + "周";
+                {
+                    if ((days.ToString() + "天") == t)
+                    {
+                        if (week > 0)
+                            SpanTime.Text = "相差" + days.ToString() + "天"
+                                            + "\n相差" + week.ToString() + "周";
+                        else
+                            SpanTime.Text = "相差" + days.ToString() + "天";
+                    }
+                    else
+                    {
+                        if (week > 0)
+                            SpanTime.Text = "相差" + days.ToString() + "天\n"
+                                            + "相差" + t
+                                            + "\n相差" + week.ToString() + "周";
+                        else
+                            SpanTime.Text = "相差" + days.ToString() + "天";
+                    }
+                }
+                    
                 else
                 {
                     if ((days.ToString() + "天") == t)
                     {
-                        SpanTime.Text = "相差" + t 
+                        if(week > 0)
+                            SpanTime.Text = "相差" + t
                                           + "\n相差" + week.ToString() + "周" + week_date.ToString() + "天";
+                        else
+                            SpanTime.Text = "相差" + t;
                     }
                     else
                     {
@@ -130,7 +150,7 @@ namespace 倒计时
             } 
             catch
             {
-                SpanTime.Text = "你输错了！";
+                SpanTime.Text = "没有选好日期哦！";
             }
             finally
             {

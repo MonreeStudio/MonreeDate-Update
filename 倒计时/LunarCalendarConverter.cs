@@ -369,16 +369,30 @@ namespace 倒计时
                 var year = calendar.GetYear(date.LocalDateTime);
                 var month = calendar.GetMonth(date.LocalDateTime);
                 var day = calendar.GetDayOfMonth(date.LocalDateTime);
-                if (LunarFestivals.TryGetValue((month, day), out var festival))
+                var leapMonth = calendar.GetLeapMonth(year);
+                int tempMonth = month;
+                if(leapMonth > 0)
+                {
+                    if (month >= leapMonth)
+                    {
+                        tempMonth--;
+                    }
+                }
+                if (LunarFestivals.TryGetValue((tempMonth, day), out var festival))
                 {
                     return festival;
                 }
+                
+                //if (LunarFestivals.TryGetValue((month, day), out var festival))
+                //{
+                //    return festival;
+                //}
 
                 var term = GetTerm(date.Year, date.Month, date.Day);
                 if (!string.IsNullOrEmpty(term))
                     return term;
 
-                var leapMonth = calendar.GetLeapMonth(year);
+                
 
                 return GetLunarDateString(month, day, leapMonth);
             }

@@ -158,7 +158,7 @@ namespace 倒计时
                     LunarDate.Visibility = Visibility.Collapsed;
             }
             else
-                LunarDate.Visibility = Visibility.Collapsed;
+                LunarDate.Visibility = Visibility.Visible;
             dEvent.Text = DetailsEvent.Text;
             dCalDate.Text = DetailsDate.Text;
             dDate.Text = DetailsPickedDate.Text;
