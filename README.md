@@ -15,7 +15,7 @@
 
 # Monree Date  
 ## 安装方式        
-2.2.10正式版已上架Microsoft Store，请直接搜索安装。  
+2.3.1正式版已上架Microsoft Store，请直接搜索安装。  
 [微软应用商店传送门](https://www.microsoft.com/store/productId/9PKBWKPCCFJ8)      
     
 ## 其他介绍：  
@@ -23,23 +23,17 @@
 - 关于[Fluent Design System（流畅设计体系）](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)  
 
 
-## 预计实现功能：  
+## 功能：  
 
-1. 首页：今年已过天数以及进度条；已创建的日程信息（显示已过/还有XX天）；点击相关项显示具体内容；
+1. 主页日常显示
 
-2. 新建：在此页面输入日程名、选取时间，点击“新建”按钮，在首页完成日程的新建；
+2. 日程到期通知提醒
 
-2. 计算：选取一个开始日期和一个结束日期，计算两者相差的天数等；
+2. 日期距离的计算
 
-3. 节日：选取一年内的一些重要节日，显示当天距离所显示节日的日数差；
+3. 常用节日的查看
 
-4. 设置：个人主页以及相关功能的设置；  
+4. 日程开始菜单磁贴显示  
 
-5. 实现登录;  
-
-6. 首页：日程置顶功能；  
-
-7. 时间线功能（暂无现成的API）；  
-
-8. 计算：排版优化；  
+6. 日程桌面浮窗显示    
 
