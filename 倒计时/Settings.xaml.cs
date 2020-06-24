@@ -91,7 +91,6 @@ namespace 倒计时
             SetPersonPicture();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Settings";
-
         }
 
         private async void SetPersonPicture()

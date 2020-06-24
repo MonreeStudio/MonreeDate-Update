@@ -465,9 +465,10 @@
                    CornerRadius="10"
                    Background="White"
                    PrimaryButtonClick="BgsDialog_PrimaryButtonClick">
-                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TextBlock Text="建议选择较为温和的颜色" Foreground="DarkSlateGray" Margin="5,0,0,0" TextWrapping="Wrap"/>
-                    <ColorPicker x:Name="MyColorPicker"
+                <ScrollViewer>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <TextBlock Text="建议选择较为温和的颜色" Foreground="DarkSlateGray" Margin="5,0,0,0" TextWrapping="Wrap"/>
+                            <ColorPicker x:Name="MyColorPicker"
                              Margin="5"
                              IsColorSliderVisible="True"
                              IsMoreButtonVisible="True"
@@ -477,6 +478,25 @@
                              IsAlphaSliderVisible="True"
                              IsAlphaTextInputVisible="True"
                              />
+                    <Button Content="选择自带颜色" Foreground="White" Background="{x:Bind TC}" CornerRadius="6">
+                        <Button.Flyout>
+                            <Flyout x:Name="DefaltColorFlyout">
+                                    <StackPanel Orientation="Vertical" Width="240">
+                                        <TextBlock Text="自带颜色" TextWrapping="Wrap" FontWeight="Bold" Margin="0,0,0,2" Opacity="0.7"/>
+                                        <GridView x:Name="ColorGridView" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" IsItemClickEnabled="True" ItemClick="ColorGridView_ItemClick">
+                                            <GridView.ItemTemplate>
+                                                <DataTemplate x:DataType="local:ThemeColorData">
+                                                    <StackPanel>
+                                                        <Rectangle Fill="{x:Bind themeColor}" Height="40" Width="40" ToolTipService.ToolTip="{x:Bind colorName}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridView.ItemTemplate>
+                                        </GridView>
+                                        <TextBlock Text="Tip：如果您有不错的配色方案，欢迎邮箱联系我~" TextWrapping="Wrap" Foreground="Gray"/>
+                                    </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                     <Slider AutomationProperties.Name="Slider with ticks"
                         x:Name="MySlider"
                             Foreground="{x:Bind TC}"
@@ -486,8 +506,11 @@
                         Maximum="100"
                         TickFrequency="10"
                         TickPlacement="Outside" />
+                        
+                    
                 </StackPanel>
-            </ContentDialog>
+    </ScrollViewer>
+    </ContentDialog>
             <ContentDialog x:Name="TipDialog"
                        Title="添加备注"
                        PrimaryButtonText="确定"

@@ -60,7 +60,7 @@ namespace 倒计时
         public int _index;
         private double percentage;
         private bool TopTap;
-        DispatcherTimer timer;
+        private DispatcherTimer timer;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public All()

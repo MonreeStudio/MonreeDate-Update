@@ -53,7 +53,6 @@ namespace 倒计时
             list = new List<string>();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
-            
             SetThemeColor();
             InitialData();
         }

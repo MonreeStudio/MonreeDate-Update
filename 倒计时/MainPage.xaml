@@ -351,9 +351,11 @@
                 <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItem x:Name="DesktopItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="GoToStart" Tag="Desktop" Content="桌面"/>
+                <NavigationViewItemSeparator/>
+                <NavigationViewItem x:Name="TimerItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Clock" Tag="Timer" Content="计时"/>
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
-                <NavigationViewItem x:Name="FeedbackItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Mail" Tag="Feedback" Content="反馈"/>
+                <NavigationViewItem x:Name="FeedbackItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Mail" Tag="Feedback" Content="反馈" IsTapEnabled="True" Tapped="FeedbackItem_Tapped"/>
             </NavigationView.PaneFooter>
             <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
                 <Frame x:Name="ContentFrame"

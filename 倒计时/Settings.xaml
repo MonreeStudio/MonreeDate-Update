@@ -486,7 +486,7 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="local:ThemeColorData">
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25"/>
+                                <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25" Margin="0,0,20,0"/>
                                 <TextBlock Text="{x:Bind colorName}" Margin="2" Foreground="{x:Bind themeColor}"/>
                             </StackPanel>
                         </DataTemplate>

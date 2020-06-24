@@ -37,6 +37,8 @@ namespace 倒计时
         private double _TintOpacity { get; set; }
         private string _Tip { get; set; }
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
+
         public Add()
         {  
             this.InitializeComponent();
@@ -49,6 +51,8 @@ namespace 倒计时
             SetDateDialogTitle();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Add";
+            MyColorPicker.Color = Colors.CornflowerBlue;
+
         }
 
         private void SetThemeColor()
@@ -125,6 +129,7 @@ namespace 倒计时
         private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
             string Picker = Add_Picker.Date.ToString();
+            _PickDate = "";
             try
             {
                 DateTime s1 = Convert.ToDateTime(Picker);
@@ -281,6 +286,18 @@ namespace 倒计时
                 textbox.Text = textbox.Text.Remove(pos, 1);
                 textbox.SelectionStart = pos;
             }
+        }
+
+        private void ThemeColorSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ColorGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var _item = (ThemeColorData)e.ClickedItem;
+            MyColorPicker.Color = _item.themeColor.Color;
+            DefaltColorFlyout.Hide();
         }
     }
 }

@@ -279,6 +279,7 @@ namespace 倒计时
           ("Festival", typeof(Festival)),
           ("Details",typeof(Details)),
           ("Desktop",typeof(Desktop)),
+          ("Feedback",typeof(Feedback)),
         };
 
         private void MyNav_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
@@ -341,6 +342,7 @@ namespace 倒计时
 
         private void MyNav_ItemInvoked(NavigationView sender,NavigationViewItemInvokedEventArgs args)
         {
+            FeedbackItem.IsSelected = false;
             if (args.IsSettingsInvoked == true)
             {
                 MyNav_Navigate("settings", args.RecommendedNavigationTransitionInfo);
@@ -373,8 +375,14 @@ namespace 倒计时
                 ||SelectedPageItem.Equals("Calculator")
                 ||SelectedPageItem.Equals("Festival")
                 ||SelectedPageItem.Equals("Settings")
-                ||SelectedPageItem.Equals("Desktop"))
+                ||SelectedPageItem.Equals("Desktop")
+                ||SelectedPageItem.Equals("Feedback"))
             {
+                FeedbackItem.IsSelected = false;
+                DesktopItem.IsSelected = false;
+                NewItem.IsSelected = false;
+                CalculatorItem.IsSelected = false;
+                FestivalItem.IsSelected = false;
                 MyNav.SelectedItem = MyNav.MenuItems[0];
                 ContentFrame.Navigate(typeof(All));
                 SelectedPageItem = "All";
@@ -490,6 +498,13 @@ namespace 倒计时
         {
             var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
             await Launcher.LaunchUriAsync(Uri);
+        }
+
+        private void FeedbackItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            SelectedPageItem = "Feedback";
+            MyNav.SelectedItem = FeedbackItem;
+            ContentFrame.Navigate(typeof(Feedback));
         }
     }
 }
