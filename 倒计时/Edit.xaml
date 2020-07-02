@@ -45,6 +45,7 @@
                                 x:FieldModifier="Public"
                                 Foreground="{x:Bind TC}"
                                 BorderBrush="{x:Bind TC}"
+                                DateFormat="{}{year.full}/{month.integer}/{day.integer}"
                                 Header="生日"
                                 FontSize="20"
                                 CornerRadius="8"

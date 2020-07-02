@@ -126,9 +126,25 @@ namespace 倒计时
                 return s2;
         }
 
-        private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
+            if (Add_Picker.Date == null)
+                return;
             string Picker = Add_Picker.Date.ToString();
+            string[] strs = Picker.Split(" ");
+            foreach(var str in strs)
+            {
+                if (str.Contains("/"))
+                {
+                    if (str.Contains("周") || str.Contains("星"))
+                    {
+                        int index = str.LastIndexOf("/");
+                        Picker = str.Substring(0, index - 1);
+                    }
+                    else
+                        Picker = str;
+                }
+            }
             _PickDate = "";
             try
             {
@@ -136,10 +152,10 @@ namespace 倒计时
                 _PickDate = s1.ToString("yyyy-MM-dd");
                 //_PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
             }
-            catch
+            catch(Exception e)
             {
-                //MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
-                //await AboutDialog.ShowAsync();
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。\n异常类型："+e.GetType(), "发生异常");
+                await AboutDialog.ShowAsync();
             }
             _Date = Calculator(_PickDate);
         }
@@ -264,9 +280,9 @@ namespace 倒计时
                 var res = today.AddDays(count);
                 Add_Picker.Date = Convert.ToDateTime(res);
             }
-            catch
+            catch(Exception e)
             {
-                MessageDialog message = new MessageDialog("发生异常！");
+                MessageDialog message = new MessageDialog("异常类型："+ e.ToString() + "影响使用的话请及时反馈。","发生异常！");
                 await message.ShowAsync();
             }
             DaysTextBox.Text = "";

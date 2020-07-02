@@ -55,7 +55,9 @@ namespace 倒计时
             MainPage.Current.NewItem.IsSelected = false;
             MainPage.Current.CalculatorItem.IsSelected = false;
             MainPage.Current.FestivalItem.IsSelected = false;
+            MainPage.Current.TimerItem.IsSelected = false;
             InitSystemInfro();
+            SetThemeColor();
         }
 
         private void InitSystemInfro()
@@ -69,8 +71,7 @@ namespace 倒计时
                 + "\n设备类型：" + DeviceFamily
                 + "\n设备型号：" + DeviceModel
                 + "\n设备制造商：" + DeviceManufacturer
-                + "\n应用首次安装版本号：" + FirstVersionInstalled.Major + "." + FirstVersionInstalled.Minor + "."  + FirstVersionInstalled.Build + "." + FirstVersionInstalled.Revision
-                + "\n应用总启动次数：" + TotalLaunchCount);
+                );
             SysInfoTextBlock.Text = sb.ToString();
         }
 

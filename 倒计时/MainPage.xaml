@@ -351,8 +351,8 @@
                 <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItem x:Name="DesktopItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="GoToStart" Tag="Desktop" Content="桌面"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItem x:Name="TimerItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Clock" Tag="Timer" Content="计时"/>
+                <NavigationViewItemSeparator Visibility="Collapsed"/>
+                <NavigationViewItem x:Name="TimerItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Clock" Tag="Timer" Content="计时"/>
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <NavigationViewItem x:Name="FeedbackItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Mail" Tag="Feedback" Content="反馈" IsTapEnabled="True" Tapped="FeedbackItem_Tapped"/>
@@ -375,10 +375,10 @@
             <ScrollViewer>
             <StackPanel>
                 <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="1、修复 解决了闰月造成的传统节日显示错误的问题；&#x0a;2、修复 解决了一些界面显示的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="往期版本：2.3.0.0&#x0a;1、新增 日期选择增加阴历显示；&#x0a;2、新增 日程详情页增加阴历显示；（可在设置中关闭）&#x0a;3、新增 计算页面增加阴历转换工具;&#x0a;4、优化 调整了计算页面的布局；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="往期版本：2.2.10.0&#x0a;1、修复 解决了一些问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" />
-                    <TextBlock Text="往期版本：2.2.9.0&#x0a;1、新增 自定义桌面小工具背景颜色；&#x0a;2、新增 自定义桌面小工具左上角标题；&#x0a;3、新增 自定义日程提醒时间（提前n天提醒）；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="1、修复 解决了某些情况下日期无法选择的问题；&#x0a;Tip：若问题仍存在，请邮件私信我，以便排查。" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="往期版本：2.3.2.0&#x0a;1、新增 新建日程时提供自带颜色快速选择；&#x0a;2、新增 添加了邮件快速反馈功能；&#x0a;Tip：使用邮件反馈，开发者会尽量及时答复哦。有些bug仅出现在个别设备上，请尝试重置应用，若无法解决请邮件反馈。部分新功能仍在开发中，请耐心等待。" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="往期版本：2.3.1.0&#x0a;1、修复 解决了闰月造成的传统节日显示错误的问题；&#x0a;2、修复 解决了一些界面显示的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="往期版本：2.3.0.0&#x0a;1、新增 日期选择增加阴历显示；&#x0a;2、新增 日程详情页增加阴历显示；（可在设置中关闭）&#x0a;3、新增 计算页面增加阴历转换工具;&#x0a;4、优化 调整了计算页面的布局；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="&#x0a;感谢大家选择了夏日！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！&#x0a;&#x0a;——Bill夏昕" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
                 </StackPanel>
             </ScrollViewer>

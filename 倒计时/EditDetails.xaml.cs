@@ -122,16 +122,32 @@ namespace 夏日
 
         private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
+            if (Add_Picker.Date == null)
+                return;
             string Picker = Add_Picker.Date.ToString();
+            string[] strs = Picker.Split(" ");
+            foreach (var str in strs)
+            {
+                if (str.Contains("/"))
+                {
+                    if (str.Contains("周") || str.Contains("星"))
+                    {
+                        int index = str.LastIndexOf("/");
+                        Picker = str.Substring(0, index - 1);
+                    }
+                    else
+                        Picker = str;
+                }
+            }
             try
             {
                 DateTime s1 = Convert.ToDateTime(Picker);
                 _PickDate = s1.ToString("yyyy-MM-dd");
                 //_PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
             }
-            catch
+            catch(Exception e)
             {
-                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。\n异常类型：" + e.GetType(), "发生异常");
                 await AboutDialog.ShowAsync();
             }
             _Date = Calculator(_PickDate);

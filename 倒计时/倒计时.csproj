@@ -190,6 +190,9 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThemeColorData.cs" />
+    <Compile Include="TimerPage.xaml.cs">
+      <DependentUpon>TimerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToolData.cs" />
     <Compile Include="ViewModels\ImageCropperPickerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -333,6 +336,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TimerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

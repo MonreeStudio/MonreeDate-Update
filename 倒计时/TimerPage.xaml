@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="倒计时.TimerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:倒计时"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    <Page.Resources>
+        <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="TimerTopText"
+                       Text="计时"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="{x:Bind TC}"
+                       Margin="90,30,0,0"
+                       Grid.Row="0"
+                       Grid.Column="0" 
+                       VerticalAlignment="Top"/>
+        <ScrollViewer Grid.Row="1" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50,0,0,50">
+                    <RadioButton x:Name="MinusButton" Content="倒计时" GroupName="TimerType" FontSize="15" Foreground="{x:Bind TC}" IsChecked="True"/>
+                    <RadioButton x:Name="PlusButton" Content="正计时" GroupName="TimerType" FontSize="15" Foreground="{x:Bind TC}"/>
+                </StackPanel>
+                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                    <Ellipse x:Name="TimeBackGroundEllipse" Height="320" Width="320" Fill="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Ellipse x:Name="TimeEllipse" Height="300" Width="300" Fill="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" extensions:Mouse.Cursor="Hand" PointerEntered="TimeEllipse_PointerEntered" PointerExited="TimeEllipse_PointerExited"/>
+                    <TextBlock x:Name="TimeText" Text="14 : 00 : 00" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="52" FontWeight="Bold" extensions:Mouse.Cursor="Hand" PointerEntered="TimeText_PointerEntered"/>
+                </Grid>
+                
+            </Grid>
+        </ScrollViewer>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger
+                        MinWindowWidth="{x:Bind MinMyNav}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TimerTopText.Margin" Value="20,20,20,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</Page>

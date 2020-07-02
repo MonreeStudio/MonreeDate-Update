@@ -439,7 +439,7 @@
         </animations:Implicit.HideAnimations>
                     </TextBlock>
                 </Grid>
-                <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Margin="0,0,0,0" Foreground="{x:Bind TC}" FontSize="30" FontFamily="FZShuTi" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
+                <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Margin="0,0,0,0" Foreground="{x:Bind TC}" FontSize="30" FontWeight="Thin" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
                 <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" Margin="0,0,0,20"/>
                 <TextBlock x:Name="MarginText" x:FieldModifier="public" Height="30"/>
                 <ContentDialog x:Name="DeleteDialog"

@@ -280,6 +280,7 @@ namespace 倒计时
           ("Details",typeof(Details)),
           ("Desktop",typeof(Desktop)),
           ("Feedback",typeof(Feedback)),
+          ("Timer", typeof(TimerPage)),
         };
 
         private void MyNav_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
@@ -376,7 +377,8 @@ namespace 倒计时
                 ||SelectedPageItem.Equals("Festival")
                 ||SelectedPageItem.Equals("Settings")
                 ||SelectedPageItem.Equals("Desktop")
-                ||SelectedPageItem.Equals("Feedback"))
+                ||SelectedPageItem.Equals("Feedback")
+                ||SelectedPageItem.Equals("Timer"))
             {
                 FeedbackItem.IsSelected = false;
                 DesktopItem.IsSelected = false;
@@ -453,10 +455,10 @@ namespace 倒计时
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["2.3.1.0"] == null)
+            if (localSettings.Values["2.3.3.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["2.3.1.0"] = "false";
+                localSettings.Values["2.3.3.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 

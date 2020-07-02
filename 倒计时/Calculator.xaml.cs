@@ -160,36 +160,68 @@ namespace 倒计时
 
         private async void Picker1_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
+            if (Picker1.Date == null)
+                return;
             string str1 = Picker1.Date.ToString();
+            string[] strs = str1.Split(" ");
+            foreach (var str in strs)
+            {
+                if (str.Contains("/"))
+                {
+                    if (str.Contains("周") || str.Contains("星"))
+                    {
+                        int index = str.LastIndexOf("/");
+                        str1 = str.Substring(0, index - 1);
+                    }
+                    else
+                        str1 = str;
+                }
+            }
             try
             {
                 DateTime s1 = Convert.ToDateTime(str1);
                 Str.start = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
             }
-            catch
+            catch(Exception e)
             {
-                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。\n异常类型：" + e.GetType(), "发生异常");
                 await AboutDialog.ShowAsync();
             }
         }
 
         private async void Picker2_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
+            if (Picker2.Date == null)
+                return;
             string str2 = Picker2.Date.ToString();
+            string[] strs = str2.Split(" ");
+            foreach (var str in strs)
+            {
+                if (str.Contains("/"))
+                {
+                    if (str.Contains("周") || str.Contains("星"))
+                    {
+                        int index = str.LastIndexOf("/");
+                        str2 = str.Substring(0, index - 1);
+                    }
+                    else
+                        str2 = str;
+                }
+            }
             try
             {
                 DateTime s2 = Convert.ToDateTime(str2);
                 Str.end = string.Format("{0}/{1}/{2}", s2.Year, s2.Month, s2.Day);
             }
-            catch
+            catch(Exception e)
             {
-                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。", "发生异常");
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。\n异常类型：" + e.GetType(), "发生异常");
                 await AboutDialog.ShowAsync();
             }
 
         }
 
-        private void TermCalendarView_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+        private async void TermCalendarView_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
         {
             try
             {
@@ -197,8 +229,12 @@ namespace 倒计时
                 var date = dateOffset.ToString("yyyy-MM-dd");
                 TermTextBlock.Text = "阳历：\n" + date + "\n\n阴历：\n" + LunarCalendar.GetChineseDateTime(Convert.ToDateTime(date));
             }
-            catch { }
-            
+            catch(Exception e)
+            {
+                MessageDialog Dialog = new MessageDialog("日期选择发生错误。\n异常类型：" + e.GetType(), "发生异常");
+                await Dialog.ShowAsync();
+            }
+
             //var date = Convert.ToDateTime(dateOffset);
             //
 

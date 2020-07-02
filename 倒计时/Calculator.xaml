@@ -115,7 +115,7 @@
                                        Foreground="Black"
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
-                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True">
+                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker1_DateChanged" x:Name="Picker1" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="1" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True" DateFormat="{}{year.full}/{month.integer}/{day.integer}">
                             <CalendarDatePicker.CalendarViewStyle>
                                 <Style TargetType="CalendarView" BasedOn="{StaticResource CalendarViewRevealStyle}">
                                     <Setter Property="CalendarViewDayItemStyle">
@@ -164,7 +164,7 @@
                                 </Style>
                             </CalendarDatePicker.CalendarViewStyle>
                         </CalendarDatePicker>
-                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True">
+                        <CalendarDatePicker CornerRadius="8" Width="150" DateChanged="Picker2_DateChanged" x:Name="Picker2" BorderThickness="1" BorderBrush="{x:Bind TC}" Grid.Row="2" Grid.Column="1" PlaceholderText="Pick一个日期" HorizontalAlignment="Left" VerticalAlignment="Center" IsGroupLabelVisible="True" DateFormat="{}{year.full}/{month.integer}/{day.integer}">
                             <CalendarDatePicker.CalendarViewStyle>
                                 <Style TargetType="CalendarView" BasedOn="{StaticResource CalendarViewRevealStyle}">
                                     <Setter Property="CalendarViewDayItemStyle">

@@ -94,11 +94,36 @@ namespace 倒计时
             EditSex_Sex = EditSex.SelectedItem.ToString();
         }
 
-        private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
+            if (EditBirthday.Date == null)
+                return;
             string Picker = EditBirthday.Date.ToString();
-            DateTime s1 = Convert.ToDateTime(Picker);
-            EditBirthday_Date = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            string[] strs = Picker.Split(" ");
+            foreach (var str in strs)
+            {
+                if (str.Contains("/"))
+                {
+                    if(str.Contains("周") || str.Contains("星"))
+                    {
+                        int index = str.LastIndexOf("/");
+                        Picker = str.Substring(0, index - 1);
+                    }
+                    else
+                        Picker = str;
+                }
+            }
+            try
+            {
+                DateTime s1 = Convert.ToDateTime(Picker);
+                EditBirthday_Date = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
+            }
+            catch(Exception e)
+            {
+                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。\n异常类型：" + e.GetType(), "发生异常");
+                await AboutDialog.ShowAsync();
+            }
+            
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
