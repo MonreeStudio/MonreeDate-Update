@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.SocialInfo;
+using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -58,6 +61,8 @@ namespace 倒计时
             MainPage.Current.TimerItem.IsSelected = false;
             InitSystemInfro();
             SetThemeColor();
+            InitFaqText();
+            InitVersionText();
         }
 
         private void InitSystemInfro()
@@ -73,6 +78,72 @@ namespace 倒计时
                 + "\n设备制造商：" + DeviceManufacturer
                 );
             SysInfoTextBlock.Text = sb.ToString();
+        }
+
+        private async void InitFaqText()
+        {
+            try
+            {
+                FaqProgressBar.IsActive = true;
+                HttpClient client = new HttpClient();
+                Uri uri = new Uri("http://www.monreeing.com/notice/get_uwp_notice.xml");
+                HttpResponseMessage response = await client.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
+                string xml = await response.Content.ReadAsStringAsync();
+                StringBuilder sb = new StringBuilder();
+                if (xml != null)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(xml);
+                    var grid = doc.FirstChild.ChildNodes;
+                    for (var i = 0; i < grid.Count; i++)
+                    {
+                        var temp = grid[i];
+                        if (temp.NodeName == "content")
+                            sb.Append(temp.InnerText + "\n\n");
+                    }
+                }
+                FaqText.Text = sb.ToString();
+                FaqProgressBar.IsActive = false;
+            }
+            catch (Exception e)
+            {
+                PopupNotice popupNotice = new PopupNotice("网络异常： " + e.GetType().ToString());
+                popupNotice.ShowAPopup();
+            }
+        }
+
+        private async void InitVersionText()
+        {
+            try
+            {
+                VersionProgressBar.IsActive = true;
+                HttpClient client = new HttpClient();
+                Uri uri = new Uri("http://www.monreeing.com/notice/monreedate_version_info.xml");
+                HttpResponseMessage response = await client.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
+                string xml = await response.Content.ReadAsStringAsync();
+                StringBuilder sb = new StringBuilder();
+                if (xml != null)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(xml);
+                    var grid = doc.FirstChild.ChildNodes;
+                    for (var i = 0; i < grid.Count; i++)
+                    {
+                        var temp = grid[i];
+                        if (temp.NodeName == "content")
+                            sb.Append(temp.InnerText + "\n\n");
+                    }
+                }
+                VersionText.Text = sb.ToString();
+                VersionProgressBar.IsActive = false;
+            }
+            catch (Exception e)
+            {
+                PopupNotice popupNotice = new PopupNotice("网络异常： " + e.GetType().ToString());
+                popupNotice.ShowAPopup();
+            }
         }
 
         public void SetThemeColor()

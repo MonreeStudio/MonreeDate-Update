@@ -243,12 +243,22 @@ namespace 倒计时
             {
                 string _color = localSettings.Values["ToolColor"].ToString();
                 color = GetColor(_color);
+                if(localSettings.Values["Transparent"] != null && localSettings.Values["Transparent"].ToString() == "0")
+                {
+                    rootGrid.Background = new SolidColorBrush(color);
+                    return;
+                }
                 amount1 = 0.5f;
                 amount2 = 0.5f;
             }
             else
             {
                 color = Color.FromArgb(255, 245, 245, 245);
+                if (localSettings.Values["Transparent"] != null && localSettings.Values["Transparent"].ToString() == "0")
+                {
+                    rootGrid.Background = new SolidColorBrush(color);
+                    return;
+                }
                 amount1 = 0.7f;
                 amount2 = 0.3f;
             }
@@ -483,7 +493,25 @@ namespace 倒计时
             foreach(var item in gridList)
             {
                 if (item.Name == "ListGrid")
-                    InitializeFrostedGlass(item, 1);
+                {
+                    if (localSettings.Values["Transparent"] != null && localSettings.Values["Transparent"].ToString() == "0")
+                    {
+                        if (localSettings.Values["Colorful"] != null
+                            &&
+                            localSettings.Values["ToolColor"] != null
+                            &&
+                            localSettings.Values["Colorful"].ToString() == "1")
+                        {
+                            string _color = localSettings.Values["ToolColor"].ToString();
+                            var color = GetColor(_color);
+                            item.Background = new SolidColorBrush(color);
+                        }
+                        else
+                            item.Background = new SolidColorBrush(Color.FromArgb(255, 245, 245, 245));
+                    }
+                    else
+                        InitializeFrostedGlass(item, 1);
+                }
             }
         }
     }

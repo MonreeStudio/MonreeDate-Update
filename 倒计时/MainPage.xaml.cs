@@ -73,6 +73,8 @@ namespace 倒计时
             GetAppVersion();
             MyNav.IsBackEnabled = false;
             SelectedPageItem = "";
+            ApplicationView.PreferredLaunchViewSize = new Size(1000, 1000);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
             localSettings.Values["hasBeenOpened"] = "0";
         }
@@ -455,10 +457,10 @@ namespace 倒计时
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["2.3.3.0"] == null)
+            if (localSettings.Values["2.3.4.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["2.3.3.0"] = "false";
+                localSettings.Values["2.3.4.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 

@@ -115,7 +115,11 @@ namespace 倒计时
                 {
                     ColorfulEllipse.Visibility = Visibility.Collapsed;
                 }
-            }                      
+            }
+            if (localSettings.Values["Transparent"] != null && localSettings.Values["Transparent"].ToString() == "1")
+                TransparentSwitch.IsOn = true;
+            else
+                TransparentSwitch.IsOn = false;
             if (localSettings.Values["CornerName"] == null)
             {
                 CornerNameTextBox.Text = "夏日";
@@ -298,6 +302,17 @@ namespace 倒计时
                     ColorfulButton.IsEnabled = false;
                     ColorfulEllipse.Visibility = Visibility.Collapsed;
                 }
+            }
+        }
+
+        private void TransparentSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (TransparentSwitch != null)
+            {
+                if (TransparentSwitch.IsOn == true)
+                    localSettings.Values["Transparent"] = "1";
+                else
+                    localSettings.Values["Transparent"] = "0";
             }
         }
     }

@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
     <Page.Resources>
@@ -30,7 +30,7 @@
                        Grid.Column="0" 
                        VerticalAlignment="Top"/>
         <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top">
-            <StackPanel >
+            <StackPanel>
                 <Button x:Name="SendMailButton"
                     Content="发送邮件"
                     Margin="20,20,0,0"
@@ -45,6 +45,49 @@
                        Margin="20,50,0,0"
                        Text="基本信息："
                        />
+                <Border x:Name="Line" Width="400" Height="1" BorderBrush="LightGray" BorderThickness="1" Margin="20,50,0,10" HorizontalAlignment="Left"/>
+                <StackPanel x:Name="NoticeStackPanel" Orientation="Vertical">
+                    <StackPanel>
+                        <TextBlock Text="常见问题及解答" FontWeight="Bold" Foreground="{x:Bind TC}" Margin="20,20,0,0" FontSize="20"/>
+                        <controls:DropShadowPanel BlurRadius="18"
+                                          Margin="20,10,0,10"
+                                                  ShadowOpacity="0.6"
+                                                  OffsetX="2"
+                                                  OffsetY="3"
+                                                  Color="Gray"
+                                                  CornerRadius="10"
+                                                  IsMasked="True">
+                            <Grid x:Name="FaqGrid" Width="350" Height="330" Padding="15" CornerRadius="10" HorizontalAlignment="Left" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Grid>
+                                        <ProgressRing x:Name="FaqProgressBar" Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"/>
+                                        <TextBlock x:Name="FaqText" TextWrapping="WrapWholeWords"/>
+                                    </Grid>
+                                </ScrollViewer>
+                            </Grid>
+                        </controls:DropShadowPanel>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="历代版本更新内容" FontWeight="Bold" Foreground="{x:Bind TC}" Margin="20,20,0,0" FontSize="20"/>
+                        <controls:DropShadowPanel BlurRadius="18"
+                                          Margin="20,10,0,50"
+                                                  ShadowOpacity="0.6"
+                                                  OffsetX="2"
+                                                  OffsetY="3"
+                                                  Color="Gray"
+                                                  CornerRadius="10"
+                                                  IsMasked="True">
+                            <Grid x:Name="VersionGrid" Width="350" Height="330" Padding="15" CornerRadius="10" HorizontalAlignment="Left" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Grid>
+                                        <ProgressRing x:Name="VersionProgressBar" Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"/>
+                                        <TextBlock x:Name="VersionText" TextWrapping="WrapWholeWords"/>
+                                    </Grid>
+                                </ScrollViewer>
+                            </Grid>
+                        </controls:DropShadowPanel>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
         <VisualStateManager.VisualStateGroups>
@@ -56,6 +99,31 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="FeedbackTopText.Margin" Value="20,20,20,0"/>
+                        <Setter Target="FaqGrid.Width" Value="550"/>
+                        <Setter Target="VersionGrid.Width" Value="550"/>
+                        <Setter Target="Line.Width" Value="580"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1080" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FeedbackTopText.Margin" Value="20,20,20,0"/>
+                        <Setter Target="NoticeStackPanel.Orientation" Value="Horizontal"/>
+                        <Setter Target="Line.Width" Value="730"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FeedbackTopText.Margin" Value="20,20,20,0"/>
+                        <Setter Target="FaqGrid.Width" Value="400"/>
+                        <Setter Target="VersionGrid.Width" Value="400"/>
+                        <Setter Target="NoticeStackPanel.Orientation" Value="Horizontal"/>
+                        <Setter Target="Line.Width" Value="830"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
