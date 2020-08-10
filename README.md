@@ -20,7 +20,7 @@
     
 ## 其他介绍：  
 - 关于[UWP](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/universal-application-platform-guide)  
-- 关于[Fluent Design System（流畅设计体系）](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)  
+- 关于[Fluent Design System（流畅设计体系）](https://docs.microsoft.com/zh-cn/windows/apps/fluent-design-system)  
 
 
 ## 功能：  
