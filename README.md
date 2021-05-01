@@ -15,12 +15,12 @@
 
 # Monree Date  
 ## 安装方式        
-2.3.1正式版已上架Microsoft Store，请直接搜索安装。  
+2.3.4正式版已上架Microsoft Store，请直接搜索安装。  
 [微软应用商店传送门](https://www.microsoft.com/store/productId/9PKBWKPCCFJ8)      
     
 ## 其他介绍：  
 - 关于[UWP](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/universal-application-platform-guide)  
-- 关于[Fluent Design System（流畅设计体系）](https://developer.microsoft.com/zh-cn/windows/apps/design?ocid=cxfluent-getstartedheader-devcenterappsdesign)  
+- 关于[Fluent Design System（流畅设计体系）](https://docs.microsoft.com/zh-cn/windows/apps/fluent-design-system)  
 
 
 ## 功能：  
