@@ -276,6 +276,7 @@ namespace 倒计时
         private readonly List<(string Tag, Type Page)> _pages = new List<(string Tag, Type Page)>
         {
           ("All", typeof(All)),
+          ("ToDo", typeof(ToDo)),
           ("New", typeof(Add)),
           ("Calculator", typeof(Calculator)),
           ("Festival", typeof(Festival)),
@@ -375,6 +376,7 @@ namespace 倒计时
                  MyNav.DisplayMode == NavigationViewDisplayMode.Minimal))
                 return false;
             if(SelectedPageItem.Equals("Add")
+                ||SelectedPageItem.Equals("ToDo")
                 ||SelectedPageItem.Equals("Calculator")
                 ||SelectedPageItem.Equals("Festival")
                 ||SelectedPageItem.Equals("Settings")
@@ -457,10 +459,10 @@ namespace 倒计时
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["2.3.4.0"] == null)
+            if (localSettings.Values["2.3.5.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["2.3.4.0"] = "false";
+                localSettings.Values["2.3.5.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 

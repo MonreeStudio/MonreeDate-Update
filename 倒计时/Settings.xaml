@@ -402,11 +402,13 @@
                 </Grid>
             </Grid>
             <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
+                <Button x:Name="SyncButton" Visibility="Collapsed" Foreground="White" Background="{x:Bind TC}" Height="33" Width="33" CornerRadius="20" Click="SyncButton_Click"/>
                 <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
                       Header="首页背景亚克力模糊效果"
                       HorizontalAlignment="Left"
                       x:Name="AllPageAcylic"
                       x:FieldModifier="public"
+                              Visibility="Collapsed"
                       OnContent="开"
                       OffContent="关"
                       Foreground="{x:Bind TC}"
@@ -481,7 +483,7 @@
                            Tapped="AppAutoStartTip_Tapped"/>
             </StackPanel>
             <StackPanel Grid.Row="3" Margin="20,0,0,10" VerticalAlignment="Top">
-                <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="Black"/>
+                <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="{x:Bind ToolAutoStartSwitch.Foreground}"/>
                 <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="local:ThemeColorData">
@@ -532,7 +534,7 @@
                        CloseButtonText="不了解"
                        DefaultButton="Primary"
                        CornerRadius="10"
-                       Background="White"
+                       Background="{ThemeResource SystemControlAltHighAcrylicElementBrush}"
                        SecondaryButtonClick="AboutContent_SecondaryButtonClick">
                 <ScrollViewer>
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

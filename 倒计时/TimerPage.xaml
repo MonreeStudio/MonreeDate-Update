@@ -5,11 +5,96 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations" xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <Style TargetType="Button" x:Key="CornerRadiusShadowButtonStyle">
+    <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
+    <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="20,10,20,10" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+    <Setter Property="FocusVisualMargin" Value="-3" />
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="Button">
+                <Grid x:Name="RootGrid">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualStateGroup.Transitions>
+                                <VisualTransition To="Normal" >
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="OffsetY" To="1" Duration="0:0:0.1" EnableDependentAnimation="True" />
+                                        <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="BlurRadius" To="12" Duration="0:0:0.1" EnableDependentAnimation="True" />
+                                    </Storyboard>
+                                </VisualTransition>
+                                <VisualTransition To="PointerOver" >
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="OffsetY" To="2" Duration="0:0:0.1" EnableDependentAnimation="True" />
+                                        <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="BlurRadius" To="15" Duration="0:0:0.1" EnableDependentAnimation="True" />
+                                    </Storyboard>
+                                </VisualTransition>
+                                <VisualTransition To="Pressed" >
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="OffsetY" To="3" Duration="0:0:0.1" EnableDependentAnimation="True" />
+                                        <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="BlurRadius" To="20" Duration="0:0:0.1" EnableDependentAnimation="True" />
+                                    </Storyboard>
+                                </VisualTransition>
+                            </VisualStateGroup.Transitions>
+                            <VisualState x:Name="Normal" >
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="OffsetY" To="1" Duration="0" EnableDependentAnimation="True" />
+                                    <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="BlurRadius" To="12" Duration="0" EnableDependentAnimation="True" />
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="PointerOver">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="OffsetY" To="2" Duration="0" EnableDependentAnimation="True" />
+                                    <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="BlurRadius" To="15" Duration="0" EnableDependentAnimation="True" />
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="OffsetY" To="3" Duration="0" EnableDependentAnimation="True" />
+                                    <DoubleAnimation Storyboard.TargetName="Shadow" Storyboard.TargetProperty="BlurRadius" To="20" Duration="0" EnableDependentAnimation="True" />
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Fill">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <control:DropShadowPanel x:Name="Shadow" xmlns:control="using:Microsoft.Toolkit.Uwp.UI.Controls" HorizontalContentAlignment="Stretch" 
+                                              ShadowOpacity="1" OffsetX="0" OffsetY="1" Color="Gray">
+                        <Rectangle x:Name="Background" Fill="{TemplateBinding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RadiusX="50" RadiusY="50" />
+                    </control:DropShadowPanel>
+                    <ContentPresenter x:Name="ContentPresenter"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Content="{TemplateBinding Content}"
+                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        AutomationProperties.AccessibilityView="Raw" />
+                </Grid>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
     </Page.Resources>
 
     <Grid>
@@ -26,23 +111,50 @@
                        Grid.Row="0"
                        Grid.Column="0" 
                        VerticalAlignment="Top"/>
-        <ScrollViewer Grid.Row="1" VerticalAlignment="Center">
+        <ScrollViewer Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="400"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50,0,0,50">
-                    <RadioButton x:Name="MinusButton" Content="倒计时" GroupName="TimerType" FontSize="15" Foreground="{x:Bind TC}" IsChecked="True"/>
-                    <RadioButton x:Name="PlusButton" Content="正计时" GroupName="TimerType" FontSize="15" Foreground="{x:Bind TC}"/>
-                </StackPanel>
-                <Grid Grid.Row="1" HorizontalAlignment="Center">
-                    <Ellipse x:Name="TimeBackGroundEllipse" Height="320" Width="320" Fill="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Ellipse x:Name="TimeEllipse" Height="300" Width="300" Fill="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" extensions:Mouse.Cursor="Hand" PointerEntered="TimeEllipse_PointerEntered" PointerExited="TimeEllipse_PointerExited"/>
-                    <TextBlock x:Name="TimeText" Text="14 : 00 : 00" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="52" FontWeight="Bold" extensions:Mouse.Cursor="Hand" PointerEntered="TimeText_PointerEntered"/>
-                </Grid>
                 
+                
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                        <controls:DropShadowPanel BlurRadius="8"
+                                                  ShadowOpacity="1"
+                                                  OffsetX="0"
+                                                  OffsetY="0"
+                                                  Color="Gray"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"
+                                                  IsMasked="True"> 
+                            <Ellipse x:Name="TimeEllipse" Height="300" Width="300" Fill="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" extensions:Mouse.Cursor="Hand" />
+                        </controls:DropShadowPanel>
+                        <TextBlock x:Name="TimeText" Text="00 : 13 : 00" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="52" FontWeight="Bold" extensions:Mouse.Cursor="Hand"/>
+                </Grid>
+                <StackPanel Grid.Row="1">
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50,0,0,50">
+                        <TextBlock Text="选择模式：" VerticalAlignment="Center" FontSize="18"/>
+                        <DropDownButton Content="倒计时" CornerRadius="6" Foreground="White" Background="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <DropDownButton.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuFlyoutItem Text="倒计时" Foreground="{x:Bind TC}"/>
+                                    <MenuFlyoutItem Text="正计时" Foreground="{x:Bind TC}"/>
+                                </MenuFlyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
+                    </StackPanel>
+                    <Button Content="&#xE14C;" FontFamily="Segoe MDL2 Assets" Foreground="White" Background="{x:Bind TC}" CornerRadius="50" Height="40" Width="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Grid Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="&#xE102;" FontFamily="Segoe MDL2 Assets" Grid.Column="1" HorizontalAlignment="Center" Height="100" Width="100" CornerRadius="50" FontSize="30" Foreground="{x:Bind TC}" Background="White" Style="{ThemeResource CornerRadiusShadowButtonStyle }"/>
+                </Grid>
             </Grid>
         </ScrollViewer>
         <VisualStateManager.VisualStateGroups>

@@ -10,9 +10,11 @@
             <viewModels:ViewModelLocator x:Name="Locator" />
             <Color x:Key="NavigationViewBackgroundColor">#F9FAFE</Color>
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush" BackgroundSource="HostBackdrop"
-        TintOpacity="0.6" TintColor="CornflowerBlue" FallbackColor="CornflowerBlue"/>
+        TintOpacity="0.7" TintColor="CornflowerBlue" FallbackColor="CornflowerBlue"/>
             <AcrylicBrush x:Key="CustomAcrylicInAppBrush" BackgroundSource="HostBackdrop"
-        TintOpacity="0.9" TintColor="White" FallbackColor="White" />
+        TintOpacity="0.5" TintColor="White" FallbackColor="White" />
+            <AcrylicBrush x:Key="CustomAcrylicInAppBrush1" BackgroundSource="HostBackdrop"
+        TintOpacity="0.95"  TintColor="White" FallbackColor="White" />
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush2" BackgroundSource="HostBackdrop"
         TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="PowderBlue" />
             <SolidColorBrush x:Key="GlobalTheme" x:FieldModifier="public"/>

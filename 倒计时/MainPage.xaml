@@ -341,7 +341,9 @@
                         x:FieldModifier="Public"
                         >
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="首页"/>
+                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="日子"/>
+                <NavigationViewItemSeparator/>
+                <NavigationViewItem x:Name="ToDoItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator/>
@@ -375,10 +377,11 @@
             <ScrollViewer>
             <StackPanel>
                     <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="1、新增 可根据需要开关桌面小工具背景的亚克力模糊效果；&#x0a;2、新增 反馈页面提供了一些可参考的信息；&#x0a;3、修复 解决了主界面窗口显示过小的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="1、修复 节日数据更新；&#x0a;2、优化 计算界面宽屏自适应调整；&#x0a;3、优化 日程详情页加入日期模式切换提示；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                    <TextBlock Text="往期版本：2.3.4.0&#x0a;1、新增 可根据需要开关桌面小工具背景的亚克力模糊效果；&#x0a;2、新增 反馈页面提供了一些可参考的信息；&#x0a;3、修复 解决了主界面窗口显示过小的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.3.3.0&#x0a;1、修复 解决了某些情况下日期无法选择的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                     <TextBlock Text="往期版本：2.3.2.0&#x0a;1、新增 新建日程时提供自带颜色快速选择；&#x0a;2、新增 添加了邮件快速反馈功能；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.3.1.0&#x0a;1、修复 解决了闰月造成的传统节日显示错误的问题；&#x0a;2、修复 解决了一些界面显示的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                    <TextBlock Text="&#x0a;近来收到了来自很多朋友对于夏日的建议，感谢你们。夏日在2021的上半年将会提高更新频率，为大家尽可能带来更好的体验~&#x0a;" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
                     <TextBlock Text="&#x0a;感谢大家选择了夏日！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！&#x0a;&#x0a;——Bill夏昕" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
                 </StackPanel>
             </ScrollViewer>

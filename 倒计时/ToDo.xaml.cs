@@ -1,5 +1,4 @@
-﻿using ColorCode.Compilation.Languages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using 倒计时.Models;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -23,16 +23,21 @@ namespace 倒计时
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class TimerPage : Page
+    public sealed partial class ToDo : Page
     {
-        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
-        public TimerPage()
+        public ToDoTasksViewModel DesViewModel1 = new ToDoTasksViewModel();
+        public ToDoTasksViewModel DesViewModel2 = new ToDoTasksViewModel();
+
+
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
+        public ToDo()
         {
             this.InitializeComponent();
             SetThemeColor();
             MainPage.Current.MyNav.IsBackEnabled = true;
-            MainPage.Current.SelectedPageItem = "Timer";
+            MainPage.Current.SelectedPageItem = "ToDo";
         }
 
         public void SetThemeColor()
@@ -76,6 +81,14 @@ namespace 倒计时
             }
         }
 
-      
+        private void ToDoList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ToDoList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
     }
 }

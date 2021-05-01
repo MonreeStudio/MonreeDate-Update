@@ -402,22 +402,18 @@
                 <Grid>
                     <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" Margin="20" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited" IsTapEnabled="True" Tapped="AllPicture_Tapped"/>
                     <TextBlock x:Name="UserName" Text="我是昵称" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <animations:Implicit.ShowAnimations>
-          <animations:TranslationAnimation Duration="0:0:1" From="-30" To="-150,0,0" />
-          <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
-        </animations:Implicit.ShowAnimations>
-
-        <animations:Implicit.HideAnimations>
-          <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
-          <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0">
-          </animations:ScalarAnimation>
-            <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
-              
-            <animations:ScalarKeyFrame Key="0.1" Value="0"/>
-            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
-          </animations:ScalarAnimation>
-        </animations:Implicit.HideAnimations>
-
+                        <animations:Implicit.ShowAnimations>
+                            <animations:TranslationAnimation Duration="0:0:1" From="-30" To="-150,0,0" />
+                            <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
+                        </animations:Implicit.ShowAnimations>
+                        <animations:Implicit.HideAnimations>
+                            <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
+                            <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0"/>
+                            <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
+                                <animations:ScalarKeyFrame Key="0.1" Value="0"/>
+                                <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+                            </animations:ScalarAnimation>
+                        </animations:Implicit.HideAnimations>
                     </TextBlock>
                     <TextBlock x:Name="UserSign" Text="我是个性签名" FontSize="15" Width="180" MaxLines="3" TextTrimming="CharacterEllipsis"  TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <animations:Implicit.ShowAnimations>

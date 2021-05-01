@@ -770,19 +770,21 @@ namespace 倒计时
             }
             if (localSettings.Values["SetAllPageAcrylic"] != null)
             {
-                if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
-                {
-                    AcrylicBrush myBrush = new AcrylicBrush();
-                    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
-                    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
-                    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
-                    myBrush.TintOpacity = 0.8;
-                    AllPageStackPanel.Background = myBrush;
-                }
-                else
-                {
-                    AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
-                }
+                var theme = ApplicationTheme.Light;
+                var requestTheme = RequestedTheme;
+                //if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
+                //{
+                //    AcrylicBrush myBrush = new AcrylicBrush();
+                //    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                //    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
+                //    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
+                //    myBrush.TintOpacity = 0.8;
+                //    AllPageStackPanel.Background = myBrush;
+                //}
+                //else
+                //{
+                //    AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
+                //}
             }
             if (localSettings.Values["SetAllPersonPicture"] != null)
             {

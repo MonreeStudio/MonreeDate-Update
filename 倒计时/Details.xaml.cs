@@ -190,6 +190,8 @@ namespace 倒计时
                     case "Day":
                         DetailsDate.Text = All.Current.ConvertToWeek(All.Current.str3);
                         DetailsDateMode = "Week";
+                        PopupNotice popupNotice0 = new PopupNotice("周数模式");
+                        popupNotice0.ShowAPopup();
                         break;
                     case "Week":
                         if (d4 > d3)
@@ -200,10 +202,14 @@ namespace 倒计时
                                 DetailsDate.Text = "还有" + App.Term(d4, d3);
                         }
                         DetailsDateMode = "Year";
+                        PopupNotice popupNotice1 = new PopupNotice("年数模式");
+                        popupNotice1.ShowAPopup();
                         break;
                     case "Year":
                         DetailsDate.Text = CustomData.Calculator(All.Current.str3);
                         DetailsDateMode = "Day";
+                        PopupNotice popupNotice2 = new PopupNotice("天数模式");
+                        popupNotice2.ShowAPopup();
                         break;
                 }
                 dCalDate.Text = DetailsDate.Text;
@@ -220,6 +226,8 @@ namespace 倒计时
                     case "Day":
                         DetailsDate.Text = All.Current.ConvertToWeek(Festival.Current.str3);
                         FestivalDateMode = "Week";
+                        PopupNotice popupNotice0 = new PopupNotice("周数模式");
+                        popupNotice0.ShowAPopup();
                         break;
                     case "Week":
                         if (d4 > d3)
@@ -230,10 +238,14 @@ namespace 倒计时
                                 DetailsDate.Text = "还有" + App.Term(d4, d3);
                         }
                         FestivalDateMode = "Year";
+                        PopupNotice popupNotice1 = new PopupNotice("年数模式");
+                        popupNotice1.ShowAPopup();
                         break;
                     case "Year":
                         DetailsDate.Text = CustomData.Calculator(Festival.Current.str3);
                         FestivalDateMode = "Day";
+                        PopupNotice popupNotice2 = new PopupNotice("天数模式");
+                        popupNotice2.ShowAPopup();
                         break;
                 }
                 dCalDate.Text = DetailsDate.Text;

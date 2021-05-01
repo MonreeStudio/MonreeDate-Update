@@ -43,6 +43,9 @@ using 夏日.Models;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using HHChaosToolkit.UWP.Picker;
 using 倒计时.ViewModels;
+using Microsoft.Toolkit.Services.Services.MicrosoftGraph;
+using Microsoft.Toolkit.Services.OneDrive;
+using Microsoft.Identity.Client;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -392,23 +395,23 @@ namespace 倒计时
             
             if (toggleSwitch != null)
             {
-                if (AllPageAcylic.IsOn == true)
-                {
-                    AcrylicBrush myBrush = new AcrylicBrush();
-                    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
-                    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
-                    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
-                    myBrush.TintOpacity = 0.8;
-                    All.Current.AllPageStackPanel.Background = myBrush;
-                    localSettings.Values["SetAllPageAcrylic"] = true;
-                    //Add.Current.AddPageGird.Background = myBrush;
-                }
-                else
-                {
-                    All.Current.AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
-                    localSettings.Values["SetAllPageAcrylic"] = false;
-                    //Add.Current.AddPageGird.Background = new SolidColorBrush(Colors.White);
-                }
+                //if (AllPageAcylic.IsOn == true)
+                //{
+                //    AcrylicBrush myBrush = new AcrylicBrush();
+                //    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                //    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
+                //    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
+                //    myBrush.TintOpacity = 0.8;
+                //    All.Current.AllPageStackPanel.Background = myBrush;
+                //    localSettings.Values["SetAllPageAcrylic"] = true;
+                //    //Add.Current.AddPageGird.Background = myBrush;
+                //}
+                //else
+                //{
+                //    All.Current.AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
+                //    localSettings.Values["SetAllPageAcrylic"] = false;
+                //    //Add.Current.AddPageGird.Background = new SolidColorBrush(Colors.White);
+                //}
             }
             toggleSwitch.Toggled += AllPageAcylic_Toggled;
         }
@@ -854,6 +857,41 @@ namespace 倒计时
                 }
                 All.Current.LoadSettings();
                 All.Current.LoadTile();
+            }
+        }
+
+        private async void SyncButton_Click(object sender, RoutedEventArgs e)
+        {
+            await InitSync();
+        }
+
+        private static async Task InitSync()
+        {
+            string[] scopes = new string[] { MicrosoftGraphScope.FilesReadWriteAppFolder };
+            OneDriveService.Instance.Initialize("0000000048273E9C", scopes, null, null);
+            if (await OneDriveService.Instance.LoginAsync())
+            {
+                var folder = await OneDriveService.Instance.RootFolderForMeAsync();
+                var OneDriveItems = await folder.NextItemsAsync();
+                do
+                {
+                    // Get the next page of items
+                    OneDriveItems = await folder.NextItemsAsync();
+                }
+                while (OneDriveItems != null);
+                string newFolderName = "MonreeDate Data";
+                if (!string.IsNullOrEmpty(newFolderName))
+                {
+                    await folder.StorageFolderPlatformService.CreateFolderAsync(newFolderName, CreationCollisionOption.GenerateUniqueName);
+                }
+                //var currentFolder = await _graphCurrentFolder.GetFolderAsync(item.Name);
+                //OneDriveItemsList.ItemsSource = await currentFolder.GetItemsAsync(20);
+                //_graphCurrentFolder = currentFolder;
+            }
+            else
+            {
+                //TipServices.TipAuthenticateFail();
+                throw new Exception("Unable to sign in");
             }
         }
     }

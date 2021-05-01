@@ -106,7 +106,7 @@ namespace 倒计时
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数 
-            RequestedTheme = ApplicationTheme.Light;
+            //RequestedTheme = ApplicationTheme.Light;
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
             {
                 this.FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
