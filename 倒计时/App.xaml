@@ -10,13 +10,15 @@
             <viewModels:ViewModelLocator x:Name="Locator" />
             <Color x:Key="NavigationViewBackgroundColor">#F9FAFE</Color>
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush" BackgroundSource="HostBackdrop"
-        TintOpacity="0.7" TintColor="CornflowerBlue" FallbackColor="CornflowerBlue"/>
+        TintOpacity="0.7" TintColor="White" FallbackColor="White"/>
             <AcrylicBrush x:Key="CustomAcrylicInAppBrush" BackgroundSource="HostBackdrop"
         TintOpacity="0.5" TintColor="White" FallbackColor="White" />
             <AcrylicBrush x:Key="CustomAcrylicInAppBrush1" BackgroundSource="HostBackdrop"
         TintOpacity="0.95"  TintColor="White" FallbackColor="White" />
             <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush2" BackgroundSource="HostBackdrop"
-        TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="PowderBlue" />
+        TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="White" />
+            <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush3" BackgroundSource="Backdrop"
+        TintOpacity="0.7" TintColor="AliceBlue" FallbackColor="White" />
             <SolidColorBrush x:Key="GlobalTheme" x:FieldModifier="public"/>
             <FontFamily x:Key="CalculatorFontFamily">ms-appx:///Assets/CalcMDL2.ttf#Calculator MDL2 Assets</FontFamily>
             <AcrylicBrush x:Key="ModuleBackground" BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemChromeMediumColor}" TintOpacity="0.5"/>
