@@ -30,11 +30,13 @@ namespace 倒计时
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public ToDoTasksViewModel ToDoTaskViewModel1 = new ToDoTasksViewModel();
         public ToDoTasksViewModel ToDoTaskViewModel2 = new ToDoTasksViewModel();
+        public ToDoTaskStepsViewModel ToDoTaskStepsViewModel = new ToDoTaskStepsViewModel();
 
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
 
         private ToDoTasks CurrentItem;
+        private ToDoTaskSteps CurrentTaskStep;
 
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
@@ -42,13 +44,17 @@ namespace 倒计时
         {
             this.InitializeComponent();
             // 建立数据库连接
+            string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
             conn.CreateTable<ToDoTasks>(); //默认表名同范型参数 
+            conn.CreateTable<ToDoTaskSteps>();
             SetThemeColor();
             LoadData();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "ToDo";
+
         }
 
         public void SetThemeColor()
@@ -172,6 +178,17 @@ namespace 倒计时
                 ToDo_Picker.Date = Convert.ToDateTime(CurrentItem.Date);
             TaskCard.Header = CurrentItem.Name;
             ToDoRemarkTextBox.Text = CurrentItem.Remark;
+            LoadSteps();
+        }
+
+        private void LoadSteps()
+        {
+            ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Clear();
+            List<ToDoTaskSteps> tempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where TaskName = ?", CurrentItem.Name);
+            foreach (var item in tempList)
+            {
+                ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() { Content = item.Content, Finish = item.Finish, UnFinish = item.UnFinish });
+            }
         }
 
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
@@ -296,6 +313,7 @@ namespace 倒计时
         private void DeleteTaskDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             conn.Execute("delete from ToDoTasks where Name = ?", CurrentItem.Name);
+            conn.Execute("delete from ToDoTaskSteps where TaskName = ?", CurrentItem.Name);
             ToDoTaskViewModel1.ToDoDatas.Remove(CurrentItem);
             ToDoTaskViewModel2.ToDoDatas.Remove(CurrentItem);
             PopupNotice popupNotice = new PopupNotice("删除成功");
@@ -316,6 +334,95 @@ namespace 倒计时
             ToDo_Picker.Date = null;
             ToDoRemarkTextBox.Text = "";
             PopupNotice popupNotice = new PopupNotice("更新成功");
+            popupNotice.ShowAPopup();
+        }
+
+        private void StepCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TaskStepList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            
+        }
+
+        private void UpdateTaskStepDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (DialogStepNameTextBox.Text.Equals(""))
+                return;
+            conn.Execute("update ToDoTaskSteps set Content = ? where TaskName = ? and Content = ?", DialogStepNameTextBox.Text, TaskCard.Header.ToString(), CurrentTaskStep.Content);
+            LoadSteps();
+            PopupNotice popupNotice = new PopupNotice("修改成功");
+            popupNotice.ShowAPopup();
+        }
+
+        private void DoneStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Execute("update ToDoTaskSteps set Finish = ? where Content = ?", true, CurrentTaskStep.Content);
+            conn.Execute("update ToDoTaskSteps set UnFinish = ? where Content = ?", false, CurrentTaskStep.Content);
+            LoadSteps();
+        }
+
+        private void UnDoneStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Execute("update ToDoTaskSteps set Finish = ? where Content = ?", false, CurrentTaskStep.Content);
+            conn.Execute("update ToDoTaskSteps set UnFinish = ? where Content = ?", true, CurrentTaskStep.Content);
+            LoadSteps();
+        }
+
+        private async void EditSetpButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogStepNameTextBox.Text = CurrentTaskStep.Content;
+            await UpdateTaskStepDialog.ShowAsync();
+        }
+
+        private void TaskStepList_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            CurrentTaskStep = (e.OriginalSource as FrameworkElement)?.DataContext as ToDoTaskSteps;
+            if(!CurrentTaskStep.Finish)
+            {
+                DoneStepButton.Visibility = Visibility.Visible;
+                UnDoneStepButton.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                DoneStepButton.Visibility = Visibility.Collapsed;
+                UnDoneStepButton.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void AddStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (StepNameTextBox.Text.Equals(""))
+            {
+                PopupNotice popupNotice = new PopupNotice("步骤名称不能为空~");
+                popupNotice.ShowAPopup();
+            }
+            else
+            {
+                List<ToDoTaskSteps> tempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where Content = ?", StepNameTextBox.Text);
+                if (tempList.Count != 0)
+                {
+                    PopupNotice popupNotice = new PopupNotice("该步骤已被添加，请勿重复添加~");
+                    popupNotice.ShowAPopup();
+                }
+                else
+                {
+                    conn.Insert(new ToDoTaskSteps() { TaskName = TaskCard.Header.ToString(), Content = StepNameTextBox.Text, Finish = false, UnFinish = true});
+                    ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() { TaskName = TaskCard.Header.ToString(), Content = StepNameTextBox.Text, Finish = false, UnFinish = true });
+                    PopupNotice popupNotice = new PopupNotice("添加成功");
+                    popupNotice.ShowAPopup();
+                    StepNameTextBox.Text = "";
+                }
+            }
+        }
+
+        private void DeleteStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Execute("delete from ToDoTaskSteps where TaskName = ? and Content = ?", CurrentItem.Name, CurrentTaskStep.Content);
+            ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Remove(CurrentTaskStep);
+            PopupNotice popupNotice = new PopupNotice("删除成功");
             popupNotice.ShowAPopup();
         }
     }

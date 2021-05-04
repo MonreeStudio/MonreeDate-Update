@@ -46,6 +46,10 @@ using 倒计时.ViewModels;
 using Microsoft.Toolkit.Services.Services.MicrosoftGraph;
 using Microsoft.Toolkit.Services.OneDrive;
 using Microsoft.Identity.Client;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using System.Threading;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -58,22 +62,20 @@ namespace 倒计时
     {
         public static Settings Current;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
-        Compositor _compositor = Window.Current.Compositor;
-        SpringVector3NaturalMotionAnimation _springAnimation;
+        public Compositor _compositor = Window.Current.Compositor;
+        public SpringVector3NaturalMotionAnimation _springAnimation;
         public static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-        private StorageFile Picture_file;//UWP 采用StorageFile来读写文件
+        public StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
         public Color color;
-      //  private StorageFile sampleFile;
-      //  private string filename = "sampleFile.dat";
+
         StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
         private StoreContext context = null;
         private int current = 0;
-        private StorageFile pictureFile;
+        private string logoutJson;
 
         public Settings()
         {
@@ -320,6 +322,18 @@ namespace 倒计时
 
         public async Task LoadState()
         {
+            if (localSettings.Values["Token"] != null && !localSettings.Values["Token"].Equals(""))
+            {
+                LoginButton.Visibility = Visibility.Collapsed;
+                SignOutButton.Visibility = Visibility.Visible;
+                SyncButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                LoginButton.Visibility = Visibility.Visible;
+                SignOutButton.Visibility = Visibility.Collapsed;
+                SyncButton.Visibility = Visibility.Collapsed;
+            }
             var task = await StartupTask.GetAsync("AppAutoRun");
             AutoStartTipButton.Visibility = Visibility.Collapsed;
             switch (task.State)
@@ -860,9 +874,9 @@ namespace 倒计时
             }
         }
 
-        private async void SyncButton_Click(object sender, RoutedEventArgs e)
+        private void SyncButton_Click(object sender, RoutedEventArgs e)
         {
-            await InitSync();
+            //await InitSync();
         }
 
         private static async Task InitSync()
@@ -893,6 +907,81 @@ namespace 倒计时
                 //TipServices.TipAuthenticateFail();
                 throw new Exception("Unable to sign in");
             }
+        }
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(LoginPage));
+        }
+
+        private void SignOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            string userName = localSettings.Values["UserName"].ToString();
+            logoutJson = "{\"UserName\":\"" + userName + "\"}";
+            ThreadStart threadStart = new ThreadStart(DoLogout);
+            Thread thread = new Thread(threadStart);
+            thread.Start();
+        }
+        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
+        }
+
+        private void DoLogout()
+        {
+            Invoke(() =>
+            {
+                SignOutButton.Content = "正在注销";
+                SignOutButton.IsEnabled = false;
+            });
+            HttpClient client = new HttpClient();
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://msdate.monreeing.com:3000/user/logout/");
+            requestMessage.Content = new StringContent(logoutJson);
+            requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            HttpResponseMessage response = client.SendAsync(requestMessage).GetAwaiter().GetResult();
+
+            if (response.StatusCode.ToString() == "OK")
+            {
+                string result = response.Content.ReadAsStringAsync().Result.ToString();
+                JObject jo = JObject.Parse(result);
+                if (jo["Code"].ToString().Equals("0"))
+                {
+                    localSettings.Values["Token"] = "";
+                    localSettings.Values["TimeStamp"] = "";
+                    Invoke(() =>
+                    {
+                        PopupNotice popupNotice = new PopupNotice("注销成功");
+                        popupNotice.ShowAPopup();
+                        SignOutButton.Content = "退出登录";
+                        SignOutButton.IsEnabled = true;
+                        SignOutButton.Visibility = Visibility.Collapsed;
+                        SyncButton.Visibility = Visibility.Collapsed;
+                        LoginButton.Visibility = Visibility.Visible;
+                    });
+                }
+                else
+                {
+                    Invoke(() =>
+                    {
+                        string errorMsg = jo["Message"].ToString();
+                        PopupNotice popupNotice = new PopupNotice("注销失败" + errorMsg);
+                        popupNotice.ShowAPopup();
+                    });
+                }
+            }
+            else
+            {
+                Invoke(() =>
+                {
+                    PopupNotice popupNotice = new PopupNotice("服务器错误：未知原因");
+                    popupNotice.ShowAPopup();
+                });
+            }
+            Invoke(() =>
+            {
+                SignOutButton.Content = "退出登录";
+                SignOutButton.IsEnabled = true;
+            });
         }
     }
 }

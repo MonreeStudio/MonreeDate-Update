@@ -55,6 +55,7 @@ namespace 倒计时
             conn.CreateTable<DataTemple>(); //默认表名同范型参数 
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 1);
+            
             timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
             timer.Start();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
