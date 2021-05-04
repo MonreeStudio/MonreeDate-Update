@@ -170,6 +170,9 @@
     <Compile Include="ImageCropperPickerPage.xaml.cs">
       <DependentUpon>ImageCropperPickerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LunarCalendar.cs" />
     <Compile Include="LunarCalendarConverter.cs" />
     <Compile Include="LunarExtension.cs" />
@@ -325,6 +328,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ImageCropperPickerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

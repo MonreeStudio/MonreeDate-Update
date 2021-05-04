@@ -173,21 +173,65 @@
             </StackPanel>
         </ScrollViewer>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
-            <m_control:CardView x:Name="TaskCard" Header="毕业设计答辩" Foreground="{x:Bind TC}" Margin="20"  CornerRadius="20" VerticalAlignment="Center" Padding="-100" MaxWidth="500" IsOpen="False" Background="{ThemeResource CustomAcrylicInAppBrush1}">
-                <StackPanel Orientation="Vertical" Margin="20">
-                    <CalendarDatePicker HorizontalAlignment="Left"
-                            x:Name="ToDo_Picker"
+            <m_control:CardView x:Name="TaskCard" Header="毕业设计答辩" Radius="12" Foreground="{x:Bind TC}" Margin="20"  VerticalAlignment="Center" Padding="-5" MaxWidth="500" IsOpen="False" Background="{ThemeResource CustomAcrylicInAppBrush1}">
+                <ScrollViewer>
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="AddStepButton" BorderBrush="{x:Bind TC}" BorderThickness ="1" FontSize="10" VerticalAlignment="Center" Content="&#xE109;" FontFamily="Segoe MDL2 Assets" Width="30" Height="30" Margin="10" CornerRadius="25" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Click="AddStepButton_Click"/>
+                            <TextBox x:Name="StepNameTextBox" BorderThickness="0" Grid.Column="1" Margin="10,0,10,0" Padding="15" FontSize="14"  CornerRadius="8"  PlaceholderText="添加步骤"/>
+                        </Grid>
+                        <ListView x:Name="TaskStepList" Height="Auto" ItemsSource="{x:Bind ToDoTaskStepsViewModel.ToDoTaskStepsDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False"  Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemClick="TaskStepList_ItemClick" RightTapped="TaskStepList_RightTapped">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                           
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local1:ToDoTaskSteps">
+                                    <Grid  Background="{ThemeResource CustomAcrylicInAppBrush1}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon x:Name="DoneIcon"  Margin="5,10,0,10" Grid.Column="0" Glyph="&#xE10B;" Visibility="{x:Bind Finish}" FontFamily="Segoe MDL2 Assets"/>
+                                        <FontIcon x:Name="UnDoneIcon"  Margin="5,10,0,10" Grid.Column="0" Glyph="&#xEA3A;" Visibility="{x:Bind UnFinish}" FontFamily="Segoe MDL2 Assets"/>
+                                        <TextBlock x:Name="SetpContentTextBlock" Text="{x:Bind Content}" Padding="10" Grid.Column="1" Height="40"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ContextFlyout>
+                                <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource MenuFlyoutBackground}">
+                                    <MenuFlyoutItem x:Name="EditSetpButton" Icon="Edit" Text="更改名称" Click="EditSetpButton_Click"/>
+                                    <MenuFlyoutItem x:Name="DoneStepButton" Icon="Accept"  Text="设为已完成" Click="DoneStepButton_Click"/>
+                                    <MenuFlyoutItem x:Name="UnDoneStepButton" Icon="ReDo"  Text="设为未完成" Visibility="Collapsed" Click="UnDoneStepButton_Click"/>
+                                    <MenuFlyoutItem x:Name="DeleteStepButton" Icon="Delete" Text="删除步骤" Foreground="Red" Click="DeleteStepButton_Click"/>
+                                </MenuFlyout>
+                            </ListView.ContextFlyout>
+                        </ListView>
+                        <CalendarDatePicker HorizontalAlignment="Left"
+                                        x:Name="ToDo_Picker"
                                         Header="过期时间"
-                            BorderThickness="0"
-                            BorderBrush="{x:Bind TC}"
-                            DateFormat="{}{year.full}/{month.integer}/{day.integer}"
-                            CornerRadius="8"
-                            PlaceholderText="选择一个日期"
-                                    IsGroupLabelVisible="True"
-                            />
-                    <TextBox x:Name="ToDoRemarkTextBox" Header="备注：" Foreground="{x:Bind TC}" Text="明天" FontSize="14"  IsColorFontEnabled="True" CornerRadius="12" BorderThickness="0" Margin="0,10,0,0"/>
-                    <Button x:Name="UpdateTastButton" Content="更新计划" Margin="0,30,0,0" CornerRadius="8" Foreground="White" Background="{x:Bind TC}" Click="UpdateTastButton_Click"/>
-                </StackPanel>
+                                        BorderThickness="0"
+                                        BorderBrush="{x:Bind TC}"
+                                        DateFormat="{}{year.full}/{month.integer}/{day.integer}"
+                                        CornerRadius="8"
+                                        PlaceholderText="选择一个日期"
+                                        IsGroupLabelVisible="True"/>
+                        <TextBox x:Name="ToDoRemarkTextBox" Header="备注：" Foreground="{x:Bind TC}" Text="明天" FontSize="14"  IsColorFontEnabled="True" CornerRadius="12" BorderThickness="0" Margin="0,10,0,0"/>
+                        <Button x:Name="UpdateTastButton" Content="更新时间和备注" Margin="0,30,0,0" CornerRadius="8" Foreground="White" Background="{x:Bind TC}" Click="UpdateTastButton_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+                
             </m_control:CardView>
         </Grid>
         <Grid Grid.Row="2" Grid.ColumnSpan="2"  Height="100" Background="{ThemeResource CustomAcrylicInAppBrush}" >
@@ -212,6 +256,18 @@
                 <TextBlock TextWrapping="Wrap" Foreground="DarkSlateGray">
                     该计划将被永久删除，请确认后操作
                 </TextBlock>
+            </StackPanel>
+        </ContentDialog>
+        <ContentDialog x:Name="UpdateTaskStepDialog"
+                       Title="修改步骤名称"
+                       PrimaryButtonText="确定"
+                       CloseButtonText="取消"
+                               CornerRadius="8"
+                       DefaultButton="Primary"
+                        Background="White"
+                       PrimaryButtonClick="UpdateTaskStepDialog_PrimaryButtonClick">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="300">
+                <TextBox x:Name="DialogStepNameTextBox" TextWrapping="Wrap" Margin="5,10,5,0" BorderThickness="1" CornerRadius="12"/>
             </StackPanel>
         </ContentDialog>
         <VisualStateManager.VisualStateGroups>
