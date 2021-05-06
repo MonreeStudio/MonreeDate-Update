@@ -322,18 +322,22 @@ namespace 倒计时
 
         public async Task LoadState()
         {
-            if (localSettings.Values["Token"] != null && !localSettings.Values["Token"].Equals(""))
+            if (localSettings.Values["UserName"] != null && !localSettings.Values["UserName"].Equals(""))
             {
                 LoginButton.Visibility = Visibility.Collapsed;
                 SignOutButton.Visibility = Visibility.Visible;
                 SyncButton.Visibility = Visibility.Visible;
+                EmailStackPanel.Visibility = Visibility.Visible;
+                PersonalEmail.Text = localSettings.Values["UserName"].ToString();
             }
             else
             {
                 LoginButton.Visibility = Visibility.Visible;
                 SignOutButton.Visibility = Visibility.Collapsed;
                 SyncButton.Visibility = Visibility.Collapsed;
+                EmailStackPanel.Visibility = Visibility.Collapsed;
             }
+
             var task = await StartupTask.GetAsync("AppAutoRun");
             AutoStartTipButton.Visibility = Visibility.Collapsed;
             switch (task.State)
@@ -874,9 +878,10 @@ namespace 倒计时
             }
         }
 
-        private void SyncButton_Click(object sender, RoutedEventArgs e)
+        private async void SyncButton_Click(object sender, RoutedEventArgs e)
         {
             //await InitSync();
+            await SyncDataDialog.ShowAsync();
         }
 
         private static async Task InitSync()
@@ -948,6 +953,7 @@ namespace 倒计时
                 {
                     localSettings.Values["Token"] = "";
                     localSettings.Values["TimeStamp"] = "";
+                    localSettings.Values["UserName"] = "";
                     Invoke(() =>
                     {
                         PopupNotice popupNotice = new PopupNotice("注销成功");
@@ -957,6 +963,8 @@ namespace 倒计时
                         SignOutButton.Visibility = Visibility.Collapsed;
                         SyncButton.Visibility = Visibility.Collapsed;
                         LoginButton.Visibility = Visibility.Visible;
+                        EmailStackPanel.Visibility = Visibility.Collapsed;
+                        PersonalEmail.Text = "";
                     });
                 }
                 else
@@ -982,6 +990,16 @@ namespace 倒计时
                 SignOutButton.Content = "退出登录";
                 SignOutButton.IsEnabled = true;
             });
+        }
+
+        private void SyncDataDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
+
+        private void ExitSyncButton_Click(object sender, RoutedEventArgs e)
+        {
+            SyncDataDialog.Hide();
         }
     }
 }
