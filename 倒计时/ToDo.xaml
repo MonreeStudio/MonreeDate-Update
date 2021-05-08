@@ -97,7 +97,7 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:ToDoTasks">
                                     <StackPanel Orientation="Horizontal" Height="60" Background="{ThemeResource CustomAcrylicInAppBrush1}">
-                                        <Button x:Name="UnDoneButton" Margin="10" Tag="{x:Bind Name}" Content="&#xEA3A;" FontFamily="Segoe MDL2 Assets" CornerRadius="25" Width="40" Height="40" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}" Click="UnDoneButton_Click"/>
+                                        <Button x:Name="UnDoneButton" Margin="10" Tag="{x:Bind TaskId}" Content="&#xEA3A;" FontFamily="Segoe MDL2 Assets" CornerRadius="25" Width="40" Height="40" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}" Click="UnDoneButton_Click"/>
                                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20,0,0,0">
                                             <TextBlock x:Name="UnDoneTaskNameTextBlock"   Text="{x:Bind Name}"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
@@ -145,7 +145,7 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:ToDoTasks">
                                     <StackPanel Orientation="Horizontal" Height="60" Background="{ThemeResource CustomAcrylicInAppBrush1}">
-                                        <Button x:Name="DoneButton" Margin="10" Tag="{x:Bind Name}" Content="&#xE10B;" FontFamily="Segoe MDL2 Assets" CornerRadius="25" Width="40" Height="40" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}" Click="DoneButton_Click"/>
+                                        <Button x:Name="DoneButton" Margin="10" Tag="{x:Bind TaskId}" Content="&#xE10B;" FontFamily="Segoe MDL2 Assets" CornerRadius="25" Width="40" Height="40" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}" Click="DoneButton_Click"/>
                                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20,0,0,0">
                                             <TextBlock x:Name="DoneTaskNameTextBlock"   Text="{x:Bind Name}"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">

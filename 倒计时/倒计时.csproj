@@ -179,6 +179,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Manager\SyncManager.cs" />
     <Compile Include="Models\DataTemple.cs" />
     <Compile Include="Models\DesktopEvents.cs" />
     <Compile Include="Models\DesktopModel.cs" />

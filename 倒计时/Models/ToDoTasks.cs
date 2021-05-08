@@ -14,6 +14,7 @@ namespace 倒计时.Models
     public class ToDoTasks
     {
         [PrimaryKey]
+        public string TaskId { get; set; }
         public string Name { get; set; }
         public string Date { get; set; }
         public string Star { get; set; }
@@ -22,6 +23,9 @@ namespace 倒计时.Models
         public string Done { get; set; }
 
         public string UpdateTime { get; set; }
+
+        public string IsDelete { get; set;
+        }
         public Visibility StarVisibility { get; set; }
         public Visibility DateVisibility { get; set; }
 

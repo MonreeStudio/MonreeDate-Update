@@ -102,8 +102,8 @@ namespace 倒计时
         {
             ToDoTaskViewModel1.ToDoDatas.Clear();
             ToDoTaskViewModel2.ToDoDatas.Clear();
-            List<ToDoTasks> datalist0 = conn.Query<ToDoTasks>("select * from ToDoTasks where Done = ?", "0");
-            List<ToDoTasks> datalist1 = conn.Query<ToDoTasks>("select * from ToDoTasks where Done = ? order by UpdateTime desc", 1);
+            List<ToDoTasks> datalist0 = conn.Query<ToDoTasks>("select * from ToDoTasks where Done = ? and IsDelete = ?", "0", "0");
+            List<ToDoTasks> datalist1 = conn.Query<ToDoTasks>("select * from ToDoTasks where Done = ? and IsDelete = ? order by UpdateTime desc", 1, "0");
             foreach (var item in datalist0)
             {
                 if(item.Star == "1")
@@ -130,7 +130,7 @@ namespace 倒计时
                 {
                     item.RemarkVisibility = Visibility.Collapsed;
                 }
-                ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() { Name = item.Name, Date = item.Date, Remark = item.Remark, StarVisibility = item.StarVisibility, DateVisibility = item.DateVisibility, RemarkVisibility = item.RemarkVisibility });
+                ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() { TaskId = item.TaskId, Name = item.Name, Date = item.Date, Remark = item.Remark, StarVisibility = item.StarVisibility, DateVisibility = item.DateVisibility, RemarkVisibility = item.RemarkVisibility });
 
             }
             foreach (var item in datalist1)
@@ -159,7 +159,7 @@ namespace 倒计时
                 {
                     item.RemarkVisibility = Visibility.Collapsed;
                 }
-                ToDoTaskViewModel2.ToDoDatas.Add(new ToDoTasks() { Name = item.Name, Date = item.Date, Remark = item.Remark, StarVisibility = item.StarVisibility, DateVisibility = item.DateVisibility, RemarkVisibility = item.RemarkVisibility });
+                ToDoTaskViewModel2.ToDoDatas.Add(new ToDoTasks() { TaskId = item.TaskId, Name = item.Name, Date = item.Date, Remark = item.Remark, StarVisibility = item.StarVisibility, DateVisibility = item.DateVisibility, RemarkVisibility = item.RemarkVisibility });
             }
         }
 
@@ -184,10 +184,12 @@ namespace 倒计时
         private void LoadSteps()
         {
             ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Clear();
-            List<ToDoTaskSteps> tempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where TaskName = ?", CurrentItem.Name);
+            string taskId = CurrentItem.TaskId;
+            List<ToDoTaskSteps> tempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where TaskId = ?", CurrentItem.TaskId);
             foreach (var item in tempList)
             {
-                ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() { Content = item.Content, Finish = item.Finish, UnFinish = item.UnFinish });
+                if(item.IsDelete.Equals("0"))
+                    ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() { TaskId = item.TaskId, StepId = item.StepId, Content = item.Content, Finish = item.Finish, UnFinish = item.UnFinish });
             }
         }
 
@@ -203,17 +205,27 @@ namespace 倒计时
                 List<ToDoTasks> tempList = conn.Query<ToDoTasks>("select * from ToDoTasks where Name = ?", TaskNameTextBox.Text);
                 if(tempList.Count != 0)
                 {
-                    PopupNotice popupNotice = new PopupNotice("该计划已被添加，请勿重复添加~");
-                    popupNotice.ShowAPopup();
+                    if(tempList[0].IsDelete.Equals("1"))
+                    {
+                        conn.Execute("update ToDoTasks set Name = ?, Date = ?, Star = ?, Remark = ?, Done = ?, UpdateTime = ?, IsDelete = ?  where TaskId = ?",
+                            TaskNameTextBox.Text, "", "0", "", "0", DateTime.Now.ToString(), "0", tempList[0].TaskId);
+                        ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() { TaskId = tempList[0].TaskId, Name = TaskNameTextBox.Text, Date = "", Remark = "", UpdateTime = DateTime.Now.ToString(), StarVisibility = Visibility.Collapsed, DateVisibility = Visibility.Collapsed, RemarkVisibility = Visibility.Collapsed });
+                    }
+                    else
+                    {
+                        PopupNotice popupNotice0 = new PopupNotice("请勿重复添加计划");
+                        popupNotice0.ShowAPopup();
+                    }
                 }
                 else
                 {
-                    conn.Insert(new ToDoTasks() { Name = TaskNameTextBox.Text, Date = "", Star = "0", Remark = "", Done = "0" });
-                    ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() { Name = TaskNameTextBox.Text, Date = "", Remark = "", UpdateTime = DateTime.Now.ToString(),StarVisibility = Visibility.Collapsed, DateVisibility = Visibility.Collapsed, RemarkVisibility = Visibility.Collapsed });
-                    PopupNotice popupNotice = new PopupNotice("添加成功");
-                    popupNotice.ShowAPopup();
-                    TaskNameTextBox.Text = "";
+                    string uuid = Guid.NewGuid().ToString();
+                    conn.Insert(new ToDoTasks() { TaskId = uuid, Name = TaskNameTextBox.Text, Date = "", Star = "0", Remark = "", Done = "0", UpdateTime = DateTime.Now.ToString(), IsDelete = "0" });
+                    ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() {TaskId = uuid, Name = TaskNameTextBox.Text, Date = "", Remark = "", UpdateTime = DateTime.Now.ToString(),StarVisibility = Visibility.Collapsed, DateVisibility = Visibility.Collapsed, RemarkVisibility = Visibility.Collapsed });
                 }
+                PopupNotice popupNotice = new PopupNotice("添加成功");
+                popupNotice.ShowAPopup();
+                TaskNameTextBox.Text = "";
             }
         }
 
@@ -260,7 +272,7 @@ namespace 倒计时
 
         private void StarButton1_Click(object sender, RoutedEventArgs e)
         {
-            conn.Execute("update ToDoTasks set Star = ? where Name = ?", "1", CurrentItem.Name);
+            conn.Execute("update ToDoTasks set Star = ? , UpdateTime = ? where TaskId = ?", "1", DateTime.Now.ToString(), CurrentItem.TaskId);
             LoadData();
             PopupNotice popupNotice = new PopupNotice("标记成功");
             popupNotice.ShowAPopup();
@@ -268,7 +280,7 @@ namespace 倒计时
 
         private void UnStarButton1_Click(object sender, RoutedEventArgs e)
         {
-            conn.Execute("update ToDoTasks set Star = ? where Name = ?", "0", CurrentItem.Name);
+            conn.Execute("update ToDoTasks set Star = ? , UpdateTime = ? where TaskId = ?", "0", DateTime.Now.ToString(), CurrentItem.TaskId);
             LoadData();
             PopupNotice popupNotice = new PopupNotice("标记成功");
             popupNotice.ShowAPopup();
@@ -277,8 +289,8 @@ namespace 倒计时
         private void UnDoneButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            conn.Execute("update ToDoTasks set Done = ? where Name = ?", "1", button.Tag);
-            conn.Execute("update ToDoTasks set UpdateTime = ? where Name = ?", DateTime.Now.ToString(), button.Tag);
+            conn.Execute("update ToDoTasks set Done = ? where TaskId = ?", "1", button.Tag);
+            conn.Execute("update ToDoTasks set UpdateTime = ? where TaskId = ?", DateTime.Now.ToString(), button.Tag);
             LoadData();
             PopupNotice popupNotice = new PopupNotice("标记成功");
             popupNotice.ShowAPopup();
@@ -287,8 +299,8 @@ namespace 倒计时
         private void DoneButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            conn.Execute("update ToDoTasks set Done = ? where Name = ?", "0", button.Tag);
-            conn.Execute("update ToDoTasks set UpdateTime = ? where Name = ?", DateTime.Now.ToString(), button.Tag);
+            conn.Execute("update ToDoTasks set Done = ? where TaskId = ?", "0", button.Tag);
+            conn.Execute("update ToDoTasks set UpdateTime = ? where TaskId = ?", DateTime.Now.ToString(), button.Tag);
             LoadData();
             PopupNotice popupNotice = new PopupNotice("标记成功");
             popupNotice.ShowAPopup();
@@ -312,8 +324,10 @@ namespace 倒计时
 
         private void DeleteTaskDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            conn.Execute("delete from ToDoTasks where Name = ?", CurrentItem.Name);
-            conn.Execute("delete from ToDoTaskSteps where TaskName = ?", CurrentItem.Name);
+            //conn.Execute("delete from ToDoTasks where TaskId = ?", CurrentItem.TaskId);
+            conn.Execute("update ToDoTasks set IsDelete = ?, UpdateTime = ? where TaskId = ?", "1", DateTime.Now.ToString(), CurrentItem.TaskId);
+            //conn.Execute("delete from ToDoTaskSteps where TaskId = ?", CurrentItem.TaskId);
+            conn.Execute("update ToDoTaskSteps set IsDelete = ?, UpdateTime = ? where TaskId = ?", "1", DateTime.Now.ToString(), CurrentItem.TaskId);
             ToDoTaskViewModel1.ToDoDatas.Remove(CurrentItem);
             ToDoTaskViewModel2.ToDoDatas.Remove(CurrentItem);
             PopupNotice popupNotice = new PopupNotice("删除成功");
@@ -327,8 +341,8 @@ namespace 倒计时
             {
                 date = Convert.ToDateTime(ToDo_Picker.Date.ToString()).ToString("yyyy-MM-dd");
             }
-            conn.Execute("update ToDoTasks set Date = ? where Name = ?", date, TaskCard.Header);
-            conn.Execute("update ToDoTasks set Remark = ? where Name = ?", ToDoRemarkTextBox.Text, TaskCard.Header);
+            conn.Execute("update ToDoTasks set Date = ?, UpdateTime = ? where TaskId = ?", date, DateTime.Now.ToString(), CurrentItem.TaskId);
+            conn.Execute("update ToDoTasks set Remark = ?, UpdateTime = ? where TaskId = ?", ToDoRemarkTextBox.Text, DateTime.Now.ToString(), CurrentItem.TaskId);
             TaskCard.IsOpen = false;
             LoadData();
             ToDo_Picker.Date = null;
@@ -351,7 +365,9 @@ namespace 倒计时
         {
             if (DialogStepNameTextBox.Text.Equals(""))
                 return;
-            conn.Execute("update ToDoTaskSteps set Content = ? where TaskName = ? and Content = ?", DialogStepNameTextBox.Text, TaskCard.Header.ToString(), CurrentTaskStep.Content);
+            string time = DateTime.Now.ToString();
+            conn.Execute("update ToDoTaskSteps set Content = ?, UpdateTime = ? where TaskId = ? and StepId = ?", DialogStepNameTextBox.Text, time, CurrentItem.TaskId, CurrentTaskStep.StepId);
+            conn.Execute("update ToDoTasks set UpdateTime = ? where TaskId = ?", time, CurrentItem.TaskId);
             LoadSteps();
             PopupNotice popupNotice = new PopupNotice("修改成功");
             popupNotice.ShowAPopup();
@@ -359,15 +375,19 @@ namespace 倒计时
 
         private void DoneStepButton_Click(object sender, RoutedEventArgs e)
         {
-            conn.Execute("update ToDoTaskSteps set Finish = ? where Content = ?", true, CurrentTaskStep.Content);
-            conn.Execute("update ToDoTaskSteps set UnFinish = ? where Content = ?", false, CurrentTaskStep.Content);
+            string time = DateTime.Now.ToString();
+            conn.Execute("update ToDoTaskSteps set Finish = ?, UpdateTime = ? where StepId = ? and TaskId = ?", true, time, CurrentTaskStep.StepId, CurrentItem.TaskId);
+            conn.Execute("update ToDoTaskSteps set UnFinish = ?, UpdateTime = ? where StepId = ? and TaskId = ?", false, time, CurrentTaskStep.StepId, CurrentItem.TaskId);
+            conn.Execute("update ToDoTasks set UpdateTime = ? where TaskId = ?", time, CurrentItem.TaskId);
             LoadSteps();
         }
 
         private void UnDoneStepButton_Click(object sender, RoutedEventArgs e)
         {
-            conn.Execute("update ToDoTaskSteps set Finish = ? where Content = ?", false, CurrentTaskStep.Content);
-            conn.Execute("update ToDoTaskSteps set UnFinish = ? where Content = ?", true, CurrentTaskStep.Content);
+            string time = DateTime.Now.ToString();
+            conn.Execute("update ToDoTaskSteps set Finish = ?, UpdateTime = ? where StepId = ? and TaskId = ?", false, time, CurrentTaskStep.StepId, CurrentItem.TaskId);
+            conn.Execute("update ToDoTaskSteps set UnFinish = ?, UpdateTime = ? where StepId = ? and TaskId = ?", true, time, CurrentTaskStep.StepId, CurrentItem.TaskId);
+            conn.Execute("update ToDoTasks set UpdateTime = ? where TaskId = ?", time, CurrentItem.TaskId);
             LoadSteps();
         }
 
@@ -401,26 +421,42 @@ namespace 倒计时
             }
             else
             {
-                List<ToDoTaskSteps> tempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where Content = ?", StepNameTextBox.Text);
+                List<ToDoTaskSteps> tempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where Content = ? and TaskId = ?", StepNameTextBox.Text, CurrentItem.TaskId);
                 if (tempList.Count != 0)
                 {
-                    PopupNotice popupNotice = new PopupNotice("该步骤已被添加，请勿重复添加~");
-                    popupNotice.ShowAPopup();
+                    string time = DateTime.Now.ToString();
+                    if(tempList[0].IsDelete.Equals("1"))
+                    {
+                        conn.Execute("update ToDoTaskSteps set Content = ?, Finish = ?, UnFinish = ?, UpdateTime = ?, IsDelete = ?  where TaskId = ? and StepId = ?",
+                             StepNameTextBox.Text, false, true, time, "0", CurrentItem.TaskId, tempList[0].StepId);
+                        conn.Execute("update ToDoTasks set UpdateTime = ? where Name = ?", time, TaskCard.Header.ToString());
+                        ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() {StepId = tempList[0].StepId, TaskId = CurrentItem.TaskId, Content = StepNameTextBox.Text, Finish = false, UnFinish = true });
+                    }
+                    else
+                    {
+                        PopupNotice popupNotice0 = new PopupNotice("请勿重复添加步骤~");
+                        popupNotice0.ShowAPopup();
+                    }
                 }
                 else
                 {
-                    conn.Insert(new ToDoTaskSteps() { TaskName = TaskCard.Header.ToString(), Content = StepNameTextBox.Text, Finish = false, UnFinish = true});
-                    ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() { TaskName = TaskCard.Header.ToString(), Content = StepNameTextBox.Text, Finish = false, UnFinish = true });
-                    PopupNotice popupNotice = new PopupNotice("添加成功");
-                    popupNotice.ShowAPopup();
-                    StepNameTextBox.Text = "";
+                    string time = DateTime.Now.ToString();
+                    string uuid = Guid.NewGuid().ToString();
+                    conn.Insert(new ToDoTaskSteps() {TaskId = CurrentItem.TaskId , StepId = uuid, Content = StepNameTextBox.Text, Finish = false, UnFinish = true, UpdateTime = time, IsDelete = "0"});
+                    conn.Execute("update ToDoTasks set UpdateTime = ? where Name = ?", time, TaskCard.Header.ToString());
+                    ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Add(new ToDoTaskSteps() { TaskId = CurrentItem.TaskId, StepId = uuid, Content = StepNameTextBox.Text, Finish = false, UnFinish = true });
                 }
+                PopupNotice popupNotice = new PopupNotice("添加成功");
+                popupNotice.ShowAPopup();
+                StepNameTextBox.Text = "";
             }
         }
 
         private void DeleteStepButton_Click(object sender, RoutedEventArgs e)
         {
-            conn.Execute("delete from ToDoTaskSteps where TaskName = ? and Content = ?", CurrentItem.Name, CurrentTaskStep.Content);
+            string time = DateTime.Now.ToString();
+            conn.Execute("update ToDoTaskSteps set IsDelete = ?, UpdateTime = ? where TaskId = ? and StepId = ?", "1", time, CurrentItem.TaskId, CurrentTaskStep.StepId);
+            conn.Execute("update ToDoTasks set UpdateTime = ? where TaskId = ?", time, CurrentItem.TaskId);
             ToDoTaskStepsViewModel.ToDoTaskStepsDatas.Remove(CurrentTaskStep);
             PopupNotice popupNotice = new PopupNotice("删除成功");
             popupNotice.ShowAPopup();

@@ -50,6 +50,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using 倒计时.Manager;
+using Newtonsoft.Json;
+using System.Text;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -76,6 +79,10 @@ namespace 倒计时
         private StoreContext context = null;
         private int current = 0;
         private string logoutJson;
+
+        public ToDoTasksViewModel TaskViewModel = new ToDoTasksViewModel();
+        private JArray listJson;
+
 
         public Settings()
         {
@@ -1000,6 +1007,137 @@ namespace 倒计时
         private void ExitSyncButton_Click(object sender, RoutedEventArgs e)
         {
             SyncDataDialog.Hide();
+        }
+
+        private void GetLocalDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(localSettings.Values["UserName"] != null && localSettings.Values["Token"] != null)
+            {
+                LoadProgressBar.IsActive = true;
+                SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
+                string data = syncManager.GetLocalTaskData().Trim();
+                JArray taskListJson = (JArray)JsonConvert.DeserializeObject(data);
+                listJson = taskListJson;
+                TaskViewModel.ToDoDatas.Clear();
+                foreach (var item in taskListJson)
+                {
+                    if (item["IsDelete"].ToString().Equals("0"))
+                        TaskViewModel.ToDoDatas.Add(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString() });
+                }
+                LoadProgressBar.IsActive = false;
+                GetLocalDataIcon.Visibility = Visibility.Visible;
+                GetCloudDataIcon.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void GetCloudDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (localSettings.Values["UserName"] != null && localSettings.Values["Token"] != null)
+            {
+                LoadProgressBar.IsActive = true;
+                SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
+                string data = syncManager.GetCloudTaskData().Trim().Replace("\n", "");
+                JArray taskListJson = (JArray)JsonConvert.DeserializeObject(data);
+                listJson = taskListJson;
+                LoadProgressBar.IsActive = false;
+                TaskViewModel.ToDoDatas.Clear();
+                foreach (var item in taskListJson)
+                {
+                    if(item["IsDelete"].ToString().Equals("0"))
+                        TaskViewModel.ToDoDatas.Add(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString() });
+                }
+                LoadProgressBar.IsActive = false;
+                GetLocalDataIcon.Visibility = Visibility.Collapsed;
+                GetCloudDataIcon.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void ToDoTaskList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+        private void ToDoTaskList_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var clickItem = (e.OriginalSource as FrameworkElement)?.DataContext as ToDoTasks;
+            if (clickItem == null)
+                return;
+            if(listJson != null)
+            {
+                foreach (var item in listJson)
+                {
+                    if (item["TaskId"].ToString().Equals(clickItem.TaskId))
+                    {
+                        string stepsStr = item["TaskStepList"].ToString();
+                        JArray steps = (JArray)JsonConvert.DeserializeObject(stepsStr);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append("步骤：").Append("\n");
+                        for(int i = 0; i < steps.Count; i++)
+                        {
+                            var subItem = steps[i];
+                            if (subItem["IsDelete"].ToString().Equals("1"))
+                                continue;
+                            if(i != steps.Count - 1)
+                            {
+                                sb.Append(" - ").Append(subItem["Content"].ToString()).Append("\n");
+                            }
+                            else
+                            {
+                                sb.Append(" - ").Append(subItem["Content"].ToString());
+                            }
+                        }
+                        if (sb.ToString().Equals("步骤：\n"))
+                        {
+                            sb.Append("无");
+                        }
+                        StepFlyout.Text = sb.ToString();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SyncWayItem1_Click(object sender, RoutedEventArgs e)
+        {
+            SyncWaySplitButton.Content = "合并两端数据";
+        }
+
+        private void SyncWayItem2_Click(object sender, RoutedEventArgs e)
+        {
+            SyncWaySplitButton.Content = "同步云端数据到本地";
+        }
+
+        private void SyncWayItem3_Click(object sender, RoutedEventArgs e)
+        {
+            SyncWaySplitButton.Content = "同步本地数据到云端";
+        }
+
+        private void SyncWaySplitButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
+        {
+            string way1Str = "合并两端数据";
+            string way2Str = "同步云端数据到本地";
+            string way3Str = "同步本地数据到云端";
+            string selectedWayStr = SyncWaySplitButton.Content.ToString();
+            SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
+            if (way1Str.Equals(selectedWayStr))
+            {
+                syncManager.MergeData();
+            }
+            else if(way2Str.Equals(selectedWayStr))
+            {
+                syncManager.UseCloudData();
+            }
+            else if(way3Str.Equals(selectedWayStr))
+            {
+                syncManager.UseLocalData();
+            }
+            else
+            {
+
+            }
+            TaskViewModel.ToDoDatas.Clear();
+            GetLocalDataIcon.Visibility = Visibility.Collapsed;
+            GetCloudDataIcon.Visibility = Visibility.Collapsed;
         }
     }
 }

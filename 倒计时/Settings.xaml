@@ -11,7 +11,7 @@
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:夏日="using:夏日"
     xmlns:models="using:夏日.Models"
-    xmlns:media="using:Windows.UI.Xaml.Media"
+    xmlns:media="using:Windows.UI.Xaml.Media" xmlns:local1="using:倒计时.Models" xmlns:muxc="using:Windows.UI.Xaml.Controls"
     DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
@@ -547,16 +547,81 @@
                        DefaultButton="Primary"
                        CornerRadius="10"
                        Background="White">
-                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TextBlock Text="将日程数据与云端同步" Margin="0,0,100,30" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TitleLinearGradientBrush}"/>
-                    <Button Content="同步" IsEnabled="True" Background="{StaticResource ButtonLinearGradientBrush}" Foreground="White" CornerRadius="100" Height="150" Width="150" HorizontalAlignment="Center" FontSize="32"/>
-                    <StackPanel Margin="0,10,0,10" HorizontalAlignment="Center">
-                        <TextBlock Text="同步中，请勿关闭应用"/>
-                        <ProgressBar IsIndeterminate="True" Foreground="{StaticResource TitleLinearGradientBrush}" Margin="0,5,0,0"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="将日程数据与云端同步" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,100,30" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TitleLinearGradientBrush}"/>
+                    <StackPanel Grid.Row="1" Margin="0,0,20,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="GetLocalDataButton" Content="查看本地数据" Margin="5" CornerRadius="8" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="GetLocalDataButton_Click" HorizontalAlignment="Left"/>
+                            <FontIcon x:Name="GetLocalDataIcon" Foreground="{StaticResource TitleLinearGradientBrush}" Visibility="Collapsed" Margin="10,0,0,0" Glyph="&#xE761;" FontFamily="Segoe MDL2 Assets"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="GetCloudDataButton" Content="查看云端数据" Margin="5" CornerRadius="8" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="GetCloudDataButton_Click" HorizontalAlignment="Left"/>
+                            <FontIcon x:Name="GetCloudDataIcon" Foreground="{StaticResource TitleLinearGradientBrush}" Visibility="Collapsed" Margin="10,0,0,0"  Glyph="&#xE761;" FontFamily="Segoe MDL2 Assets"/>
+                        </StackPanel>
                     </StackPanel>
-                    <TextBlock x:Name="SyncTimeTextBlock" Text="上次同步时间：未进行过同步操作。" Margin="0,20,0,15" Foreground="{StaticResource TitleLinearGradientBrush}"/>
-                    <Button x:Name="ExitSyncButton" Content="退出" Background="{StaticResource ButtonLinearGradientBrush}" Foreground="White" CornerRadius="8" Height="40" Width="100" HorizontalAlignment="Center" FontSize="15" Click="ExitSyncButton_Click"/>
-                </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" BorderBrush="{StaticResource TitleLinearGradientBrush}" BorderThickness="1" CornerRadius="12">
+                            <ListView x:Name="ToDoTaskList" Height="200" ItemsSource="{x:Bind TaskViewModel.ToDoDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False"  Background="White" ItemClick="ToDoTaskList_ItemClick" RightTapped="ToDoTaskList_RightTapped">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="BorderThickness" Value="0.3"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local1:ToDoTasks">
+                                        <StackPanel>
+                                            <TextBlock Margin="20,0,0,0" Text="{x:Bind Name}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            <ListView.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Name="StepFlyout" Text="哈哈哈哈"/>
+                                </MenuFlyout>
+                            </ListView.ContextFlyout>
+                        </ListView>
+                    </StackPanel>
+                    <ProgressRing x:Name="LoadProgressBar" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
+                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                        <TextBlock Text="选择同步逻辑：" Margin="0,0,0,5" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
+                        <muxc:SplitButton x:Name="SyncWaySplitButton" CornerRadius="8" BorderThickness="1" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="SyncWaySplitButton_Click">
+                            合并两端数据
+                            <muxc:SplitButton.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuFlyoutItem x:Name="SyncWayItem1" Text="合并两端数据" Click="SyncWayItem1_Click"/>
+                                    <MenuFlyoutItem x:Name="SyncWayItem2" Text="同步云端数据到本地" Click="SyncWayItem2_Click"/>
+                                    <MenuFlyoutItem x:Name="SyncWayItem3" Text="同步本地数据到云端" Click="SyncWayItem3_Click"/>
+                                </MenuFlyout>
+                            </muxc:SplitButton.Flyout>
+                        </muxc:SplitButton>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,20,0,0">
+                        
+                        <StackPanel x:Name="SyncingStackPanel" Visibility="Collapsed" Margin="0,10,0,10" HorizontalAlignment="Left">
+                            <TextBlock Text="同步中，请勿关闭应用" Foreground="{StaticResource TitleLinearGradientBrush}"/>
+                            <ProgressBar IsIndeterminate="True" Foreground="{StaticResource TitleLinearGradientBrush}" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <TextBlock x:Name="SyncTimeTextBlock" Text="上次同步时间：未进行过同步操作。" Margin="0,20,0,15" Foreground="{StaticResource TitleLinearGradientBrush}"/>
+                        
+                    </StackPanel>
+                    <Button x:Name="ExitSyncButton" Grid.Row="4" Grid.ColumnSpan="2" Content="退出" Background="{StaticResource ButtonLinearGradientBrush}" Foreground="White" CornerRadius="8" Height="40" Width="100" HorizontalAlignment="Center" FontSize="15" Click="ExitSyncButton_Click"/>
+
+                </Grid>
+                
             </ContentDialog>
             <ContentDialog x:Name="AboutContent"
                        Title="关于“夏日”"
