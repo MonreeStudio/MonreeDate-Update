@@ -1071,7 +1071,7 @@ namespace 倒计时
                         string stepsStr = item["TaskStepList"].ToString();
                         JArray steps = (JArray)JsonConvert.DeserializeObject(stepsStr);
                         StringBuilder sb = new StringBuilder();
-                        sb.Append("步骤：").Append("\n");
+                        sb.Append("内容：").Append("\n");
                         for(int i = 0; i < steps.Count; i++)
                         {
                             var subItem = steps[i];

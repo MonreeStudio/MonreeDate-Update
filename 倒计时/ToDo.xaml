@@ -182,7 +182,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Button x:Name="AddStepButton" BorderBrush="{x:Bind TC}" BorderThickness ="1" FontSize="10" VerticalAlignment="Center" Content="&#xE109;" FontFamily="Segoe MDL2 Assets" Width="30" Height="30" Margin="10" CornerRadius="25" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Click="AddStepButton_Click"/>
-                            <TextBox x:Name="StepNameTextBox" BorderThickness="0" Grid.Column="1" Margin="10,0,10,0" Padding="15" FontSize="14"  CornerRadius="8"  PlaceholderText="添加步骤"/>
+                            <TextBox x:Name="StepNameTextBox" BorderThickness="0" Grid.Column="1" Margin="10,0,10,0" Padding="15" FontSize="14"  CornerRadius="8"  PlaceholderText="添加具体内容"/>
                         </Grid>
                         <ListView x:Name="TaskStepList" Height="Auto" ItemsSource="{x:Bind ToDoTaskStepsViewModel.ToDoTaskStepsDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False"  Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemClick="TaskStepList_ItemClick" RightTapped="TaskStepList_RightTapped">
                             <ListView.ItemContainerStyle>
@@ -214,7 +214,7 @@
                                     <MenuFlyoutItem x:Name="EditSetpButton" Icon="Edit" Text="更改名称" Click="EditSetpButton_Click"/>
                                     <MenuFlyoutItem x:Name="DoneStepButton" Icon="Accept"  Text="设为已完成" Click="DoneStepButton_Click"/>
                                     <MenuFlyoutItem x:Name="UnDoneStepButton" Icon="ReDo"  Text="设为未完成" Visibility="Collapsed" Click="UnDoneStepButton_Click"/>
-                                    <MenuFlyoutItem x:Name="DeleteStepButton" Icon="Delete" Text="删除步骤" Foreground="Red" Click="DeleteStepButton_Click"/>
+                                    <MenuFlyoutItem x:Name="DeleteStepButton" Icon="Delete" Text="删除该条内容" Foreground="Red" Click="DeleteStepButton_Click"/>
                                 </MenuFlyout>
                             </ListView.ContextFlyout>
                         </ListView>
@@ -259,7 +259,7 @@
             </StackPanel>
         </ContentDialog>
         <ContentDialog x:Name="UpdateTaskStepDialog"
-                       Title="修改步骤名称"
+                       Title="修改该条内容名称"
                        PrimaryButtonText="确定"
                        CloseButtonText="取消"
                                CornerRadius="8"

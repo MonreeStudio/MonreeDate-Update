@@ -246,6 +246,7 @@ namespace 倒计时.Manager
                 var localData = GetLocalTaskData();
                 var cloudData = GetCloudTaskData();
                 JArray cloudTaskArray = (JArray)JsonConvert.DeserializeObject(cloudData);
+                JArray localTaskArray = (JArray)JsonConvert.DeserializeObject(localData);
                 List<TaskJson> taskJsons = new List<TaskJson>();
                 PushData pushData = new PushData();
                 pushData.UserName = userName;
@@ -254,11 +255,7 @@ namespace 倒计时.Manager
                 {
                     string taskId = cloudTaskItem["TaskId"].ToString();
                     List<ToDoTasks> tempList = conn.Query<ToDoTasks>("select * from ToDoTasks where TaskId = ?", taskId);
-                    string localUpdateTimeStr = tempList[0].UpdateTime;
-                    string cloudUpdateTimeStr = cloudTaskItem["UpdateTime"].ToString();
-                    DateTime localUpdateTime = Convert.ToDateTime(localUpdateTimeStr);
-                    DateTime cloudUpdateTime = Convert.ToDateTime(cloudUpdateTimeStr);
-                    if(cloudUpdateTime >= localUpdateTime)
+                    if(tempList.Count == 0)
                     {
                         TaskJson taskJson = new TaskJson
                         {
@@ -292,37 +289,189 @@ namespace 倒计时.Manager
                     }
                     else
                     {
-                        TaskJson taskJson = new TaskJson
+                        string localUpdateTimeStr = tempList[0].UpdateTime;
+                        string cloudUpdateTimeStr = cloudTaskItem["UpdateTime"].ToString();
+                        DateTime localUpdateTime = Convert.ToDateTime(localUpdateTimeStr);
+                        DateTime cloudUpdateTime = Convert.ToDateTime(cloudUpdateTimeStr);
+                        if (cloudUpdateTime >= localUpdateTime)
                         {
-                            TaskId = tempList[0].TaskId,
-                            TaskName = tempList[0].Name,
-                            Date = tempList[0].Date,
-                            Star = tempList[0].Star,
-                            Done = tempList[0].Done,
-                            Remark = tempList[0].Remark,
-                            UpdateTime = tempList[0].UpdateTime,
-                            IsDelete = tempList[0].IsDelete
-                        };
-                        List<StepJson> stepJsons = new List<StepJson>();
-                        List<ToDoTaskSteps> subTempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where TaskId = ?", taskId);
-                        foreach (var subItem in subTempList)
-                        {
-                            StepJson stepJson = new StepJson()
+                            TaskJson taskJson = new TaskJson
                             {
-                                TaskId = subItem.TaskId,
-                                StepId = subItem.StepId,
-                                Content = subItem.Content,
-                                UpdateTime = subItem.UpdateTime,
-                                IsDelete = subItem.IsDelete
+                                TaskId = cloudTaskItem["TaskId"].ToString(),
+                                TaskName = cloudTaskItem["TaskName"].ToString(),
+                                Date = cloudTaskItem["Date"].ToString(),
+                                Star = cloudTaskItem["Star"].ToString(),
+                                Done = cloudTaskItem["Done"].ToString(),
+                                Remark = cloudTaskItem["Remark"].ToString(),
+                                UpdateTime = cloudTaskItem["UpdateTime"].ToString(),
+                                IsDelete = cloudTaskItem["IsDelete"].ToString()
                             };
-                            if (subItem.Finish)
-                                stepJson.Done = "1";
-                            else
-                                stepJson.Done = "0";
-                            stepJsons.Add(stepJson);
+                            List<StepJson> stepJsons = new List<StepJson>();
+                            string taskStepListStr = cloudTaskItem["TaskStepList"].ToString();
+                            JArray localStepArray = (JArray)JsonConvert.DeserializeObject(taskStepListStr);
+                            foreach (var subItem in localStepArray)
+                            {
+                                StepJson stepJson = new StepJson()
+                                {
+                                    TaskId = subItem["TaskId"].ToString(),
+                                    StepId = subItem["StepId"].ToString(),
+                                    Content = subItem["Content"].ToString(),
+                                    Done = subItem["Done"].ToString(),
+                                    UpdateTime = subItem["UpdateTime"].ToString(),
+                                    IsDelete = subItem["IsDelete"].ToString()
+                                };
+                                stepJsons.Add(stepJson);
+                            }
+                            taskJson.TaskStepList = stepJsons;
+                            taskJsons.Add(taskJson);
                         }
-                        taskJson.TaskStepList = stepJsons;
-                        taskJsons.Add(taskJson);
+                        else
+                        {
+                            TaskJson taskJson = new TaskJson
+                            {
+                                TaskId = tempList[0].TaskId,
+                                TaskName = tempList[0].Name,
+                                Date = tempList[0].Date,
+                                Star = tempList[0].Star,
+                                Done = tempList[0].Done,
+                                Remark = tempList[0].Remark,
+                                UpdateTime = tempList[0].UpdateTime,
+                                IsDelete = tempList[0].IsDelete
+                            };
+                            List<StepJson> stepJsons = new List<StepJson>();
+                            List<ToDoTaskSteps> subTempList = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where TaskId = ?", taskId);
+                            foreach (var subItem in subTempList)
+                            {
+                                StepJson stepJson = new StepJson()
+                                {
+                                    TaskId = subItem.TaskId,
+                                    StepId = subItem.StepId,
+                                    Content = subItem.Content,
+                                    UpdateTime = subItem.UpdateTime,
+                                    IsDelete = subItem.IsDelete
+                                };
+                                if (subItem.Finish)
+                                    stepJson.Done = "1";
+                                else
+                                    stepJson.Done = "0";
+                                stepJsons.Add(stepJson);
+                            }
+                            taskJson.TaskStepList = stepJsons;
+                            taskJsons.Add(taskJson);
+                        }
+                    }
+                    
+                }
+                foreach(var localTaskItem in localTaskArray)
+                {
+                    string taskId = localTaskItem["TaskId"].ToString();
+                    foreach(var cloudTaskItem in cloudTaskArray)
+                    {
+                        bool isItemOnCloud = false;
+                        if (cloudTaskItem["TaskId"].ToString().Equals(taskId))
+                        {
+                            isItemOnCloud = true;
+                            string localUpdateTimeStr = localTaskItem["UpdateTime"].ToString();
+                            string cloudUpdateTimeStr = cloudTaskItem["UpdateTime"].ToString();
+                            DateTime localUpdateTime = Convert.ToDateTime(localUpdateTimeStr);
+                            DateTime cloudUpdateTime = Convert.ToDateTime(cloudUpdateTimeStr);
+                            if (cloudUpdateTime >= localUpdateTime)
+                            {
+                                TaskJson taskJson = new TaskJson
+                                {
+                                    TaskId = cloudTaskItem["TaskId"].ToString(),
+                                    TaskName = cloudTaskItem["TaskName"].ToString(),
+                                    Date = cloudTaskItem["Date"].ToString(),
+                                    Star = cloudTaskItem["Star"].ToString(),
+                                    Done = cloudTaskItem["Done"].ToString(),
+                                    Remark = cloudTaskItem["Remark"].ToString(),
+                                    UpdateTime = cloudTaskItem["UpdateTime"].ToString(),
+                                    IsDelete = cloudTaskItem["IsDelete"].ToString()
+                                };
+                                List<StepJson> stepJsons = new List<StepJson>();
+                                string taskStepListStr = cloudTaskItem["TaskStepList"].ToString();
+                                JArray localStepArray = (JArray)JsonConvert.DeserializeObject(taskStepListStr);
+                                foreach (var subItem in localStepArray)
+                                {
+                                    StepJson stepJson = new StepJson()
+                                    {
+                                        TaskId = subItem["TaskId"].ToString(),
+                                        StepId = subItem["StepId"].ToString(),
+                                        Content = subItem["Content"].ToString(),
+                                        Done = subItem["Done"].ToString(),
+                                        UpdateTime = subItem["UpdateTime"].ToString(),
+                                        IsDelete = subItem["IsDelete"].ToString()
+                                    };
+                                    stepJsons.Add(stepJson);
+                                }
+                                taskJson.TaskStepList = stepJsons;
+                                taskJsons.Add(taskJson);
+                            }
+                            else
+                            {
+                                TaskJson taskJson = new TaskJson
+                                {
+                                    TaskId = localTaskItem["TaskId"].ToString(),
+                                    TaskName = localTaskItem["TaskName"].ToString(),
+                                    Date = localTaskItem["Date"].ToString(),
+                                    Star = localTaskItem["Star"].ToString(),
+                                    Done = localTaskItem["Done"].ToString(),
+                                    Remark = localTaskItem["Remark"].ToString(),
+                                    UpdateTime = localTaskItem["UpdateTime"].ToString(),
+                                    IsDelete = localTaskItem["IsDelete"].ToString()
+                                };
+                                List<StepJson> stepJsons = new List<StepJson>();
+                                string taskStepListStr = localTaskItem["TaskStepList"].ToString();
+                                JArray localStepArray = (JArray)JsonConvert.DeserializeObject(taskStepListStr);
+                                foreach (var subItem in localStepArray)
+                                {
+                                    StepJson stepJson = new StepJson()
+                                    {
+                                        TaskId = subItem["TaskId"].ToString(),
+                                        StepId = subItem["StepId"].ToString(),
+                                        Content = subItem["Content"].ToString(),
+                                        Done = subItem["Done"].ToString(),
+                                        UpdateTime = subItem["UpdateTime"].ToString(),
+                                        IsDelete = subItem["IsDelete"].ToString()
+                                    };
+                                    stepJsons.Add(stepJson);
+                                }
+                                taskJson.TaskStepList = stepJsons;
+                                taskJsons.Add(taskJson);
+                            }
+                        }
+                        if (!isItemOnCloud)
+                        {
+                            TaskJson taskJson = new TaskJson
+                            {
+                                TaskId = localTaskItem["TaskId"].ToString(),
+                                TaskName = localTaskItem["TaskName"].ToString(),
+                                Date = localTaskItem["Date"].ToString(),
+                                Star = localTaskItem["Star"].ToString(),
+                                Done = localTaskItem["Done"].ToString(),
+                                Remark = localTaskItem["Remark"].ToString(),
+                                UpdateTime = localTaskItem["UpdateTime"].ToString(),
+                                IsDelete = localTaskItem["IsDelete"].ToString()
+                            };
+                            List<StepJson> stepJsons = new List<StepJson>();
+                            string taskStepListStr = localTaskItem["TaskStepList"].ToString();
+                            JArray localStepArray = (JArray)JsonConvert.DeserializeObject(taskStepListStr);
+                            foreach (var subItem in localStepArray)
+                            {
+                                StepJson stepJson = new StepJson()
+                                {
+                                    TaskId = subItem["TaskId"].ToString(),
+                                    StepId = subItem["StepId"].ToString(),
+                                    Content = subItem["Content"].ToString(),
+                                    Done = subItem["Done"].ToString(),
+                                    UpdateTime = subItem["UpdateTime"].ToString(),
+                                    IsDelete = subItem["IsDelete"].ToString()
+                                };
+                                stepJsons.Add(stepJson);
+                            }
+                            taskJson.TaskStepList = stepJsons;
+                            taskJsons.Add(taskJson);
+                        }
                     }
                 }
                 pushData.TaskList = taskJsons;
@@ -410,11 +559,27 @@ namespace 倒计时.Manager
                         bool finish = false;
                         if (subItem["Done"].ToString().Equals("1"))
                             finish = true;
-                        conn.Execute("update ToDoTaskSteps set Content = ?, Finish = ?, UnFinish = ?, UpdateTime = ?, IsDelete = ? where TaskId = ? and StepId = ?",
-                            subItem["Content"].ToString(), finish, !finish, subItem["UpdateTime"].ToString(), subItem["IsDelete"].ToString(), subItem["TaskId"].ToString(), subItem["StepId"].ToString());
+                        List<ToDoTaskSteps> tempList0 = conn.Query<ToDoTaskSteps>("select * from ToDoTaskSteps where TaskId = ? and StepId = ?", item["TaskId"].ToString(), subItem["StepId"].ToString());
+                        if(tempList0.Count == 0)
+                        {
+                            conn.Insert(new ToDoTaskSteps() { TaskId = subItem["TaskId"].ToString(), StepId = subItem["StepId"].ToString(), Content = subItem["Content"].ToString(), Finish = false, UnFinish = true, UpdateTime = subItem["UpdateTime"].ToString(), IsDelete = subItem["IsDelete"].ToString() });
+                        }
+                        else
+                        {
+                            conn.Execute("update ToDoTaskSteps set Content = ?, Finish = ?, UnFinish = ?, UpdateTime = ?, IsDelete = ? where TaskId = ? and StepId = ?",
+                                subItem["Content"].ToString(), finish, !finish, subItem["UpdateTime"].ToString(), subItem["IsDelete"].ToString(), subItem["TaskId"].ToString(), subItem["StepId"].ToString());
+                        }
                     }
-                    conn.Execute("update ToDoTasks set Name = ?, Date = ?, Star = ?, Remark = ?, Done = ?, UpdateTime = ?, IsDelete = ? where Name = ? and TaskId = ?",
+                    List<ToDoTasks> tempList1 = conn.Query<ToDoTasks>("select * from ToDoTasks where TaskId = ?", item["TaskId"].ToString());
+                    if (tempList1.Count == 0)
+                    {
+                        conn.Insert(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString(), Date = item["Date"].ToString(), Star = item["Star"].ToString(), Remark = item["Remark"].ToString(), Done = item["Done"].ToString(), UpdateTime = item["UpdateTime"].ToString(), IsDelete = item["IsDelete"].ToString() });
+                    }
+                    else
+                    {
+                        conn.Execute("update ToDoTasks set Name = ?, Date = ?, Star = ?, Remark = ?, Done = ?, UpdateTime = ?, IsDelete = ? where Name = ? and TaskId = ?",
                             item["TaskName"].ToString(), item["Date"].ToString(), item["Star"].ToString(), item["Remark"].ToString(), item["Done"].ToString(), item["UpdateTime"].ToString(), item["IsDelete"].ToString(), item["TaskName"].ToString(), item["TaskId"].ToString());
+                    }
                 }
                 conn.Commit();  // 事务结束
                 this.Invoke(() =>

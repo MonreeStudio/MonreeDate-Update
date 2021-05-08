@@ -416,7 +416,7 @@ namespace 倒计时
         {
             if (StepNameTextBox.Text.Equals(""))
             {
-                PopupNotice popupNotice = new PopupNotice("步骤名称不能为空~");
+                PopupNotice popupNotice = new PopupNotice("内容名称不能为空~");
                 popupNotice.ShowAPopup();
             }
             else
@@ -434,7 +434,7 @@ namespace 倒计时
                     }
                     else
                     {
-                        PopupNotice popupNotice0 = new PopupNotice("请勿重复添加步骤~");
+                        PopupNotice popupNotice0 = new PopupNotice("请勿重复添加同一内容~");
                         popupNotice0.ShowAPopup();
                     }
                 }
