@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations" xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Background="{ThemeResource CustomAcrylicInAppBrush}">
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <Style TargetType="Button" x:Key="CornerRadiusShadowButtonStyle">

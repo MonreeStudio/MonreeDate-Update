@@ -10,7 +10,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Background="{ThemeResource CustomAcrylicInAppBrush}">
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue" />
         <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="ThemeColor" x:FieldModifier="public"/>
@@ -146,7 +146,7 @@
                                 <Button x:Name="EditCornerNameButton" Content="修改" Foreground="White" Background="{x:Bind TC}" CornerRadius="15" Width="70" Margin="10,10,0,0" Click="EditCornerNameButton_Click"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="5,20,0,0">
-                                <ToggleSwitch x:Name="TransparentSwitch" Header="亚克力模糊背景" Foreground="{x:Bind TC}"  Toggled="TransparentSwitch_Toggled"/>
+                                <ToggleSwitch x:Name="TransparentSwitch" Header="亚克力模糊背景" Foreground="{x:Bind TC}" IsOn="True" Toggled="TransparentSwitch_Toggled"/>
                                 <TextBlock x:Name="TransparentTipText" Text="Tip：&#x0a;若在深色壁纸下，背景过暗的话，请关闭此选项" Margin="0,0,0,20" Foreground="{x:Bind TC}"/>
                                 <ToggleSwitch x:Name="ColorfulSwitch" Header="彩色背景" Foreground="{x:Bind TC}" IsOn="False" Toggled="ColorfulSwitch_Toggled"/>
                                 <StackPanel Orientation="Horizontal">

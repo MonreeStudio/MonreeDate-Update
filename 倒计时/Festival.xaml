@@ -53,7 +53,7 @@
     </Page.Resources>
     <Grid>
         <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
-            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Grid Background="{ThemeResource CustomAcrylicInAppBrush}">
 
                 <ListView x:Name="FesList" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
                     <ListView.Header>

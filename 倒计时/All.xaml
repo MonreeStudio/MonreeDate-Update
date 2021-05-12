@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     x:Name="APage"
     x:FieldModifier="Public"
-    Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+    Background="{ThemeResource CustomAcrylicInAppBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -359,7 +359,7 @@
 
     <Grid>
         <ScrollViewer x:Name="AllScrollViewer" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource CustomAcrylicInAppBrush}">
                 <RelativePanel x:FieldModifier="Public">
                     <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
                     <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">

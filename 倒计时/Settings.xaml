@@ -5,16 +5,11 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    xmlns:夏日="using:夏日"
-    xmlns:models="using:夏日.Models"
-    xmlns:media="using:Windows.UI.Xaml.Media" xmlns:local1="using:倒计时.Models" xmlns:muxc="using:Windows.UI.Xaml.Controls"
+    xmlns:local1="using:倒计时.Models"
     DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Background="{ThemeResource CustomAcrylicInAppBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue" />
@@ -598,16 +593,16 @@
                     <ProgressRing x:Name="LoadProgressBar" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
                     <StackPanel Grid.Row="2" Margin="0,10,0,0">
                         <TextBlock Text="选择同步逻辑：" Margin="0,0,0,5" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
-                        <muxc:SplitButton x:Name="SyncWaySplitButton" CornerRadius="8" BorderThickness="1" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="SyncWaySplitButton_Click">
+                        <SplitButton x:Name="SyncWaySplitButton" CornerRadius="8" BorderThickness="1" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="SyncWaySplitButton_Click">
                             合并两端数据
-                            <muxc:SplitButton.Flyout>
+                            <SplitButton.Flyout>
                                 <MenuFlyout Placement="Bottom">
                                     <MenuFlyoutItem x:Name="SyncWayItem1" Text="合并两端数据" Click="SyncWayItem1_Click"/>
                                     <MenuFlyoutItem x:Name="SyncWayItem2" Text="同步云端数据到本地" Click="SyncWayItem2_Click"/>
                                     <MenuFlyoutItem x:Name="SyncWayItem3" Text="同步本地数据到云端" Click="SyncWayItem3_Click"/>
                                 </MenuFlyout>
-                            </muxc:SplitButton.Flyout>
-                        </muxc:SplitButton>
+                            </SplitButton.Flyout>
+                        </SplitButton>
                     </StackPanel>
                     <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,20,0,0">
                         

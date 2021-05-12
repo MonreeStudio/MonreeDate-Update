@@ -1011,44 +1011,60 @@ namespace 倒计时
 
         private void GetLocalDataButton_Click(object sender, RoutedEventArgs e)
         {
-            if(localSettings.Values["UserName"] != null && localSettings.Values["Token"] != null)
+            try
             {
-                LoadProgressBar.IsActive = true;
-                SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
-                string data = syncManager.GetLocalTaskData().Trim();
-                JArray taskListJson = (JArray)JsonConvert.DeserializeObject(data);
-                listJson = taskListJson;
-                TaskViewModel.ToDoDatas.Clear();
-                foreach (var item in taskListJson)
+                if (localSettings.Values["UserName"] != null && localSettings.Values["Token"] != null)
                 {
-                    if (item["IsDelete"].ToString().Equals("0"))
-                        TaskViewModel.ToDoDatas.Add(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString() });
+                    LoadProgressBar.IsActive = true;
+                    SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
+                    string data = syncManager.GetLocalTaskData().Trim();
+                    JArray taskListJson = (JArray)JsonConvert.DeserializeObject(data);
+                    listJson = taskListJson;
+                    TaskViewModel.ToDoDatas.Clear();
+                    foreach (var item in taskListJson)
+                    {
+                        if (item["IsDelete"].ToString().Equals("0"))
+                            TaskViewModel.ToDoDatas.Add(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString() });
+                    }
+                    LoadProgressBar.IsActive = false;
+                    GetLocalDataIcon.Visibility = Visibility.Visible;
+                    GetCloudDataIcon.Visibility = Visibility.Collapsed;
                 }
-                LoadProgressBar.IsActive = false;
-                GetLocalDataIcon.Visibility = Visibility.Visible;
-                GetCloudDataIcon.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception err)
+            {
+                PopupNotice popupNotice = new PopupNotice("获取云端数据错误：" + err.Message);
+                popupNotice.ShowAPopup();
             }
         }
 
         private void GetCloudDataButton_Click(object sender, RoutedEventArgs e)
         {
-            if (localSettings.Values["UserName"] != null && localSettings.Values["Token"] != null)
+            try
             {
-                LoadProgressBar.IsActive = true;
-                SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
-                string data = syncManager.GetCloudTaskData().Trim().Replace("\n", "");
-                JArray taskListJson = (JArray)JsonConvert.DeserializeObject(data);
-                listJson = taskListJson;
-                LoadProgressBar.IsActive = false;
-                TaskViewModel.ToDoDatas.Clear();
-                foreach (var item in taskListJson)
+                if (localSettings.Values["UserName"] != null && localSettings.Values["Token"] != null)
                 {
-                    if(item["IsDelete"].ToString().Equals("0"))
-                        TaskViewModel.ToDoDatas.Add(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString() });
+                    LoadProgressBar.IsActive = true;
+                    SyncManager syncManager = new SyncManager(localSettings.Values["UserName"].ToString(), localSettings.Values["Token"].ToString());
+                    string data = syncManager.GetCloudTaskData().Trim().Replace("\n", "");
+                    JArray taskListJson = (JArray)JsonConvert.DeserializeObject(data);
+                    listJson = taskListJson;
+                    LoadProgressBar.IsActive = false;
+                    TaskViewModel.ToDoDatas.Clear();
+                    foreach (var item in taskListJson)
+                    {
+                        if (item["IsDelete"].ToString().Equals("0"))
+                            TaskViewModel.ToDoDatas.Add(new ToDoTasks() { TaskId = item["TaskId"].ToString(), Name = item["TaskName"].ToString() });
+                    }
+                    LoadProgressBar.IsActive = false;
+                    GetLocalDataIcon.Visibility = Visibility.Collapsed;
+                    GetCloudDataIcon.Visibility = Visibility.Visible;
                 }
-                LoadProgressBar.IsActive = false;
-                GetLocalDataIcon.Visibility = Visibility.Collapsed;
-                GetCloudDataIcon.Visibility = Visibility.Visible;
+            }
+            catch (Exception err)
+            {
+                PopupNotice popupNotice = new PopupNotice("获取云端数据错误：" + err.Message);
+                popupNotice.ShowAPopup();
             }
         }
 

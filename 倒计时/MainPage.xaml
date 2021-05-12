@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     x:FieldModifier="Public"
     x:Name="MPage"
-    Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+    Background="{ThemeResource CustomAcrylicInAppBrush}">
 
     <Page.Resources>
         <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
@@ -344,8 +344,8 @@
                 <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="日子"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItem x:Name="ToDoItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItem x:Name="NewItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
+                <NavigationViewItemSeparator Visibility="Collapsed"/>
+                <NavigationViewItem x:Name="NewItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItemHeader Content="工具"/>
                 <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
