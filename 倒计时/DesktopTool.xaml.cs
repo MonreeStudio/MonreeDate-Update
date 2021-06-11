@@ -138,7 +138,7 @@ namespace 倒计时
             }
             int count = (int)localSettings.Values["ItemCount"];
             List<DataTemple> datalist = new List<DataTemple>();
-            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            var allData = conn.Query<DataTemple>("select *from DataTemple order by Date asc");
             switch (count)
             {
                 case 1:
@@ -182,31 +182,31 @@ namespace 倒计时
             switch (count)
             {
                 case 1:
-                    List<DataTemple> a1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
+                    List<DataTemple> a1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[0].Schedule_name);
                     foreach (var item in a1)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 case 2:
-                    List<DataTemple> b1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
+                    List<DataTemple> b1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[0].Schedule_name);
                     foreach (var item in b1)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
-                    List<DataTemple> b2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[1].Schedule_name);
+                    List<DataTemple> b2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[1].Schedule_name);
                     foreach (var item in b2)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 case 3:
-                    List<DataTemple> c1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[0].Schedule_name);
+                    List<DataTemple> c1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[0].Schedule_name);
                     foreach (var item in c1)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
-                    List<DataTemple> c2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[1].Schedule_name);
+                    List<DataTemple> c2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[1].Schedule_name);
                     foreach (var item in c2)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
@@ -396,14 +396,24 @@ namespace 倒计时
 
         private void RefreshData()
         {
-            var timeNow = DateTime.Now;
-            if (Convert.ToInt32(timeNow.Hour) == 0
-                && Convert.ToInt32(timeNow.Minute) == 0
-                && Convert.ToInt32(timeNow.Second) == 0)
+            //ToolViewModel.ToolDatas.Clear();
+            LoadData();
+            if (IsNeededUpdate())
             {
-                ToolViewModel.ToolDatas.Clear();
+                
                 LoadData();
             }
+            
+        }
+
+        private bool IsNeededUpdate()
+        {
+            if (localSettings.Values["CurrentDate"] == null || !localSettings.Values["CurrentDate"].ToString().Equals(DateTime.Now.ToShortDateString()))
+            {
+                localSettings.Values["CurrentDate"] = DateTime.Now.ToShortDateString();
+                return true;
+            }
+            return false;
         }
 
         public async void Pip()
@@ -433,7 +443,7 @@ namespace 倒计时
                 SetTopBtn.Visibility = Visibility.Visible;
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
-            ApplicationView.PreferredLaunchViewSize = new Size(3000, 3000);
+            //ApplicationView.PreferredLaunchViewSize = new Size(3000, 3000);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             ////返回默认模式
@@ -447,8 +457,10 @@ namespace 倒计时
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
             preferences.CustomSize = new Size(330, viewHeight - 20);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
-            ApplicationView.PreferredLaunchViewSize = new Size(330, viewHeight - 20);
+            //ApplicationView.PreferredLaunchViewSize = new Size(330, viewHeight - 20);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+
             Frame.Navigate(typeof(DesktopTool), null, new SuppressNavigationTransitionInfo());
             //timer = new DispatcherTimer();
             //timer.Interval = new TimeSpan(0, 0, 1);

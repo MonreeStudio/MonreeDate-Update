@@ -343,9 +343,9 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="日子"/>
                 <NavigationViewItemSeparator/>
-                <NavigationViewItem x:Name="ToDoItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
+                <NavigationViewItem x:Name="ToDoItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
                 <NavigationViewItemSeparator Visibility="Collapsed"/>
-                <NavigationViewItem x:Name="NewItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
+                <NavigationViewItem x:Name="NewItem" Visibility="Visible" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItemHeader Content="工具"/>
                 <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>

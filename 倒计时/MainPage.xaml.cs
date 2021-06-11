@@ -73,8 +73,10 @@ namespace 倒计时
             GetAppVersion();
             MyNav.IsBackEnabled = false;
             SelectedPageItem = "";
-            ApplicationView.PreferredLaunchViewSize = new Size(1000, 1000);
+            //ApplicationView.PreferredLaunchViewSize = new Size;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+
             localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
             localSettings.Values["hasBeenOpened"] = "0";
         }
@@ -142,7 +144,7 @@ namespace 倒计时
         public async void CreateTool()
         {
             //GetViewHeight();
-            localSettings.Values["Pip"] = "1";
+            localSettings.Values["pip"] = "1";
             var num = CoreApplication.Views.Count();
             //if (localSettings.Values["newViewId"] != null)
             //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();

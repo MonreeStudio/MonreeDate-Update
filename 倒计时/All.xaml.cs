@@ -830,8 +830,8 @@ namespace 倒计时
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            //((NavigationViewItem)MainPage.Current.MyNav.MenuItems[2]).IsSelected = true;
-            //MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[2];
+            ((NavigationViewItem)MainPage.Current.MyNav.MenuItems[4]).IsSelected = true;
+            MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[4];
             Frame.Navigate(typeof(Add));
         }
 
