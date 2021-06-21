@@ -40,9 +40,11 @@ namespace 倒计时
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         List<DataTemple> list;
         DispatcherTimer timer;
+        DispatcherTimer timer2;
         public ToolDataViewModel ToolViewModel = new ToolDataViewModel();
         private int viewHeight;
         public static DesktopTool Current;
+        private string currentDate;
 
         public DesktopTool()
         {
@@ -54,10 +56,14 @@ namespace 倒计时
             //建表              
             conn.CreateTable<DataTemple>(); //默认表名同范型参数 
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 1);
+            timer2 = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 10, 0);
+            timer2.Interval = new TimeSpan(0, 0, 1);
             
             timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
+            //timer2.Tick += Timer_Tick2;
             timer.Start();
+            //timer2.Start();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
             title.BackgroundColor = Colors.SkyBlue;
@@ -68,6 +74,7 @@ namespace 倒计时
             title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
             InitializeFrostedGlass(rootGrid, 0);
             localSettings.Values["FirstlyStart"] = "1";
+            localSettings.Values["HasOpenTool"] = "1";
             LoadData();
             if (localSettings.Values["Pip"] == null)
                 localSettings.Values["Pip"] = "1";
@@ -78,7 +85,7 @@ namespace 倒计时
                 Pip();
             }
             //Pip();
-            
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         private async void ToCompactOverlay()
@@ -102,6 +109,11 @@ namespace 倒计时
             //    //Pip();
             //    ToCompactOverlay();
             //}
+            //bool isNeed = IsNeededUpdate();
+            //if (isNeed)
+            //{
+                
+            //}
             RefreshData();
             if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay)
             {
@@ -114,6 +126,11 @@ namespace 倒计时
                 SetTopBtn.Visibility = Visibility.Visible;
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void Timer_Tick2(object sender, object e)
+        {
+            currentDate = DateTime.Now.ToShortDateString();
         }
 
         public void LoadData()
@@ -396,22 +413,24 @@ namespace 倒计时
 
         private void RefreshData()
         {
-            //ToolViewModel.ToolDatas.Clear();
+            ToolViewModel.ToolDatas.Clear();
             LoadData();
-            if (IsNeededUpdate())
-            {
-                
-                LoadData();
-            }
-            
         }
 
         private bool IsNeededUpdate()
         {
-            if (localSettings.Values["CurrentDate"] == null || !localSettings.Values["CurrentDate"].ToString().Equals(DateTime.Now.ToShortDateString()))
+            try
             {
-                localSettings.Values["CurrentDate"] = DateTime.Now.ToShortDateString();
-                return true;
+                var timeNow = currentDate;
+                if (!MainPage.Current.CurrentDate.Equals(timeNow))
+                {
+                    MainPage.Current.CurrentDate = timeNow;
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                
             }
             return false;
         }
@@ -458,10 +477,11 @@ namespace 倒计时
             preferences.CustomSize = new Size(330, viewHeight - 20);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
             //ApplicationView.PreferredLaunchViewSize = new Size(330, viewHeight - 20);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             Frame.Navigate(typeof(DesktopTool), null, new SuppressNavigationTransitionInfo());
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
             //timer = new DispatcherTimer();
             //timer.Interval = new TimeSpan(0, 0, 1);
             //timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针

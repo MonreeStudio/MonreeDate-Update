@@ -329,21 +329,21 @@ namespace 倒计时
 
         public async Task LoadState()
         {
-            if (localSettings.Values["UserName"] != null && !localSettings.Values["UserName"].Equals(""))
-            {
-                LoginButton.Visibility = Visibility.Collapsed;
-                SignOutButton.Visibility = Visibility.Visible;
-                SyncButton.Visibility = Visibility.Visible;
-                EmailStackPanel.Visibility = Visibility.Visible;
-                PersonalEmail.Text = localSettings.Values["UserName"].ToString();
-            }
-            else
-            {
-                LoginButton.Visibility = Visibility.Visible;
-                SignOutButton.Visibility = Visibility.Collapsed;
-                SyncButton.Visibility = Visibility.Collapsed;
-                EmailStackPanel.Visibility = Visibility.Collapsed;
-            }
+            //if (localSettings.Values["UserName"] != null && !localSettings.Values["UserName"].Equals(""))
+            //{
+            //    LoginButton.Visibility = Visibility.Collapsed;
+            //    SignOutButton.Visibility = Visibility.Visible;
+            //    SyncButton.Visibility = Visibility.Visible;
+            //    EmailStackPanel.Visibility = Visibility.Visible;
+            //    PersonalEmail.Text = localSettings.Values["UserName"].ToString();
+            //}
+            //else
+            //{
+            //    LoginButton.Visibility = Visibility.Visible;
+            //    SignOutButton.Visibility = Visibility.Collapsed;
+            //    SyncButton.Visibility = Visibility.Collapsed;
+            //    EmailStackPanel.Visibility = Visibility.Collapsed;
+            //}
 
             var task = await StartupTask.GetAsync("AppAutoRun");
             AutoStartTipButton.Visibility = Visibility.Collapsed;

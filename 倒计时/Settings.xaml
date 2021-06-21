@@ -411,7 +411,7 @@
             </Grid>
             <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button x:Name="LoginButton" x:FieldModifier="Public" Content="登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="LoginButton_Click" Margin="0,0,10,0"/>
+                    <Button x:Name="LoginButton" x:FieldModifier="Public" Visibility="Collapsed" Content="登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="LoginButton_Click" Margin="0,0,10,0"/>
                     <Button x:Name="SignOutButton" x:FieldModifier="Public" Visibility="Collapsed" Content="退出登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="SignOutButton_Click"  Margin="0,0,10,0"/>
                     <Button x:Name="SyncButton" x:FieldModifier="Public" Visibility="Collapsed" Content="同步" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Click="SyncButton_Click" Margin="0,0,10,0"/>
                 </StackPanel>

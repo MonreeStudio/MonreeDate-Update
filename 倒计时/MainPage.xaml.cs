@@ -48,6 +48,7 @@ namespace 倒计时
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         static SQLite.Net.SQLiteConnection conn;
         private int viewHeight;
+        public string CurrentDate { get; set; }
 
         public MainPage()
         {
@@ -74,11 +75,20 @@ namespace 倒计时
             MyNav.IsBackEnabled = false;
             SelectedPageItem = "";
             //ApplicationView.PreferredLaunchViewSize = new Size;
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
             localSettings.Values["hasBeenOpened"] = "0";
+            if(localSettings.Values["HasOpenTool"] == null || localSettings.Values["HasOpenTool"].ToString().Equals("0"))
+            {
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            }
+            else
+            {
+                ApplicationView.PreferredLaunchViewSize = new Size(1920, 1080);
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            }
+            localSettings.Values["HasOpenTool"] = "0";
+            CurrentDate = DateTime.Now.ToShortDateString();
         }
 
         private void GetViewHeight()
@@ -461,10 +471,10 @@ namespace 倒计时
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["2.3.5.0"] == null)
+            if (localSettings.Values["2.3.6.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["2.3.5.0"] = "false";
+                localSettings.Values["2.3.6.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
@@ -514,5 +524,6 @@ namespace 倒计时
             MyNav.SelectedItem = FeedbackItem;
             ContentFrame.Navigate(typeof(Feedback));
         }
+
     }
 }
