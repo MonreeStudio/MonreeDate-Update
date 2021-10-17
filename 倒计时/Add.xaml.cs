@@ -266,33 +266,6 @@ namespace 倒计时
             await DateDialog.ShowAsync();
         }
 
-        private async void DateDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            try
-            {
-                var today = DateTime.Now;
-                var count = Convert.ToInt32(DaysTextBox.Text);
-                if (today.AddDays(count) > Convert.ToDateTime("2120/12/31"))
-                {
-                    PopupNotice popupNotice = new PopupNotice("超出了最大范围");
-                    popupNotice.ShowAPopup();
-                }
-                var res = today.AddDays(count);
-                Add_Picker.Date = Convert.ToDateTime(res);
-            }
-            catch(Exception e)
-            {
-                MessageDialog message = new MessageDialog("异常类型："+ e.ToString() + "影响使用的话请及时反馈。","发生异常！");
-                await message.ShowAsync();
-            }
-            DaysTextBox.Text = "";
-        }
-
-        private void DateDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            DaysTextBox.Text = "";
-        }
-
         private void DaysTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var textbox = (TextBox)sender;
@@ -314,6 +287,66 @@ namespace 倒计时
             var _item = (ThemeColorData)e.ClickedItem;
             MyColorPicker.Color = _item.themeColor.Color;
             DefaltColorFlyout.Hide();
+        }
+
+        private void BgsDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            _Color = MyColorPicker.Color.ToString();
+            MyEllipse.Fill = new SolidColorBrush(GetColor(_Color));
+            _TintOpacity = MySlider.Value / 100;
+            BgsDialog.Hide();
+        }
+
+        private void BgsDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            BgsDialog.Hide();
+        }
+
+        private void TipDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            _Tip = TipTextbox.Text;
+            TTB.Text = _Tip;
+            TipDialog.Hide();
+        }
+
+        private void TipDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            TipTextbox.Text = "";
+            TipDialog.Hide();
+        }
+
+        private async void DateDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var count = Convert.ToInt32(DaysTextBox.Text);
+                if (today.AddDays(count) > Convert.ToDateTime("2120/12/31"))
+                {
+                    PopupNotice popupNotice = new PopupNotice("超出了最大范围");
+                    popupNotice.ShowAPopup();
+                }
+                var res = today.AddDays(count);
+                Add_Picker.Date = Convert.ToDateTime(res);
+            }
+            catch (FormatException e0)
+            {
+
+            }
+            catch (Exception e1)
+            {
+                MessageDialog message = new MessageDialog("异常类型：" + e1.ToString() + "影响使用的话请及时反馈。", "发生异常！");
+                await message.ShowAsync();
+            }
+            
+            DaysTextBox.Text = "";
+            DateDialog.Hide();
+        }
+
+        private void DateDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            DaysTextBox.Text = "";
+            DateDialog.Hide();
         }
     }
 }

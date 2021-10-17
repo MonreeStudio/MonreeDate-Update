@@ -29,7 +29,13 @@ using BackgroundTasks;
 using Windows.UI.Popups;
 using SQLite.Net.Platform.WinRT;
 using Windows.UI.Core;
-
+using Microsoft.UI.Xaml.Controls;
+using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
+using NavigationViewItemInvokedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs;
+using NavigationViewBackRequestedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewBackRequestedEventArgs;
+using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
+using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
+// NavigationViewExpandedPaneBackground
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -61,7 +67,6 @@ namespace 倒计时
             SelectedPage = true;
             var applicationView = CoreApplication.GetCurrentView();
             applicationView.TitleBar.ExtendViewIntoTitleBar = true;
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             var title = ApplicationView.GetForCurrentView().TitleBar;
             title.BackgroundColor = Colors.SkyBlue;
@@ -356,7 +361,7 @@ namespace 倒计时
             this.KeyboardAccelerators.Add(altLeft);
         }
 
-        private void MyNav_ItemInvoked(NavigationView sender,NavigationViewItemInvokedEventArgs args)
+        private void MyNav_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             FeedbackItem.IsSelected = false;
             if (args.IsSettingsInvoked == true)
@@ -467,21 +472,22 @@ namespace 倒计时
 
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
+            //localSettings.Values["3.0.0.0"] = null;
             if (localSettings.Values["hasBeenOpened"] == null)
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["2.3.6.0"] == null)
+            if (localSettings.Values["3.0.0.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["2.3.6.0"] = "false";
+                localSettings.Values["3.0.0.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
             if (ContentFrame.SourcePageType == typeof(Settings))
             {
                 // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
-                MyNav.SelectedItem = (NavigationViewItem)MyNav.SettingsItem;
+                MyNav.SelectedItem = (Microsoft.UI.Xaml.Controls.NavigationViewItem)MyNav.SettingsItem;
                 //MyNav.Header = "Settings";
             }
             else if (ContentFrame.SourcePageType != null)
@@ -512,10 +518,9 @@ namespace 倒计时
             Version.Text = appVersion;
         }
 
-        private async void MyCD_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void MyCD_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
-            await Launcher.LaunchUriAsync(Uri);
+            
         }
 
         private void FeedbackItem_Tapped(object sender, TappedRoutedEventArgs e)
@@ -525,5 +530,16 @@ namespace 倒计时
             ContentFrame.Navigate(typeof(Feedback));
         }
 
+        private void MyCDPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            MyCD.Hide();
+        }
+
+        private async void MyCDSecondaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
+            await Launcher.LaunchUriAsync(Uri);
+            MyCD.Hide();
+        }
     }
 }

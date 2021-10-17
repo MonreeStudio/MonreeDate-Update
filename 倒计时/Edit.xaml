@@ -6,15 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:倒计时.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush" />
     </Page.Resources>
 
     <Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid>
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />

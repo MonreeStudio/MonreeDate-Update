@@ -205,9 +205,7 @@ namespace 夏日
 
         private void BgsDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            _Color = MyColorPicker.Color.ToString();
-            MyEllipse.Fill = new SolidColorBrush(GetColor(_Color));
-            _TintOpacity = MySlider.Value / 100;
+            
         }
 
         private string Calculator(string s1)
@@ -249,6 +247,31 @@ namespace 夏日
         {
             _tip = TipTextbox.Text;
             TTB.Text = _tip;
+        }
+
+        private void TipDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            _tip = TipTextbox.Text;
+            TTB.Text = _tip;
+            TipDialog.Hide();
+        }
+
+        private void TipDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            TipDialog.Hide();
+        }
+
+        private void BgsDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            _Color = MyColorPicker.Color.ToString();
+            MyEllipse.Fill = new SolidColorBrush(GetColor(_Color));
+            _TintOpacity = MySlider.Value / 100;
+            BgsDialog.Hide();
+        }
+
+        private void BgsDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            BgsDialog.Hide();
         }
     }
 }

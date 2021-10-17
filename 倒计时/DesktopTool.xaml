@@ -8,7 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource SystemColorWindowColor}">
 
     <Grid MinWidth="320">
         <Grid.RowDefinitions>
@@ -22,7 +22,7 @@
             <ListView x:Name="DesktopListView" SelectionMode ="None" HorizontalAlignment="Center" Margin="0,8,0,0" ItemsSource="{x:Bind ToolViewModel.ToolDatas}">
                 <ListView.Header>
                     <controls:ScrollHeader Mode="Sticky">
-                        <Grid x:Name="MyHeaderGrid" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                        <Grid x:Name="MyHeaderGrid" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
                         </Grid>
                     </controls:ScrollHeader>

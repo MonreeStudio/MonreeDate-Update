@@ -9,10 +9,11 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     x:FieldModifier="Public"
-    Background="White">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush" />
         <Style x:Key="ThumbStyle1" TargetType="Thumb">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -53,7 +54,7 @@
     </Page.Resources>
     <Grid>
         <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
-            <Grid Background="{ThemeResource CustomAcrylicInAppBrush}">
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
                 <ListView x:Name="FesList" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
                     <ListView.Header>

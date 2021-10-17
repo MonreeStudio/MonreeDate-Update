@@ -22,7 +22,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using SQLitePCL;
 using SQLite.Net.Platform.WinRT;
 using SQLite.Net.Interop;
 using SQLite.Net.Attributes;
@@ -307,6 +306,9 @@ namespace 倒计时
                 {
                     //TODO: 从之前挂起的应用程序加载状态
                 }
+
+                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.ExtendViewIntoTitleBar = true;
 
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;

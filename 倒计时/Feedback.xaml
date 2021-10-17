@@ -6,11 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
+        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush" />
+
     </Page.Resources>
-    <Grid>
+    <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="2*"/>
@@ -57,7 +59,7 @@
                                                   Color="Gray"
                                                   CornerRadius="10"
                                                   IsMasked="True">
-                            <Grid x:Name="FaqGrid" Width="350" Height="330" Padding="15" CornerRadius="10" HorizontalAlignment="Left" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+                            <Grid x:Name="FaqGrid" Width="350" Height="330" Padding="15" CornerRadius="10" HorizontalAlignment="Left" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid>
                                         <ProgressRing x:Name="FaqProgressBar" Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"/>
@@ -77,7 +79,7 @@
                                                   Color="Gray"
                                                   CornerRadius="10"
                                                   IsMasked="True">
-                            <Grid x:Name="VersionGrid" Width="350" Height="330" Padding="15" CornerRadius="10" HorizontalAlignment="Left" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+                            <Grid x:Name="VersionGrid" Width="350" Height="330" Padding="15" CornerRadius="10" HorizontalAlignment="Left" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid>
                                         <ProgressRing x:Name="VersionProgressBar" Foreground="{x:Bind TC}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"/>

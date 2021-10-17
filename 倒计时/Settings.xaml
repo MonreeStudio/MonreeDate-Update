@@ -9,7 +9,7 @@
     xmlns:local1="using:倒计时.Models"
     DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue" />
@@ -332,7 +332,7 @@
         </Style>
     </Page.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid>
+        <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
@@ -377,7 +377,7 @@
                                 <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalNickName" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="游客" FontSize="13"/>
                             </StackPanel>
-                            <StackPanel x:Name="EmailStackPanel" Orientation="Horizontal">
+                            <StackPanel x:Name="EmailStackPanel" Orientation="Horizontal" Visibility="Collapsed">
                                 <TextBlock x:Name="EmailTB" Text="邮箱：" Foreground="{x:Bind TC}" FontSize="13"/>
                                 <TextBlock x:Name="PersonalEmail" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="无" FontSize="13"/>
                             </StackPanel>
@@ -620,69 +620,68 @@
             </ContentDialog>
             <ContentDialog x:Name="AboutContent"
                        Title="关于“夏日”"
-                       PrimaryButtonText="了解"
-                       SecondaryButtonText="五星好评😝"
-                       CloseButtonText="不了解"
                        DefaultButton="Primary"
-                       CornerRadius="10"
-                       Background="{ThemeResource SystemControlAltHighAcrylicElementBrush}"
-                       SecondaryButtonClick="AboutContent_SecondaryButtonClick">
+                       CornerRadius="10">
                 <ScrollViewer>
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <TextBlock Foreground="DarkSlateGray" x:Name="Version" Margin="10,10,0,5" />
-                        <TextBlock Foreground="DarkSlateGray" x:Name="SystemVersion" Margin="10,0,0,5" />
-                        <TextBlock Foreground="DarkSlateGray" x:Name="Platform" Margin="10,0,0,10"/>
-                        <TextBlock Foreground="DarkSlateGray" Text="一款简约设计的纪念日/倒计时记录应用。" 
+                        <TextBlock Foreground="Gray" x:Name="Version" Margin="10,10,0,5" />
+                        <TextBlock Foreground="Gray" x:Name="SystemVersion" Margin="10,0,0,5" />
+                        <TextBlock Foreground="Gray" x:Name="Platform" Margin="10,0,0,10"/>
+                        <TextBlock Foreground="Gray" Text="一款简约设计的纪念日/倒计时记录应用。" 
             TextWrapping="Wrap" Margin="10"/>
                         <Image Source="Assets/03.png" Width="350" Height="350"/>
-                        <TextBlock Foreground="DarkSlateGray" Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
-                        <TextBlock  Foreground="DarkSlateGray" Text="开发者邮箱：monreestudio@outlook.com" Margin="10" />
+                        <TextBlock Foreground="Gray" Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
+                        <TextBlock  Foreground="Gray" Text="开发者邮箱：monreestudio@outlook.com" Margin="10" />
                         <HyperlinkButton Content="Github开源项目" 
                                  Margin="10"
                                          Visibility="Collapsed"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <Button x:Name="AboutDialogPrimaryButton" Content="了解" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="116" Click="AboutDialogPrimaryButton_Click"/>
+                            <Button x:Name="AboutDialogSecondryButton" Content="五星好评😝" Margin="0,0,4,0" Width="116" Click="AboutDialogSecondryButton_Click"/>
+                            <Button x:Name="AboutDialogCloseButton" Content="不了解" Width="116" Click="AboutDialogCloseButton_Click"/>
+
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </ContentDialog>
             <ContentDialog x:Name="BirthDialog"
                        Title="添加出生日为日程"
-                       PrimaryButtonText="确认"
-                       CloseButtonText="取消"
-                       DefaultButton="Primary"
-                       CornerRadius="10"
-                       Background="White"
-                       PrimaryButtonClick="BirthDialog_PrimaryButtonClick">
+                       CornerRadius="10">
                 <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <TextBlock x:Name="BirthText"/>
                     <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
                                 TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                        <Button x:Name="BirthDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="BirthDialogPrimaryButton_Click"/>
+                        <Button x:Name="BirthDialogCloseButton" Content="取消" Width="200" Click="BirthDialogCloseButton_Click"/>
+
+                    </StackPanel>
                 </StackPanel>
             </ContentDialog>
             <ContentDialog x:Name="AutoStartTipDialog"
                            Title="设置应用开机自启动"
-                       PrimaryButtonText="学会了！"
-                       DefaultButton="Primary"
-                       CornerRadius="10"
-                       Background="White">
+                       CornerRadius="10">
                 <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <TextBlock TextWrapping="WrapWholeWords" Foreground="Gray" Width="400">
                         夏日暂不支持一键设置应用开机自启动，但可以通过您手动设置实现。只需以下简单几步：
                     </TextBlock>
                     <TextBlock Text="1、右击屏幕左下角的开始按钮，选择 运行；&#x0a;2、在 运行 内输入shell:startup，此时会打开一个文件夹窗口；&#x0a;3、打开开始菜单，在左侧的列表中找到夏日；&#x0a;4、将夏日拖拽到刚刚打开的文件夹窗口；" 
-                               Foreground="DarkSlateGray"
+                               Foreground="Gray"
                                Margin="10"/>
-                    
+                    <StackPanel  Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Right">
+                        <Button x:Name="AutoStartTipDialogPrimaryButton" Content="学会了！" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="AutoStartTipDialogPrimaryButton_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </ContentDialog>
             <ContentDialog x:Name="CropperDialog"
                            Title="编辑头像"
-                           CornerRadius="10"
-                           Background="White"
-                           PrimaryButtonText="确认"
-                           DefaultButton="Primary"
-                           CloseButtonText="取消"
-                           PrimaryButtonClick="CropperDialog_PrimaryButtonClick" >
+                           CornerRadius="10">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
@@ -712,6 +711,10 @@
                                 Click="PickImgButton_Click"
                                 Command="{Binding CropCircularImageCommand}"
                                 Content="选取图片"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                        <Button x:Name="CropperDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="CropperDialogPrimaryButton_Click"/>
+                        <Button x:Name="CropperDialogCloseButton" Content="取消" Width="200" Click="CropperDialogCloseButton_Click"/>
                     </StackPanel>
                 </Grid>
             </ContentDialog>

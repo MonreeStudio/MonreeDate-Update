@@ -8,7 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     mc:Ignorable="d"
-    Background="{ThemeResource CustomAcrylicBackgroundBrush}">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -22,6 +22,7 @@
         <SolidColorBrush x:Key="OriginalButtonForegroundPointerOver" Color="Black"/>
         <SolidColorBrush x:Key="OriginalButtonBackgroundPressed" Color ="DarkGray"/>
         <Thickness x:Key="ContentDialogPadding">0</Thickness>
+
         <Style x:Name="CloseContentDialog" TargetType="ContentDialog">
             <Setter Property="Foreground" Value="{ThemeResource ContentDialogForeground}" />
             <Setter Property="Background" Value="{ThemeResource ContentDialogBackground}" />
@@ -461,7 +462,7 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Grid.Row="3"/>
-            <Grid  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Grid  CornerRadius="8" Grid.Row="4"  Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -486,8 +487,9 @@
                            Foreground="CornflowerBlue"
                            DefaultButton="Primary"
                                CornerRadius="10"
+                               
                            x:Name="RenderDialog">
-                    <StackPanel>
+                    <StackPanel Margin="10">
                         <Border x:Name="RenderBorder" x:FieldModifier="public">
                             <Grid x:Name="RenderGrid" Padding="25,10,30,10"  Height="Auto" Width="Auto">
                                 <Grid.RowDefinitions>
@@ -528,8 +530,8 @@
                 </ContentDialog>
             </Grid>
             <TextBlock Text="——夏日——" Margin="20" Grid.Row="5" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
-            <ContentDialog x:Name="AlertContentDialog" CornerRadius="10" Style="{ThemeResource CloseContentDialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel VerticalAlignment="Stretch" Margin="0,0,0,20">
+            <ContentDialog x:Name="AlertContentDialog"  CornerRadius="10" Style="{ThemeResource CloseContentDialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel VerticalAlignment="Stretch" Margin="0,0,0,20" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
                     <Button x:Name="CloseContentDialogBtn" Click="CloseContentDialogBtn_Click" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" BorderThickness="0" Padding="10" HorizontalAlignment="Right" Background="Transparent"/>
                     <TextBlock Text="设置提醒" Margin="20,0,0,20" FontWeight="Bold" FontSize="20" Foreground="{x:Bind TC}"/>
                     <StackPanel Orientation="Horizontal" Margin="10,0,0,10">

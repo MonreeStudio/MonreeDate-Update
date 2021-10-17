@@ -12,7 +12,10 @@
     mc:Ignorable="d"
     x:Name="APage"
     x:FieldModifier="Public"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+        Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+
+    >
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -359,9 +362,9 @@
 
     <Grid>
         <ScrollViewer x:Name="AllScrollViewer" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" Background="{ThemeResource CustomAcrylicInAppBrush}">
+            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" >
                 <RelativePanel x:FieldModifier="Public">
-                    <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,36,0,0" VerticalAlignment="Center" Width="Auto"/>
+                    <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,40,0,0" VerticalAlignment="Center" Width="Auto"/>
                     <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
                         <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
                             <AppBarButton.Icon>
@@ -375,9 +378,9 @@
                             <AppBarButton.Flyout>
                                 <MenuFlyout Placement="Bottom">
                                     <MenuFlyoutItem x:Name="DisplayAll" Text="显示全部" Foreground="{x:Bind TC}" Click="DisplayAll_Click"/>
-                                    <MenuFlyoutSeparator Background="{x:Bind TC}"/>
+                                    <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem x:Name="DisplatPast" Text="显示已过日程" Foreground="{x:Bind TC}" Click="DisplatPast_Click"/>
-                                    <MenuFlyoutSeparator Background="{x:Bind TC}"/>
+                                    <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem x:Name="DisplayFuture" Text="显示未过日程" Foreground="{x:Bind TC}" Click="DisplayFuture_Click"/>
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
@@ -436,20 +439,20 @@
                     </TextBlock>
                 </Grid>
                 <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Margin="0,0,0,0" Foreground="{x:Bind TC}" FontSize="30" FontWeight="Thin" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
-                <ProgressBar x:Name="MyProgressBar" Width="365" Foreground="SkyBlue" Background="CornflowerBlue" Margin="0,0,0,20"/>
+                <ProgressBar x:Name="MyProgressBar" Width="365" Height="4.8" Foreground="SkyBlue" Background="CornflowerBlue" Margin="0,0,0,20" CornerRadius="2"/>
                 <TextBlock x:Name="MarginText" x:FieldModifier="public" Height="30"/>
                 <ContentDialog x:Name="DeleteDialog"
                        Title="确定删除该日程吗?"
-                       PrimaryButtonText="确定"
-                       CloseButtonText="手滑了"
-                               CornerRadius="8"
-                       DefaultButton="Primary"
-
-                       PrimaryButtonClick="DeleteDialog_PrimaryButtonClick">
-                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="300">
-                        <TextBlock TextWrapping="Wrap" Foreground="DarkSlateGray">
+                               CornerRadius="8">
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="324">
+                        <TextBlock TextWrapping="Wrap" Foreground="Gray">
                     删除后该日程将在你的首页中移除，你可以在“新建”页面重新添加。
                         </TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                            <Button x:Name="DeleteDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="160" Click="DeleteDialogPrimaryButton_Click"/>
+                            <Button x:Name="DeleteDialogCloseButton" Content="手滑了" Width="160" Click="DeleteDialogCloseButton_Click"/>
+
+                        </StackPanel>
                     </StackPanel>
                 </ContentDialog>
                 <Grid>
@@ -462,9 +465,9 @@
                             <MenuFlyout x:Name="MyMenuFlyout">
                                 <MenuFlyoutItem x:Name="SetTop" Icon="Upload" Text="置顶" Foreground="{x:Bind TC}" Visibility="Visible" Click="SetTop_Click"/>
                                 <MenuFlyoutItem x:Name="Cancel" Icon="Redo" Text="取消置顶" Foreground="{x:Bind TC}" Visibility="Collapsed" Click="Cancel_Click"/>
-                                <MenuFlyoutSeparator x:Name="FS" Background="{x:Bind TC}"/>
+                                <MenuFlyoutSeparator x:Name="FS"/>
                                 <MenuFlyoutItem x:Name="MyFlyout" Icon="Delete" Foreground="{x:Bind TC}" Text="删除日程" Click="MenuFlyoutItem_Click" IsEnabled="False"/>
-                                <MenuFlyoutSeparator x:Name="FS2" Background="{x:Bind TC}"/>
+                                <MenuFlyoutSeparator x:Name="FS2"/>
                                 <MenuFlyoutItem x:Name="PinToSC" Icon="Pin" Foreground="{x:Bind TC}" Text="固定日程到开始菜单" Visibility="Visible" Click="PinToSC_Click"/>
                                 <MenuFlyoutItem x:Name="unPinToSC" Icon="Unpin" Foreground="{x:Bind TC}" Text="从开始菜单中取消固定" Visibility="Collapsed" Click="unPinToSC_Click"/>
                                 <MenuFlyoutItem x:Name="MainTile" Icon="Accept" Foreground="{x:Bind TC}" Text="该日程已被自动设为主磁贴&#x0a;将应用固定到开始菜单后自动启用" IsEnabled="False" Visibility="Collapsed"/>
@@ -492,8 +495,8 @@
                         </animations:Implicit.ShowAnimations>
                     </GridView>
                 </Grid>
-                <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
-                <TextBlock x:Name="NewTB2" x:FieldModifier="public" Visibility="Collapsed" Text="（创建后可右键删除）" Opacity="0.4" Foreground="Black" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock x:Name="NewTB" x:FieldModifier="public" Visibility="Collapsed" Text="创建你的第一个日程吧！" Opacity="0.4" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
+                <TextBlock x:Name="NewTB2" x:FieldModifier="public" Visibility="Collapsed" Text="（创建后可右键删除）" Opacity="0.4" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup>
                         <VisualState>
@@ -529,7 +532,7 @@
                         MinWindowWidth="{x:Bind MinMyNav}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Today.Margin" Value="20,55,0,0"/>
+                        <Setter Target="Today.Margin" Value="20,40,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

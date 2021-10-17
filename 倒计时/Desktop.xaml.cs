@@ -270,10 +270,7 @@ namespace 倒计时
 
         private void ColorfulDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            color = ColorfulBcakgroundPicker.Color.ToString();
-            ColorfulEllipse.Fill = new SolidColorBrush(GetColor(color));
-            ColorfulEllipse.Visibility = Visibility.Visible;
-            localSettings.Values["ToolColor"] = color;
+            
         }
 
         public Color GetColor(string hex)
@@ -314,6 +311,20 @@ namespace 倒计时
                 else
                     localSettings.Values["Transparent"] = "0";
             }
+        }
+
+        private void ColorfulDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            color = ColorfulBcakgroundPicker.Color.ToString();
+            ColorfulEllipse.Fill = new SolidColorBrush(GetColor(color));
+            ColorfulEllipse.Visibility = Visibility.Visible;
+            localSettings.Values["ToolColor"] = color;
+            ColorfulDialog.Hide();
+        }
+
+        private void ColorfulDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorfulDialog.Hide();
         }
     }
 }

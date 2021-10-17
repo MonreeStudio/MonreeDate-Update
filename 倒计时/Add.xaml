@@ -4,14 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:倒计时.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:control="using:倒计时.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
         <StaticResource x:Key="SliderThumbBackground" ResourceKey="ThemeColor" />
+        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush" />
+
         <Style TargetType="ContentDialog">
             <Setter Property="Foreground" Value="{ThemeResource ThemeColor}" />
             <Setter Property="Background" Value="{ThemeResource ContentDialogBackground}" />
@@ -318,7 +322,7 @@
     </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="AddPageGird" x:FieldModifier="Public">
+        <Grid x:Name="AddPageGird" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -416,16 +420,15 @@
                     </CalendarDatePicker.CalendarViewStyle>
                 </CalendarDatePicker>
                 <TextBlock Text="或" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                <Button x:Name="DateChooseBtn" Content="&#x1F4A1;" Height="35" Width="35" ToolTipService.ToolTip="试一试选择多少天后的日子" Foreground="Orange" FontSize="18" FontFamily="Segoe UI Emoji" BorderThickness="0" Background="Transparent" Margin="2,10,20,10" CornerRadius="100" Click="DateChooseBtn_Click"/>
+                <Button x:Name="DateChooseBtn" Content="&#x1F4A1;" Height="44" Width="44" ToolTipService.ToolTip="试一试选择多少天后的日子" Foreground="Orange" FontSize="18" FontFamily="Segoe UI Emoji" BorderThickness="0" Background="Transparent" Margin="2,10,20,10" CornerRadius="100" Click="DateChooseBtn_Click"/>
                 <StackPanel Grid.Row="2" Grid.Column="1" Margin="20" Orientation="Horizontal">
                     <Button Content="背景选项"
                 x:Name="BgsButton"
                 HorizontalAlignment="Left"
                 CornerRadius="15"
+                            Foreground="White"
                 Background="{x:Bind TC}"
-                Foreground="White"
-                Click="BgsButton_Click"
-                />
+                Click="BgsButton_Click"/>
                     <Ellipse x:Name="MyEllipse" Height="20" Width="20" Margin="10" Fill="Transparent" StrokeThickness="0"/>
                 </StackPanel>
             </StackPanel>
@@ -438,6 +441,7 @@
                 HorizontalAlignment="Center"
                 Foreground="White"
                 Background="{x:Bind TC}"
+                        
                 CornerRadius="15"
                 Click="TipButton_Click"/>
                 <TextBlock x:Name="TTB" Foreground="Gray"  FontSize="15" Width="200" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
@@ -459,15 +463,11 @@
 
             <ContentDialog x:Name="BgsDialog"
                    Title="背景设置"
-                   PrimaryButtonText="确定"
-                   CloseButtonText="取消"
-                   DefaultButton="Primary"
                    CornerRadius="10"
-                   Background="White"
-                   PrimaryButtonClick="BgsDialog_PrimaryButtonClick">
-                <ScrollViewer>
+                   >
+                <ScrollViewer Padding="10,0,10,0">
                     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <TextBlock Text="建议选择较为温和的颜色" Foreground="DarkSlateGray" Margin="5,0,0,0" TextWrapping="Wrap"/>
+                        <TextBlock Text="建议选择较为温和的颜色" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" Margin="5,0,0,0" TextWrapping="Wrap"/>
                             <ColorPicker x:Name="MyColorPicker"
                              Margin="5"
                              IsColorSliderVisible="True"
@@ -478,7 +478,7 @@
                              IsAlphaSliderVisible="True"
                              IsAlphaTextInputVisible="True"
                              />
-                    <Button Content="选择自带颜色" Foreground="White" Background="{x:Bind TC}" CornerRadius="6">
+                        <Button Content="选择自带颜色" Foreground="White" Background="{x:Bind TC}" CornerRadius="6">
                         <Button.Flyout>
                             <Flyout x:Name="DefaltColorFlyout">
                                     <StackPanel Orientation="Vertical" Width="240">
@@ -506,37 +506,43 @@
                         Maximum="100"
                         TickFrequency="10"
                         TickPlacement="Outside" />
-                        
-                    
-                </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                            <Button x:Name="BgsDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="BgsDialogPrimaryButton_Click"/>
+                            <Button x:Name="BgsDialogCloseButton" Content="取消" Width="200" Click="BgsDialogCloseButton_Click"/>
+
+                        </StackPanel>
+                    </StackPanel>
+                
     </ScrollViewer>
     </ContentDialog>
             <ContentDialog x:Name="TipDialog"
                        Title="添加备注"
-                       PrimaryButtonText="确定"
-                       CloseButtonText="取消"
-                       DefaultButton="Primary"
                        CornerRadius="10"
-                       Background="White"
-                       PrimaryButtonClick="TipDialog_PrimaryButtonClick"
-                       CloseButtonClick="TipDialog_CloseButtonClick">
-                <TextBox x:Name="TipTextbox" Margin="5" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="8"/>
+                       >
+                <StackPanel>
+                    <TextBox x:Name="TipTextbox" Margin="5" TextWrapping="Wrap" BorderThickness="2" PlaceholderText ="备注可留空" CornerRadius="8"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                        <Button x:Name="TipDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="TipDialogPrimaryButton_Click"/>
+                        <Button x:Name="TipDialogCloseButton" Content="取消" Width="200" Click="TipDialogCloseButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            
             </ContentDialog>
             <ContentDialog x:Name="DateDialog"
                        Title="选择多少天后的日子"
-                       PrimaryButtonText="确定"
-                       CloseButtonText="取消"
-                       DefaultButton="Primary"
                        CornerRadius="10"
                            Foreground="{x:Bind TC}"
-                       Background="White"
-                       PrimaryButtonClick="DateDialog_PrimaryButtonClick"
-                           CloseButtonClick="DateDialog_CloseButtonClick">
+                       >
                 <StackPanel>
                     <TextBlock x:Name="TodayDate" Text="今天是……" Foreground="DimGray" FontSize="16"/>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
                         <TextBox x:Name="DaysTextBox" MaxLength="5" InputScope="Number" Margin="0,0,5,0" CornerRadius="5" FontSize="15" TextAlignment="Center" BorderBrush="{x:Bind TC}" TextChanged="DaysTextBox_TextChanged"/>
                         <TextBlock x:Name="DayCountTextBlock" Text="天后" VerticalAlignment="Center" Width="Auto" FontSize="20" Foreground="SlateGray"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                        <Button x:Name="DateDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="DateDialogPrimaryButton_Click"/>
+                        <Button x:Name="DateDialogCloseButton" Content="取消" Width="200" Click="DateDialogCloseButton_Click"/>
                     </StackPanel>
                 </StackPanel>
             </ContentDialog>

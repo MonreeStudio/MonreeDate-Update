@@ -10,16 +10,18 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue" />
         <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="ThemeColor" x:FieldModifier="public"/>
         <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
         <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="ThemeColor"/>
+        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush" />
+
     </Page.Resources>
     <Grid>
     <ScrollViewer>
-    <Grid>
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -46,7 +48,7 @@
                                   Margin="10,50,10,0"
                                   IsMasked="True"
                                   >
-            <StackPanel x:Name="ListBackgroundPanel" Orientation="Vertical" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"  CornerRadius="10" Grid.Row="1" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <StackPanel x:Name="ListBackgroundPanel" Orientation="Vertical" Background="{ThemeResource SystemControlAcrylicWindowBrush}"  CornerRadius="10" Grid.Row="1" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <StackPanel>
                 <TextBlock Text="日程列表" HorizontalAlignment="Left" FontWeight="Bold" FontSize="23" Margin="0,10,0,20" />
                 <controls:DropShadowPanel BlurRadius="10"
@@ -128,10 +130,10 @@
                                   Margin="10,20,10,50"
                                   IsMasked="True"
                                   >
-                    <StackPanel x:Name="SettingsPanel" Width="465" Orientation="Vertical" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"  CornerRadius="10" Grid.Row="1" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <StackPanel x:Name="SettingsPanel" Width="465" Orientation="Vertical" Background="{ThemeResource SystemControlAcrylicWindowBrush}"  CornerRadius="10" Grid.Row="1" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Top">
                         <StackPanel>
                             <TextBlock Text="个性化设置" HorizontalAlignment="Left" FontWeight="Bold" FontSize="23" Margin="0,10,0,10" />
-                            <TextBlock x:Name="Header1" Foreground="Black" Text="左上角标题" Margin="5,0,0,5"/>
+                            <TextBlock x:Name="Header1" Text="左上角标题" Margin="5,0,0,5" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
                             <StackPanel x:Name="SettingsStackPanel" Orientation="Vertical">
                                 <controls:DropShadowPanel BlurRadius="15"
                                   ShadowOpacity="0.5"
@@ -146,7 +148,7 @@
                                 <Button x:Name="EditCornerNameButton" Content="修改" Foreground="White" Background="{x:Bind TC}" CornerRadius="15" Width="70" Margin="10,10,0,0" Click="EditCornerNameButton_Click"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="5,20,0,0">
-                                <ToggleSwitch x:Name="TransparentSwitch" Header="亚克力模糊背景" Foreground="{x:Bind TC}" IsOn="True" Toggled="TransparentSwitch_Toggled"/>
+                                <ToggleSwitch x:Name="TransparentSwitch" Header="亚克力模糊背景" Foreground="{x:Bind TC}" Toggled="TransparentSwitch_Toggled"/>
                                 <TextBlock x:Name="TransparentTipText" Text="Tip：&#x0a;若在深色壁纸下，背景过暗的话，请关闭此选项" Margin="0,0,0,20" Foreground="{x:Bind TC}"/>
                                 <ToggleSwitch x:Name="ColorfulSwitch" Header="彩色背景" Foreground="{x:Bind TC}" IsOn="False" Toggled="ColorfulSwitch_Toggled"/>
                                 <StackPanel Orientation="Horizontal">
@@ -158,11 +160,7 @@
                         </StackPanel>
                         <ContentDialog x:Name="ColorfulDialog"
                                        Title="颜色选项"
-                                       CornerRadius="8"
-                                       PrimaryButtonText="确定"
-                                       CloseButtonText="取消"
-                                       DefaultButton="Primary"
-                                       PrimaryButtonClick="ColorfulDialog_PrimaryButtonClick">
+                                       CornerRadius="8">
                             <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                 <ColorPicker x:Name="ColorfulBcakgroundPicker"
                                             IsMoreButtonVisible="True"
@@ -172,6 +170,11 @@
                                             IsAlphaEnabled="False"
                                             IsAlphaSliderVisible="True"
                                             IsAlphaTextInputVisible="True" />
+                                <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                                    <Button x:Name="ColorfulDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="160" Click="ColorfulDialogPrimaryButton_Click"/>
+                                    <Button x:Name="ColorfulDialogCloseButton" Content="取消" Width="160" Click="ColorfulDialogCloseButton_Click"/>
+
+                                </StackPanel>
                             </StackPanel>
 
                         </ContentDialog>

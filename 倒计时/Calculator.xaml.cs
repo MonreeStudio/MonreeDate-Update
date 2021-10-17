@@ -36,6 +36,8 @@ namespace 倒计时
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
             InitCalendarView();
+            Str.start = null;
+            Str.end = null;
         }
 
         private void InitCalendarView()
@@ -92,6 +94,11 @@ namespace 倒计时
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (Str.start == null || Str.end == null)
+            {
+                SpanTime.Text = "没有选好日期哦！";
+                return;
+            }
             try
             {
                 string t;
@@ -228,6 +235,10 @@ namespace 倒计时
                 var dateOffset = TermCalendarView.SelectedDates[0];
                 var date = dateOffset.ToString("yyyy-MM-dd");
                 TermTextBlock.Text = "阳历：\n" + date + "\n\n阴历：\n" + LunarCalendar.GetChineseDateTime(Convert.ToDateTime(date));
+            }
+            catch (System.Runtime.InteropServices.COMException e0)
+            {
+
             }
             catch(Exception e)
             {

@@ -43,9 +43,9 @@ using 夏日.Models;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using HHChaosToolkit.UWP.Picker;
 using 倒计时.ViewModels;
-using Microsoft.Toolkit.Services.Services.MicrosoftGraph;
-using Microsoft.Toolkit.Services.OneDrive;
-using Microsoft.Identity.Client;
+//using Microsoft.Toolkit.Services.Services.MicrosoftGraph;
+//using Microsoft.Toolkit.Services.OneDrive;
+//using Microsoft.Identity.Client;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
@@ -690,6 +690,7 @@ namespace 倒计时
         public async Task DownloadAndInstallAllUpdatesAsync()
         {
             UpdateRing.IsActive = true;
+            CheckUpdate.IsEnabled = false;
             if (context == null)
             {
                 context = StoreContext.GetDefault();
@@ -727,13 +728,18 @@ namespace 倒计时
                     //downloadProgressBar.Visibility = Visibility.Collapsed;
                     StorePackageUpdateResult result = await downloadOperation.AsTask();
                     UpdateRing.IsActive = false;
+                    CheckUpdate.IsEnabled = true;
                 }
                 else
+                {
                     UpdateRing.IsActive = false;
+                    CheckUpdate.IsEnabled = true;
+                }
             }
             else
             {
                 UpdateRing.IsActive = false;
+                CheckUpdate.IsEnabled = true;
                 PopupNotice popupNotice = new PopupNotice("已是最新版本！");
                 popupNotice.ShowAPopup();
             }
@@ -758,48 +764,7 @@ namespace 倒计时
         private async void AppAutoStartTip_Tapped(object sender, TappedRoutedEventArgs e)
         {
             await AutoStartTipDialog.ShowAsync();
-        }
-
-        private async void CropperDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            var imageSource = EditPicture.ProfilePicture;
-            byte[] imageBuffer;
-            var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("temp.jpg", CreationCollisionOption.ReplaceExisting);
-            try
-            {
-                using (var ras = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
-                {
-                    WriteableBitmap bitmap = imageSource as WriteableBitmap;
-                    var stream = bitmap.PixelBuffer.AsStream();
-                    byte[] buffer = new byte[stream.Length];
-                    await stream.ReadAsync(buffer, 0, buffer.Length);
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, ras);
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
-                    await encoder.FlushAsync();
-                    var imageStream = ras.AsStream();
-                    imageStream.Seek(0, SeekOrigin.Begin);
-                    imageBuffer = new byte[imageStream.Length];
-                    var re = await imageStream.ReadAsync(imageBuffer, 0, imageBuffer.Length);
-                }
-                await file.DeleteAsync(StorageDeleteOption.Default);
-                List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
-                if (datalist != null)
-                    conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
-                conn.Insert(new PersonPictures() { pictureName = "picture", picture = imageBuffer });
-                SetPersonPicture();
-                PopupNotice popupNotice = new PopupNotice("头像已更新");
-                popupNotice.ShowAPopup();
-            }
-            catch 
-            {
-                TempPicture.Visibility = Visibility.Visible;
-                EditPicture.Visibility = Visibility.Collapsed;
-            };
-            
-        }
-
-        
+        }      
 
         private async Task<ImageSource> CropImage(ImageCropperConfig config)
         {
@@ -891,35 +856,35 @@ namespace 倒计时
             await SyncDataDialog.ShowAsync();
         }
 
-        private static async Task InitSync()
-        {
-            string[] scopes = new string[] { MicrosoftGraphScope.FilesReadWriteAppFolder };
-            OneDriveService.Instance.Initialize("0000000048273E9C", scopes, null, null);
-            if (await OneDriveService.Instance.LoginAsync())
-            {
-                var folder = await OneDriveService.Instance.RootFolderForMeAsync();
-                var OneDriveItems = await folder.NextItemsAsync();
-                do
-                {
-                    // Get the next page of items
-                    OneDriveItems = await folder.NextItemsAsync();
-                }
-                while (OneDriveItems != null);
-                string newFolderName = "MonreeDate Data";
-                if (!string.IsNullOrEmpty(newFolderName))
-                {
-                    await folder.StorageFolderPlatformService.CreateFolderAsync(newFolderName, CreationCollisionOption.GenerateUniqueName);
-                }
-                //var currentFolder = await _graphCurrentFolder.GetFolderAsync(item.Name);
-                //OneDriveItemsList.ItemsSource = await currentFolder.GetItemsAsync(20);
-                //_graphCurrentFolder = currentFolder;
-            }
-            else
-            {
-                //TipServices.TipAuthenticateFail();
-                throw new Exception("Unable to sign in");
-            }
-        }
+        //private static Task InitSync()
+        //{
+        //    //string[] scopes = new string[] { MicrosoftGraphScope.FilesReadWriteAppFolder };
+        //    //OneDriveService.Instance.Initialize("0000000048273E9C", scopes, null, null);
+        //    //if (await OneDriveService.Instance.LoginAsync())
+        //    //{
+        //    //    var folder = await OneDriveService.Instance.RootFolderForMeAsync();
+        //    //    var OneDriveItems = await folder.NextItemsAsync();
+        //    //    do
+        //    //    {
+        //    //        // Get the next page of items
+        //    //        OneDriveItems = await folder.NextItemsAsync();
+        //    //    }
+        //    //    while (OneDriveItems != null);
+        //    //    string newFolderName = "MonreeDate Data";
+        //    //    if (!string.IsNullOrEmpty(newFolderName))
+        //    //    {
+        //    //        await folder.StorageFolderPlatformService.CreateFolderAsync(newFolderName, CreationCollisionOption.GenerateUniqueName);
+        //    //    }
+        //    //    //var currentFolder = await _graphCurrentFolder.GetFolderAsync(item.Name);
+        //    //    //OneDriveItemsList.ItemsSource = await currentFolder.GetItemsAsync(20);
+        //    //    //_graphCurrentFolder = currentFolder;
+        //    //}
+        //    //else
+        //    //{
+        //    //    //TipServices.TipAuthenticateFail();
+        //    //    throw new Exception("Unable to sign in");
+        //    //}
+        //}
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1154,6 +1119,106 @@ namespace 倒计时
             TaskViewModel.ToDoDatas.Clear();
             GetLocalDataIcon.Visibility = Visibility.Collapsed;
             GetCloudDataIcon.Visibility = Visibility.Collapsed;
+        }
+
+        private async void AboutDialogSecondryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
+            await Launcher.LaunchUriAsync(Uri);
+        }
+
+        private void AboutDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            AboutContent.Hide();
+        }
+
+        private void AboutDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            AboutContent.Hide();
+        }
+
+        private async void BirthDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (PersonalBirthday.Text == "未设置")
+            {
+                MessageDialog AboutDialog = new MessageDialog("您还没有设置生日哦，赶紧去设置吧。", "提示");
+                await AboutDialog.ShowAsync();
+                BirthDialog.Hide();
+            }
+            else
+            {
+                try
+                {
+                    DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
+                    string Tip = "";
+                    string _birthday = birthday.ToString("yyyy-MM-dd");
+                    All.Current.conn.Insert(new DataTemple() { Schedule_name = "出生日", CalculatedDate = CustomData.Calculator(_birthday), Date = _birthday, BgColor = "#fffbb612", TintOpacity = 0.7, IsTop = "0", AddTime = "" });
+                    localSettings.Values["出生日" + _birthday] = Tip;
+                    MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
+                    Frame.Navigate(typeof(All));
+                    PopupNotice popupNotice = new PopupNotice("添加成功");
+                    popupNotice.ShowAPopup();
+                }
+                catch
+                {
+                    MessageDialog AboutDialog = new MessageDialog("您已经添加过了哦。", "提示");
+                    await AboutDialog.ShowAsync();
+                }
+            }
+        }
+
+        private void BirthDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            BirthDialog.Hide();
+        }
+
+        private void CropperDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            CropperDialog.Hide();
+        }
+
+        private async void CropperDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var imageSource = EditPicture.ProfilePicture;
+            byte[] imageBuffer;
+            var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("temp.jpg", CreationCollisionOption.ReplaceExisting);
+            try
+            {
+                using (var ras = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
+                {
+                    WriteableBitmap bitmap = imageSource as WriteableBitmap;
+                    var stream = bitmap.PixelBuffer.AsStream();
+                    byte[] buffer = new byte[stream.Length];
+                    await stream.ReadAsync(buffer, 0, buffer.Length);
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, ras);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
+                    await encoder.FlushAsync();
+                    var imageStream = ras.AsStream();
+                    imageStream.Seek(0, SeekOrigin.Begin);
+                    imageBuffer = new byte[imageStream.Length];
+                    var re = await imageStream.ReadAsync(imageBuffer, 0, imageBuffer.Length);
+                }
+                await file.DeleteAsync(StorageDeleteOption.Default);
+                List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
+                if (datalist != null)
+                    conn.Execute("delete from PersonPictures where pictureName = ?", "picture");
+                conn.Insert(new PersonPictures() { pictureName = "picture", picture = imageBuffer });
+                SetPersonPicture();
+                PopupNotice popupNotice = new PopupNotice("头像已更新");
+                popupNotice.ShowAPopup();
+            }
+            catch
+            {
+                TempPicture.Visibility = Visibility.Visible;
+                EditPicture.Visibility = Visibility.Collapsed;
+            };
+            CropperDialog.Hide();
+        }
+
+        private void AutoStartTipDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            AutoStartTipDialog.Hide();
         }
     }
 }

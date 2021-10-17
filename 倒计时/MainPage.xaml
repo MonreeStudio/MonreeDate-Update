@@ -5,23 +5,29 @@
     xmlns:local="using:倒计时"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:models="using:倒计时.Models"
+    xmlns:models="using:倒计时.Models" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     x:FieldModifier="Public"
     x:Name="MPage"
-    Background="{ThemeResource CustomAcrylicInAppBrush}">
+    
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    >
+
+    <!--Background="{ThemeResource NavigationViewExpandedPaneBackground}"-->
 
     <Page.Resources>
-        <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
-                  BackgroundSource="Backdrop" TintColor="{ThemeResource NavigationViewBackgroundColor}" FallbackColor="{ThemeResource NavigationViewBackgroundColor}" TintOpacity="0.5"/>
+        <!--<AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
+                  BackgroundSource="Backdrop" TintColor="{ThemeResource SystemChromeAltHighColor}" FallbackColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.5"/>
         <AcrylicBrush x:Key="NavigationViewTopPaneBackground"
-                  BackgroundSource="Backdrop" TintColor="{ThemeResource NavigationViewBackgroundColor}" FallbackColor="{ThemeResource NavigationViewBackgroundColor}" TintOpacity="0.5"/>
+                  BackgroundSource="Backdrop" TintColor="{ThemeResource SystemChromeAltHighColor}" FallbackColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.5"/>
         <AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
-                  BackgroundSource="HostBackdrop" TintColor="{ThemeResource NavigationViewBackgroundColor}" FallbackColor="{ThemeResource NavigationViewBackgroundColor}" TintOpacity="0.7"/>
+                  BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemChromeAltHighColor}" FallbackColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.7"/>-->
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ThemeColor" />
         <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ThemeColor"/>
+        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush" />
+        <!--<Thickness x:Key="NavigationViewHeaderMargin">56,44,0,0</Thickness>-->
+
         <Style TargetType="ContentDialog">
             <Setter Property="Foreground" Value="{ThemeResource ContentDialogForeground}" />
             <Setter Property="Background" Value="{ThemeResource ContentDialogBackground}" />
@@ -326,86 +332,90 @@
             </Setter>
         </Style>
     </Page.Resources>
-    
-    <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
-        <NavigationView x:Name="MyNav"
+    <Grid >
+        <Grid >
+            <muxc:NavigationView x:Name="MyNav"
                         Loaded="MyNav_Loaded"
                         ItemInvoked="MyNav_ItemInvoked"
                         BackRequested="MyNav_BackRequested"
                         SelectionChanged="MyNav_SelectionChanged"
-                        PaneDisplayMode="Auto"
+                        PaneDisplayMode="Auto"      
                         PaneTitle="夏日 —— 记录你的生活"
-                        AlwaysShowHeader="True"
+                             Margin="-0,0,0,0"
+                                 Background="{ThemeResource SystemControlAcrylicWindowBrush}"
                         Foreground="{x:Bind TC}"
-                        CornerRadius="10"
-                        x:FieldModifier="Public"
-                        >
-            <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="AllItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="日子"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItem x:Name="ToDoItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
-                <NavigationViewItemSeparator Visibility="Collapsed"/>
-                <NavigationViewItem x:Name="NewItem" Visibility="Visible" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItemHeader Content="工具"/>
-                <NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItem x:Name="DesktopItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="GoToStart" Tag="Desktop" Content="桌面"/>
-                <NavigationViewItemSeparator Visibility="Collapsed"/>
-                <NavigationViewItem x:Name="TimerItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Clock" Tag="Timer" Content="计时"/>
-            </NavigationView.MenuItems>
-            <NavigationView.PaneFooter>
-                <NavigationViewItem x:Name="FeedbackItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Mail" Tag="Feedback" Content="反馈" IsTapEnabled="True" Tapped="FeedbackItem_Tapped"/>
-            </NavigationView.PaneFooter>
-            <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
+                        x:FieldModifier="public">
+                <muxc:NavigationView.MenuItems>
+                    <muxc:NavigationViewItem x:Name="AllItem" x:FieldModifier="public" SelectsOnInvoked="True" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="日子"/>
+                    <muxc:NavigationViewItemSeparator Margin="15,5,15,5"/>
+                    <muxc:NavigationViewItem x:Name="ToDoItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
+                    <muxc:NavigationViewItemSeparator Margin="15,5,15,5" Visibility="Collapsed"/>
+                    <muxc:NavigationViewItem x:Name="NewItem" Visibility="Visible" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
+                    <muxc:NavigationViewItemSeparator Margin="15,5,15,5"/>
+                    <muxc:NavigationViewItemHeader Content="工具" Foreground="{x:Bind TC}"/>
+                    <muxc:NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
+                    <muxc:NavigationViewItemSeparator Margin="15,5,15,5"/>
+                    <muxc:NavigationViewItem x:Name="FestivalItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Festival" Icon="CalendarDay" Content="节日"/>
+                    <muxc:NavigationViewItemSeparator Margin="15,5,15,5"/>
+                    <muxc:NavigationViewItem x:Name="DesktopItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="GoToStart" Tag="Desktop" Content="桌面"/>
+                    <muxc:NavigationViewItemSeparator Margin="15,5,15,5" Visibility="Collapsed"/>
+                    <muxc:NavigationViewItem x:Name="TimerItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="Clock" Tag="Timer" Content="计时"/>
+                </muxc:NavigationView.MenuItems>
+                <muxc:NavigationView.PaneFooter>
+                    <muxc:NavigationViewItem Margin="0,0,-4,0" x:Name="FeedbackItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Icon="MailReply" Tag="Feedback" Content="反馈" IsTapEnabled="True" Tapped="FeedbackItem_Tapped"/>
+                </muxc:NavigationView.PaneFooter>
+                <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
                 <Frame x:Name="ContentFrame"
+                       Margin="0,-33,0,0"
                    NavigationFailed="ContentFrame_NavigationFailed"
+                   
                        x:FieldModifier="Public"/>
-            <!--</ScrollViewer>-->
-        </NavigationView>
-
-        <ContentDialog x:Name="MyCD" 
+                <!--</ScrollViewer>-->
+            </muxc:NavigationView>
+            <ContentDialog x:Name="MyCD" 
                        CornerRadius="10"
                        Title="欢迎使用新版本的夏日~"
-                       PrimaryButtonText="确定"
-                       SecondaryButtonText="好评鼓励！"
-                       SecondaryButtonClick="MyCD_SecondaryButtonClick"
-                       DefaultButton="Primary"
-                       Background="White">
-            <ScrollViewer>
-            <StackPanel>
-                    <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="1、修复 桌面小工具日期无法及时更新的问题；&#x0a;2、优化 桌面小工具日程按日期排序；&#x0a;3、优化 UI微调、更换了闪屏Logo；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
-                    <TextBlock Text="往期版本：2.3.5.0&#x0a;1、修复 节日数据更新；&#x0a;2、优化 计算界面宽屏自适应调整；&#x0a;3、优化 日程详情页加入日期模式切换提示；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.3.4.0&#x0a;1、新增 可根据需要开关桌面小工具背景的亚克力模糊效果；&#x0a;2、新增 反馈页面提供了一些可参考的信息；&#x0a;3、修复 解决了主界面窗口显示过小的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <TextBlock Text="往期版本：2.3.3.0&#x0a;1、修复 解决了某些情况下日期无法选择的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                    <!--<TextBlock Text="&#x0a;近来收到了来自很多朋友对于夏日的建议，感谢你们。夏日在2021的上半年将会提高更新频率，为大家尽可能带来更好的体验~&#x0a;" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>-->
-                    <TextBlock Text="&#x0a;感谢大家选择了夏日！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！&#x0a;&#x0a;——Bill夏昕" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
-                </StackPanel>
-            </ScrollViewer>
-        </ContentDialog>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger
+                       Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
+                        <TextBlock Text="1、新增 支持暗黑模式（暂仅支持跟随系统设置，桌面小工具暂不支持）；&#x0a;2、优化 部分控件设计适配Windows 11风格，届时升级到Windows 11体验更佳；&#x0a;3、修复 解决了若干Bug；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                        <TextBlock Text="往期版本：2.3.6.0&#x0a;1、修复 桌面小工具日期无法及时更新的问题；&#x0a;2、优化 桌面小工具日程按日期排序；&#x0a;3、优化 UI微调、更换了闪屏Logo；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" />
+                        <TextBlock Text="往期版本：2.3.5.0&#x0a;1、修复 节日数据更新；&#x0a;2、优化 计算界面宽屏自适应调整；&#x0a;3、优化 日程详情页加入日期模式切换提示；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                        <TextBlock Text="往期版本：2.3.4.0&#x0a;1、新增 可根据需要开关桌面小工具背景的亚克力模糊效果；&#x0a;2、新增 反馈页面提供了一些可参考的信息；&#x0a;3、修复 解决了主界面窗口显示过小的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                        <!--<TextBlock Text="&#x0a;近来收到了来自很多朋友对于夏日的建议，感谢你们。夏日在2021的上半年将会提高更新频率，为大家尽可能带来更好的体验~&#x0a;" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>-->
+                        <TextBlock Text="&#x0a;感谢大家选择了夏日！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！&#x0a;&#x0a;——Bill夏昕" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                            <Button x:Name="MyCDPrimaryButton" Content="确定" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="240" Click="MyCDPrimaryButton_Click"/>
+                            <Button x:Name="MyCDSecondaryButton" Content="好评鼓励！" Width="240" Click="MyCDSecondaryButton_Click"/>
+
+                        </StackPanel>
+                    </StackPanel>
+
+                </ScrollViewer>
+            </ContentDialog>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger
                         MinWindowWidth="{x:Bind MyNav.CompactModeThresholdWidth}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="MyNav.PaneDisplayMode" Value="LeftCompact"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1000"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="MyNav.PaneDisplayMode" Value="Left"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="MyNav.PaneDisplayMode" Value="LeftCompact"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="1000"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="MyNav.PaneDisplayMode" Value="Left"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+
     </Grid>
 </Page>

@@ -1,5 +1,4 @@
 ﻿using SQLite.Net.Platform.WinRT;
-using SQLitePCL;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -35,6 +34,8 @@ using Windows.UI.Core;
 using 倒计时.Models;
 using Windows.UI.Xaml.Media.Imaging;
 using BackgroundTasks;
+using Microsoft.UI.Xaml.Controls;
+
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -830,7 +831,7 @@ namespace 倒计时
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            ((NavigationViewItem)MainPage.Current.MyNav.MenuItems[4]).IsSelected = true;
+            ((Microsoft.UI.Xaml.Controls.NavigationViewItem)MainPage.Current.MyNav.MenuItems[4]).IsSelected = true;
             MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[4];
             Frame.Navigate(typeof(Add));
         }
@@ -1072,65 +1073,9 @@ namespace 倒计时
             LoadSettings();
         }
 
-        private async void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            bool isPinned = SecondaryTile.Exists(AllItem.Str1);
-            if (isPinned)
-            {
-                SecondaryTile toBeDeleted = new SecondaryTile(AllItem.Str1);
-                await toBeDeleted.RequestDeleteAsync();
-            }
-            int _start = ViewModel.CustomDatas.Count();
-            ViewModel.CustomDatas.Remove(AllItem);
-            conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
-            int _end = ViewModel.CustomDatas.Count();
-            if (_start != _end)
-            {
-                PopupNotice popupNotice = new PopupNotice("删除成功");
-                popupNotice.ShowAPopup();
-            }
-            var dm = localSettings.Values["DisplayMode"].ToString();
-            switch (dm)
-            {
-                case "All":
-                    {
-                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
-                        if (datalist.Count() == 0)
-                        {
-                            NewTB.Text = "创建你的第一个日程吧！";
-                            NewTB2.Text = "（创建后可右键删除）";
-                            NewTB.Visibility = Visibility.Visible;
-                            NewTB2.Visibility = Visibility.Visible;
-                        }
-                    }
-                    break;
-                case "Past":
-                    {
-                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date < ?", DateTime.Now.ToString("yyyy-MM-dd"));
-                        if(datalist.Count==0)
-                        {
-                            NewTB.Text = "这里空空如也~";
-                            NewTB2.Text = "（暂无已过日程）";
-                            NewTB.Visibility = Visibility.Visible;
-                            NewTB2.Visibility = Visibility.Visible;
-                        }
-                    }
-                    break;
-                case "Future":
-                    {
-                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ?", DateTime.Now.ToString("yyyy-MM-dd"));
-                        if (datalist.Count == 0)
-                        {
-                            NewTB.Text = "这里空空如也~";
-                            NewTB2.Text = "（暂无未过日程）";
-                            NewTB.Visibility = Visibility.Visible;
-                            NewTB2.Visibility = Visibility.Visible;
-                        }
-                    }
-                    break;
-            }
             
-            LoadTile();
         }
 
         private async void PinToSC_Click(object sender, RoutedEventArgs e)
@@ -1281,6 +1226,72 @@ namespace 倒计时
             ChangeABB.Label = "年数模式";
             localSettings.Values["DateMode"] = "Year";
             LoadDateData();
+        }
+
+        private async void DeleteDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isPinned = SecondaryTile.Exists(AllItem.Str1);
+            if (isPinned)
+            {
+                SecondaryTile toBeDeleted = new SecondaryTile(AllItem.Str1);
+                await toBeDeleted.RequestDeleteAsync();
+            }
+            int _start = ViewModel.CustomDatas.Count();
+            ViewModel.CustomDatas.Remove(AllItem);
+            conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
+            int _end = ViewModel.CustomDatas.Count();
+            if (_start != _end)
+            {
+                PopupNotice popupNotice = new PopupNotice("删除成功");
+                popupNotice.ShowAPopup();
+            }
+            var dm = localSettings.Values["DisplayMode"].ToString();
+            switch (dm)
+            {
+                case "All":
+                    {
+                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+                        if (datalist.Count() == 0)
+                        {
+                            NewTB.Text = "创建你的第一个日程吧！";
+                            NewTB2.Text = "（创建后可右键删除）";
+                            NewTB.Visibility = Visibility.Visible;
+                            NewTB2.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+                case "Past":
+                    {
+                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date < ?", DateTime.Now.ToString("yyyy-MM-dd"));
+                        if (datalist.Count == 0)
+                        {
+                            NewTB.Text = "这里空空如也~";
+                            NewTB2.Text = "（暂无已过日程）";
+                            NewTB.Visibility = Visibility.Visible;
+                            NewTB2.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+                case "Future":
+                    {
+                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ?", DateTime.Now.ToString("yyyy-MM-dd"));
+                        if (datalist.Count == 0)
+                        {
+                            NewTB.Text = "这里空空如也~";
+                            NewTB2.Text = "（暂无未过日程）";
+                            NewTB.Visibility = Visibility.Visible;
+                            NewTB2.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+            }
+            DeleteDialog.Hide();
+            LoadTile();
+        }
+
+        private void DeleteDialogCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteDialog.Hide();
         }
 
         public Color GetColor(string hex)
