@@ -341,16 +341,16 @@
                         SelectionChanged="MyNav_SelectionChanged"
                         PaneDisplayMode="Auto"      
                         PaneTitle="夏日 —— 记录你的生活"
-                             Margin="-0,0,0,0"
-                                 Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+                                 
+                             Margin="0,0,0,0"
                         Foreground="{x:Bind TC}"
                         x:FieldModifier="public">
                 <muxc:NavigationView.MenuItems>
                     <muxc:NavigationViewItem x:Name="AllItem" x:FieldModifier="public" SelectsOnInvoked="True" Foreground="{x:Bind TC}" Tag="All" Icon="Home" Content="日子"/>
                     <muxc:NavigationViewItemSeparator Margin="15,5,15,5"/>
-                    <muxc:NavigationViewItem x:Name="ToDoItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
+                    <muxc:NavigationViewItem x:Name="ToDoItem" Visibility="Visible" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="ToDo" Icon="AllApps" Content="计划"/>
                     <muxc:NavigationViewItemSeparator Margin="15,5,15,5" Visibility="Collapsed"/>
-                    <muxc:NavigationViewItem x:Name="NewItem" Visibility="Visible" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
+                    <muxc:NavigationViewItem x:Name="NewItem" Visibility="Collapsed" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="New" Icon="Add" Content="新建"/>
                     <muxc:NavigationViewItemSeparator Margin="15,5,15,5"/>
                     <muxc:NavigationViewItemHeader Content="工具" Foreground="{x:Bind TC}"/>
                     <muxc:NavigationViewItem x:Name="CalculatorItem" x:FieldModifier="public" Foreground="{x:Bind TC}" Tag="Calculator" Icon="Calculator" Content="计算"/>
@@ -366,10 +366,10 @@
                 </muxc:NavigationView.PaneFooter>
                 <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
                 <Frame x:Name="ContentFrame"
-                       Margin="0,-33,0,0"
+                       Margin="0,0,0,0"
+                       
                    NavigationFailed="ContentFrame_NavigationFailed"
-                   
-                       x:FieldModifier="Public"/>
+                       x:FieldModifier="Public" Navigated="ContentFrame_Navigated"/>
                 <!--</ScrollViewer>-->
             </muxc:NavigationView>
             <ContentDialog x:Name="MyCD" 
@@ -379,10 +379,11 @@
                 <ScrollViewer>
                     <StackPanel>
                         <TextBlock x:Name="Version" Foreground="{x:Bind TC}"/>
-                        <TextBlock Text="1、新增 支持暗黑模式（暂仅支持跟随系统设置，桌面小工具暂不支持）；&#x0a;2、优化 部分控件设计适配Windows 11风格，届时升级到Windows 11体验更佳；&#x0a;3、修复 解决了若干Bug；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                        <TextBlock Text="1、新增 新增“计划”功能，可分步骤进行规划；&#x0a;2、优化 Win11下默认开启云母背景效果；&#x0a;3、修复 解决了若干Bug；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" Foreground="{x:Bind TC}"/>
+                        <TextBlock Text="往期版本：3.0.0.0&#x0a;1、新增 支持暗黑模式（暂仅支持跟随系统设置，桌面小工具暂不支持）；&#x0a;2、优化 部分控件设计适配Windows 11风格，届时升级到Windows 11体验更佳；&#x0a;3、修复 解决了若干Bug；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
                         <TextBlock Text="往期版本：2.3.6.0&#x0a;1、修复 桌面小工具日期无法及时更新的问题；&#x0a;2、优化 桌面小工具日程按日期排序；&#x0a;3、优化 UI微调、更换了闪屏Logo；" TextWrapping="WrapWholeWords" Margin="0,0,0,5" />
                         <TextBlock Text="往期版本：2.3.5.0&#x0a;1、修复 节日数据更新；&#x0a;2、优化 计算界面宽屏自适应调整；&#x0a;3、优化 日程详情页加入日期模式切换提示；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
-                        <TextBlock Text="往期版本：2.3.4.0&#x0a;1、新增 可根据需要开关桌面小工具背景的亚克力模糊效果；&#x0a;2、新增 反馈页面提供了一些可参考的信息；&#x0a;3、修复 解决了主界面窗口显示过小的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>
+                        <!--<TextBlock Text="往期版本：2.3.4.0&#x0a;1、新增 可根据需要开关桌面小工具背景的亚克力模糊效果；&#x0a;2、新增 反馈页面提供了一些可参考的信息；&#x0a;3、修复 解决了主界面窗口显示过小的问题；" TextWrapping="WrapWholeWords" Margin="0,0,0,5"/>-->
                         <!--<TextBlock Text="&#x0a;近来收到了来自很多朋友对于夏日的建议，感谢你们。夏日在2021的上半年将会提高更新频率，为大家尽可能带来更好的体验~&#x0a;" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>-->
                         <TextBlock Text="&#x0a;感谢大家选择了夏日！若在使用过程中发现意外情况，请发送截图+文字描述到邮箱反馈。独自一人开发不易，您的好评将会是一份认可。若感觉此应用不错，还可以推荐给身边的朋友哦。感谢大家支持！&#x0a;&#x0a;——Bill夏昕" TextWrapping="WrapWholeWords" Foreground="SlateGray" Margin="10"/>
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">

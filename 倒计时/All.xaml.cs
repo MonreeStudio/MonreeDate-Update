@@ -1,4 +1,4 @@
-﻿using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Platform.WinRT;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -32,9 +32,11 @@ using Windows.Data.Xml.Dom;
 using Windows.UI.StartScreen;
 using Windows.UI.Core;
 using 倒计时.Models;
+using 倒计时.Manager;
 using Windows.UI.Xaml.Media.Imaging;
 using BackgroundTasks;
 using Microsoft.UI.Xaml.Controls;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -54,6 +56,7 @@ namespace 倒计时
         public Color BgsColor;
         private double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static All Current;
+        public CountdownRepository CountdownRepository { get; private set; }
         public string Model_event;
         public string Model_Date;
         //public CustomData SelectedItem;
@@ -67,10 +70,8 @@ namespace 倒计时
         public All()
         {
             this.InitializeComponent();           
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            CountdownRepository = new CountdownRepository();
+            conn = CountdownRepository.Connection;
             Current = this;
             LoadAllPage();
             MainPage.Current.MyNav.IsBackEnabled = false;
@@ -226,20 +227,26 @@ namespace 倒计时
 
         public async void LoadTile()
         {
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
+            CountdownRecord countdown = CountdownRepository.GetNextFuture(DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
             string _CaculatedDate = "";
             string _Date = "";
 
-            foreach (var item in datalist)
+            if (countdown != null)
             {
-                _ScheduleName = item.Schedule_name;
-                _CaculatedDate = CustomData.Calculator(item.Date);
-                _Date = item.Date;
+                _ScheduleName = countdown.Schedule_name;
+                _CaculatedDate = CustomData.Calculator(countdown.Date);
+                _Date = countdown.Date;
             }
+
             if (_ScheduleName != "" && _CaculatedDate != "" && _Date != "")
             {
                 CreateTile(_ScheduleName, _CaculatedDate, _Date);
+            }
+            else
+            {
+                TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                localSettings.Values["mainTile"] = "";
             }
 
             bool isPinned = SecondaryTile.Exists(_ScheduleName);
@@ -442,9 +449,10 @@ namespace 倒计时
             if (localSettings.Values["DateMode"] == null)
                 localSettings.Values["DateMode"] = "Day";
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? order by AddTime desc", "1");
-            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
-            List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
+            string today = DateTime.Now.ToString("yyyy-MM-dd");
+            List<CountdownRecord> datalist0 = CountdownRepository.GetPinnedOrderByAddTime();
+            List<CountdownRecord> datalist1 = CountdownRepository.GetFuture(today);
+            List<CountdownRecord> datalist2 = CountdownRepository.GetPast(today);
             if ((datalist1.Count() + datalist2.Count()) == 0)
             {
                 NewTB.Text = "创建你的第一个日程吧！";
@@ -569,8 +577,9 @@ namespace 倒计时
             if (localSettings.Values["DateMode"] == null)
                 localSettings.Values["DateMode"] = "Day";
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date < ? order by AddTime desc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
-            List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date < ? order by Date desc", DateTime.Now.ToString("yyyy-MM-dd"));
+            string today = DateTime.Now.ToString("yyyy-MM-dd");
+            List<CountdownRecord> datalist1 = CountdownRepository.GetPinnedPast(today);
+            List<CountdownRecord> datalist2 = CountdownRepository.GetPast(today);
             if (datalist2.Count() == 0)
             {
                 NewTB.Text = "这里空空如也~";
@@ -664,8 +673,9 @@ namespace 倒计时
             if (localSettings.Values["DateMode"] == null)
                 localSettings.Values["DateMode"] = "Day";
             ViewModel.CustomDatas.Clear();
-            List<DataTemple> datalist1 = conn.Query<DataTemple>("select * from DataTemple where IsTop = ? and Date >= ? order by AddTime desc", "1", DateTime.Now.ToString("yyyy-MM-dd"));
-            List<DataTemple> datalist2 = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc", DateTime.Now.ToString("yyyy-MM-dd"));
+            string today = DateTime.Now.ToString("yyyy-MM-dd");
+            List<CountdownRecord> datalist1 = CountdownRepository.GetPinnedFuture(today);
+            List<CountdownRecord> datalist2 = CountdownRepository.GetFuture(today);
             if (datalist2.Count() == 0)
             {
                 NewTB.Text = "这里空空如也~";
@@ -808,7 +818,7 @@ namespace 倒计时
             }
             else
                 AllPicture.Visibility = Visibility.Visible;
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+            List<CountdownRecord> datalist = CountdownRepository.GetAll();
             foreach(var item in datalist)
             {
                 if (SecondaryTile.Exists(item.Schedule_name))
@@ -860,78 +870,18 @@ namespace 倒计时
 
         private string ConvertToYMD(String _date)
         {
-            string CDate = "";
-            DateTime d1 = Convert.ToDateTime(_date);
-            DateTime d2 = DateTime.Now;
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            if (d4 > d3)
-                CDate = "已过" + Term(d3, d4);
-            else
-            {
-                if (d4 < d3)
-                    CDate = "还有" + Term(d4, d3);
-                else
-                    CDate = "就在今天";
-            }
-            return CDate;
+            return CountdownDateCalculator.FormatYearMonthDayCountdown(_date);
         }
 
         public string ConvertToWeek(string _date)
         {
-            string CDate = "";
-            DateTime d1 = Convert.ToDateTime(_date);
-            DateTime d2 = DateTime.Now;
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            if (d4 > d3)
-            {
-                int days = (d4 - d3).Days;
-                int week, week_date;
-                week = days / 7;
-                week_date = days % 7;
-                if (week != 0)
-                {
-                    if (week_date == 0)
-                        CDate = "已过" + week.ToString() + "周";
-                    else
-                        CDate = "已过" + week.ToString() + "周" + week_date.ToString() + "天";
-                }
-                else
-                {
-                    CDate = "已过" + week_date.ToString() + "天";
-                }
-            }
-            else
-            {
-                if (d4 < d3)
-                {
-                    int days = (d3 - d4).Days;
-                    int week, week_date;
-                    week = days / 7;
-                    week_date = days % 7;
-                    if (week != 0)
-                    {
-                        if (week_date == 0)
-                            CDate = "还有" + week.ToString() + "周";
-                        else
-                            CDate = "还有" + week.ToString() + "周" + week_date.ToString() + "天";
-                    }
-                    else
-                    {
-                        CDate = "还有" + week_date.ToString() + "天";
-                    }
-                }
-                else
-                    CDate = "就在今天";
-            }
-            return CDate;
+            return CountdownDateCalculator.FormatWeekCountdown(_date);
         }
 
         private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
-            List<DataTemple> toplist = conn.Query<DataTemple>("select * from DataTemple where IsTop = ?", "1");
+            List<CountdownRecord> toplist = CountdownRepository.GetPinned();
             AllItem = _item;
             if (AllItem != null)
             {
@@ -1049,26 +999,14 @@ namespace 倒计时
 
         private void SetTop_Click(object sender, RoutedEventArgs e)
         {
-            //            conn.Execute("update DataTemple set IsTop = ? where Schedule_name = ?", "1", AllItem.Str1);
-            List<DataTemple> _datalist = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", AllItem.Str1);
-            conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
-            foreach (var item in _datalist)
-            {
-                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "1", AddTime = DateTime.Now.ToString() });
-            }
+            CountdownRepository.SetPinned(AllItem.Str1, true);
             LoadDateData();
             LoadSettings();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            //conn.Execute("update DataTemple set IsTop = ? where Schedule_name = ?", "0", AllItem.Str1);
-            List<DataTemple> _datalist = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", AllItem.Str1);
-            conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
-            foreach (var item in _datalist)
-            {
-                conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity, IsTop = "0", AddTime = "" });
-            }
+            CountdownRepository.SetPinned(AllItem.Str1, false);
             LoadDateData();
             LoadSettings();
         }
@@ -1238,7 +1176,7 @@ namespace 倒计时
             }
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(AllItem);
-            conn.Execute("delete from DataTemple where Schedule_name = ?", AllItem.Str1);
+            CountdownRepository.DeleteByName(AllItem.Str1);
             int _end = ViewModel.CustomDatas.Count();
             if (_start != _end)
             {
@@ -1250,7 +1188,7 @@ namespace 倒计时
             {
                 case "All":
                     {
-                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple");
+                        List<CountdownRecord> datalist = CountdownRepository.GetAll();
                         if (datalist.Count() == 0)
                         {
                             NewTB.Text = "创建你的第一个日程吧！";
@@ -1262,7 +1200,7 @@ namespace 倒计时
                     break;
                 case "Past":
                     {
-                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date < ?", DateTime.Now.ToString("yyyy-MM-dd"));
+                        List<CountdownRecord> datalist = CountdownRepository.GetUnorderedPast(DateTime.Now.ToString("yyyy-MM-dd"));
                         if (datalist.Count == 0)
                         {
                             NewTB.Text = "这里空空如也~";
@@ -1274,7 +1212,7 @@ namespace 倒计时
                     break;
                 case "Future":
                     {
-                        List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ?", DateTime.Now.ToString("yyyy-MM-dd"));
+                        List<CountdownRecord> datalist = CountdownRepository.GetUnorderedFuture(DateTime.Now.ToString("yyyy-MM-dd"));
                         if (datalist.Count == 0)
                         {
                             NewTB.Text = "这里空空如也~";
@@ -1306,8 +1244,6 @@ namespace 倒计时
 
         public void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
-
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;

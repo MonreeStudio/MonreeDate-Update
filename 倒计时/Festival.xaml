@@ -9,7 +9,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     x:FieldModifier="Public"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Margin="0,-34,0,0">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -53,8 +53,14 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <ScrollViewer x:Name="FesScrollViewer" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
-            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="FsTop" Text="节日" Grid.Row="0" FontWeight="Bold" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" />
+
+        <ScrollViewer x:Name="FesScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto" ViewChanged="FesScrollViewer_ViewChanged" ViewChanging="FesScrollViewer_ViewChanging">
+            <Grid>
 
                 <ListView x:Name="FesList" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.FestivalDatas}" RightTapped="ListView_RightTapped">
                     <ListView.Header>
@@ -69,7 +75,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="FsTop" Text="节日" FontWeight="Bold" Margin="90,30,0,0" Foreground="{x:Bind TC}" FontSize="28" Height="100" />
+                                
                                 <TextBlock Text="列举了一些较为重要的节日（右键可添加到首页）" TextWrapping="WrapWholeWords" Foreground="Gray" HorizontalAlignment="Center" Margin="0,0,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" />
                             </Grid>
                         </controls:ScrollHeader>
@@ -106,8 +112,9 @@
                                   Margin="50,50,50,100"
                                   VerticalAlignment="Bottom"
                                   HorizontalAlignment="Right"
+                                  Grid.Row="1"
                                   IsMasked="True">
-            <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="0" Visibility="Collapsed" x:Name="RootThumb" ToolTipService.ToolTip="返回顶部" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped">
+            <Thumb Style="{StaticResource ThumbStyle1}" Grid.Row="1" Visibility="Collapsed" x:Name="RootThumb" ToolTipService.ToolTip="返回顶部" Height="55" Width="55" VerticalAlignment="Bottom" HorizontalAlignment="Right" Tapped="RootThumb_Tapped">
                 <animations:Implicit.ShowAnimations>
                     <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
                     <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>

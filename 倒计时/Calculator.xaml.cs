@@ -250,5 +250,10 @@ namespace 倒计时
             //
 
         }
+
+        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

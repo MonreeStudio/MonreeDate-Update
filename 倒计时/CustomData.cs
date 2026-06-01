@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,6 +8,7 @@ using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using 夏日.Models;
+using 倒计时.Manager;
 
 namespace 倒计时
 {
@@ -60,29 +61,7 @@ namespace 倒计时
 
         static public string Calculator(string s1)
         {
-            string str1 = s1;
-            string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
-            DateTime d1 = Convert.ToDateTime(str1);
-            DateTime d2 = Convert.ToDateTime(str2);
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            int days = (d4 - d3).Days;
-            if (days < 0)
-            {
-                days = -days;
-                s2 = "还有" + days.ToString() + "天";
-            }
-            else
-            {
-                if (days != 0)
-                    s2 = "已过" + days.ToString() + "天";
-                else
-                {
-                    s2 = "就在今天";
-                }
-             }
-            return s2;
+            return CountdownDateCalculator.FormatDayCountdown(s1);
         }
     }
 

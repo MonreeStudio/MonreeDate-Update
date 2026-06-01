@@ -10,9 +10,9 @@
   <Identity
     Name="10912MonreeStudio.6397911AA70B0"
     Publisher="CN=CA1BB48F-A548-4F00-8EF9-31E9C7536F64"
-    Version="3.0.0.0" />
+    Version="3.0.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="4bb216d2-446a-4157-83ec-e659bfd245c4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="6abd8c3a-5f52-4add-9d76-1483dc5bc2c3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>夏日</DisplayName>

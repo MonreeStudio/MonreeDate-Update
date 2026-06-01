@@ -8,7 +8,8 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:control="using:倒计时.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Margin="0,-34,0,0"
+>
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -322,7 +323,7 @@
     </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="AddPageGird" x:FieldModifier="Public" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <Grid x:Name="AddPageGird" x:FieldModifier="Public">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />

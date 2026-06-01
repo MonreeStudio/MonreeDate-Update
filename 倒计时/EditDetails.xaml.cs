@@ -8,7 +8,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using 倒计时;
+using 倒计时.Manager;
 using 夏日.Models;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -80,7 +82,7 @@ namespace 夏日
 
         private void InitialData()
         {
-            List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", App.AllItem.Str1);
+            List<CountdownRecord> datalist = All.Current.CountdownRepository.GetByName(App.AllItem.Str1);
             foreach (var item in datalist)
             {
                 _isTop = item.IsTop;
@@ -164,11 +166,10 @@ namespace 夏日
             _Event = _event;
             if (_Date != null && _event != "" && _Color != "" && _TintOpacity >= 0)
             {
-                List<DataTemple> datalist = All.Current.conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", All.Current.str1);
+                List<CountdownRecord> datalist = All.Current.CountdownRepository.GetByName(All.Current.str1);
                 try
                 {
-                    All.Current.conn.Execute("delete from DataTemple where Schedule_name = ?", All.Current.str1);
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = _isTop, AddTime = "" });
+                    All.Current.CountdownRepository.ReplaceByName(All.Current.str1, CountdownRecord.Create(_event, _Date, _PickDate, _Color, _TintOpacity, _isTop, ""));
                     localSettings.Values[_event + _PickDate] = _tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
@@ -180,7 +181,7 @@ namespace 夏日
 
                     foreach(var item in datalist)
                     {
-                        All.Current.conn.Insert(new DataTemple() { Schedule_name = item.Schedule_name, CalculatedDate = item.CalculatedDate, Date = item.Date, BgColor = item.BgColor, TintOpacity = item.TintOpacity,IsTop = "0",AddTime = "" });
+                        All.Current.CountdownRepository.Insert(CountdownRecord.Create(item.Schedule_name, item.CalculatedDate, item.Date, item.BgColor, item.TintOpacity, "0", ""));
                     }
                     return;
                 }
@@ -210,27 +211,7 @@ namespace 夏日
 
         private string Calculator(string s1)
         {
-            string str1 = s1;
-            string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
-            DateTime d1 = Convert.ToDateTime(str1);
-            DateTime d2 = Convert.ToDateTime(str2);
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            int days = (d4 - d3).Days;
-            if (days < 0)
-            {
-                days = -days;
-                s2 = "还有" + days.ToString() + "天";
-            }
-            else
-            {
-                if (days != 0)
-                    s2 = "已过" + days.ToString() + "天";
-                else
-                    s2 = "就在今天";
-            }
-            return s2;
+            return CountdownDateCalculator.FormatDayCountdown(s1);
         }
 
         private async void TipButton_Click(object sender, RoutedEventArgs e)

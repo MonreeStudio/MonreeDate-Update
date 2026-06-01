@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,12 +29,15 @@ using BackgroundTasks;
 using Windows.UI.Popups;
 using SQLite.Net.Platform.WinRT;
 using Windows.UI.Core;
+using 倒计时.Manager;
 using Microsoft.UI.Xaml.Controls;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewItemInvokedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs;
 using NavigationViewBackRequestedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewBackRequestedEventArgs;
 using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
+using Microsoft.Toolkit.Uwp.Helpers;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 // NavigationViewExpandedPaneBackground
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -51,8 +54,7 @@ namespace 倒计时
         public bool SelectedPage { get; set; }
         public string SelectedPageItem { get; set; }
         public IntroPageViewModel ViewModel = new IntroPageViewModel();
-        static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
-        static SQLite.Net.SQLiteConnection conn;
+        static CountdownRepository countdownRepository;
         private int viewHeight;
         public string CurrentDate { get; set; }
 
@@ -60,10 +62,7 @@ namespace 倒计时
         {
             this.InitializeComponent();
             Current = this;
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            countdownRepository = new CountdownRepository();
             SelectedPage = true;
             var applicationView = CoreApplication.GetCurrentView();
             applicationView.TitleBar.ExtendViewIntoTitleBar = true;
@@ -83,7 +82,7 @@ namespace 倒计时
 
             localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
             localSettings.Values["hasBeenOpened"] = "0";
-            if(localSettings.Values["HasOpenTool"] == null || localSettings.Values["HasOpenTool"].ToString().Equals("0"))
+            if (localSettings.Values["HasOpenTool"] == null || localSettings.Values["HasOpenTool"].ToString().Equals("0"))
             {
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
             }
@@ -94,13 +93,24 @@ namespace 倒计时
             }
             localSettings.Values["HasOpenTool"] = "0";
             CurrentDate = DateTime.Now.ToShortDateString();
+            SetAcylicBackGround();
+        }
+
+        private void SetAcylicBackGround()
+        {
+            int buildNumber = SystemInformation.OperatingSystemVersion.Build;
+            bool isWin11 = buildNumber >= 22000;
+            if (!isWin11)
+            {
+                MyNav.Background = Application.Current.Resources["SystemControlAcrylicWindowBrush"] as AcrylicBrush;
+            }
         }
 
         private void GetViewHeight()
         {
             int count = (int)localSettings.Values["ItemCount"];
-            List<DataTemple> datalist = new List<DataTemple>();
-            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            List<CountdownRecord> datalist = new List<CountdownRecord>();
+            var allData = countdownRepository.GetAll();
             switch (count)
             {
                 case 1:
@@ -166,8 +176,8 @@ namespace 倒计时
             if (localSettings.Values["ItemCount"] == null)
                 localSettings.Values["ItemCount"] = 0;
             int count = (int)localSettings.Values["ItemCount"];
-            List<DataTemple> datalist = new List<DataTemple>();
-            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            List<CountdownRecord> datalist = new List<CountdownRecord>();
+            var allData = countdownRepository.GetAll();
             switch (count)
             {
                 case 1:
@@ -225,7 +235,7 @@ namespace 倒计时
             switch (localSettings.Values["ThemeColor"].ToString())
             {
                 case "CornflowerBlue":
-                    TC.Color = Colors.CornflowerBlue;                    
+                    TC.Color = Colors.CornflowerBlue;
                     break;
                 case "DeepSkyBlue":
                     TC.Color = Color.FromArgb(255, 2, 136, 235);
@@ -253,7 +263,7 @@ namespace 倒计时
                     break;
                 case "Coffee":
                     TC.Color = Color.FromArgb(255, 183, 133, 108);
-                    break;  
+                    break;
                 default:
                     break;
             }
@@ -262,7 +272,7 @@ namespace 倒计时
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.RegisterBackgroundTask();
-            
+
         }
 
         private async void RegisterBackgroundTask()
@@ -392,14 +402,14 @@ namespace 倒计时
                 (MyNav.DisplayMode == NavigationViewDisplayMode.Compact ||
                  MyNav.DisplayMode == NavigationViewDisplayMode.Minimal))
                 return false;
-            if(SelectedPageItem.Equals("Add")
-                ||SelectedPageItem.Equals("ToDo")
-                ||SelectedPageItem.Equals("Calculator")
-                ||SelectedPageItem.Equals("Festival")
-                ||SelectedPageItem.Equals("Settings")
-                ||SelectedPageItem.Equals("Desktop")
-                ||SelectedPageItem.Equals("Feedback")
-                ||SelectedPageItem.Equals("Timer"))
+            if (SelectedPageItem.Equals("Add")
+                || SelectedPageItem.Equals("ToDo")
+                || SelectedPageItem.Equals("Calculator")
+                || SelectedPageItem.Equals("Festival")
+                || SelectedPageItem.Equals("Settings")
+                || SelectedPageItem.Equals("Desktop")
+                || SelectedPageItem.Equals("Feedback")
+                || SelectedPageItem.Equals("Timer"))
             {
                 FeedbackItem.IsSelected = false;
                 DesktopItem.IsSelected = false;
@@ -421,7 +431,7 @@ namespace 倒计时
                     SelectedPageItem = "Festival";
                     return true;
                 }
-                if(SelectedPageItem.Equals("Details")&&SelectedPage==true)
+                if (SelectedPageItem.Equals("Details") && SelectedPage == true)
                 {
                     ContentFrame.Navigate(typeof(All));
                     SelectedPageItem = "All";
@@ -441,7 +451,7 @@ namespace 倒计时
 
         private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+            //throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
         private void MyNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -461,7 +471,7 @@ namespace 倒计时
                     All.Current.LoadAllPage();
                     return;
                 }
-                if(navItemTag == "Festival")
+                if (navItemTag == "Festival")
                 {
                     MyNav.IsBackEnabled = true;
                     SelectedPageItem = "Festival";
@@ -472,15 +482,15 @@ namespace 倒计时
 
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
-            //localSettings.Values["3.0.0.0"] = null;
+            //localSettings.Values["3.0.1.0"] = null;
             if (localSettings.Values["hasBeenOpened"] == null)
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["3.0.0.0"] == null)
+            if (localSettings.Values["3.0.1.0"] == null)
             {
                 await MyCD.ShowAsync();
-                localSettings.Values["3.0.0.0"] = "false";
+                localSettings.Values["3.0.1.0"] = "false";
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
@@ -520,7 +530,7 @@ namespace 倒计时
 
         private void MyCD_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            
+
         }
 
         private void FeedbackItem_Tapped(object sender, TappedRoutedEventArgs e)
@@ -540,6 +550,11 @@ namespace 倒计时
             var Uri = new Uri("ms-windows-store://review/?productid=9PKBWKPCCFJ8");
             await Launcher.LaunchUriAsync(Uri);
             MyCD.Hide();
+        }
+
+        private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+
         }
     }
 }

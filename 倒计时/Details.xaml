@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Margin="0,-34,0,0"
+    mc:Ignorable="d">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -487,11 +487,11 @@
                            Foreground="CornflowerBlue"
                            DefaultButton="Primary"
                                CornerRadius="10"
-                               
+                              Background="{ThemeResource SystemAltHighColor}"
                            x:Name="RenderDialog">
-                    <StackPanel Margin="10">
+                    <StackPanel Margin="10" >
                         <Border x:Name="RenderBorder" x:FieldModifier="public">
-                            <Grid x:Name="RenderGrid" Padding="25,10,30,10"  Height="Auto" Width="Auto">
+                            <Grid x:Name="RenderGrid" Padding="25,10,30,10"  Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="3*"/>
                                     <RowDefinition Height="1*"/>

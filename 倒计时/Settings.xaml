@@ -9,7 +9,7 @@
     xmlns:local1="using:倒计时.Models"
     DataContext="{Binding MainViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Margin="0,-34,0,0">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue" />
@@ -331,37 +331,42 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="SettingsTopText"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="SettingsTopText"
                        Text="个性化设置"
                        FontSize="28"
                        FontWeight="Bold"
                        Foreground="{x:Bind TC}"
                        Margin="90,30,0,0"
                        Grid.Row="0"
-                       Grid.Column="0" 
                        VerticalAlignment="Top"/>
-            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,30,20,0">
-                <Grid Padding="10,13,10,13" CornerRadius="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <PersonPicture x:Name="MyPersonPicture"
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,30,20,0">
+                    <Grid Padding="10,13,10,13" CornerRadius="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <PersonPicture x:Name="MyPersonPicture"
                        Width="110"
                        Height="110"
                        ToolTipService.ToolTip="点击更换头像"
@@ -372,30 +377,30 @@
                        PointerEntered="MyPersonPicture_PointerEntered"
                        PointerExited="MyPersonPicture_PointerExited"
                        />
-                        <StackPanel Margin="20,0,0,0" Grid.Column="1" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
-                                <TextBlock x:Name="PersonalNickName" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="游客" FontSize="13"/>
-                            </StackPanel>
-                            <StackPanel x:Name="EmailStackPanel" Orientation="Horizontal" Visibility="Collapsed">
-                                <TextBlock x:Name="EmailTB" Text="邮箱：" Foreground="{x:Bind TC}" FontSize="13"/>
-                                <TextBlock x:Name="PersonalEmail" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="无" FontSize="13"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="SexTB" Text="性别：" Foreground="{x:Bind TC}" FontSize="13"/>
-                                <TextBlock x:Name="PersonalSex" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未选择" FontSize="13" />
-                            </StackPanel>
-                            <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" ToolTipService.ToolTip="点我看看？" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
-                                <TextBlock x:Name="BirthdayTB" Text="生日："  Foreground="{x:Bind TC}" FontSize="13"/>
-                                <TextBlock x:Name="PersonalBirthday" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock x:Name="SignTB" Text="个性签名：" Foreground="{x:Bind TC}" FontSize="13"/>
-                                <TextBlock x:Name="PersonalSign" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="这个人好懒，什么也没写……" Width="200" TextWrapping="WrapWholeWords" FontSize="13"/>
+                            <StackPanel Margin="20,0,0,0" Grid.Column="1" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="NameTB" Text="昵称：" Foreground="{x:Bind TC}" FontSize="13"/>
+                                    <TextBlock x:Name="PersonalNickName" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="游客" FontSize="13"/>
+                                </StackPanel>
+                                <StackPanel x:Name="EmailStackPanel" Orientation="Horizontal" Visibility="Collapsed">
+                                    <TextBlock x:Name="EmailTB" Text="邮箱：" Foreground="{x:Bind TC}" FontSize="13"/>
+                                    <TextBlock x:Name="PersonalEmail" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="无" FontSize="13"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="SexTB" Text="性别：" Foreground="{x:Bind TC}" FontSize="13"/>
+                                    <TextBlock x:Name="PersonalSex" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未选择" FontSize="13" />
+                                </StackPanel>
+                                <StackPanel x:Name="BirthCreate" Orientation="Horizontal" IsTapEnabled="True" Tapped="BirthCreate_Tapped" ToolTipService.ToolTip="点我看看？" PointerEntered="BirthCreate_PointerEntered" PointerExited="BirthCreate_PointerExited">
+                                    <TextBlock x:Name="BirthdayTB" Text="生日："  Foreground="{x:Bind TC}" FontSize="13"/>
+                                    <TextBlock x:Name="PersonalBirthday" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="未设置" FontSize="13"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock x:Name="SignTB" Text="个性签名：" Foreground="{x:Bind TC}" FontSize="13"/>
+                                    <TextBlock x:Name="PersonalSign" Foreground="{x:Bind TC}" x:FieldModifier="Public" Text="这个人好懒，什么也没写……" Width="200" TextWrapping="WrapWholeWords" FontSize="13"/>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                    <Button Content="编辑个人信息"
+                        <Button Content="编辑个人信息"
                 x:Name="EditButton"
                 Height="40"
                 CornerRadius="8"
@@ -407,15 +412,15 @@
                 HorizontalAlignment="Right"
                 Style="{StaticResource ButtonRevealStyle}" 
                 Click="Button_Click"/>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button x:Name="LoginButton" x:FieldModifier="Public" Visibility="Collapsed" Content="登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="LoginButton_Click" Margin="0,0,10,0"/>
-                    <Button x:Name="SignOutButton" x:FieldModifier="Public" Visibility="Collapsed" Content="退出登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="SignOutButton_Click"  Margin="0,0,10,0"/>
-                    <Button x:Name="SyncButton" x:FieldModifier="Public" Visibility="Collapsed" Content="同步" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Click="SyncButton_Click" Margin="0,0,10,0"/>
-                </StackPanel>
-                <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="20,20,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="LoginButton" x:FieldModifier="Public" Visibility="Collapsed" Content="登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="LoginButton_Click" Margin="0,0,10,0"/>
+                        <Button x:Name="SignOutButton" x:FieldModifier="Public" Visibility="Collapsed" Content="退出登录" Foreground="White" Background="{x:Bind TC}" CornerRadius="6"   Click="SignOutButton_Click"  Margin="0,0,10,0"/>
+                        <Button x:Name="SyncButton" x:FieldModifier="Public" Visibility="Collapsed" Content="同步" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Click="SyncButton_Click" Margin="0,0,10,0"/>
+                    </StackPanel>
+                    <ToggleSwitch AutomationProperties.Name="simple ToggleSwitch"
                       Header="首页背景亚克力模糊效果"
                       HorizontalAlignment="Left"
                       x:Name="AllPageAcylic"
@@ -425,7 +430,7 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPageAcylic_Toggled"/>
-                <ToggleSwitch x:Name="AllPersonPicture"
+                    <ToggleSwitch x:Name="AllPersonPicture"
                       Header="首页显示头像"
                       Margin="0,5,0,0"
                       HorizontalAlignment="Left"
@@ -433,7 +438,7 @@
                       OffContent="关"
                       Foreground="{x:Bind TC}"
                       Toggled="AllPersonPicture_Toggled"/>
-                <ToggleSwitch x:Name="LunarSwitch"
+                    <ToggleSwitch x:Name="LunarSwitch"
                               Header="日程详情页显示阴历"
                               Margin="0,5,0,0"
                               HorizontalAlignment="Left"
@@ -441,7 +446,7 @@
                               OffContent="关"
                               Foreground="{x:Bind TC}"
                               Toggled="LunarSwitch_Toggled"/>
-                <ToggleSwitch x:Name="TileTip"
+                    <ToggleSwitch x:Name="TileTip"
                               Header="磁贴显示日程备注"
                               Margin="0,5,0,0"
                               HorizontalAlignment="Left"
@@ -449,8 +454,8 @@
                               OffContent="关"
                               Foreground="{x:Bind TC}"
                               Toggled="TileTip_Toggled"/>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <ToggleSwitch x:Name="AutoStartSwitch"
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <ToggleSwitch x:Name="AutoStartSwitch"
                               Header="开机自启动"
                               HorizontalAlignment="Left"
                               OnContent="开"
@@ -458,7 +463,7 @@
                               Foreground="{x:Bind TC}"
                                   Visibility="Collapsed"
                               Toggled="AutoStartSwitch_Toggled"/>
-                    <Button x:Name="AutoStartTipButton"
+                        <Button x:Name="AutoStartTipButton"
                             Content="&#xE82F;"
                             FontFamily="Segoe MDL2 Assets"
                             CornerRadius="20"
@@ -469,14 +474,14 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left"
                             Visibility="Collapsed">
-                        <Button.Flyout>
-                            <Flyout Placement="TopEdgeAlignedLeft">
-                                <TextBlock Text="自启动已被用户手动关闭，无法自动打开。&#x0a;请转至“设置”→“应用”→“启动”手动打开。"/>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
-                <ToggleSwitch x:Name="ToolAutoStartSwitch"
+                            <Button.Flyout>
+                                <Flyout Placement="TopEdgeAlignedLeft">
+                                    <TextBlock Text="自启动已被用户手动关闭，无法自动打开。&#x0a;请转至“设置”→“应用”→“启动”手动打开。"/>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                    <ToggleSwitch x:Name="ToolAutoStartSwitch"
                               Header="桌面小工具随应用启动"
                               Margin="0,5,0,0"
                               HorizontalAlignment="Left"
@@ -485,7 +490,7 @@
                               Foreground="{x:Bind TC}"
                               ToolTipService.ToolTip="已选择日程不为空时有效"
                               Toggled="ToolAutoStartSwitch_Toggled"/>
-                <TextBlock x:Name="AppAutoStartTip"
+                    <TextBlock x:Name="AppAutoStartTip"
                            Visibility="Visible"
                            TextDecorations="Underline"
                            Text="设置应用开机自启动"
@@ -493,200 +498,200 @@
                            Foreground="{x:Bind TC}"
                            Margin="0,15,0,20"
                            Tapped="AppAutoStartTip_Tapped"/>
-            </StackPanel>
-            <StackPanel Grid.Row="3" Margin="20,0,0,10" VerticalAlignment="Top">
-                <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="{x:Bind ToolAutoStartSwitch.Foreground}"/>
-                <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="local:ThemeColorData">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25" Margin="0,0,20,0"/>
-                                <TextBlock Text="{x:Bind colorName}" Margin="2" Foreground="{x:Bind themeColor}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,10,0,0">
-                <Button x:Name="PinButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
-                <Button x:Name="PinTaskbarButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
-                <Button x:Name="SupportButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="支持开发者❤" Click="SupportButton_Click">
-                    <Button.Flyout>
-                        <Flyout>
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="10">
-                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码.jpg"/>
-                                    <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
-                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码2.jpg"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="10">
-                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码.png"/>
-                                    <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
-                                    <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码2.png"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <Button x:Name="CheckUpdate" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,10,0"  Width="120" Content="检查更新" Click="CheckUpdate_Click"/>
-                    <ProgressRing x:Name="UpdateRing" Foreground="{x:Bind TC}" IsActive="False"/>
                 </StackPanel>
-                <!--<ProgressBar x:Name="downloadProgressBar" Visibility="Collapsed" Width="200"/>-->
-            </StackPanel>
-            <TextBlock x:Name="TestTb"
+                <StackPanel Grid.Row="3" Margin="20,0,0,10" VerticalAlignment="Top">
+                    <TextBlock Text="主题色" Margin="0,0,0,5" Foreground="{x:Bind ToolAutoStartSwitch.Foreground}"/>
+                    <ComboBox x:Name="ThemeColorSelected" CornerRadius="8" BorderBrush="{x:Bind TC}" ItemsSource="{x:Bind ViewModel.ThemeColorDatas}" SelectionChanged="ComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:ThemeColorData">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="{x:Bind themeColor}" Height="25" Width="25" Margin="0,0,20,0"/>
+                                    <TextBlock Text="{x:Bind colorName}" Margin="2" Foreground="{x:Bind themeColor}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Row="4" VerticalAlignment="Top" Margin="20,10,0,0">
+                    <Button x:Name="PinButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="固定到开始菜单" ToolTipService.ToolTip="建议打开动态磁贴" Click="PinButton_Click"/>
+                    <Button x:Name="PinTaskbarButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="固定到任务栏" Click="PinTaskbarButton_Click"  />
+                    <Button x:Name="SupportButton" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,0,20" Width="120" Content="支持开发者❤" Click="SupportButton_Click">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="10">
+                                        <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码.jpg"/>
+                                        <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
+                                        <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//支付宝收款码2.jpg"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="10">
+                                        <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码.png"/>
+                                        <TextBlock Text="或" VerticalAlignment="Center" Margin="10"/>
+                                        <Image Stretch="UniformToFill" Height="200" Width="150" Source="/Assets//微信收款码2.png"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <Button x:Name="CheckUpdate" Foreground="White" Background="{x:Bind TC}" CornerRadius="6" Margin="0,0,10,0"  Width="120" Content="检查更新" Click="CheckUpdate_Click"/>
+                        <ProgressRing x:Name="UpdateRing" Foreground="{x:Bind TC}" IsActive="False"/>
+                    </StackPanel>
+                    <!--<ProgressBar x:Name="downloadProgressBar" Visibility="Collapsed" Width="200"/>-->
+                </StackPanel>
+                <TextBlock x:Name="TestTb"
                    Grid.Row="3"
                    Grid.Column="0"
                    HorizontalAlignment="Center"/>
-            <ContentDialog x:Name="SyncDataDialog" 
+                <ContentDialog x:Name="SyncDataDialog" 
                        DefaultButton="Primary"
                        CornerRadius="10"
                        Background="White">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="将日程数据与云端同步" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,100,30" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TitleLinearGradientBrush}"/>
-                    <StackPanel Grid.Row="1" Margin="0,0,20,0">
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="GetLocalDataButton" Content="查看本地数据" Margin="5" CornerRadius="8" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="GetLocalDataButton_Click" HorizontalAlignment="Left"/>
-                            <FontIcon x:Name="GetLocalDataIcon" Foreground="{StaticResource TitleLinearGradientBrush}" Visibility="Collapsed" Margin="10,0,0,0" Glyph="&#xE761;" FontFamily="Segoe MDL2 Assets"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="将日程数据与云端同步" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,100,30" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TitleLinearGradientBrush}"/>
+                        <StackPanel Grid.Row="1" Margin="0,0,20,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="GetLocalDataButton" Content="查看本地数据" Margin="5" CornerRadius="8" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="GetLocalDataButton_Click" HorizontalAlignment="Left"/>
+                                <FontIcon x:Name="GetLocalDataIcon" Foreground="{StaticResource TitleLinearGradientBrush}" Visibility="Collapsed" Margin="10,0,0,0" Glyph="&#xE761;" FontFamily="Segoe MDL2 Assets"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="GetCloudDataButton" Content="查看云端数据" Margin="5" CornerRadius="8" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="GetCloudDataButton_Click" HorizontalAlignment="Left"/>
+                                <FontIcon x:Name="GetCloudDataIcon" Foreground="{StaticResource TitleLinearGradientBrush}" Visibility="Collapsed" Margin="10,0,0,0"  Glyph="&#xE761;" FontFamily="Segoe MDL2 Assets"/>
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="GetCloudDataButton" Content="查看云端数据" Margin="5" CornerRadius="8" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="GetCloudDataButton_Click" HorizontalAlignment="Left"/>
-                            <FontIcon x:Name="GetCloudDataIcon" Foreground="{StaticResource TitleLinearGradientBrush}" Visibility="Collapsed" Margin="10,0,0,0"  Glyph="&#xE761;" FontFamily="Segoe MDL2 Assets"/>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" BorderBrush="{StaticResource TitleLinearGradientBrush}" BorderThickness="1" CornerRadius="12">
+                        <StackPanel Grid.Row="1" Grid.Column="1" BorderBrush="{StaticResource TitleLinearGradientBrush}" BorderThickness="1" CornerRadius="12">
                             <ListView x:Name="ToDoTaskList" Height="200" ItemsSource="{x:Bind TaskViewModel.ToDoDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False"  Background="White" ItemClick="ToDoTaskList_ItemClick" RightTapped="ToDoTaskList_RightTapped">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="CornerRadius" Value="10"/>
-                                    <Setter Property="BorderBrush" Value="LightGray"/>
-                                    <Setter Property="BorderThickness" Value="0.3"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.ItemTemplate>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                        <Setter Property="BorderBrush" Value="LightGray"/>
+                                        <Setter Property="BorderThickness" Value="0.3"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="local1:ToDoTasks">
                                         <StackPanel>
                                             <TextBlock Margin="20,0,0,0" Text="{x:Bind Name}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
-                            <ListView.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Name="StepFlyout" Text="哈哈哈哈"/>
-                                </MenuFlyout>
-                            </ListView.ContextFlyout>
-                        </ListView>
-                    </StackPanel>
-                    <ProgressRing x:Name="LoadProgressBar" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
-                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
-                        <TextBlock Text="选择同步逻辑：" Margin="0,0,0,5" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
-                        <SplitButton x:Name="SyncWaySplitButton" CornerRadius="8" BorderThickness="1" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="SyncWaySplitButton_Click">
-                            合并两端数据
-                            <SplitButton.Flyout>
-                                <MenuFlyout Placement="Bottom">
-                                    <MenuFlyoutItem x:Name="SyncWayItem1" Text="合并两端数据" Click="SyncWayItem1_Click"/>
-                                    <MenuFlyoutItem x:Name="SyncWayItem2" Text="同步云端数据到本地" Click="SyncWayItem2_Click"/>
-                                    <MenuFlyoutItem x:Name="SyncWayItem3" Text="同步本地数据到云端" Click="SyncWayItem3_Click"/>
-                                </MenuFlyout>
-                            </SplitButton.Flyout>
-                        </SplitButton>
-                    </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,20,0,0">
-                        
-                        <StackPanel x:Name="SyncingStackPanel" Visibility="Collapsed" Margin="0,10,0,10" HorizontalAlignment="Left">
-                            <TextBlock Text="同步中，请勿关闭应用" Foreground="{StaticResource TitleLinearGradientBrush}"/>
-                            <ProgressBar IsIndeterminate="True" Foreground="{StaticResource TitleLinearGradientBrush}" Margin="0,5,0,0"/>
+                                <ListView.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Name="StepFlyout" Text="哈哈哈哈"/>
+                                    </MenuFlyout>
+                                </ListView.ContextFlyout>
+                            </ListView>
                         </StackPanel>
-                        <TextBlock x:Name="SyncTimeTextBlock" Text="上次同步时间：未进行过同步操作。" Margin="0,20,0,15" Foreground="{StaticResource TitleLinearGradientBrush}"/>
-                        
-                    </StackPanel>
-                    <Button x:Name="ExitSyncButton" Grid.Row="4" Grid.ColumnSpan="2" Content="退出" Background="{StaticResource ButtonLinearGradientBrush}" Foreground="White" CornerRadius="8" Height="40" Width="100" HorizontalAlignment="Center" FontSize="15" Click="ExitSyncButton_Click"/>
+                        <ProgressRing x:Name="LoadProgressBar" Grid.Row="1" Grid.Column="1" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
+                        <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                            <TextBlock Text="选择同步逻辑：" Margin="0,0,0,5" Foreground="{StaticResource ButtonLinearGradientBrush}"/>
+                            <SplitButton x:Name="SyncWaySplitButton" CornerRadius="8" BorderThickness="1" Foreground="White" Background="{StaticResource ButtonLinearGradientBrush}" Click="SyncWaySplitButton_Click">
+                                合并两端数据
+                                <SplitButton.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem x:Name="SyncWayItem1" Text="合并两端数据" Click="SyncWayItem1_Click"/>
+                                        <MenuFlyoutItem x:Name="SyncWayItem2" Text="同步云端数据到本地" Click="SyncWayItem2_Click"/>
+                                        <MenuFlyoutItem x:Name="SyncWayItem3" Text="同步本地数据到云端" Click="SyncWayItem3_Click"/>
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,20,0,0">
 
-                </Grid>
-                
-            </ContentDialog>
-            <ContentDialog x:Name="AboutContent"
+                            <StackPanel x:Name="SyncingStackPanel" Visibility="Collapsed" Margin="0,10,0,10" HorizontalAlignment="Left">
+                                <TextBlock Text="同步中，请勿关闭应用" Foreground="{StaticResource TitleLinearGradientBrush}"/>
+                                <ProgressBar IsIndeterminate="True" Foreground="{StaticResource TitleLinearGradientBrush}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                            <TextBlock x:Name="SyncTimeTextBlock" Text="上次同步时间：未进行过同步操作。" Margin="0,20,0,15" Foreground="{StaticResource TitleLinearGradientBrush}"/>
+
+                        </StackPanel>
+                        <Button x:Name="ExitSyncButton" Grid.Row="4" Grid.ColumnSpan="2" Content="退出" Background="{StaticResource ButtonLinearGradientBrush}" Foreground="White" CornerRadius="8" Height="40" Width="100" HorizontalAlignment="Center" FontSize="15" Click="ExitSyncButton_Click"/>
+
+                    </Grid>
+
+                </ContentDialog>
+                <ContentDialog x:Name="AboutContent"
                        Title="关于“夏日”"
                        DefaultButton="Primary"
                        CornerRadius="10">
-                <ScrollViewer>
-                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <TextBlock Foreground="Gray" x:Name="Version" Margin="10,10,0,5" />
-                        <TextBlock Foreground="Gray" x:Name="SystemVersion" Margin="10,0,0,5" />
-                        <TextBlock Foreground="Gray" x:Name="Platform" Margin="10,0,0,10"/>
-                        <TextBlock Foreground="Gray" Text="一款简约设计的纪念日/倒计时记录应用。" 
+                    <ScrollViewer>
+                        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <TextBlock Foreground="Gray" x:Name="Version" Margin="10,10,0,5" />
+                            <TextBlock Foreground="Gray" x:Name="SystemVersion" Margin="10,0,0,5" />
+                            <TextBlock Foreground="Gray" x:Name="Platform" Margin="10,0,0,10"/>
+                            <TextBlock Foreground="Gray" Text="一款简约设计的纪念日/倒计时记录应用。" 
             TextWrapping="Wrap" Margin="10"/>
-                        <Image Source="Assets/03.png" Width="350" Height="350"/>
-                        <TextBlock Foreground="Gray" Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
-                        <TextBlock  Foreground="Gray" Text="开发者邮箱：monreestudio@outlook.com" Margin="10" />
-                        <HyperlinkButton Content="Github开源项目" 
+                            <Image Source="Assets/03.png" Width="350" Height="350"/>
+                            <TextBlock Foreground="Gray" Text="梦睿工作室(Monree Studio)——Bill夏昕" Margin="10"/>
+                            <TextBlock  Foreground="Gray" Text="开发者邮箱：monreestudio@outlook.com" Margin="10" />
+                            <HyperlinkButton Content="Github开源项目" 
                                  Margin="10"
                                          Visibility="Collapsed"
                                  NavigateUri="https://github.com/MonreeStudio/MonreeDate-Update"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                            <Button x:Name="AboutDialogPrimaryButton" Content="了解" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="116" Click="AboutDialogPrimaryButton_Click"/>
-                            <Button x:Name="AboutDialogSecondryButton" Content="五星好评😝" Margin="0,0,4,0" Width="116" Click="AboutDialogSecondryButton_Click"/>
-                            <Button x:Name="AboutDialogCloseButton" Content="不了解" Width="116" Click="AboutDialogCloseButton_Click"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Button x:Name="AboutDialogPrimaryButton" Content="了解" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="116" Click="AboutDialogPrimaryButton_Click"/>
+                                <Button x:Name="AboutDialogSecondryButton" Content="五星好评😝" Margin="0,0,4,0" Width="116" Click="AboutDialogSecondryButton_Click"/>
+                                <Button x:Name="AboutDialogCloseButton" Content="不了解" Width="116" Click="AboutDialogCloseButton_Click"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </ContentDialog>
+                <ContentDialog x:Name="BirthDialog"
+                       Title="添加出生日为日程"
+                       CornerRadius="10">
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <TextBlock x:Name="BirthText"/>
+                        <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
+                                TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                            <Button x:Name="BirthDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="BirthDialogPrimaryButton_Click"/>
+                            <Button x:Name="BirthDialogCloseButton" Content="取消" Width="200" Click="BirthDialogCloseButton_Click"/>
 
                         </StackPanel>
                     </StackPanel>
-                </ScrollViewer>
-            </ContentDialog>
-            <ContentDialog x:Name="BirthDialog"
-                       Title="添加出生日为日程"
-                       CornerRadius="10">
-                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TextBlock x:Name="BirthText"/>
-                    <TextBlock Text="添加后将被固定为日程到首页，显示你出生至今已过的日子。&#x0a;这或许是一件有趣的事情~" 
-                                TextWrapping="Wrap" />
-                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
-                        <Button x:Name="BirthDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="BirthDialogPrimaryButton_Click"/>
-                        <Button x:Name="BirthDialogCloseButton" Content="取消" Width="200" Click="BirthDialogCloseButton_Click"/>
-
-                    </StackPanel>
-                </StackPanel>
-            </ContentDialog>
-            <ContentDialog x:Name="AutoStartTipDialog"
+                </ContentDialog>
+                <ContentDialog x:Name="AutoStartTipDialog"
                            Title="设置应用开机自启动"
                        CornerRadius="10">
-                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TextBlock TextWrapping="WrapWholeWords" Foreground="Gray" Width="400">
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <TextBlock TextWrapping="WrapWholeWords" Foreground="Gray" Width="400">
                         夏日暂不支持一键设置应用开机自启动，但可以通过您手动设置实现。只需以下简单几步：
-                    </TextBlock>
-                    <TextBlock Text="1、右击屏幕左下角的开始按钮，选择 运行；&#x0a;2、在 运行 内输入shell:startup，此时会打开一个文件夹窗口；&#x0a;3、打开开始菜单，在左侧的列表中找到夏日；&#x0a;4、将夏日拖拽到刚刚打开的文件夹窗口；" 
+                        </TextBlock>
+                        <TextBlock Text="1、右击屏幕左下角的开始按钮，选择 运行；&#x0a;2、在 运行 内输入shell:startup，此时会打开一个文件夹窗口；&#x0a;3、打开开始菜单，在左侧的列表中找到夏日；&#x0a;4、将夏日拖拽到刚刚打开的文件夹窗口；" 
                                Foreground="Gray"
                                Margin="10"/>
-                    <StackPanel  Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Right">
-                        <Button x:Name="AutoStartTipDialogPrimaryButton" Content="学会了！" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="AutoStartTipDialogPrimaryButton_Click"/>
+                        <StackPanel  Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Right">
+                            <Button x:Name="AutoStartTipDialogPrimaryButton" Content="学会了！" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="AutoStartTipDialogPrimaryButton_Click"/>
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
-            </ContentDialog>
-            <ContentDialog x:Name="CropperDialog"
+                </ContentDialog>
+                <ContentDialog x:Name="CropperDialog"
                            Title="编辑头像"
                            CornerRadius="10">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <!--<controls:DropShadowPanel BlurRadius="18"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <!--<controls:DropShadowPanel BlurRadius="18"
                                   ShadowOpacity="0.2"
                                   OffsetX="2"
                                   OffsetY="2"
@@ -697,13 +702,13 @@
                                   IsMasked="True">
                         <Border CornerRadius="10">-->
 
-                    <PersonPicture x:Name="EditPicture" Width="150" Visibility="Collapsed" Height="150" ProfilePicture="{Binding CroppedCircularImage}"/>
-                    <PersonPicture x:Name="TempPicture" Visibility="Visible" Width="150" Height="150"/>
-                    <!--<controls:ImageCropper x:Name="imageCropper" Width="350" Height="350"/>-->
+                        <PersonPicture x:Name="EditPicture" Width="150" Visibility="Collapsed" Height="150" ProfilePicture="{Binding CroppedCircularImage}"/>
+                        <PersonPicture x:Name="TempPicture" Visibility="Visible" Width="150" Height="150"/>
+                        <!--<controls:ImageCropper x:Name="imageCropper" Width="350" Height="350"/>-->
                         <!--</Border>-->
-                    <!--</controls:DropShadowPanel>-->
-                    <StackPanel Grid.Column="1" Padding="50" VerticalAlignment="Center">
-                        <Button x:Name="PickImgButton"
+                        <!--</controls:DropShadowPanel>-->
+                        <StackPanel Grid.Column="1" Padding="50" VerticalAlignment="Center">
+                            <Button x:Name="PickImgButton"
                                 Margin="0,0,0,10"
                                 CornerRadius="8"
                                 Foreground="White"
@@ -711,14 +716,14 @@
                                 Click="PickImgButton_Click"
                                 Command="{Binding CropCircularImageCommand}"
                                 Content="选取图片"/>
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
-                        <Button x:Name="CropperDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="CropperDialogPrimaryButton_Click"/>
-                        <Button x:Name="CropperDialogCloseButton" Content="取消" Width="200" Click="CropperDialogCloseButton_Click"/>
-                    </StackPanel>
-                </Grid>
-            </ContentDialog>
-            <Button x:Name="AboutButton"
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,24,0,0" HorizontalAlignment="Center">
+                            <Button x:Name="CropperDialogPrimaryButton" Content="确认" Margin="0,0,4,0" Foreground="White" Background="{x:Bind TC}" Width="200" Click="CropperDialogPrimaryButton_Click"/>
+                            <Button x:Name="CropperDialogCloseButton" Content="取消" Width="200" Click="CropperDialogCloseButton_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </ContentDialog>
+                <Button x:Name="AboutButton"
                 Content="关于应用"
                 Grid.Row="5"
                 Grid.Column="1"
@@ -733,8 +738,10 @@
                 Width="100"
                 Click="AboutButton_Click"/>
 
-            <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
-        </Grid>
+                <Frame x:Name="ContentFrame" x:FieldModifier="Public"/>
+            </Grid>
+            
+        </ScrollViewer>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -748,5 +755,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </ScrollViewer>
+    </Grid>
+    
 </Page>

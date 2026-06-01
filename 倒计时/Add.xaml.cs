@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +16,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using 倒计时.Manager;
 using 夏日.Models;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -104,26 +106,7 @@ namespace 倒计时
         }
         private string Calculator(string s1)
         {
-            string str1 = s1;
-            string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
-            DateTime d1 = Convert.ToDateTime(str1);
-            DateTime d2 = Convert.ToDateTime(str2);
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            int days = (d4 - d3).Days;
-            if (days < 0)
-            {
-                days = -days;
-                s2 = "还有" + days.ToString() + "天";
-            }
-            else
-            {if (days != 0)
-                    s2 = "已过" + days.ToString() + "天";
-                else
-                    s2 = "就在今天";
-            }
-                return s2;
+            return CountdownDateCalculator.FormatDayCountdown(s1);
         }
 
         private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
@@ -174,7 +157,7 @@ namespace 倒计时
             {
                 try
                 {
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = _event, CalculatedDate = _Date, Date = _PickDate, BgColor = _Color, TintOpacity = _TintOpacity, IsTop = "0",AddTime = "" });
+                    All.Current.CountdownRepository.Insert(CountdownRecord.Create(_event, _Date, _PickDate, _Color, _TintOpacity, "0", ""));
                     //All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
                     localSettings.Values[_event+_PickDate] = _Tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;

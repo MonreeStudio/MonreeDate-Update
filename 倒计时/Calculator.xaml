@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:倒计时.Controls" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    Margin="0,-34,0,0">
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
@@ -57,13 +57,11 @@
     </Page.Resources>
 
     <Grid>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-            <TextBlock x:Name="CalculatorTopText"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="CalculatorTopText"
                        Text="计算"
                        FontSize="28"
                        FontWeight="Bold"
@@ -72,6 +70,13 @@
                        Grid.Row="0"
                        Grid.Column="0" 
                        VerticalAlignment="Top"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                
                 <StackPanel x:Name="PageStackPanel" HorizontalAlignment="Center" Grid.Row="1" Orientation="Vertical">
                     <controls:DropShadowPanel 
                                     BlurRadius="15"
@@ -85,7 +90,7 @@
                                   Margin="10,50,10,0"
                                   IsMasked="True"
                                   >
-                        <Grid x:Name="DistanceGrid" CornerRadius="10" Padding="20" Width="450" Height="450" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                        <Grid x:Name="DistanceGrid" CornerRadius="10" Padding="20" Width="450" Height="450" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
@@ -97,7 +102,7 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="日期距离" HorizontalAlignment="Left" FontWeight="Bold" FontSize="23" Margin="0,10,0,20" />
+                            <TextBlock Text="日期距离" HorizontalAlignment="Left" FontWeight="Bold" FontSize="23" Margin="0,10,0,20" SelectionChanged="TextBlock_SelectionChanged" />
                             <TextBlock x:Name="StartDate" Grid.Row="1" Grid.Column="0" FontSize="25" Text="开始日期：" Margin="0,0,20,0"  Foreground="{x:Bind TC}"  HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBlock x:Name="EndDate" Grid.Row="2" Grid.Column="0" FontSize="25" Text="结束日期：" Margin="0,0,20,0"  Foreground="{x:Bind TC}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <StackPanel Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
@@ -231,7 +236,7 @@
                                   Margin="10,20,10,100"
                                   IsMasked="True"
                                   >
-                        <Grid x:Name="ConverterGrid" CornerRadius="10" Padding="20" Width="450" Height="Auto" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                        <Grid x:Name="ConverterGrid" CornerRadius="10" Padding="20" Width="450" Height="Auto" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
@@ -299,9 +304,9 @@
                         </Grid>
                     </controls:DropShadowPanel>
                 </StackPanel>
-            
-        </Grid>
-    </ScrollViewer>
+
+            </Grid>
+        </ScrollViewer>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

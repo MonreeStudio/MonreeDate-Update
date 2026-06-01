@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -29,6 +29,7 @@ namespace 倒计时
     /// </summary>
     public sealed partial class LoginPage : Page
     {
+        private const string ServiceBaseAddress = "https://msdate.monreeing.com:3000";
         private DispatcherTimer timer;
         private int getCodeMinute;
         private string signUpJson;
@@ -122,7 +123,7 @@ namespace 倒计时
                     LoginPageProgressBar.IsActive = true;
                 });
                 HttpClient client = new HttpClient();
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://msdate.monreeing.com:3000/user/signup/");
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, ServiceBaseAddress + "/user/signup/");
                 requestMessage.Content = new StringContent(signUpJson);
                 requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 HttpResponseMessage response = client.SendAsync(requestMessage).GetAwaiter().GetResult();
@@ -222,7 +223,7 @@ namespace 倒计时
             try
             {
                 HttpClient client = new HttpClient();
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://msdate.monreeing.com:3000/email/signup_code/");
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, ServiceBaseAddress + "/email/signup_code/");
                 requestMessage.Content = new StringContent(getVCodeJson);
                 requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 HttpResponseMessage response = client.SendAsync(requestMessage).GetAwaiter().GetResult();
@@ -324,7 +325,7 @@ namespace 倒计时
                     LoginPageProgressBar.IsActive = true;
                 });
                 HttpClient client = new HttpClient();
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://msdate.monreeing.com:3000/user/login/");
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, ServiceBaseAddress + "/user/login/");
                 requestMessage.Content = new StringContent(loginJson);
                 requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 HttpResponseMessage response = client.SendAsync(requestMessage).GetAwaiter().GetResult();

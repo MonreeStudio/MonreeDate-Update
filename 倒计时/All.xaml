@@ -13,48 +13,48 @@
     x:Name="APage"
     x:FieldModifier="Public"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-        Background="{ThemeResource SystemControlAcrylicWindowBrush}"
-
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    Margin="0,-34,0,0"
     >
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
         <Style x:Key="ThumbStyle1" TargetType="Thumb">
             <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="IsTabStop" Value="False"/>
-                <Setter Property="BorderBrush" Value="{ThemeResource ThumbBorderBrush}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Thumb">
-                            <Grid x:Name="RootGrid">
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="Normal"/>
-                                        <VisualState x:Name="PointerOver">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPointerOver"/>
-                                                <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="Pressed">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPressed"/>
-                                                <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="Disabled"/>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                                <Rectangle RadiusY="55" RadiusX="55" Fill="Gray"  Opacity="0.6" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="0" />
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE11C;" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Border x:Name="Background" BorderBrush="White" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
-                                <Border x:Name="BackgroundPointerOver" BorderBrush="White" BorderThickness="0" Background="Transparent" Opacity="0"/>
-                                <Border x:Name="BackgroundPressed" BorderBrush="{ThemeResource ThumbBorderBrushPressed}" BorderThickness="0" Background="Transparent" Opacity="0"/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ThumbBorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Grid x:Name="RootGrid">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPointerOver"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundPressed"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Background"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle RadiusY="55" RadiusX="55" Fill="Gray"  Opacity="0.6" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="0" />
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE11C;" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border x:Name="Background" BorderBrush="White" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
+                            <Border x:Name="BackgroundPointerOver" BorderBrush="White" BorderThickness="0" Background="Transparent" Opacity="0"/>
+                            <Border x:Name="BackgroundPressed" BorderBrush="{ThemeResource ThumbBorderBrushPressed}" BorderThickness="0" Background="Transparent" Opacity="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style TargetType="ContentDialog">
             <Setter Property="Foreground" Value="{ThemeResource ThemeColor}" />
@@ -361,47 +361,51 @@
     </Page.Resources>
 
     <Grid>
-        <ScrollViewer x:Name="AllScrollViewer" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" >
-                <RelativePanel x:FieldModifier="Public">
-                    <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,40,0,0" VerticalAlignment="Center" Width="Auto"/>
-                    <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
-                        <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
-                            <AppBarButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
-                            </AppBarButton.Icon>
-                        </AppBarButton>
-                        <AppBarButton x:Name="ContentChoise" Label="显示全部" Foreground="{x:Bind TC}" CornerRadius="3" ToolTipService.Placement="Mouse">
-                            <AppBarButton.Icon>
-                                <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets"/>
-                            </AppBarButton.Icon>
-                            <AppBarButton.Flyout>
-                                <MenuFlyout Placement="Bottom">
-                                    <MenuFlyoutItem x:Name="DisplayAll" Text="显示全部" Foreground="{x:Bind TC}" Click="DisplayAll_Click"/>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Name="DisplatPast" Text="显示已过日程" Foreground="{x:Bind TC}" Click="DisplatPast_Click"/>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Name="DisplayFuture" Text="显示未过日程" Foreground="{x:Bind TC}" Click="DisplayFuture_Click"/>
-                                </MenuFlyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <RelativePanel x:FieldModifier="Public" Grid.Row="0">
+            <TextBlock x:Name="Today" x:FieldModifier="public"  FontSize="20" RelativePanel.AlignLeftWithPanel="True" FontWeight="Bold"  Height="30" Margin="90,40,0,0" VerticalAlignment="Center" Width="Auto"/>
+            <CommandBar x:Name="AllCommandBar" x:FieldModifier="public" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,2" IsOpen="False" DefaultLabelPosition="Right">
+                <AppBarButton x:Name="AddABB" CornerRadius="3" Click="AppBarButton_Click" Label="新建" ToolTipService.ToolTip="新建一个日程" ToolTipService.Placement="Mouse" Foreground="{x:Bind TC}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="ContentChoise" Label="显示全部" Foreground="{x:Bind TC}" CornerRadius="3" ToolTipService.Placement="Mouse">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets"/>
+                    </AppBarButton.Icon>
+                    <AppBarButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem x:Name="DisplayAll" Text="显示全部" Foreground="{x:Bind TC}" Click="DisplayAll_Click"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="DisplatPast" Text="显示已过日程" Foreground="{x:Bind TC}" Click="DisplatPast_Click"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="DisplayFuture" Text="显示未过日程" Foreground="{x:Bind TC}" Click="DisplayFuture_Click"/>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
 
-                        <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="天数模式" Foreground="{x:Bind TC}">
-                            <AppBarButton.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
-                            </AppBarButton.Icon>
-                            <AppBarButton.Flyout>
-                                <MenuFlyout Placement="Bottom">
-                                    <MenuFlyoutItem x:Name="DayMode" Text="天数模式" Foreground="{x:Bind TC}" Click="DayMode_Click"/>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Name="WeekMode" Text="周数模式" Foreground="{x:Bind TC}" Click="WeekMode_Click"/>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Name="YearMode" Text="年数模式" Foreground="{x:Bind TC}" Click="YearMode_Click"/>
-                                </MenuFlyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                    </CommandBar>
-                </RelativePanel>
+                <AppBarButton x:Name="ChangeABB" CornerRadius="3" Label="天数模式" Foreground="{x:Bind TC}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE163;"/>
+                    </AppBarButton.Icon>
+                    <AppBarButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem x:Name="DayMode" Text="天数模式" Foreground="{x:Bind TC}" Click="DayMode_Click"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="WeekMode" Text="周数模式" Foreground="{x:Bind TC}" Click="WeekMode_Click"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="YearMode" Text="年数模式" Foreground="{x:Bind TC}" Click="YearMode_Click"/>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+            </CommandBar>
+        </RelativePanel>
+        <ScrollViewer x:Name="AllScrollViewer" Grid.Row="1" x:FieldModifier="public" ViewChanged="AllScrollViewer_ViewChanged" ViewChanging="AllScrollViewer_ViewChanging" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="AllPageStackPanel" x:FieldModifier="Public" >
                 <Grid>
                     <PersonPicture x:Name="AllPicture" x:FieldModifier="public" Width="100" Height="100" Margin="20" PointerEntered="AllPicture_PointerEntered" PointerExited="AllPicture_PointerExited" IsTapEnabled="True" Tapped="AllPicture_Tapped"/>
                     <TextBlock x:Name="UserName" Text="我是昵称" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -419,23 +423,22 @@
                         </animations:Implicit.HideAnimations>
                     </TextBlock>
                     <TextBlock x:Name="UserSign" Text="我是个性签名" FontSize="15" Width="180" MaxLines="3" TextTrimming="CharacterEllipsis"  TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <animations:Implicit.ShowAnimations>
-          <animations:TranslationAnimation Duration="0:0:1" From="30" To="150,0,0" />
-          <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
-        </animations:Implicit.ShowAnimations>
+                        <animations:Implicit.ShowAnimations>
+                            <animations:TranslationAnimation Duration="0:0:1" From="30" To="150,0,0" />
+                            <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
+                        </animations:Implicit.ShowAnimations>
 
-        <animations:Implicit.HideAnimations>
-          <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
-          <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0">
-            <animations:ScalarKeyFrame Key="0.1" Value="30"/>
-            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
-          </animations:ScalarAnimation>
-            <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
-              
-            <animations:ScalarKeyFrame Key="0.1" Value="0"/>
-            <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
-          </animations:ScalarAnimation>
-        </animations:Implicit.HideAnimations>
+                        <animations:Implicit.HideAnimations>
+                            <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"/>
+                            <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="0">
+                                <animations:ScalarKeyFrame Key="0.1" Value="30"/>
+                                <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+                            </animations:ScalarAnimation>
+                            <animations:ScalarAnimation Target="Translation.Y" Duration="0:0:1" To="0">
+                                <animations:ScalarKeyFrame Key="0.1" Value="0"/>
+                                <animations:ScalarKeyFrame Key="0.5" Value="0.0"/>
+                            </animations:ScalarAnimation>
+                        </animations:Implicit.HideAnimations>
                     </TextBlock>
                 </Grid>
                 <TextBlock x:Name="TopText" x:FieldModifier="Public" Height="50" Margin="0,0,0,0" Foreground="{x:Bind TC}" FontSize="30" FontWeight="Thin" TextWrapping="WrapWholeWords" HorizontalTextAlignment="Center" ToolTipService.ToolTip="点击切换显示模式（天数/百分比）" IsTapEnabled="True" Tapped="TopText_Tapped" PointerEntered="TopText_PointerEntered" PointerExited="TopText_PointerExited"/>
@@ -512,18 +515,18 @@
                 </VisualStateManager.VisualStateGroups>
             </StackPanel>
         </ScrollViewer>
-        <Thumb Margin="50,50,50,80"  Grid.Row="0" Visibility="Collapsed" ToolTipService.ToolTip="返回顶部" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped">
-                <animations:Implicit.ShowAnimations>
-                    <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
-                    <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
-                </animations:Implicit.ShowAnimations>
+        <Thumb Margin="50,50,50,80"  Grid.Row="1" Visibility="Collapsed" ToolTipService.ToolTip="返回顶部" Style="{StaticResource ThumbStyle1}" Name="RootThumb" Height="55" Width="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="101" Tapped="RootThumb_Tapped">
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:1" From="200, 0, 0" To="0" ></animations:TranslationAnimation>
+                <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"></animations:OpacityAnimation>
+            </animations:Implicit.ShowAnimations>
 
-                <animations:Implicit.HideAnimations>
-                    <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
-                    <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
-                    </animations:ScalarAnimation>
-                </animations:Implicit.HideAnimations>
-            </Thumb>
+            <animations:Implicit.HideAnimations>
+                <animations:ScalarAnimation Target="Opacity" Duration="0:0:1" To="0.0"></animations:ScalarAnimation>
+                <animations:ScalarAnimation Target="Translation.X" Duration="0:0:1" To="200">
+                </animations:ScalarAnimation>
+            </animations:Implicit.HideAnimations>
+        </Thumb>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

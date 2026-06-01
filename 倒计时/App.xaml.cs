@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -34,6 +35,8 @@ using Windows.ApplicationModel.Core;
 using 夏日.Models;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media.Animation;
+using 倒计时.Manager;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 namespace 倒计时
 {
@@ -48,8 +51,7 @@ namespace 倒计时
         private const string SelectedAppThemeKey = "SelectedAppTheme";
         public static CustomData AllItem;
         public static FestivalData FestivalItem;
-        static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
-        static SQLite.Net.SQLiteConnection conn;
+        static CountdownRepository countdownRepository;
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -101,10 +103,7 @@ namespace 倒计时
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
             this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            countdownRepository = new CountdownRepository();
             //RequestedTheme = ApplicationTheme.Light;
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
             {
@@ -138,7 +137,26 @@ namespace 倒计时
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
+            _ = LogUnhandledExceptionAsync(e);
             e.Handled = true;
+        }
+
+        private async Task LogUnhandledExceptionAsync(Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                StorageFile logFile = await ApplicationData.Current.LocalFolder.CreateFileAsync("crash.log", CreationCollisionOption.OpenIfExists);
+                string message = DateTime.Now.ToString("o") + Environment.NewLine
+                    + e.Message + Environment.NewLine
+                    + e.Exception?.ToString() + Environment.NewLine
+                    + "----" + Environment.NewLine;
+
+                await FileIO.AppendTextAsync(logFile, message);
+            }
+            catch (Exception logException)
+            {
+                Debug.WriteLine(logException);
+            }
         }
 
         private void ToolAutoStart()
@@ -161,8 +179,8 @@ namespace 倒计时
             if (localSettings.Values["ItemCount"] == null)
                 localSettings.Values["ItemCount"] = 0;
             int count = (int)localSettings.Values["ItemCount"];
-            List<DataTemple> datalist = new List<DataTemple>();
-            var allData = conn.Query<DataTemple>("select *from DataTemple");
+            List<CountdownRecord> datalist = new List<CountdownRecord>();
+            var allData = countdownRepository.GetAll();
             switch (count)
             {
                 case 1:
@@ -215,63 +233,7 @@ namespace 倒计时
 
         public static string Term(DateTime b, DateTime e)
         {
-            if (b < e)
-            {
-                var t = new
-                {
-                    bm = b.Month,
-                    em = e.Month,
-                    bd = b.Day,
-                    ed = e.Day
-                };
-                int diffMonth = (e.Year - b.Year) * 12 + (t.em - t.bm),//相差月
-                    diffYear = diffMonth / 12;//相差年
-
-                int[] d = new int[3] { 0, 0, 0 };
-                if (diffYear > 0)
-                {
-                    if (t.em == t.bm && t.ed < t.bd)
-                    {
-                        d[0] = diffYear - 1;
-                    }
-                    else d[0] = diffYear;
-                }
-
-                if (t.ed >= t.bd)
-                {
-                    d[1] = diffMonth % 12;
-                    d[2] = t.ed - t.bd;
-                }
-                else//结束日 小于 开始日
-                {
-                    int dm = diffMonth - 1;
-                    d[1] = dm % 12;
-                    TimeSpan ts = e - b.AddMonths(dm);
-                    d[2] = ts.Days;
-                }
-                StringBuilder sb = new StringBuilder();
-
-                if (d.Sum() > 0)
-                {
-                    if (d[0] > 0) sb.Append($"{d[0]}年");
-                    if (d[1] > 0) sb.Append($"{d[1]}个月");
-                    if (d[2] > 0) sb.Append($"{d[2]}天");
-                }
-                else
-                {
-                    int[] time = new int[2] { 0, 0 };
-                    TimeSpan sj = e - b;
-                    time[0] = sj.Hours;
-                    time[1] = sj.Minutes % 60;
-                    if (time[0] > 0) sb.Append($"{time[0]}小时");
-                    if (time[1] > 0) sb.Append($"{time[1]}分钟");
-
-                    if (time.Sum() <= 0) sb.Append($"{sj.Seconds}秒");
-                }
-                return sb.ToString();
-            }
-            else
-                throw new Exception("开始日期必须小于结束日期");
+            return CountdownDateCalculator.FormatDateRange(b, e);
         }
         
         public static TEnum GetEnum<TEnum>(string text) where TEnum : struct

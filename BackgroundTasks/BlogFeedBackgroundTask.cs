@@ -3,6 +3,7 @@ using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,51 +36,142 @@ namespace BackgroundTasks
             //建立数据库连接   
             conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
             //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数    
+            if (!TableHasColumn("DataTemplate", "Id"))
+            {
+                MigrateLegacyDataTemplateTable();
+            }
+
+            conn.CreateTable<CountdownRecord>(); //默认表名同范型参数
+            MigrateLegacyDataTempleTable();
+            EnsureIndexes();
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
             UpdateTile();   //更新磁贴
             LoadToast();    //加载通知
             deferral.Complete();
         }
 
+        private void EnsureIndexes()
+        {
+            conn.Execute("create index if not exists IX_DataTemplate_Date on DataTemplate(Date)");
+            conn.Execute("create index if not exists IX_DataTemplate_IsTop_Date on DataTemplate(IsTop, Date)");
+        }
+
+        private bool TableHasColumn(string tableName, string columnName)
+        {
+            try
+            {
+                var columns = conn.Query<TableInfo>("pragma table_info(" + tableName + ")");
+                return columns.Any(column => string.Equals(column.name, columnName, StringComparison.OrdinalIgnoreCase));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void MigrateLegacyDataTemplateTable()
+        {
+            List<LegacyDataTemplate> legacyItems;
+
+            try
+            {
+                legacyItems = conn.Query<LegacyDataTemplate>("select * from DataTemplate");
+            }
+            catch
+            {
+                return;
+            }
+
+            if (legacyItems.Count == 0)
+            {
+                return;
+            }
+
+            conn.Execute("drop table if exists DataTemplate");
+            conn.CreateTable<CountdownRecord>();
+
+            foreach (var legacyItem in legacyItems)
+            {
+                conn.Insert(legacyItem.ToCountdownRecord());
+            }
+        }
+
+        private void MigrateLegacyDataTempleTable()
+        {
+            List<LegacyDataTemple> legacyItems;
+
+            try
+            {
+                legacyItems = conn.Query<LegacyDataTemple>("select * from DataTemple");
+            }
+            catch
+            {
+                return;
+            }
+
+            foreach (var legacyItem in legacyItems)
+            {
+                var existingItems = conn.Query<CountdownRecord>(
+                    "select * from DataTemplate where Schedule_name = ?",
+                    legacyItem.Schedule_name);
+
+                if (existingItems.Count > 0)
+                {
+                    continue;
+                }
+
+                conn.Insert(legacyItem.ToCountdownRecord());
+            }
+        }
+
         public void UpdateTile()
         {
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
             updater.EnableNotificationQueue(true);
-            updater.Clear();
-            if(LoadTile()!=null)
-                updater.Update(LoadTile());
-        }
-        public static string Calculator(string s1)
-        {
-            string str1 = s1;
-            string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
-            DateTime d1 = Convert.ToDateTime(str1);
-            DateTime d2 = Convert.ToDateTime(str2);
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            int days = (d4 - d3).Days;
-            if (days < 0)
+            TileNotification tileNotification = LoadTile();
+            if(tileNotification != null)
             {
-                days = -days;
-                s2 = "还有" + days.ToString() + "天";
+                updater.Update(tileNotification);
             }
             else
             {
-                if (days != 0)
-                    s2 = "已过" + days.ToString() + "天";
-                else
-                {
-                    s2 = "就在今天";
-                }
+                updater.Clear();
             }
-            return s2;
+        }
+        public static string Calculator(string s1)
+        {
+            DateTime targetDate = ParseDate(s1);
+            DateTime today = DateTime.Today;
+            int days = (today - targetDate).Days;
+
+            if (days < 0)
+            {
+                return "还有" + Math.Abs(days) + "天";
+            }
+
+            if (days == 0)
+            {
+                return "就在今天";
+            }
+
+            return "已过" + days + "天";
+        }
+
+        private static DateTime ParseDate(string date)
+        {
+            DateTime parsedDate;
+            if (DateTime.TryParse(date, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out parsedDate)
+                || DateTime.TryParse(date, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out parsedDate))
+            {
+                return parsedDate.Date;
+            }
+
+            return Convert.ToDateTime(date).Date;
         }
 
         private TileNotification LoadTile()
         {
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            List<CountdownRecord> datalist0 = conn.Query<CountdownRecord>("select * from DataTemplate");
             foreach (var item in datalist0)
             {
                 if (SecondaryTile.Exists(item.Schedule_name))
@@ -87,7 +179,7 @@ namespace BackgroundTasks
                     CreateSecondaryTile(item.Schedule_name, Calculator(item.Date), item.Date);
                 }
             }
-            List<DataTemple> datalist = conn.Query<DataTemple>("select * from DataTemple where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<CountdownRecord> datalist = conn.Query<CountdownRecord>("select * from DataTemplate where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
             string _ScheduleName = "";
             string _CaculatedDate = "";
             string _Date = "";
@@ -110,7 +202,6 @@ namespace BackgroundTasks
 
         private TileNotification CreateTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;
@@ -268,7 +359,6 @@ namespace BackgroundTasks
 
         private void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;
@@ -431,7 +521,7 @@ namespace BackgroundTasks
 
         public void LoadToast()
         {
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
+            List<CountdownRecord> datalist0 = conn.Query<CountdownRecord>("select * from DataTemplate where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
             foreach (var item in datalist0)
             {
                 var AlertName = "Alert" + item.Schedule_name;
@@ -450,7 +540,7 @@ namespace BackgroundTasks
             for (int i = 1; i <= 3; i += 2)
             {
                 string temp = DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd");
-                var datalist1 = conn.Query<DataTemple>("select * from DataTemple where Date = ?", DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
+                var datalist1 = conn.Query<CountdownRecord>("select * from DataTemplate where Date = ?", DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
                 foreach(var item in datalist1)
                 {
                     var AlertName = "Alert" + item.Schedule_name + i;
@@ -467,7 +557,7 @@ namespace BackgroundTasks
                     }
                 }
             }
-            var datalist2 = conn.Query<DataTemple>("select * from DataTemple");
+            var datalist2 = conn.Query<CountdownRecord>("select * from DataTemplate");
             foreach(var item in datalist2)
             {
                 var AlertName = "Alert" + item.Schedule_name + "Personal";
@@ -542,6 +632,11 @@ namespace BackgroundTasks
             toastNotif.ExpirationTime = DateTime.Now.AddDays(1);
             // And send the notification
             ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+        }
+
+        private class TableInfo
+        {
+            public string name { get; set; }
         }
     }
 }

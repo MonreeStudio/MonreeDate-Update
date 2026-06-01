@@ -1,4 +1,4 @@
-﻿using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +23,8 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Popups;
+using 倒计时.Manager;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -37,8 +39,7 @@ namespace 倒计时
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public DesktopEventsViewModel DesViewModel = new DesktopEventsViewModel();
         public DesktopEventsViewModel DesViewModel2 = new DesktopEventsViewModel();
-        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
-        public SQLite.Net.SQLiteConnection conn;
+        public CountdownRepository CountdownRepository { get; private set; }
         public static Desktop Current;
         private string color;
         List<string> list;
@@ -46,10 +47,7 @@ namespace 倒计时
         {
             this.InitializeComponent();
             Current = this;
-            // 建立数据库连接
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            CountdownRepository = new CountdownRepository();
             list = new List<string>();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
@@ -129,7 +127,7 @@ namespace 倒计时
                 CornerNameTextBox.Text = localSettings.Values["CornerName"].ToString();
             }
             int num = 0;
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            List<CountdownRecord> datalist0 = CountdownRepository.GetAll();
             foreach(var item in datalist0)
             {
                 var pinToDesktopFlag = "DesktopFlag" + item.Schedule_name;
@@ -160,7 +158,7 @@ namespace 倒计时
 
         private void TestButton2_Click(object sender, RoutedEventArgs e)
         {
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            List<CountdownRecord> datalist0 = CountdownRepository.GetAll();
             foreach (var _item in datalist0)
             {
                 var pinToDesktopFlag = "DesktopFlag" + _item.Schedule_name;
@@ -178,7 +176,7 @@ namespace 倒计时
         private async void TestButton1_Click(object sender, RoutedEventArgs e)
         {
             list.Clear();
-            List<DataTemple> datalist0 = conn.Query<DataTemple>("select * from DataTemple");
+            List<CountdownRecord> datalist0 = CountdownRepository.GetAll();
             foreach (var _item in datalist0)
             {
                 var pinToDesktopFlag = "DesktopFlag" + _item.Schedule_name;

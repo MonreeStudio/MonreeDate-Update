@@ -1,4 +1,4 @@
-﻿using Microsoft.Graphics.Canvas.Effects;
+using Microsoft.Graphics.Canvas.Effects;
 using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,8 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using 夏日;
 using 夏日.Models;
+using 倒计时.Manager;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -35,10 +37,9 @@ namespace 倒计时
     /// </summary>
     public sealed partial class DesktopTool : Page
     {
-        static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
-        static SQLite.Net.SQLiteConnection conn;
+        private CountdownRepository countdownRepository;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        List<DataTemple> list;
+        List<CountdownRecord> list;
         DispatcherTimer timer;
         DispatcherTimer timer2;
         public ToolDataViewModel ToolViewModel = new ToolDataViewModel();
@@ -50,11 +51,8 @@ namespace 倒计时
         {
             this.InitializeComponent();
             Current = this;
-            list = new List<DataTemple>();
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            conn.CreateTable<DataTemple>(); //默认表名同范型参数 
+            list = new List<CountdownRecord>();
+            countdownRepository = new CountdownRepository();
             timer = new DispatcherTimer();
             timer2 = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 10, 0);
@@ -154,8 +152,8 @@ namespace 倒计时
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
             int count = (int)localSettings.Values["ItemCount"];
-            List<DataTemple> datalist = new List<DataTemple>();
-            var allData = conn.Query<DataTemple>("select *from DataTemple order by Date asc");
+            List<CountdownRecord> datalist = new List<CountdownRecord>();
+            var allData = countdownRepository.GetAllOrderByDate();
             switch (count)
             {
                 case 1:
@@ -199,36 +197,36 @@ namespace 倒计时
             switch (count)
             {
                 case 1:
-                    List<DataTemple> a1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[0].Schedule_name);
+                    List<CountdownRecord> a1 = countdownRepository.GetByName(datalist[0].Schedule_name);
                     foreach (var item in a1)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 case 2:
-                    List<DataTemple> b1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[0].Schedule_name);
+                    List<CountdownRecord> b1 = countdownRepository.GetByName(datalist[0].Schedule_name);
                     foreach (var item in b1)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
-                    List<DataTemple> b2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[1].Schedule_name);
+                    List<CountdownRecord> b2 = countdownRepository.GetByName(datalist[1].Schedule_name);
                     foreach (var item in b2)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
                     break;
                 case 3:
-                    List<DataTemple> c1 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[0].Schedule_name);
+                    List<CountdownRecord> c1 = countdownRepository.GetByName(datalist[0].Schedule_name);
                     foreach (var item in c1)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
-                    List<DataTemple> c2 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ? order by Date asc", datalist[1].Schedule_name);
+                    List<CountdownRecord> c2 = countdownRepository.GetByName(datalist[1].Schedule_name);
                     foreach (var item in c2)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
                     }
-                    List<DataTemple> c3 = conn.Query<DataTemple>("select * from DataTemple where Schedule_name = ?", datalist[2].Schedule_name);
+                    List<CountdownRecord> c3 = countdownRepository.GetByName(datalist[2].Schedule_name);
                     foreach (var item in c3)
                     {
                         ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
@@ -372,29 +370,7 @@ namespace 倒计时
 
         public string Calculator(string s1)
         {
-            string str1 = s1;
-            string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
-            DateTime d1 = Convert.ToDateTime(str1);
-            DateTime d2 = Convert.ToDateTime(str2);
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            int days = (d4 - d3).Days;
-            if (days < 0)
-            {
-                days = -days;
-                s2 = "还有" + days.ToString() + "天";
-            }
-            else
-            {
-                if (days != 0)
-                    s2 = "已过" + days.ToString() + "天";
-                else
-                {
-                    s2 = "就在今天";
-                }
-            }
-            return s2;
+            return CountdownDateCalculator.FormatDayCountdown(s1);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -403,7 +379,7 @@ namespace 倒计时
             {
                 try
                 {
-                    list = (List<DataTemple>)e.Parameter;
+                    list = (List<CountdownRecord>)e.Parameter;
 
                     //localSettings.Values["DesktopPin"] = false;
                 }

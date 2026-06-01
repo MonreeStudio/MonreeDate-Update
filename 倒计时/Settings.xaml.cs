@@ -1,4 +1,4 @@
-﻿using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,6 +53,7 @@ using System.Threading;
 using 倒计时.Manager;
 using Newtonsoft.Json;
 using System.Text;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -63,6 +64,7 @@ namespace 倒计时
     /// </summary>
     public sealed partial class Settings : Page
     {
+        private const string ServiceBaseAddress = "https://msdate.monreeing.com:3000";
         public static Settings Current;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public Compositor _compositor = Window.Current.Compositor;
@@ -141,7 +143,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -152,7 +154,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -163,7 +165,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -174,7 +176,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -185,7 +187,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -196,7 +198,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -207,7 +209,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -218,7 +220,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -229,7 +231,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -240,7 +242,7 @@ namespace 倒计时
                     try
                     {
                         All.Current.SetThemeColor();
-                        Festival.Current.SetThemeColor();
+                        Festival.Current?.SetThemeColor();
                     }
                     catch { }
                     break;
@@ -642,7 +644,7 @@ namespace 倒计时
                     DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
                     string Tip = "";
                     string _birthday = birthday.ToString("yyyy-MM-dd");
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = "出生日", CalculatedDate = CustomData.Calculator(_birthday), Date = _birthday, BgColor = "#fffbb612", TintOpacity = 0.7, IsTop = "0", AddTime = "" });
+                    All.Current.CountdownRepository.Insert(CountdownRecord.Create("出生日", CustomData.Calculator(_birthday), _birthday, "#fffbb612", 0.7, "0", ""));
                     localSettings.Values["出生日" + _birthday] = Tip;
                     MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                     Frame.Navigate(typeof(All));
@@ -912,7 +914,7 @@ namespace 倒计时
                 SignOutButton.IsEnabled = false;
             });
             HttpClient client = new HttpClient();
-            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://msdate.monreeing.com:3000/user/logout/");
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, ServiceBaseAddress + "/user/logout/");
             requestMessage.Content = new StringContent(logoutJson);
             requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             HttpResponseMessage response = client.SendAsync(requestMessage).GetAwaiter().GetResult();
@@ -1152,7 +1154,7 @@ namespace 倒计时
                     DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
                     string Tip = "";
                     string _birthday = birthday.ToString("yyyy-MM-dd");
-                    All.Current.conn.Insert(new DataTemple() { Schedule_name = "出生日", CalculatedDate = CustomData.Calculator(_birthday), Date = _birthday, BgColor = "#fffbb612", TintOpacity = 0.7, IsTop = "0", AddTime = "" });
+                    All.Current.CountdownRepository.Insert(CountdownRecord.Create("出生日", CustomData.Calculator(_birthday), _birthday, "#fffbb612", 0.7, "0", ""));
                     localSettings.Values["出生日" + _birthday] = Tip;
                     MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                     Frame.Navigate(typeof(All));

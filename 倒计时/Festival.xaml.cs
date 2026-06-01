@@ -17,7 +17,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using 夏日;
+using 倒计时.Manager;
 using 夏日.Models;
+using CountdownRecord = 夏日.Models.CountdownRecord;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -97,7 +99,7 @@ namespace 倒计时
         {
             try
             {
-                All.Current.conn.Insert(new DataTemple() { Schedule_name = App.FestivalItem.Str1, CalculatedDate = App.FestivalItem.Str2, Date = App.FestivalItem.Str3, BgColor = App.FestivalItem.Str4.ToString(), TintOpacity = 0.7, IsTop = "0", AddTime = "" });
+                All.Current.CountdownRepository.Insert(CountdownRecord.Create(App.FestivalItem.Str1, App.FestivalItem.Str2, App.FestivalItem.Str3, App.FestivalItem.Str4.ToString(), 0.7, "0", ""));
                 All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = App.FestivalItem.Str1, Str2 = App.FestivalItem.Str2, Str3 = App.FestivalItem.Str3, Str4 = All.Current.ColorfulBrush(App.FestivalItem.Str4, 0.8), BackGroundColor = App.FestivalItem.Str4 });
                 All.Current.NewTB.Visibility = Visibility.Collapsed;
                 All.Current.NewTB2.Visibility = Visibility.Collapsed;
@@ -116,22 +118,7 @@ namespace 倒计时
 
         private string Calculator(string s1)
         {
-            string str1 = s1;
-            string str2 = DateTime.Now.ToShortDateString().ToString();
-            string s2;
-            DateTime d1 = Convert.ToDateTime(str1);
-            DateTime d2 = Convert.ToDateTime(str2);
-            DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-            DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
-            int days = (d4 - d3).Days;
-            if (days < 0)
-            {
-                days = -days;
-                s2 = "还有" + days.ToString() + "天";
-            }
-            else
-                s2 = "已过" + days.ToString() + "天";
-            return s2;
+            return CountdownDateCalculator.FormatDayCountdown(s1);
         }
 
         private void FesScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
