@@ -1,4 +1,4 @@
-using SQLite.Net.Platform.WinRT;
+﻿using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -95,6 +95,9 @@ namespace 倒计时
             color = Colors.SkyBlue;
             this.InitializeComponent();
             Current = this;
+            loadingMaterialPreference = true;
+            MaterialStyleSelected.SelectedIndex = MainPage.Current.UsesMica ? 1 : 0;
+            loadingMaterialPreference = false;
             //this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += OnSettingsPageLoaded;
             ReadSettings();
@@ -107,6 +110,17 @@ namespace 倒计时
             MainPage.Current.SelectedPageItem = "Settings";
         }
 
+        private bool loadingMaterialPreference = true;
+
+        private void MaterialStyleSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (loadingMaterialPreference || !(MaterialStyleSelected.SelectedItem is ComboBoxItem item))
+                return;
+
+            localSettings.Values["MaterialStyle"] = item.Tag.ToString();
+            MainPage.Current.ApplyMaterialStyle();
+        }
+
         private async void SetPersonPicture()
         {
             List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
@@ -116,9 +130,7 @@ namespace 倒计时
                 {
                     try
                     {
-                        MemoryStream stream = new MemoryStream(item.picture);
-                        BitmapImage bitmap = new BitmapImage();
-                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                        var bitmap = await 倒计时.Manager.AvatarImage.LoadAsync(item.picture);
                         MyPersonPicture.ProfilePicture = bitmap;
                         All.Current.AllPicture.ProfilePicture = bitmap;
 
@@ -595,15 +607,15 @@ namespace 倒计时
                 if (AllPersonPicture.IsOn == true)
                 {
                     All.Current.AllPicture.Visibility = Visibility.Visible;
-                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 2);
-                    All.Current.MarginText.Height = 30;
+                    All.Current.AllCommandBar.Margin = new Thickness(0);
+                    All.Current.MarginText.Height = 12;
                     localSettings.Values["SetAllPersonPicture"] = true;
                 }
                 else
                 {
                     All.Current.AllPicture.Visibility = Visibility.Collapsed;
-                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 25);
-                    All.Current.MarginText.Height = 60;
+                    All.Current.AllCommandBar.Margin = new Thickness(0);
+                    All.Current.MarginText.Height = 12;
                     localSettings.Values["SetAllPersonPicture"] = false;
                 }
             }
@@ -644,8 +656,8 @@ namespace 倒计时
                     DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
                     string Tip = "";
                     string _birthday = birthday.ToString("yyyy-MM-dd");
-                    All.Current.CountdownRepository.Insert(CountdownRecord.Create("出生日", CustomData.Calculator(_birthday), _birthday, "#fffbb612", 0.7, "0", ""));
-                    localSettings.Values["出生日" + _birthday] = Tip;
+                    var birthdayRecord = CountdownRecord.Create("出生日", CustomData.Calculator(_birthday), _birthday, "#fffbb612", 0.7, "0", "");
+                    All.Current.ScheduleService.CreateWithNote(birthdayRecord, Tip);
                     MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                     Frame.Navigate(typeof(All));
                     PopupNotice popupNotice = new PopupNotice("添加成功");
@@ -1154,8 +1166,8 @@ namespace 倒计时
                     DateTime birthday = Convert.ToDateTime(PersonalBirthday.Text);
                     string Tip = "";
                     string _birthday = birthday.ToString("yyyy-MM-dd");
-                    All.Current.CountdownRepository.Insert(CountdownRecord.Create("出生日", CustomData.Calculator(_birthday), _birthday, "#fffbb612", 0.7, "0", ""));
-                    localSettings.Values["出生日" + _birthday] = Tip;
+                    var birthdayRecord = CountdownRecord.Create("出生日", CustomData.Calculator(_birthday), _birthday, "#fffbb612", 0.7, "0", "");
+                    All.Current.ScheduleService.CreateWithNote(birthdayRecord, Tip);
                     MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[0];
                     Frame.Navigate(typeof(All));
                     PopupNotice popupNotice = new PopupNotice("添加成功");
@@ -1181,27 +1193,26 @@ namespace 倒计时
 
         private async void CropperDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
         {
-            var imageSource = EditPicture.ProfilePicture;
+            var bitmap = EditPicture.Visibility == Visibility.Visible ? EditPicture.ProfilePicture as WriteableBitmap : null;
+            if (bitmap == null)
+            {
+                CropperDialog.Hide();
+                return;
+            }
             byte[] imageBuffer;
-            var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("temp.jpg", CreationCollisionOption.ReplaceExisting);
             try
             {
-                using (var ras = await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
+                using (var ras = new InMemoryRandomAccessStream())
                 {
-                    WriteableBitmap bitmap = imageSource as WriteableBitmap;
-                    var stream = bitmap.PixelBuffer.AsStream();
-                    byte[] buffer = new byte[stream.Length];
-                    await stream.ReadAsync(buffer, 0, buffer.Length);
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, ras);
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
+                    byte[] buffer = bitmap.PixelBuffer.ToArray();
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, ras);
+                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
                     await encoder.FlushAsync();
                     var imageStream = ras.AsStream();
                     imageStream.Seek(0, SeekOrigin.Begin);
                     imageBuffer = new byte[imageStream.Length];
                     var re = await imageStream.ReadAsync(imageBuffer, 0, imageBuffer.Length);
                 }
-                await file.DeleteAsync(StorageDeleteOption.Default);
                 List<PersonPictures> datalist = conn.Query<PersonPictures>("select * from PersonPictures where pictureName = ?", "picture");
                 if (datalist != null)
                     conn.Execute("delete from PersonPictures where pictureName = ?", "picture");

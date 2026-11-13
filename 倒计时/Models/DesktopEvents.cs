@@ -9,6 +9,7 @@ namespace 倒计时.Models
 {
     public class DesktopEvents
     {
+        public string EventId { get; set; }
         public string EventName { get; set; }
     }
 

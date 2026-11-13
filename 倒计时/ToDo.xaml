@@ -1,18 +1,23 @@
-﻿<Page
+<Page
     x:Class="倒计时.ToDo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:倒计时"
+    xmlns:material="using:倒计时.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:layout="using:倒计时.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  xmlns:local1="using:倒计时.Models" xmlns:m_control="using:MaterialLibs.Controls"
     mc:Ignorable="d"
-    Margin="0,-34,0,0"
+    Margin="0"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
+    >
 
     <Page.Resources>
         <SolidColorBrush x:FieldModifier="public" x:Name="TC" x:Key="ThemeColor"  Color="CornflowerBlue"/>
-        <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="SystemControlAcrylicElementAccentMediumHighBrush;" />
+                <StaticResource x:Key="MenuFlyoutPresenterBackground" ResourceKey="AppCardBackgroundBrush" />
+        <CornerRadius x:Key="MenuFlyoutPresenterCornerRadius">10</CornerRadius>
+        <Thickness x:Key="MenuFlyoutPresenterPadding">4</Thickness>
         <Thickness x:Key="MenuFlyoutPresenterBorderThemeThickness">1</Thickness>
         <!--<Style x:Key="MenuFlyoutBackground" TargetType="MenuFlyoutPresenter">
             <Setter Property="Background" Value="{ThemeResource AppBarBackgroundThemeBrush}" />
@@ -53,6 +58,54 @@
                 </Setter.Value>
             </Setter>
         </Style>-->
+        <!-- Clean plan-row chrome: no gray fill, soft rounded hover only. -->
+        <Style x:Key="PlanListRowStyle" TargetType="ListViewItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="2,1" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Grid x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="HoverBorder.Opacity" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="HoverBorder.Opacity" Value="0.72" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Opacity" Value="0.4" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle x:Name="HoverBorder" IsHitTestVisible="False" Opacity="0"
+                                       Fill="{ThemeResource SystemControlBackgroundListLowBrush}" RadiusX="10" RadiusY="10" />
+                            <ContentPresenter
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Margin="{TemplateBinding Padding}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -66,116 +119,120 @@
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="ToDoTopText"
                        Text="计划"
-                       FontSize="28"
-                       FontWeight="Bold"
-                       Foreground="{x:Bind TC}"
-                       Margin="90,30,0,0"
                        Grid.Row="0"
-                       Grid.Column="0" 
-                       VerticalAlignment="Top"/>
-        
-        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top">
-            <StackPanel Margin="20" >
-                <StackPanel CornerRadius="6" Padding="20" Background="{ThemeResource SystemAltHighColor}">
-                    <TextBlock Text="未完成" FontWeight="Bold" FontSize="22"/>
-                    <Border CornerRadius="12" Margin="0,20,0,0">
-                        <ListView x:Name="ToDoList1" Height="Auto" ItemsSource="{x:Bind ToDoTaskViewModel1.ToDoDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False" SelectionChanged="ToDoList_SelectionChanged" RightTapped="ToDoList1_RightTapped" Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemClick="ToDoList_ItemClick">
+                       Grid.Column="0"
+                       VerticalAlignment="Top" Style="{StaticResource AppPageTitleStyle}" Margin="24,24,24,16" Grid.ColumnSpan="2"/>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" layout:CenteredScrollContent.IsEnabled="True">
+            <StackPanel x:Name="PlanContent" Margin="24,16,24,24" MaxWidth="880" Spacing="24">
+                <controls:DropShadowPanel Style="{StaticResource AppCardShadowStyle}">
+                    <StackPanel CornerRadius="{ThemeResource AppCardCornerRadius}" Padding="20" material:MaterialSurface.IsEnabled="True" BorderThickness="0">
+                    <TextBlock Text="未完成" FontWeight="Bold" FontSize="22" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                    <Border x:Name="ListCard1" CornerRadius="12" Margin="0,20,0,0"
+                                BorderBrush="{ThemeResource AppSubtleBorderBrush}"
+                                BorderThickness="1"
+                                Background="Transparent"
+                                Padding="2">
+                        <ListView x:Name="ToDoList1" Padding="0" Height="Auto" ItemsSource="{x:Bind ToDoTaskViewModel1.ToDoDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False" SelectionChanged="ToDoList_SelectionChanged" RightTapped="ToDoList1_RightTapped" Background="Transparent" ItemClick="ToDoList_ItemClick">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="CornerRadius" Value="10"/>
-                                    <Setter Property="BorderBrush" Value="LightGray"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                </Style>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource PlanListRowStyle}"/>
                             </ListView.ItemContainerStyle>
                             <ListView.ContextFlyout>
                                 <MenuFlyout >
-                                    <MenuFlyoutItem x:Name="StarButton1" Icon="SolidStar" Text="设为重要" Click="StarButton1_Click"/>
-                                    <MenuFlyoutItem x:Name="UnStarButton1" Icon="UnFavorite" Text="设为非重要" Click="UnStarButton1_Click"/>
+                                    <MenuFlyoutItem x:Name="StarButton1" Icon="SolidStar" Text="设为重要" Click="StarButton1_Click" Foreground="{ThemeResource AppAccentBrush}"/>
+                                    <MenuFlyoutItem x:Name="UnStarButton1" Icon="UnFavorite" Text="设为非重要" Click="UnStarButton1_Click" Foreground="{ThemeResource AppAccentBrush}"/>
                                     <MenuFlyoutItem x:Name="DeleteButton1" Icon="Delete" Text="删除计划" Foreground="Red" Click="DeleteButton1_Click"/>
                                 </MenuFlyout>
                             </ListView.ContextFlyout>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:ToDoTasks">
-                                    <StackPanel Orientation="Horizontal" Height="60" Background="{ThemeResource SystemControlAcrylicElementBrush}">
-                                        <Button x:Name="UnDoneButton" Margin="10" Tag="{x:Bind TaskId}" Content="&#xEA3A;" FontFamily="Segoe MDL2 Assets" CornerRadius="25" Width="40" Height="40" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}" Click="UnDoneButton_Click"/>
-                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20,0,0,0">
-                                            <TextBlock x:Name="UnDoneTaskNameTextBlock"   Text="{x:Bind Name}"/>
+                                    <Grid MinHeight="64" Background="Transparent">
+                                    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                    <Grid Grid.Row="0"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <Button x:Name="UnDoneButton" Margin="10" Tag="{x:Bind TaskId}" Content="&#xEA3A;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Width="40" Height="40" Click="UnDoneButton_Click" Style="{StaticResource AppIconButtonStyle}"/>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,8,12,8">
+                                            <TextBlock x:Name="UnDoneTaskNameTextBlock"   Text="{x:Bind Name}" TextWrapping="Wrap" FontSize="16" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="{x:Bind StarVisibility}" Margin="0,0,15,0">
-                                                    <FontIcon Glyph="&#xE113;"  FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="Gray"/>
-                                                    <TextBlock Margin="2,0,0,0" Text="重要" Foreground="Gray"/>
+                                                    <FontIcon Glyph="&#xE113;"  FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                                    <TextBlock Margin="2,0,0,0" Text="重要" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="{x:Bind DateVisibility}" Margin="0,0,15,0">
-                                                    <FontIcon Glyph="&#xE163;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="Gray"/>
-                                                    <TextBlock Margin="2,0,0,0" Text="{x:Bind Date}" Foreground="Gray"/>
+                                                    <FontIcon Glyph="&#xE163;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                                    <TextBlock Margin="2,0,0,0" Text="{x:Bind Date}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="{x:Bind RemarkVisibility}">
-                                                    <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="Gray"/>
-                                                    <TextBlock Margin="2,0,0,0" Text="备注" Foreground="Gray"/>
+                                                    <FontIcon Glyph="&#xE70B;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                                    <TextBlock Margin="2,0,0,0" Text="备注" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
+                                    </Grid>
+                                    <Border Grid.Row="1" Height="1" VerticalAlignment="Bottom" Margin="60,0,24,0" Background="{ThemeResource AppSubtleBorderBrush}" Visibility="{x:Bind SeparatorVisibility}"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </Border>
                 </StackPanel>
+                </controls:DropShadowPanel>
 
-                <StackPanel CornerRadius="6" Padding="20" Margin="0,20,0,0"  Background="{ThemeResource SystemAltHighColor}">
-                    <TextBlock Text="已完成" FontWeight="Bold" FontSize="22"/>
-                    <Border CornerRadius="12" Margin="0,20,0,0">
-                        <ListView x:Name="ToDoList2" Height="Auto" ItemsSource="{x:Bind ToDoTaskViewModel2.ToDoDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False" SelectionChanged="ToDoList2_SelectionChanged"  RightTapped="ToDoList2_RightTapped"  Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemClick="ToDoList_ItemClick">
+                <controls:DropShadowPanel Style="{StaticResource AppCardShadowStyle}">
+                    <StackPanel CornerRadius="{ThemeResource AppCardCornerRadius}" Padding="20"  material:MaterialSurface.IsEnabled="True" BorderThickness="0">
+                    <TextBlock Text="已完成" FontWeight="Bold" FontSize="22" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                    <Border x:Name="ListCard2" CornerRadius="12" Margin="0,20,0,0"
+                                BorderBrush="{ThemeResource AppSubtleBorderBrush}"
+                                BorderThickness="1"
+                                Background="Transparent"
+                                Padding="2">
+                        <ListView x:Name="ToDoList2" Padding="0" Height="Auto" ItemsSource="{x:Bind ToDoTaskViewModel2.ToDoDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False" SelectionChanged="ToDoList2_SelectionChanged"  RightTapped="ToDoList2_RightTapped"  Background="Transparent" ItemClick="ToDoList_ItemClick">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="CornerRadius" Value="10"/>
-                                    <Setter Property="BorderBrush" Value="LightGray"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                </Style>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource PlanListRowStyle}"/>
                             </ListView.ItemContainerStyle>
                             <ListView.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem x:Name="StarButton2" Icon="SolidStar" Text="设为重要" Click="StarButton1_Click"/>
-                                    <MenuFlyoutItem x:Name="UnStarButton2" Icon="UnFavorite"  Text="设为非重要" Visibility="Collapsed" Click="UnStarButton1_Click"/>
+                                    <MenuFlyoutItem x:Name="StarButton2" Icon="SolidStar" Text="设为重要" Click="StarButton1_Click" Foreground="{ThemeResource AppAccentBrush}"/>
+                                    <MenuFlyoutItem x:Name="UnStarButton2" Icon="UnFavorite"  Text="设为非重要" Visibility="Collapsed" Click="UnStarButton1_Click" Foreground="{ThemeResource AppAccentBrush}"/>
                                     <MenuFlyoutItem x:Name="DeleteButton2" Icon="Delete" Text="删除计划" Foreground="Red" Click="DeleteButton2_Click"/>
                                 </MenuFlyout>
                             </ListView.ContextFlyout>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:ToDoTasks">
-                                    <StackPanel Orientation="Horizontal" Height="60" Background="{ThemeResource SystemControlAcrylicElementBrush}">
-                                        <Button x:Name="DoneButton" Margin="10" Tag="{x:Bind TaskId}" Content="&#xE10B;" FontFamily="Segoe MDL2 Assets" CornerRadius="25" Width="40" Height="40" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}" Click="DoneButton_Click"/>
-                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20,0,0,0">
-                                            <TextBlock x:Name="DoneTaskNameTextBlock"   Text="{x:Bind Name}"/>
+                                    <Grid MinHeight="64" Background="Transparent">
+                                    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                    <Grid Grid.Row="0"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <Button x:Name="DoneButton" Margin="10" Tag="{x:Bind TaskId}" Content="&#xE10B;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Width="40" Height="40" Click="DoneButton_Click" Style="{StaticResource AppIconButtonStyle}"/>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,8,12,8">
+                                            <TextBlock x:Name="DoneTaskNameTextBlock"   Text="{x:Bind Name}" TextWrapping="Wrap" FontSize="16" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="{x:Bind StarVisibility}" Margin="0,0,15,0">
-                                                    <FontIcon Glyph="&#xE113;"  FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="Gray"/>
-                                                    <TextBlock Margin="2,0,0,0" Text="重要" Foreground="Gray"/>
+                                                    <FontIcon Glyph="&#xE113;"  FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+                                                    <TextBlock Margin="2,0,0,0" Text="重要" Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="{x:Bind DateVisibility}" Margin="0,0,15,0">
-                                                    <FontIcon Glyph="&#xE163;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="Gray"/>
-                                                    <TextBlock Margin="2,0,0,0" Text="{x:Bind Date}" Foreground="Gray"/>
+                                                    <FontIcon Glyph="&#xE163;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+                                                    <TextBlock Margin="2,0,0,0" Text="{x:Bind Date}" Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="{x:Bind RemarkVisibility}">
-                                                    <FontIcon Glyph="&#xE70B;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="Gray"/>
-                                                    <TextBlock Margin="2,0,0,0" Text="备注" Foreground="Gray"/>
+                                                    <FontIcon Glyph="&#xE70B;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+                                                    <TextBlock Margin="2,0,0,0" Text="备注" Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
+                                    </Grid>
+                                    <Border Grid.Row="1" Height="1" VerticalAlignment="Bottom" Margin="60,0,24,0" Background="{ThemeResource AppSubtleBorderBrush}" Visibility="{x:Bind SeparatorVisibility}"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </Border>
                 </StackPanel>
-                
+                </controls:DropShadowPanel>
+
             </StackPanel>
         </ScrollViewer>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
-            <m_control:CardView x:Name="TaskCard" Header="毕业设计答辩" Radius="8" Foreground="{x:Bind TC}" Margin="20"  VerticalAlignment="Center" Padding="-8" MaxWidth="500" IsOpen="False"  Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <m_control:CardView material:FloatingPlanCard.IsEnabled="True" x:Name="TaskCard" Header="编辑计划" Radius="12" Foreground="{ThemeResource AppAccentBrush}" Margin="20" VerticalAlignment="Center" Padding="8" MaxWidth="500" IsOpen="False" Background="{ThemeResource AppCardBackgroundBrush}" LightDismissLayerBackground="Transparent" material:MaterialSurface.IsOverlay="True" material:MaterialSurface.IsEnabled="True">
                 <ScrollViewer>
                     <StackPanel Orientation="Vertical" Margin="20">
                         <Grid Margin="0,0,0,10">
@@ -183,67 +240,84 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="AddStepButton" BorderBrush="{x:Bind TC}" BorderThickness ="1" FontSize="10" VerticalAlignment="Center" Content="&#xE109;" FontFamily="Segoe MDL2 Assets" Width="36" Height="36" Margin="10" CornerRadius="25" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Click="AddStepButton_Click"/>
-                            <TextBox x:Name="StepNameTextBox" BorderThickness="0" Grid.Column="1" Margin="10,0,10,0" Padding="15" FontSize="14"  CornerRadius="8"  PlaceholderText="添加具体内容"/>
+                            <Button x:Name="AddStepButton" FontSize="10" VerticalAlignment="Center" Content="&#xE109;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Width="36" Height="36" Margin="10" Click="AddStepButton_Click" Style="{StaticResource AppIconButtonStyle}"/>
+                            <controls:DropShadowPanel Grid.Column="1" Style="{StaticResource AppCardShadowStyle}" Margin="10,0,10,0" ShadowOpacity="0.07" BlurRadius="14" OffsetY="3">
+                                <Border CornerRadius="8" Background="{ThemeResource AppCardBackgroundBrush}">
+                                <TextBox x:Name="StepNameTextBox" BorderThickness="0" Background="Transparent" Padding="15" FontSize="14" CornerRadius="8" PlaceholderText="添加具体内容"/>
+                                </Border>
+                                </controls:DropShadowPanel>
                         </Grid>
-                        <ListView x:Name="TaskStepList" Height="Auto" ItemsSource="{x:Bind ToDoTaskStepsViewModel.ToDoTaskStepsDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False"  Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemClick="TaskStepList_ItemClick" RightTapped="TaskStepList_RightTapped">
+                        <ListView x:Name="TaskStepList" Height="Auto" ItemsSource="{x:Bind ToDoTaskStepsViewModel.ToDoTaskStepsDatas}" IsItemClickEnabled="True" SelectionMode="None" IsMultiSelectCheckBoxEnabled="False"  Background="Transparent" ItemClick="TaskStepList_ItemClick" RightTapped="TaskStepList_RightTapped">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="CornerRadius" Value="10"/>
-                                    <Setter Property="BorderBrush" Value="LightGray"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                </Style>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource PlanListRowStyle}"/>
                             </ListView.ItemContainerStyle>
-                           
+
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:ToDoTaskSteps">
-                                    <Grid  Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" CornerRadius="8" Margin="0,0,0,4">
+                                    <Grid  Background="Transparent" CornerRadius="8" Margin="0,0,0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="60"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <FontIcon x:Name="DoneIcon"  Margin="5,10,0,10" Grid.Column="0" Glyph="&#xE10B;" Visibility="{x:Bind Finish}" FontFamily="Segoe MDL2 Assets"/>
-                                        <FontIcon x:Name="UnDoneIcon"  Margin="5,10,0,10" Grid.Column="0" Glyph="&#xEA3A;" Visibility="{x:Bind UnFinish}" FontFamily="Segoe MDL2 Assets"/>
-                                        <TextBlock x:Name="SetpContentTextBlock" Text="{x:Bind Content}" Padding="10" Grid.Column="1" Height="40"/>
+                                        <FontIcon x:Name="DoneIcon"  Margin="5,10,0,10" Grid.Column="0" Glyph="&#xE10B;" Visibility="{x:Bind Finish}" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+                                        <FontIcon x:Name="UnDoneIcon"  Margin="5,10,0,10" Grid.Column="0" Glyph="&#xEA3A;" Visibility="{x:Bind UnFinish}" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+                                        <TextBlock x:Name="SetpContentTextBlock" Text="{x:Bind Content}" Padding="10" Grid.Column="1" Height="40" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                             <ListView.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem x:Name="EditSetpButton" Icon="Edit" Text="更改名称" Click="EditSetpButton_Click"/>
-                                    <MenuFlyoutItem x:Name="DoneStepButton" Icon="Accept"  Text="设为已完成" Click="DoneStepButton_Click"/>
-                                    <MenuFlyoutItem x:Name="UnDoneStepButton" Icon="ReDo"  Text="设为未完成" Visibility="Collapsed" Click="UnDoneStepButton_Click"/>
+                                    <MenuFlyoutItem x:Name="EditSetpButton" Icon="Edit" Text="更改名称" Click="EditSetpButton_Click" Foreground="{ThemeResource AppAccentBrush}"/>
+                                    <MenuFlyoutItem x:Name="DoneStepButton" Icon="Accept"  Text="设为已完成" Click="DoneStepButton_Click" Foreground="{ThemeResource AppAccentBrush}"/>
+                                    <MenuFlyoutItem x:Name="UnDoneStepButton" Icon="ReDo"  Text="设为未完成" Visibility="Collapsed" Click="UnDoneStepButton_Click" Foreground="{ThemeResource AppAccentBrush}"/>
                                     <MenuFlyoutItem x:Name="DeleteStepButton" Icon="Delete" Text="删除该条内容" Foreground="Red" Click="DeleteStepButton_Click"/>
                                 </MenuFlyout>
                             </ListView.ContextFlyout>
                         </ListView>
-                        <CalendarDatePicker HorizontalAlignment="Left"
+                        <StackPanel HorizontalAlignment="Left" Spacing="4">
+                            <TextBlock Text="过期时间" FontSize="12" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            <controls:DropShadowPanel Style="{StaticResource AppCardShadowStyle}" ShadowOpacity="0.07" BlurRadius="14" OffsetY="3">
+                            <Border CornerRadius="8" Background="{ThemeResource AppCardBackgroundBrush}" Padding="2">
+                            <CalendarDatePicker
                                         x:Name="ToDo_Picker"
-                                        Header="过期时间"
+                                        Header=""
                                         BorderThickness="0"
-                                        BorderBrush="{x:Bind TC}"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
                                         DateFormat="{}{year.full}/{month.integer}/{day.integer}"
                                         CornerRadius="8"
                                         PlaceholderText="选择一个日期"
-                                        IsGroupLabelVisible="True"/>
-                        <TextBox x:Name="ToDoRemarkTextBox" Header="备注：" Foreground="{x:Bind TC}" Text="明天" FontSize="14"  IsColorFontEnabled="True" CornerRadius="12" BorderThickness="0" Margin="0,10,0,0"/>
-                        <Button x:Name="UpdateTastButton" Content="更新时间和备注" Margin="0,30,0,0" CornerRadius="8" Foreground="White" Background="{x:Bind TC}" Click="UpdateTastButton_Click"/>
+                                        IsGroupLabelVisible="False"/>
+                            </Border>
+                            </controls:DropShadowPanel>
+                            </StackPanel>
+                        <StackPanel Margin="0,10,0,0" Spacing="4">
+                            <TextBlock Text="备注：" FontSize="12" Foreground="{x:Bind TC}"/>
+                            <controls:DropShadowPanel Style="{StaticResource AppCardShadowStyle}" ShadowOpacity="0.07" BlurRadius="14" OffsetY="3">
+                            <Border CornerRadius="12" Background="{ThemeResource AppCardBackgroundBrush}">
+                            <TextBox x:Name="ToDoRemarkTextBox" Foreground="{x:Bind TC}" Text="明天" FontSize="14" IsColorFontEnabled="True" CornerRadius="12" BorderThickness="0" Background="Transparent"/>
+                            </Border>
+                            </controls:DropShadowPanel>
+                            </StackPanel>
+                        <Button x:Name="UpdateTastButton" Content="更新时间和备注" Margin="0,30,0,0" Click="UpdateTastButton_Click" Style="{StaticResource AppPrimaryButtonStyle}"/>
                     </StackPanel>
                 </ScrollViewer>
-                
+
             </m_control:CardView>
         </Grid>
-        <Grid Grid.Row="2" Grid.ColumnSpan="2"  Height="100" >
-            <Grid Margin="20,10,20,20"  CornerRadius="12">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Height="100" HorizontalAlignment="Center" Width="{Binding Width, ElementName=PlanContent}">
+            <Grid Margin="0,10,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddTaskButton" BorderBrush="{x:Bind TC}" BorderThickness ="1" VerticalAlignment="Center" Content="&#xE109;" FontFamily="Segoe MDL2 Assets" Width="50" Height="50" Margin="10" CornerRadius="25" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Click="AddTaskButton_Click"/>
-                <TextBox x:Name="TaskNameTextBox" BorderThickness="0" Grid.Column="1" Padding="10" Height="50" Margin="10,0,10,0" FontSize="22" CornerRadius="12"  PlaceholderText="添加计划"/>
+                <Button x:Name="AddTaskButton" VerticalAlignment="Center" Content="&#xE109;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Width="50" Height="50" Margin="10" Click="AddTaskButton_Click" Style="{StaticResource AppIconButtonStyle}"/>
+                <controls:DropShadowPanel Grid.Column="1" Style="{StaticResource AppCardShadowStyle}" Margin="10,8,10,8" ShadowOpacity="0.06" BlurRadius="10" OffsetY="2">
+                    <Border CornerRadius="12" Background="{ThemeResource AppCardBackgroundBrush}">
+                    <TextBox x:Name="TaskNameTextBox" BorderThickness="0" Background="Transparent" Padding="14,10" Height="50" FontSize="22" CornerRadius="12" PlaceholderText="添加计划" FocusVisualMargin="-2"> <TextBox.Resources> <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{ThemeResource SystemChromeAltHighColor}"/> <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource SystemChromeAltHighColor}"/> <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/> <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/> <SolidColorBrush x:Key="TextControlBorderBrushFocusedPointerOver" Color="Transparent"/> <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#6688AAEE"/> </TextBox.Resources> </TextBox>
+                    </Border>
+                </controls:DropShadowPanel>
             </Grid>
         </Grid>
         <ContentDialog x:Name="DeleteTaskDialog"
@@ -254,7 +328,7 @@
                        DefaultButton="Primary"
 
                        PrimaryButtonClick="DeleteTaskDialog_PrimaryButtonClick">
-            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="300">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MaxWidth="400">
                 <TextBlock TextWrapping="Wrap" Foreground="DarkSlateGray">
                     该计划将被永久删除，请确认后操作
                 </TextBlock>
@@ -266,9 +340,8 @@
                        CloseButtonText="取消"
                                CornerRadius="8"
                        DefaultButton="Primary"
-                        Background="Transparent"
                        PrimaryButtonClick="UpdateTaskStepDialog_PrimaryButtonClick">
-            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="300">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MaxWidth="400">
                 <TextBox x:Name="DialogStepNameTextBox" TextWrapping="Wrap" Margin="5,10,5,0" BorderThickness="1" CornerRadius="12"/>
             </StackPanel>
         </ContentDialog>
@@ -280,7 +353,7 @@
                         MinWindowWidth="{x:Bind MinMyNav}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ToDoTopText.Margin" Value="20,20,20,0"/>
+                        <Setter Target="ToDoTopText.Margin" Value="24,24,24,16"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -288,7 +361,7 @@
                         <AdaptiveTrigger MinWindowWidth="1080" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ToDoTopText.Margin" Value="20,20,20,0"/>
+                        <Setter Target="ToDoTopText.Margin" Value="24,24,24,16"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -296,11 +369,11 @@
                         <AdaptiveTrigger MinWindowWidth="1200" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ToDoTopText.Margin" Value="20,20,20,0"/>
+                        <Setter Target="ToDoTopText.Margin" Value="24,24,24,16"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
     </Grid>
 </Page>

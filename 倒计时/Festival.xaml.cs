@@ -99,8 +99,8 @@ namespace 倒计时
         {
             try
             {
-                All.Current.CountdownRepository.Insert(CountdownRecord.Create(App.FestivalItem.Str1, App.FestivalItem.Str2, App.FestivalItem.Str3, App.FestivalItem.Str4.ToString(), 0.7, "0", ""));
-                All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = App.FestivalItem.Str1, Str2 = App.FestivalItem.Str2, Str3 = App.FestivalItem.Str3, Str4 = All.Current.ColorfulBrush(App.FestivalItem.Str4, 0.8), BackGroundColor = App.FestivalItem.Str4 });
+                All.Current.ScheduleService.Insert(CountdownRecord.Create(App.FestivalItem.Str1, App.FestivalItem.Str2, App.FestivalItem.Str3, App.FestivalItem.Str4.ToString(), 0.7, "0", ""));
+                All.Current.LoadDateData();
                 All.Current.NewTB.Visibility = Visibility.Collapsed;
                 All.Current.NewTB2.Visibility = Visibility.Collapsed;
             }

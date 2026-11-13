@@ -1,4 +1,4 @@
-﻿using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -161,6 +161,25 @@ namespace 倒计时
                 }
                 ToDoTaskViewModel2.ToDoDatas.Add(new ToDoTasks() { TaskId = item.TaskId, Name = item.Name, Date = item.Date, Remark = item.Remark, StarVisibility = item.StarVisibility, DateVisibility = item.DateVisibility, RemarkVisibility = item.RemarkVisibility });
             }
+            RefreshSeparators(ToDoTaskViewModel1.ToDoDatas);
+            RefreshSeparators(ToDoTaskViewModel2.ToDoDatas);
+            UpdateListCardVisibility();
+        }
+
+        // Only draw a divider between items; hide it under the last row.
+        private static void RefreshSeparators(System.Collections.ObjectModel.ObservableCollection<ToDoTasks> items)
+        {
+            for (int i = 0; i < items.Count; i++)
+                items[i].SeparatorVisibility = i < items.Count - 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Empty lists do not need a card frame.
+        private void UpdateListCardVisibility()
+        {
+            if (ListCard1 != null)
+                ListCard1.Visibility = ToDoTaskViewModel1.ToDoDatas.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            if (ListCard2 != null)
+                ListCard2.Visibility = ToDoTaskViewModel2.ToDoDatas.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ToDoList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -210,6 +229,8 @@ namespace 倒计时
                         conn.Execute("update ToDoTasks set Name = ?, Date = ?, Star = ?, Remark = ?, Done = ?, UpdateTime = ?, IsDelete = ?  where TaskId = ?",
                             TaskNameTextBox.Text, "", "0", "", "0", DateTime.Now.ToString(), "0", tempList[0].TaskId);
                         ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() { TaskId = tempList[0].TaskId, Name = TaskNameTextBox.Text, Date = "", Remark = "", UpdateTime = DateTime.Now.ToString(), StarVisibility = Visibility.Collapsed, DateVisibility = Visibility.Collapsed, RemarkVisibility = Visibility.Collapsed });
+                        RefreshSeparators(ToDoTaskViewModel1.ToDoDatas);
+                        UpdateListCardVisibility();
                     }
                     else
                     {
@@ -222,6 +243,8 @@ namespace 倒计时
                     string uuid = Guid.NewGuid().ToString();
                     conn.Insert(new ToDoTasks() { TaskId = uuid, Name = TaskNameTextBox.Text, Date = "", Star = "0", Remark = "", Done = "0", UpdateTime = DateTime.Now.ToString(), IsDelete = "0" });
                     ToDoTaskViewModel1.ToDoDatas.Add(new ToDoTasks() {TaskId = uuid, Name = TaskNameTextBox.Text, Date = "", Remark = "", UpdateTime = DateTime.Now.ToString(),StarVisibility = Visibility.Collapsed, DateVisibility = Visibility.Collapsed, RemarkVisibility = Visibility.Collapsed });
+                    RefreshSeparators(ToDoTaskViewModel1.ToDoDatas);
+                    UpdateListCardVisibility();
                 }
                 PopupNotice popupNotice = new PopupNotice("添加成功");
                 popupNotice.ShowAPopup();
@@ -330,6 +353,9 @@ namespace 倒计时
             conn.Execute("update ToDoTaskSteps set IsDelete = ?, UpdateTime = ? where TaskId = ?", "1", DateTime.Now.ToString(), CurrentItem.TaskId);
             ToDoTaskViewModel1.ToDoDatas.Remove(CurrentItem);
             ToDoTaskViewModel2.ToDoDatas.Remove(CurrentItem);
+            RefreshSeparators(ToDoTaskViewModel1.ToDoDatas);
+            RefreshSeparators(ToDoTaskViewModel2.ToDoDatas);
+            UpdateListCardVisibility();
             PopupNotice popupNotice = new PopupNotice("删除成功");
             popupNotice.ShowAPopup();
         }
@@ -461,5 +487,6 @@ namespace 倒计时
             PopupNotice popupNotice = new PopupNotice("删除成功");
             popupNotice.ShowAPopup();
         }
+
     }
 }

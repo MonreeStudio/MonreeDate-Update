@@ -23,71 +23,90 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
 using Windows.UI.Popups;
+using 倒计时.Manager;
 
 namespace BackgroundTasks
 {
     public sealed class BlogFeedBackgroundTask : IBackgroundTask
     {
         static string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
-        static SQLite.Net.SQLiteConnection conn;
+        SQLite.Net.SQLiteConnection conn;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            //建立数据库连接   
-            conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
-            //建表              
-            if (!TableHasColumn("DataTemplate", "Id"))
+            BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
+            try
             {
-                MigrateLegacyDataTemplateTable();
+                conn = new SQLite.Net.SQLiteConnection(new SQLitePlatformWinRT(), path);
+                conn.RunInTransaction(() =>
+                {
+                    if (TableExists("DataTemplate") && !TableHasColumn("DataTemplate", "Id"))
+                    {
+                        MigrateLegacyDataTemplateTable();
+                    }
+
+                    conn.CreateTable<CountdownRecord>();
+                    EnsureScheduleColumns();
+                    MigrateLegacyDataTempleTable();
+                    EnsureIndexes();
+                });
+                var scheduleSettings = new CountdownSettingsService(localSettings);
+                scheduleSettings.MigrateLegacySettings(conn.Query<CountdownRecord>("select * from DataTemplate")
+                    .Select(item => new ScheduleIdentity(item.Id, item.Schedule_name, item.Date)));
+                UpdateTile();
+                LoadToast();
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    conn.Dispose();
+                    conn = null;
+                }
+                deferral.Complete();
+            }
+        }
+
+        private void EnsureScheduleColumns()
+        {
+            if (!TableHasColumn("DataTemplate", "ScheduleType"))
+            {
+                conn.Execute("alter table DataTemplate add column ScheduleType text");
+            }
+            if (!TableHasColumn("DataTemplate", "EndDate"))
+            {
+                conn.Execute("alter table DataTemplate add column EndDate text");
             }
 
-            conn.CreateTable<CountdownRecord>(); //默认表名同范型参数
-            MigrateLegacyDataTempleTable();
-            EnsureIndexes();
-            BackgroundTaskDeferral deferral = taskInstance.GetDeferral();  // 如果没有用到异步任务就不需要Defferal
-            UpdateTile();   //更新磁贴
-            LoadToast();    //加载通知
-            deferral.Complete();
+            conn.Execute("update DataTemplate set ScheduleType = 'Point' where ScheduleType is null or trim(ScheduleType) = ''");
+            conn.Execute("update DataTemplate set EndDate = Date where ScheduleType = 'Point' or EndDate is null or trim(EndDate) = ''");
         }
 
         private void EnsureIndexes()
         {
             conn.Execute("create index if not exists IX_DataTemplate_Date on DataTemplate(Date)");
             conn.Execute("create index if not exists IX_DataTemplate_IsTop_Date on DataTemplate(IsTop, Date)");
+            conn.Execute("create index if not exists IX_DataTemplate_EndDate on DataTemplate(EndDate)");
         }
 
         private bool TableHasColumn(string tableName, string columnName)
         {
-            try
-            {
-                var columns = conn.Query<TableInfo>("pragma table_info(" + tableName + ")");
-                return columns.Any(column => string.Equals(column.name, columnName, StringComparison.OrdinalIgnoreCase));
-            }
-            catch
-            {
-                return false;
-            }
+            var columns = conn.Query<TableInfo>("pragma table_info(" + tableName + ")");
+            return columns.Any(column => string.Equals(column.name, columnName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private bool TableExists(string tableName)
+        {
+            return conn.ExecuteScalar<int>(
+                "select count(*) from sqlite_master where type = 'table' and name = ?", tableName) > 0;
         }
 
         private void MigrateLegacyDataTemplateTable()
         {
-            List<LegacyDataTemplate> legacyItems;
-
-            try
-            {
-                legacyItems = conn.Query<LegacyDataTemplate>("select * from DataTemplate");
-            }
-            catch
-            {
-                return;
-            }
-
-            if (legacyItems.Count == 0)
-            {
-                return;
-            }
-
-            conn.Execute("drop table if exists DataTemplate");
+            // Preserve the original table, even when it is empty; a failed copy
+            // rolls back both the rename and inserts in the enclosing transaction.
+            var legacyItems = conn.Query<LegacyDataTemplate>("select * from DataTemplate");
+            conn.Execute("alter table DataTemplate rename to DataTemplate_Backup_" + Guid.NewGuid().ToString("N"));
             conn.CreateTable<CountdownRecord>();
 
             foreach (var legacyItem in legacyItems)
@@ -98,16 +117,11 @@ namespace BackgroundTasks
 
         private void MigrateLegacyDataTempleTable()
         {
-            List<LegacyDataTemple> legacyItems;
-
-            try
-            {
-                legacyItems = conn.Query<LegacyDataTemple>("select * from DataTemple");
-            }
-            catch
+            if (!TableExists("DataTemple"))
             {
                 return;
             }
+            var legacyItems = conn.Query<LegacyDataTemple>("select * from DataTemple");
 
             foreach (var legacyItem in legacyItems)
             {
@@ -122,6 +136,9 @@ namespace BackgroundTasks
 
                 conn.Insert(legacyItem.ToCountdownRecord());
             }
+            // Retain the source while preventing deleted schedules from being
+            // restored again when a later foreground or background run starts.
+            conn.Execute("alter table DataTemple rename to DataTemple_Backup_" + Guid.NewGuid().ToString("N"));
         }
 
         public void UpdateTile()
@@ -140,33 +157,7 @@ namespace BackgroundTasks
         }
         public static string Calculator(string s1)
         {
-            DateTime targetDate = ParseDate(s1);
-            DateTime today = DateTime.Today;
-            int days = (today - targetDate).Days;
-
-            if (days < 0)
-            {
-                return "还有" + Math.Abs(days) + "天";
-            }
-
-            if (days == 0)
-            {
-                return "就在今天";
-            }
-
-            return "已过" + days + "天";
-        }
-
-        private static DateTime ParseDate(string date)
-        {
-            DateTime parsedDate;
-            if (DateTime.TryParse(date, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out parsedDate)
-                || DateTime.TryParse(date, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out parsedDate))
-            {
-                return parsedDate.Date;
-            }
-
-            return Convert.ToDateTime(date).Date;
+            return ScheduleDateCalculator.FormatCountdown(s1, s1, "Point");
         }
 
         private TileNotification LoadTile()
@@ -174,45 +165,47 @@ namespace BackgroundTasks
             List<CountdownRecord> datalist0 = conn.Query<CountdownRecord>("select * from DataTemplate");
             foreach (var item in datalist0)
             {
-                if (SecondaryTile.Exists(item.Schedule_name))
+                if (SecondaryTile.Exists(CountdownSettingsService.GetSecondaryTileId(item.Id))
+                    || SecondaryTile.Exists(item.Schedule_name))
                 {
-                    CreateSecondaryTile(item.Schedule_name, Calculator(item.Date), item.Date);
+                    CreateSecondaryTile(
+                        item.Id,
+                        item.Schedule_name,
+                        ScheduleDateCalculator.FormatCountdown(item.Date, item.EndDate, item.ScheduleType),
+                        item.Date,
+                        ScheduleDateCalculator.FormatDates(item.Date, item.EndDate, item.ScheduleType));
                 }
             }
-            List<CountdownRecord> datalist = conn.Query<CountdownRecord>("select * from DataTemplate where Date >= ? order by Date asc limit 1", DateTime.Now.ToString("yyyy-MM-dd"));
-            string _ScheduleName = "";
-            string _CaculatedDate = "";
-            string _Date = "";
-
-            foreach (var item in datalist)
+            var nextItem = conn.Query<CountdownRecord>(
+                "select * from DataTemplate where (case when ScheduleType = 'Range' and EndDate is not null and EndDate <> '' then EndDate else Date end) >= ? order by Date asc limit 1",
+                DateTime.Today.ToString("yyyy-MM-dd")).FirstOrDefault();
+            if (nextItem == null)
             {
-                _ScheduleName = item.Schedule_name;
-                _CaculatedDate = Calculator(item.Date);
-                _Date = item.Date;
-
-            }
-            if (_ScheduleName != "" && _CaculatedDate != "" && _Date != "")
-            {
-                var tile = CreateTile(_ScheduleName, _CaculatedDate, _Date);
-                return tile;
-            }
-            else
                 return null;
+            }
+
+            return CreateTile(
+                nextItem.Id,
+                nextItem.Schedule_name,
+                ScheduleDateCalculator.FormatCountdown(nextItem.Date, nextItem.EndDate, nextItem.ScheduleType),
+                nextItem.Date,
+                ScheduleDateCalculator.FormatDates(nextItem.Date, nextItem.EndDate, nextItem.ScheduleType));
         }
 
-        private TileNotification CreateTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        private TileNotification CreateTile(string _ScheduleId, string _ScheduleName, string _CaculatedDate, string _Date, string dateText)
         {
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;
-            string body = _Date;
+            string body = dateText;
             string displayName;
             if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
             {
-                if (localSettings.Values[_ScheduleName + _Date] == null)
+                var note = new CountdownSettingsService(localSettings).GetNote(_ScheduleId, _ScheduleName, _Date);
+                if (string.IsNullOrEmpty(note))
                     displayName = "无备注";
                 else
-                    displayName = localSettings.Values[_ScheduleName + _Date].ToString();
+                    displayName = note;
             }
             else
                 displayName = "夏日";
@@ -357,19 +350,20 @@ namespace BackgroundTasks
             return notification;
         }
 
-        private void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        private void CreateSecondaryTile(string _ScheduleId, string _ScheduleName, string _CaculatedDate, string _Date, string dateText)
         {
             // 测试磁贴
             string from = _ScheduleName;
             string subject = _CaculatedDate;
-            string body = _Date;
+            string body = dateText;
             string displayName;
             if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
             {
-                if (localSettings.Values[_ScheduleName + _Date] == null)
+                var note = new CountdownSettingsService(localSettings).GetNote(_ScheduleId, _ScheduleName, _Date);
+                if (string.IsNullOrEmpty(note))
                     displayName = "无备注";
                 else
-                    displayName = localSettings.Values[_ScheduleName + _Date].ToString();
+                    displayName = note;
             }
             else
                 displayName = "夏日";
@@ -511,9 +505,12 @@ namespace BackgroundTasks
                 }
             };
             var notification = new TileNotification(content.GetXml());
-            if (SecondaryTile.Exists(_ScheduleName))
+            string tileId = CountdownSettingsService.GetSecondaryTileId(_ScheduleId);
+            if (!SecondaryTile.Exists(tileId) && SecondaryTile.Exists(_ScheduleName))
+                tileId = _ScheduleName;
+            if (SecondaryTile.Exists(tileId))
             {
-                var updater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(_ScheduleName);
+                var updater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId);
 
                 updater.Update(notification);
             }
@@ -521,20 +518,20 @@ namespace BackgroundTasks
 
         public void LoadToast()
         {
+            var scheduleSettings = new CountdownSettingsService(localSettings);
             List<CountdownRecord> datalist0 = conn.Query<CountdownRecord>("select * from DataTemplate where Date = ?", DateTime.Now.ToString("yyyy-MM-dd"));
             foreach (var item in datalist0)
             {
-                var AlertName = "Alert" + item.Schedule_name;
-                if (localSettings.Values[AlertName] != null && localSettings.Values[AlertName].ToString()=="1")
+                if (scheduleSettings.GetAlert(item.Id, item.Schedule_name, "") == "1")
                 {
                     string tipText;
-                    var tipTextContainer = localSettings.Values[item.Schedule_name + item.Date];
-                    if (tipTextContainer != null && tipTextContainer.ToString() != "")
-                        tipText = "日程备注：" + tipTextContainer.ToString();
+                    var tipTextContainer = scheduleSettings.GetNote(item.Id, item.Schedule_name, item.Date);
+                    if (!string.IsNullOrEmpty(tipTextContainer))
+                        tipText = "日程备注：" + tipTextContainer;
                     else
                         tipText = "日程备注：无备注。";
-                    CreateToast(item.Schedule_name, tipText, 0);
-                    localSettings.Values[AlertName] = "0";
+                    CreateToast(item, tipText, 0);
+                    scheduleSettings.SetAlert(item.Id, item.Schedule_name, "", "0");
                 }               
             }
             for (int i = 1; i <= 3; i += 2)
@@ -543,54 +540,60 @@ namespace BackgroundTasks
                 var datalist1 = conn.Query<CountdownRecord>("select * from DataTemplate where Date = ?", DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
                 foreach(var item in datalist1)
                 {
-                    var AlertName = "Alert" + item.Schedule_name + i;
-                    if(localSettings.Values[AlertName]!=null && localSettings.Values[AlertName].ToString() == "1")
+                    var AlertName = i.ToString();
+                    if(scheduleSettings.GetAlert(item.Id, item.Schedule_name, AlertName) == "1")
                     {
                         string tipText;
-                        var tipTextContainer = localSettings.Values[item.Schedule_name + item.Date];
-                        if (tipTextContainer != null && tipTextContainer.ToString() != "")
-                            tipText = "日程备注：" + tipTextContainer.ToString();
+                        var tipTextContainer = scheduleSettings.GetNote(item.Id, item.Schedule_name, item.Date);
+                        if (!string.IsNullOrEmpty(tipTextContainer))
+                            tipText = "日程备注：" + tipTextContainer;
                         else
                             tipText = "日程备注：无备注。";
-                        CreateToast(item.Schedule_name, tipText, i);
-                        localSettings.Values[AlertName] = "0";
+                        CreateToast(item, tipText, i);
+                        scheduleSettings.SetAlert(item.Id, item.Schedule_name, AlertName, "0");
                     }
                 }
             }
             var datalist2 = conn.Query<CountdownRecord>("select * from DataTemplate");
             foreach(var item in datalist2)
             {
-                var AlertName = "Alert" + item.Schedule_name + "Personal";
-                
-                if(localSettings.Values[AlertName]!=null && localSettings.Values[AlertName].ToString() != "0")
+                var AlertName = "Personal";
+                string personalAlert = scheduleSettings.GetAlert(item.Id, item.Schedule_name, AlertName);
+                if(personalAlert != "0")
                 {
                     string tipText;
-                    string dayNumString = localSettings.Values[AlertName].ToString();
+                    string dayNumString = personalAlert;
                     int dayNum = Convert.ToInt32(dayNumString);
                     if(item.Date == DateTime.Now.AddDays(dayNum).ToString("yyyy-MM-dd"))
                     {
-                        var tipTextContainer = localSettings.Values[item.Schedule_name + item.Date];
-                        if (tipTextContainer != null && tipTextContainer.ToString() != "")
-                            tipText = "日程备注：" + tipTextContainer.ToString();
+                        var tipTextContainer = scheduleSettings.GetNote(item.Id, item.Schedule_name, item.Date);
+                        if (!string.IsNullOrEmpty(tipTextContainer))
+                            tipText = "日程备注：" + tipTextContainer;
                         else
                             tipText = "日程备注：无备注。";
-                        CreateToast(item.Schedule_name, tipText, dayNum);
-                        localSettings.Values[AlertName] = "0";
+                        CreateToast(item, tipText, dayNum);
+                        scheduleSettings.SetAlert(item.Id, item.Schedule_name, AlertName, "0");
                     }
                 }
             }
         }
 
-        private void CreateToast(string Schedule_name,string tipText,int dayNum)
+        private void CreateToast(CountdownRecord item, string tipText, int dayNum)
         {
+            bool isRange = ScheduleDateCalculator.IsRange(item.ScheduleType, item.EndDate);
             string text;
             if(dayNum == 0)
             {
-                text = "日程到期提醒：" + Schedule_name;
+                text = (isRange ? "日程开始提醒：" : "日程到期提醒：") + item.Schedule_name;
             }
             else
             {
-                text = Schedule_name + "，还有" + dayNum + "天";
+                text = item.Schedule_name + "，还有" + dayNum + "天" + (isRange ? "开始" : "");
+            }
+            if (isRange)
+            {
+                tipText = ScheduleDateCalculator.FormatDates(item.Date, item.EndDate, item.ScheduleType)
+                    + "\n" + tipText;
             }
             var toastContent = new ToastContent()
             {

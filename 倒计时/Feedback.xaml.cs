@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -37,6 +37,7 @@ namespace 倒计时
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         private static string address = "monreestudio@outlook.com";
+        private string systemInfoJson;
         public string ApplicationName => SystemInformation.ApplicationName;
         public string ApplicationVersion => $"{SystemInformation.ApplicationVersion.Major}.{SystemInformation.ApplicationVersion.Minor}.{SystemInformation.ApplicationVersion.Build}.{SystemInformation.ApplicationVersion.Revision}";
         public CultureInfo Culture => SystemInformation.Culture;
@@ -67,17 +68,19 @@ namespace 倒计时
 
         private void InitSystemInfro()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("基本信息\n应用名称：" + ApplicationName
-                + "\n应用版本号：" + ApplicationVersion
-                + "\n语言：" + Culture
-                + "\n系统架构：" + OperatingSystemArchitecture
-                + "\n系统版本号：" + OperatingSystemVersion
-                + "\n设备类型：" + DeviceFamily
-                + "\n设备型号：" + DeviceModel
-                + "\n设备制造商：" + DeviceManufacturer
-                );
-            SysInfoTextBlock.Text = sb.ToString();
+            var sysInfo = new Newtonsoft.Json.Linq.JObject
+            {
+                ["应用名称"] = ApplicationName,
+                ["应用版本号"] = ApplicationVersion,
+                ["语言"] = Culture?.Name ?? Culture?.ToString(),
+                ["系统架构"] = OperatingSystemArchitecture.ToString(),
+                ["系统版本号"] = OperatingSystemVersion.ToString(),
+                ["设备类型"] = DeviceFamily?.ToString(),
+                ["设备型号"] = DeviceModel?.ToString(),
+                ["设备制造商"] = DeviceManufacturer?.ToString(),
+            };
+            systemInfoJson = sysInfo.ToString(Newtonsoft.Json.Formatting.Indented);
+            SysInfoTextBlock.Text = string.Join("\n", sysInfo.Properties().Select(property => $"{property.Name}：{property.Value}"));
         }
 
         private async void InitFaqText()
@@ -189,13 +192,13 @@ namespace 倒计时
 
         private async void SendMailButton_Click(object sender, RoutedEventArgs e)
         {
-            await FeedbackAsync("请填写反馈标题", "←请在此处回车换行并输入反馈内容————————" + SysInfoTextBlock.Text);
+            await FeedbackAsync("请填写反馈标题", "←请在此处回车换行并输入反馈内容————————\n" + systemInfoJson);
         }
         public static async Task FeedbackAsync(string subject, string body)
         {
             if (address == null)
                 return;
-            var mailto = new Uri($"mailto:{address}?subject={subject}&body={body}");
+            var mailto = new Uri($"mailto:{address}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(body)}");
             await Launcher.LaunchUriAsync(mailto);
         }
     }

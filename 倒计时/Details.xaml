@@ -1,13 +1,14 @@
-﻿<Page
+<Page
     x:Class="倒计时.Details"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:倒计时"
+    xmlns:material="using:倒计时.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    Margin="0,-34,0,0"
+    Margin="0"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -15,572 +16,301 @@
         <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ThemeColor" />
         <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="ThemeColor"/>
         <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="ThemeColor" x:FieldModifier="public"/>
-        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Red"/>
-        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
-        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Crimson"/>
-        <SolidColorBrush x:Key="OriginalButtonBackgroundPointerOver" Color="LightGray"/>
-        <SolidColorBrush x:Key="OriginalButtonForegroundPointerOver" Color="Black"/>
-        <SolidColorBrush x:Key="OriginalButtonBackgroundPressed" Color ="DarkGray"/>
-        <Thickness x:Key="ContentDialogPadding">0</Thickness>
-
-        <Style x:Name="CloseContentDialog" TargetType="ContentDialog">
-            <Setter Property="Foreground" Value="{ThemeResource ContentDialogForeground}" />
-            <Setter Property="Background" Value="{ThemeResource ContentDialogBackground}" />
-            <Setter Property="BorderBrush" Value="{ThemeResource ContentDialogBorderBrush}" />
-            <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContentDialog">
-                        <Border x:Name="Container">
-
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="DialogShowingStates">
-
-                                    <VisualStateGroup.Transitions>
-                                        <VisualTransition To="DialogHidden">
-
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="IsHitTestVisible">
-                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="False" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX">
-                                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="1.0" />
-                                                    <SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="1.05" />
-                                                </DoubleAnimationUsingKeyFrames>
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY">
-                                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="1.0" />
-                                                    <SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="1.05" />
-                                                </DoubleAnimationUsingKeyFrames>
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Opacity">
-                                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="1.0" />
-                                                    <LinearDoubleKeyFrame KeyTime="0:0:0.083" Value="0.0" />
-                                                </DoubleAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualTransition>
-                                        <VisualTransition To="DialogShowing">
-
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Visibility">
-                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX">
-                                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="1.05" />
-                                                    <SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="1.0" />
-                                                </DoubleAnimationUsingKeyFrames>
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY">
-                                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="1.05" />
-                                                    <SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="1.0" />
-                                                </DoubleAnimationUsingKeyFrames>
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Opacity">
-                                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0.0" />
-                                                    <LinearDoubleKeyFrame KeyTime="0:0:0.167" Value="1.0" />
-                                                </DoubleAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualTransition>
-                                    </VisualStateGroup.Transitions>
-                                    <VisualState x:Name="DialogHidden" />
-                                    <VisualState x:Name="DialogShowing">
-                                        <VisualState.Setters>
-                                            <Setter Target="LayoutRoot.Visibility" Value="Visible" />
-                                            <Setter Target="BackgroundElement.TabFocusNavigation" Value="Cycle" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="DialogShowingWithoutSmokeLayer">
-                                        <VisualState.Setters>
-                                            <Setter Target="LayoutRoot.Visibility" Value="Visible" />
-                                            <Setter Target="LayoutRoot.Background" Value="{x:Null}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="DialogSizingStates">
-                                    <VisualState x:Name="DefaultDialogSizing" />
-                                    <VisualState x:Name="FullDialogSizing">
-                                        <VisualState.Setters>
-                                            <Setter Target="BackgroundElement.VerticalAlignment" Value="Stretch" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="ButtonsVisibilityStates">
-                                    <VisualState x:Name="AllVisible" />
-                                    <VisualState x:Name="NoneVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="CommandSpace.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="PrimaryVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="PrimaryButton.(Grid.Column)" Value="2" />
-                                            <Setter Target="PrimaryButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="PrimaryButton.Margin" Value="2,0,0,0" />
-                                            <Setter Target="SecondaryButton.Visibility" Value="Collapsed" />
-                                            <Setter Target="CloseButton.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="SecondaryVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="SecondaryButton.(Grid.Column)" Value="2" />
-                                            <Setter Target="SecondaryButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="SecondaryButton.Margin" Value="2,0,0,0" />
-                                            <Setter Target="PrimaryButton.Visibility" Value="Collapsed" />
-                                            <Setter Target="CloseButton.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="CloseVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="CloseButton.(Grid.Column)" Value="2" />
-                                            <Setter Target="CloseButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="CloseButton.Margin" Value="2,0,0,0" />
-                                            <Setter Target="PrimaryButton.Visibility" Value="Collapsed" />
-                                            <Setter Target="SecondaryButton.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="PrimaryAndSecondaryVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="PrimaryButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="SecondaryButton.(Grid.Column)" Value="2" />
-                                            <Setter Target="SecondaryButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="SecondaryButton.Margin" Value="2,0,0,0" />
-                                            <Setter Target="CloseButton.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="PrimaryAndCloseVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="PrimaryButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="CloseButton.(Grid.Column)" Value="2" />
-                                            <Setter Target="CloseButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="CloseButton.Margin" Value="2,0,0,0" />
-                                            <Setter Target="SecondaryButton.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="SecondaryAndCloseVisible">
-                                        <VisualState.Setters>
-                                            <Setter Target="SecondaryButton.(Grid.Column)" Value="0" />
-                                            <Setter Target="SecondaryButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="SecondaryButton.Margin" Value="0,0,2,0" />
-                                            <Setter Target="CloseButton.(Grid.Column)" Value="2" />
-                                            <Setter Target="CloseButton.(Grid.ColumnSpan)" Value="2" />
-                                            <Setter Target="CloseButton.Margin" Value="2,0,0,0" />
-                                            <Setter Target="PrimaryButton.Visibility" Value="Collapsed" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="DefaultButtonStates">
-                                    <VisualState x:Name="NoDefaultButton" />
-                                    <VisualState x:Name="PrimaryAsDefaultButton">
-                                        <VisualState.Setters>
-                                            <Setter Target="PrimaryButton.Style" Value="{StaticResource AccentButtonStyle}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="SecondaryAsDefaultButton">
-                                        <VisualState.Setters>
-                                            <Setter Target="SecondaryButton.Style" Value="{StaticResource AccentButtonStyle}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="CloseAsDefaultButton">
-                                        <VisualState.Setters>
-                                            <Setter Target="CloseButton.Style" Value="{StaticResource AccentButtonStyle}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-
-                                </VisualStateGroup>
-
-                                <VisualStateGroup x:Name="DialogBorderStates">
-                                    <VisualState x:Name="NoBorder" />
-                                    <VisualState x:Name="AccentColorBorder">
-                                        <VisualState.Setters>
-                                            <Setter Target="BackgroundElement.BorderBrush" Value="{ThemeResource SystemControlForegroundAccentBrush}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-
-                                </VisualStateGroup>
-
-                            </VisualStateManager.VisualStateGroups>
-                            <Grid x:Name="LayoutRoot" Visibility="Collapsed" Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}">
-                                <Border x:Name="BackgroundElement"
-                                Background="{TemplateBinding Background}"
-                                FlowDirection="{TemplateBinding FlowDirection}"
-                                BorderThickness="{ThemeResource ContentDialogBorderWidth}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                MinWidth="{ThemeResource ContentDialogMinWidth}"
-                                MaxWidth="{ThemeResource ContentDialogMaxWidth}"
-                                MinHeight="{ThemeResource ContentDialogMinHeight}"
-                                MaxHeight="{ThemeResource ContentDialogMaxHeight}"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                RenderTransformOrigin="0.5,0.5">
-                                    <Border.RenderTransform>
-                                        <ScaleTransform x:Name="ScaleTransform" />
-                                    </Border.RenderTransform>
-                                    <Grid x:Name="DialogSpace" Padding="0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <ScrollViewer x:Name="ContentScrollViewer"
-                                        HorizontalScrollBarVisibility="Disabled"
-                                        VerticalScrollBarVisibility="Disabled"
-                                        ZoomMode="Disabled"
-                                        Margin="{ThemeResource ContentDialogContentScrollViewerMargin}"
-                                        IsTabStop="False">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                <ContentControl x:Name="Title"
-                                                Margin="{ThemeResource ContentDialogTitleMargin}"
-                                                Content="{TemplateBinding Title}"
-                                                ContentTemplate="{TemplateBinding TitleTemplate}"
-                                                FontSize="20"
-                                                FontFamily="XamlAutoFontFamily"
-                                                FontWeight="Normal"
-                                                Foreground="{TemplateBinding Foreground}"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                IsTabStop="False">
-                                                    <ContentControl.Template>
-                                                        <ControlTemplate TargetType="ContentControl">
-                                                            <ContentPresenter Content="{TemplateBinding Content}"
-                                                            MaxLines="2"
-                                                            TextWrapping="Wrap"
-                                                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                            Margin="{TemplateBinding Padding}"
-                                                            ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                                        </ControlTemplate>
-                                                    </ContentControl.Template>
-                                                </ContentControl>
-                                                <ContentPresenter x:Name="Content"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                Content="{TemplateBinding Content}"
-                                                FontSize="{ThemeResource ControlContentThemeFontSize}"
-                                                FontFamily="{ThemeResource ContentControlThemeFontFamily}"
-                                                Margin="{ThemeResource ContentDialogContentMargin}"
-                                                Foreground="{TemplateBinding Foreground}"
-                                                Grid.Row="1"
-                                                TextWrapping="Wrap" />
-                                            </Grid>
-                                        </ScrollViewer>
-                                        <Grid x:Name="CommandSpace"
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Bottom"
-                                        XYFocusKeyboardNavigation="Enabled"
-                                        Margin="{ThemeResource ContentDialogCommandSpaceMargin}">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="0.5*" />
-                                                <ColumnDefinition Width="0.5*" />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <Button x:Name="PrimaryButton"
-                                            Content="{TemplateBinding PrimaryButtonText}"
-                                            IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
-                                            Style="{TemplateBinding PrimaryButtonStyle}"
-                                            ElementSoundMode="FocusOnly"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Margin="0,0,2,0"
-                                            Grid.Column="0" />
-                                            <Button x:Name="SecondaryButton"
-                                            Content="{TemplateBinding SecondaryButtonText}"
-                                            IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}"
-                                            Style="{TemplateBinding SecondaryButtonStyle}"
-                                            ElementSoundMode="FocusOnly"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Margin="2,0,2,0"
-                                            Grid.Column="1"
-                                            Grid.ColumnSpan="2" />
-                                            <Button x:Name="CloseButton"
-                                            Content="{TemplateBinding CloseButtonText}"
-                                            Style="{TemplateBinding CloseButtonStyle}"
-                                            ElementSoundMode="FocusOnly"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Margin="2,0,0,0"
-                                            Grid.Column="3" />
-                                        </Grid>
-
-                                    </Grid>
-                                </Border>
-
-                            </Grid>
-                        </Border>
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="ButtonStyle1" TargetType="Button">
-            <Setter Property="Background" Value="{ThemeResource ButtonBackground}"/>
-            <Setter Property="BackgroundSizing" Value="OuterBorderEdge"/>
-            <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
-            <Setter Property="Padding" Value="{StaticResource ButtonPadding}"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
-            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
-            <Setter Property="FocusVisualMargin" Value="-3"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BackgroundSizing="{TemplateBinding BackgroundSizing}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" CornerRadius="{TemplateBinding CornerRadius}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal">
-                                        <Storyboard>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="PointerOver">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource OriginalButtonBackgroundPointerOver}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource OriginalButtonForegroundPointerOver}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource OriginalButtonBackgroundPressed}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </ContentPresenter>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
     </Page.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="DetailsGrid">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="0.2*"/>
-                <RowDefinition />
-                <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <CommandBar x:Name="DetailsCommandBar" Background="Transparent" RelativePanel.AlignRightWithPanel="True" Margin="0,50,10,0" IsOpen="False" DefaultLabelPosition="Right">
-                <AppBarButton Visibility="Collapsed" x:Name="ToastTestButton" Icon="Send" Label="通知测试" CornerRadius="3" Foreground="White" Click="ToastTestButton_Click"/>
-                <AppBarButton x:Name="AlertButton" Icon="Clock" Label="设置提醒" CornerRadius="3" ToolTipService.ToolTip="为日程设置一个到期提醒" Foreground="White" Click="AlertButton_Click"/>
-                <AppBarButton x:Name="ShareButton" CornerRadius="3" Label="分享" ToolTipService.ToolTip="以卡片形式分享" Foreground="White" Click="ShareButton_Click">
+
+    <Grid x:Name="DetailsGrid" SizeChanged="DetailsGrid_SizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Date and compact actions -->
+        <Grid x:Name="DetailChrome" Grid.Row="0" Margin="48,16,48,0" MaxWidth="1040" HorizontalAlignment="Center">
+            <TextBlock x:Name="HeaderDate" Text=""
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Opacity="0.75"
+                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            <CommandBar x:Name="DetailsCommandBar"
+                        Background="Transparent"
+                        IsOpen="False"
+                        DefaultLabelPosition="Collapsed"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center">
+                <AppBarButton Visibility="Collapsed" x:Name="ToastTestButton" Icon="Send" Label="通知测试" Click="ToastTestButton_Click"/>
+                <AppBarButton x:Name="AlertButton" Label="提醒" ToolTipService.ToolTip="设置提醒" Click="AlertButton_Click">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE823;" FontSize="16"/>
                     </AppBarButton.Icon>
-                    <!--<AppBarButton.Flyout>
-                    <Flyout Placement="Bottom">
-                    <StackPanel CornerRadius="10">
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Margin="8">
-                                    将在未来某个版本推出！
-                        </TextBlock>
-                    </StackPanel>
-                    </Flyout>
-                </AppBarButton.Flyout>-->
                 </AppBarButton>
-                <AppBarButton x:Name="EditButton" CornerRadius="3" Label="编辑" Foreground="White" ToolTipService.ToolTip="编辑以更新日程内容" Click="EditButton_Click" >
+                <AppBarButton x:Name="ShareButton" Label="分享" ToolTipService.ToolTip="分享日程" Click="ShareButton_Click">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE104;"/>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="EditButton" Label="编辑" ToolTipService.ToolTip="编辑日程" Click="EditButton_Click">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE104;" FontSize="16"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
             </CommandBar>
-            <TextBlock x:Name="DetailsPickedDate"
-                   x:FieldModifier="public"
-                   Text="2019/6/15"
-                   FontSize="30"
-                   Foreground="White"
-                   HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                   Grid.Row="0"/>
-            <TextBlock x:Name="LunarDate"
-                       x:FieldModifier="public"
-                       FontSize="20"
-                       Foreground="White"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Grid.Row="1"/>
-            <TextBlock x:Name="DetailsEvent"
-                   x:FieldModifier="public"
-                   TextTrimming="CharacterEllipsis"
-                   Text="大学英语六级"
-                       FontWeight="Bold"
-                   FontSize="40"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Grid.Row="2"/>
-            <TextBlock x:Name="TipText"
-                   Text=""
-                   FontSize="20"
-                   Margin="50,0,50,0"
-                   TextWrapping="WrapWholeWords"
-                   Foreground="White"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Grid.Row="3"/>
-            <Grid  CornerRadius="8" Grid.Row="4"  Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+        </Grid>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock x:Name="DetailsDate"
-                       x:FieldModifier="public"
-                       Text="还有。。。"
-                       FontSize="48"
-                       
-                       Foreground="CornflowerBlue"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       IsTapEnabled="True"
-                       ToolTipService.ToolTip="点击切换显示模式（天数/周数/年数）"
-                       Tapped="DetailsDate_Tapped"
-                       PointerEntered="DetailsDate_PointerEntered"
-                       PointerExited="DetailsDate_PointerExited"
-                       >
-                </TextBlock>
-
-                <ContentDialog Title="分享日程"
-                           Foreground="CornflowerBlue"
-                           DefaultButton="Primary"
-                               CornerRadius="10"
-                              Background="{ThemeResource SystemAltHighColor}"
-                           x:Name="RenderDialog">
-                    <StackPanel Margin="10" >
-                        <Border x:Name="RenderBorder" x:FieldModifier="public">
-                            <Grid x:Name="RenderGrid" Padding="25,10,30,10"  Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="3*"/>
-                                    <RowDefinition Height="1*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="RenderTitle" Text="——夏日——" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="15" Margin="0,0,0,5"/>
-                                <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="0" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
-                                <Grid Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock x:Name="dEvent" Grid.Row="0" FontSize="25" Margin="0,5,0,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                                    <TextBlock x:Name="dCalDate" Grid.Row="1" FontSize="30" Margin="0,0,10,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="SemiBold"/>
-                                    <TextBlock x:Name="dDate" Grid.Row="2" FontSize="18" Margin="0,0,0,10" Foreground="SlateGray" VerticalAlignment="Center"/>
-                                </Grid>
-                            </Grid>
+        <ScrollViewer x:Name="DetailScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto" SizeChanged="DetailScrollViewer_SizeChanged"
+                      material:CenteredScrollContent.IsEnabled="True">
+            <StackPanel x:Name="DetailContent" MaxWidth="1040" Margin="48,12,48,40">
+                <Border x:Name="DetailTopDivider" Height="2" Background="White" Opacity="0.35"/>
+                <Grid x:Name="HeroLayout" Margin="0,96,0,0" MinHeight="300">
+                    <Grid.RowDefinitions><RowDefinition x:Name="HeroInfoRow" Height="Auto"/><RowDefinition x:Name="HeroCountdownRow" Height="Auto"/></Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="HeroTextColumn" Width="3*"/>
+                        <ColumnDefinition x:Name="HeroCountColumn" Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel x:Name="HeroInfo" VerticalAlignment="Center" Margin="0,0,32,0" Spacing="12">
+                        <Border x:Name="StatusChip" HorizontalAlignment="Left">
+                            <TextBlock x:Name="StatusChipText" FontSize="12"/>
                         </Border>
-                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                            <TextBlock Text="选取背景色：" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                            <Rectangle x:Name="BlueRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="蓝" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="BlueRec_Tapped"/>
-                            <Rectangle x:Name="YellowRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="黄" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="YellowRec_Tapped"/>
-                            <Rectangle x:Name="GreenRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="绿" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="GreenRec_Tapped"/>
-                            <Rectangle x:Name="PinkRec" Width="40" Height="40" ToolTipService.ToolTip="粉" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="PinkRec_Tapped"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                            <Button Style="{StaticResource ButtonStyle1}" x:Name="Share" HorizontalAlignment="Center" Height="40" Margin="0,0,30,0" CornerRadius="20" Width="100" Foreground="White" Background="DeepSkyBlue" Content="分享" Click="Share_Click"/>
-                            <Button Style="{StaticResource ButtonStyle1}" x:Name="Save" HorizontalAlignment="Center" Height="40" Margin="0,0,30,0" CornerRadius="20" Width="100" Foreground="White" Background="CornflowerBlue" Content="保存" Click="Save_Click"/>
-                            <Button Style="{StaticResource ButtonStyle1}" x:Name="Cancel" HorizontalAlignment="Center" Height="40"  Width="100" CornerRadius="20" Content="取消" Foreground="White" Background="LightBlue" Click="Cancel_Click"/>
-                        </StackPanel>
+                        <TextBlock x:Name="DetailsEvent" x:FieldModifier="public" FontSize="48"
+                                   FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,8"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                        <TextBlock x:Name="DetailsPickedDate" x:FieldModifier="public" FontSize="18"
+                                   TextWrapping="Wrap" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        <TextBlock x:Name="LunarDate" x:FieldModifier="public" FontSize="16" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        <TextBlock x:Name="DurationText" Visibility="Collapsed" FontSize="13"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                     </StackPanel>
-                </ContentDialog>
-            </Grid>
-            <TextBlock Text="——夏日——" Margin="20" Grid.Row="5" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White"/>
-            <ContentDialog x:Name="AlertContentDialog"  CornerRadius="10" Style="{ThemeResource CloseContentDialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel VerticalAlignment="Stretch" Margin="0,0,0,20" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                    <Button x:Name="CloseContentDialogBtn" Click="CloseContentDialogBtn_Click" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" BorderThickness="0" Padding="10" HorizontalAlignment="Right" Background="Transparent"/>
-                    <TextBlock Text="设置提醒" Margin="20,0,0,20" FontWeight="Bold" FontSize="20" Foreground="{x:Bind TC}"/>
-                    <StackPanel Orientation="Horizontal" Margin="10,0,0,10">
-                        <ToggleSwitch x:Name="AlertToggleSwitch" Header="当天" Margin="20,2,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch_Toggled"/>
-                        <ToggleSwitch x:Name="AlertToggleSwitch2" Header="提前一天" Margin="20,2,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch2_Toggled"/>
+                    <Border x:Name="HeroDivider" Grid.Column="1" Width="2" HorizontalAlignment="Left"
+                            Background="White" Opacity="0.35"/>
+                    <StackPanel x:Name="CountdownPanel" Grid.Column="1" VerticalAlignment="Center" Margin="32,0,0,0" Spacing="12">
+                        <TextBlock x:Name="CountdownPrefix" FontSize="14" TextAlignment="Center"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="200" HorizontalAlignment="Center">
+                            <TextBlock x:Name="DetailsDate" x:FieldModifier="public" FontSize="168" FontWeight="Light"
+                                       IsTapEnabled="True" Tapped="DetailsDate_Tapped"
+                                       ToolTipService.ToolTip="点击切换显示模式（天数/周数/年数）"/>
+                        </Viewbox>
+                        <TextBlock x:Name="CountdownUnit" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                        <ToggleSwitch x:Name="AlertToggleSwitch3" Header="提前三天" Margin="20,16,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch3_Toggled"/>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,5,0,0">
-                                <TextBlock Text="提前"  VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <ComboBox x:Name="DayComboBox" CornerRadius="8" BorderThickness="1" TextSubmitted="DayComboBox_TextSubmitted" SelectionChanged="DayComboBox_SelectionChanged">
-                                    <x:String>2</x:String>
-                                    <x:String>4</x:String>
-                                    <x:String>5</x:String>
-                                    <x:String>6</x:String>
-                                    <x:String>7</x:String>
-                                    <x:String>8</x:String>
-                                    <x:String>9</x:String>
-                                    <x:String>10</x:String>
-                                    <x:String>11</x:String>
-                                    <x:String>12</x:String>
-                                    <x:String>13</x:String>
-                                    <x:String>14</x:String>
-                                    <x:String>15</x:String>
-                                    <x:String>16</x:String>
-                                    <x:String>17</x:String>
-                                    <x:String>18</x:String>
-                                    <x:String>19</x:String>
-                                    <x:String>20</x:String>
-                                    <x:String>21</x:String>
-                                    <x:String>22</x:String>
-                                    <x:String>23</x:String>
-                                    <x:String>24</x:String>
-                                    <x:String>25</x:String>
-                                    <x:String>26</x:String>
-                                    <x:String>27</x:String>
-                                    <x:String>28</x:String>
-                                    <x:String>29</x:String>
-                                    <x:String>30</x:String>
-                                </ComboBox>
-                                <TextBlock Text="天" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                            </StackPanel>
-                            <ToggleSwitch x:Name="AlertToggleSwitch4" Margin="20,2,0,0" Foreground="{x:Bind TC}" OnContent="开启" OffContent="关闭" Toggled="AlertToggleSwitch4_Toggled"/>
-                        </StackPanel>
+                </Grid>
+
+                <!-- Range dates and progress share the page surface. -->
+                <controls:DropShadowPanel x:Name="ProgressCard" Visibility="Collapsed"
+                                          Style="{StaticResource AppCardShadowStyle}"
+                                          Margin="0,0,0,32">
+                    <Border x:Name="ProgressCardBorder" CornerRadius="12" Padding="20,16"
+                            Background="{ThemeResource AppCardBackgroundBrush}"
+                            BorderThickness="0"
+                            material:MaterialSurface.SubtleShadow="True"
+                            material:MaterialSurface.IsEnabled="True">
+                    <Grid>
+                        <Border x:Name="ProgressCardTint" CornerRadius="8" IsHitTestVisible="False"/>
+                    <StackPanel Spacing="14">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                            <TextBlock x:Name="RangeStartLabel" FontSize="13" TextWrapping="Wrap"
+                                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            <TextBlock x:Name="RangeEndLabel" Grid.Column="1" FontSize="13" TextAlignment="Right" TextWrapping="Wrap"
+                                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        </Grid>
+                        <Grid x:Name="RangeProgressHost" Height="16" SizeChanged="RangeProgressHost_SizeChanged">
+                            <Border x:Name="RangeProgressTrack" Height="3" VerticalAlignment="Center" CornerRadius="1.5"
+                                    Background="{ThemeResource SystemControlForegroundBaseLowBrush}"/>
+                            <Border x:Name="RangeProgressFill" Height="3" VerticalAlignment="Center" HorizontalAlignment="Left" CornerRadius="1.5" Width="0"/>
+                            <Ellipse x:Name="RangeProgressThumb" Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TextBlock x:Name="RangeTodayLabel" FontSize="12" HorizontalAlignment="Center"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+                    </Grid>
+                    </Border>
+                </controls:DropShadowPanel>
+
+                <StackPanel x:Name="NotesSection" Spacing="24">
+                    <Border x:Name="NotesDivider" Height="2" Background="White" Opacity="0.35"/>
+                    <Grid>
+                        <TextBlock x:Name="NotesTitle" Text="日程备注" FontSize="13" VerticalAlignment="Center"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    </Grid>
+                    <StackPanel x:Name="TipCard" Visibility="Collapsed">
+                        <TextBlock x:Name="TipText" FontSize="20" TextWrapping="Wrap" IsTextSelectionEnabled="True"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
                     </StackPanel>
                 </StackPanel>
-            </ContentDialog>
-        </Grid>
-    </ScrollViewer>
-    
+            </StackPanel>
+        </ScrollViewer>
+        <ContentDialog Title="分享日程"
+                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                   DefaultButton="Primary"
+                       CornerRadius="{ThemeResource AppControlCornerRadius}"
+                      Background="{ThemeResource SystemAltHighColor}"
+                   x:Name="RenderDialog">
+            <StackPanel Margin="10" >
+                <Border x:Name="RenderBorder" x:FieldModifier="public">
+                    <Grid x:Name="RenderGrid" Padding="25,10,30,10"  Height="Auto" Width="Auto" Background="{ThemeResource AppCardBackgroundBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="RenderTitle" Text="——夏日——" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="15" Margin="0,0,0,5"/>
+                        <PersonPicture x:Name="RenderPicture" HorizontalAlignment="Left" Grid.Row="0" Width="115" Height="115" Margin="0,10,15,10" VerticalAlignment="Center"/>
+                        <Grid Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="dEvent" Grid.Row="0" FontSize="25" Margin="0,5,0,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="dCalDate" Grid.Row="1" FontSize="30" Margin="0,0,10,0" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="dDate" Grid.Row="2" FontSize="18" Margin="0,0,0,10" Foreground="SlateGray" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <TextBlock Text="选取背景色：" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <Rectangle x:Name="BlueRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="蓝" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="BlueRec_Tapped"/>
+                    <Rectangle x:Name="YellowRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="黄" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="YellowRec_Tapped"/>
+                    <Rectangle x:Name="GreenRec" Width="40" Height="40" Margin="0,0,15,0" ToolTipService.ToolTip="绿" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="GreenRec_Tapped"/>
+                    <Rectangle x:Name="PinkRec" Width="40" Height="40" ToolTipService.ToolTip="粉" IsTapEnabled="True" extensions:Mouse.Cursor="Hand" Tapped="PinkRec_Tapped"/>
+                </StackPanel>
+                <Grid Margin="0,24,0,0" ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Button x:Name="Share" Content="分享" Click="Share_Click" Style="{StaticResource AppSecondaryButtonStyle}" MinWidth="0" HorizontalAlignment="Stretch" Grid.Column="0" Margin="0" Padding="8"/><Button x:Name="Save" Content="保存" Click="Save_Click" Style="{StaticResource AppPrimaryButtonStyle}" MinWidth="0" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0" Padding="8"/><Button x:Name="Cancel" Content="取消" Click="Cancel_Click" Style="{StaticResource AppSecondaryButtonStyle}" MinWidth="0" HorizontalAlignment="Stretch" Grid.Column="2" Margin="0" Padding="8"/></Grid>
+            </StackPanel>
+        </ContentDialog>
+
+        <ContentDialog x:Name="AlertContentDialog"
+                       Title="设置提醒"
+                       CornerRadius="12"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       MaxWidth="560"
+                       CloseButtonText="关闭">
+            <StackPanel Spacing="10" Margin="0,8,0,12">
+                <TextBlock x:Name="RangeReminderHint"
+                           Text="范围日程的提醒以开始日期为准。"
+                           Visibility="Collapsed"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                           Margin="0,0,0,2"/>
+
+                <Grid Background="{ThemeResource AppCardBackgroundBrush}" BorderBrush="{ThemeResource AppSubtleBorderBrush}" BorderThickness="1"
+                      CornerRadius="10" Padding="16,10" MinHeight="56">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="当天" FontSize="15" FontWeight="SemiBold"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                        <TextBlock Text="日程当天提醒" FontSize="12"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+                    <ToggleSwitch x:Name="AlertToggleSwitch" Grid.Column="1"
+                                  VerticalAlignment="Center"
+                                  OnContent="" OffContent=""
+                                  Toggled="AlertToggleSwitch_Toggled"/>
+                </Grid>
+
+                <Grid Background="{ThemeResource AppCardBackgroundBrush}" BorderBrush="{ThemeResource AppSubtleBorderBrush}" BorderThickness="1"
+                      CornerRadius="10" Padding="16,10" MinHeight="56">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="提前一天" FontSize="15" FontWeight="SemiBold"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                        <TextBlock Text="提前 1 天提醒" FontSize="12"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+                    <ToggleSwitch x:Name="AlertToggleSwitch2" Grid.Column="1"
+                                  VerticalAlignment="Center"
+                                  OnContent="" OffContent=""
+                                  Toggled="AlertToggleSwitch2_Toggled"/>
+                </Grid>
+
+                <Grid Background="{ThemeResource AppCardBackgroundBrush}" BorderBrush="{ThemeResource AppSubtleBorderBrush}" BorderThickness="1"
+                      CornerRadius="10" Padding="16,10" MinHeight="56">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="提前三天" FontSize="15" FontWeight="SemiBold"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                        <TextBlock Text="提前 3 天提醒" FontSize="12"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+                    <ToggleSwitch x:Name="AlertToggleSwitch3" Grid.Column="1"
+                                  VerticalAlignment="Center"
+                                  OnContent="" OffContent=""
+                                  Toggled="AlertToggleSwitch3_Toggled"/>
+                </Grid>
+
+                <Grid Background="{ThemeResource AppCardBackgroundBrush}" BorderBrush="{ThemeResource AppSubtleBorderBrush}" BorderThickness="1"
+                      CornerRadius="10" Padding="16,10" MinHeight="56">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Spacing="6">
+                        <TextBlock Text="自定义提前" FontSize="15" FontWeight="SemiBold"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                            <TextBlock Text="提前" FontSize="12" VerticalAlignment="Center"
+                                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            <ComboBox x:Name="DayComboBox"
+                                      MinWidth="64"
+                                      CornerRadius="8"
+                                      BorderThickness="1"
+                                      FontSize="13"
+                                      TextSubmitted="DayComboBox_TextSubmitted"
+                                      SelectionChanged="DayComboBox_SelectionChanged">
+                                <x:String>2</x:String>
+                                <x:String>4</x:String>
+                                <x:String>5</x:String>
+                                <x:String>6</x:String>
+                                <x:String>7</x:String>
+                                <x:String>8</x:String>
+                                <x:String>9</x:String>
+                                <x:String>10</x:String>
+                                <x:String>11</x:String>
+                                <x:String>12</x:String>
+                                <x:String>13</x:String>
+                                <x:String>14</x:String>
+                                <x:String>15</x:String>
+                                <x:String>16</x:String>
+                                <x:String>17</x:String>
+                                <x:String>18</x:String>
+                                <x:String>19</x:String>
+                                <x:String>20</x:String>
+                                <x:String>21</x:String>
+                                <x:String>22</x:String>
+                                <x:String>23</x:String>
+                                <x:String>24</x:String>
+                                <x:String>25</x:String>
+                                <x:String>26</x:String>
+                                <x:String>27</x:String>
+                                <x:String>28</x:String>
+                                <x:String>29</x:String>
+                                <x:String>30</x:String>
+                            </ComboBox>
+                            <TextBlock Text="天" FontSize="12" VerticalAlignment="Center"
+                                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <ToggleSwitch x:Name="AlertToggleSwitch4" Grid.Column="1"
+                                  VerticalAlignment="Center"
+                                  OnContent="" OffContent=""
+                                  Toggled="AlertToggleSwitch4_Toggled"/>
+                </Grid>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
 </Page>

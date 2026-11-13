@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using Windows.Data.Xml.Dom;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -55,6 +57,8 @@ namespace 倒计时
         public string SelectedPageItem { get; set; }
         public IntroPageViewModel ViewModel = new IntroPageViewModel();
         static CountdownRepository countdownRepository;
+        private CountdownService scheduleService;
+        private CountdownSettingsService scheduleSettings;
         private int viewHeight;
         public string CurrentDate { get; set; }
 
@@ -63,17 +67,20 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             countdownRepository = new CountdownRepository();
+            scheduleSettings = new CountdownSettingsService(localSettings);
+            scheduleService = new CountdownService(countdownRepository, scheduleSettings);
             SelectedPage = true;
             var applicationView = CoreApplication.GetCurrentView();
             applicationView.TitleBar.ExtendViewIntoTitleBar = true;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             var title = ApplicationView.GetForCurrentView().TitleBar;
-            title.BackgroundColor = Colors.SkyBlue;
+            title.BackgroundColor = Colors.Transparent;
+            title.InactiveBackgroundColor = Colors.Transparent;
             title.ForegroundColor = Colors.Transparent;
             title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
-            title.ButtonHoverBackgroundColor = Colors.White;
-            title.ButtonPressedBackgroundColor = Colors.White;
-            title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+            title.ButtonHoverBackgroundColor = Color.FromArgb(26, 0, 0, 0);
+            title.ButtonPressedBackgroundColor = Color.FromArgb(51, 0, 0, 0);
+            title.ButtonForegroundColor = title.ButtonHoverForegroundColor = title.ButtonPressedForegroundColor = null;
             SetThemeColor();
             GetAppVersion();
             MyNav.IsBackEnabled = false;
@@ -82,75 +89,109 @@ namespace 倒计时
 
             localSettings.Values["mainViewId"] = ApplicationView.GetForCurrentView().Id;
             localSettings.Values["hasBeenOpened"] = "0";
-            if (localSettings.Values["HasOpenTool"] == null || localSettings.Values["HasOpenTool"].ToString().Equals("0"))
+            // PreferAuto so Windows restores the last main-window size.
+            // Never write PreferredLaunchViewSize from the desktop tool — it is process-wide.
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            // Main window should never inherit the desktop tool min size (330x...).
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(640, 480));
+            localSettings.Values["HasOpenTool"] = "0";
+            CurrentDate = DateTime.Now.ToShortDateString();
+            SyncTitleBarSpacerHeight();
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (s, a) => ApplyChromeForDisplayMode();
+            ApplyChromeForDisplayMode();
+            ApplyMaterialStyle();
+            ActualThemeChanged += (sender, args) => ApplyMaterialStyle();
+        }
+
+        /// <summary>Keep the dedicated title-bar row aligned with the system caption height.</summary>
+        private void SyncTitleBarSpacerHeight()
+        {
+            var coreBar = CoreApplication.GetCurrentView().TitleBar;
+            double height = coreBar.Height > 0 ? coreBar.Height : 48;
+            RootLayout.RowDefinitions[0].Height = new GridLength(height);
+            TitleBarSpacer.Height = height;
+        }
+
+        // Keep the current acrylic cards as the default for existing installations.
+        public bool UsesMica => localSettings.Values["MaterialStyle"]?.ToString() == "Mica";
+
+        /// <summary>NavigationView default back chrome; do not resize it or it will misalign with the pane toggle.</summary>
+        private Button navBackButton;
+
+        private void ExpandBackButtonHitTarget()
+        {
+            try
             {
-                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+                var queue = new Queue<DependencyObject>();
+                queue.Enqueue(MyNav);
+                while (queue.Count > 0)
+                {
+                    var current = queue.Dequeue();
+                    if (current is Button button &&
+                        (button.Name == "NavigationViewBackButton" || button.Name == "BackButton"))
+                    {
+                        navBackButton = button;
+                        return;
+                    }
+
+                    int count = VisualTreeHelper.GetChildrenCount(current);
+                    for (int i = 0; i < count; i++)
+                        queue.Enqueue(VisualTreeHelper.GetChild(current, i));
+                }
+            }
+            catch { }
+        }
+
+        private static double TitleBarChromeHeight()
+        {
+            var coreBar = CoreApplication.GetCurrentView().TitleBar;
+            return coreBar.Height > 0 ? coreBar.Height : 32;
+        }
+
+        private void SetNavBackButtonTopOffset(double top)
+        {
+            if (navBackButton == null)
+                ExpandBackButtonHitTarget();
+            if (navBackButton != null)
+                navBackButton.Margin = new Thickness(0, top, 0, 0);
+        }
+
+        public void ApplyMaterialStyle()
+        {
+            bool mica = UsesMica;
+            bool dark = ActualTheme == ElementTheme.Dark;
+            Color tint = dark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
+
+            // Only the shell owns the window backdrop; child pages remain transparent.
+            Microsoft.UI.Xaml.Controls.BackdropMaterial.SetApplyToRootOrPageBackground(this, false);
+            Background = null;
+            MyNav.Background = new SolidColorBrush(Colors.Transparent);
+            if (mica)
+            {
+                Microsoft.UI.Xaml.Controls.BackdropMaterial.SetApplyToRootOrPageBackground(this, true);
             }
             else
             {
-                ApplicationView.PreferredLaunchViewSize = new Size(1920, 1080);
-                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+                Background = new AcrylicBrush
+                {
+                    BackgroundSource = AcrylicBackgroundSource.HostBackdrop,
+                    TintColor = tint,
+                    TintOpacity = 0.85,
+                    FallbackColor = tint
+                };
             }
-            localSettings.Values["HasOpenTool"] = "0";
-            CurrentDate = DateTime.Now.ToShortDateString();
-            SetAcylicBackGround();
-        }
 
-        private void SetAcylicBackGround()
-        {
-            int buildNumber = SystemInformation.OperatingSystemVersion.Build;
-            bool isWin11 = buildNumber >= 22000;
-            if (!isWin11)
-            {
-                MyNav.Background = Application.Current.Resources["SystemControlAcrylicWindowBrush"] as AcrylicBrush;
-            }
+            // Refresh actual surfaces, including cards in the currently open page.
+            Controls.MaterialSurface.Refresh();
         }
 
         private void GetViewHeight()
         {
-            int count = (int)localSettings.Values["ItemCount"];
-            List<CountdownRecord> datalist = new List<CountdownRecord>();
-            var allData = countdownRepository.GetAll();
-            switch (count)
-            {
-                case 1:
-                    viewHeight = 110;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    string a1 = localSettings.Values["DesktopKey0"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == a1)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 2:
-                    viewHeight = 230;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    string b1 = localSettings.Values["DesktopKey0"].ToString();
-                    string b2 = localSettings.Values["DesktopKey1"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 3:
-                    viewHeight = 315;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    string c1 = localSettings.Values["DesktopKey0"].ToString();
-                    string c2 = localSettings.Values["DesktopKey1"].ToString();
-                    string c3 = localSettings.Values["DesktopKey2"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
-                            datalist.Add(item);
-                    }
-                    break;
-                default:
-                    viewHeight = 110;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    break;
-            }
+            var allData = scheduleService.GetAll();
+            var selectedIds = scheduleSettings.GetDesktopScheduleIds(
+                allData.Select(item => new ScheduleIdentity(item.Id, item.Schedule_name)));
+            int count = selectedIds.Count;
+            viewHeight = count == 2 ? 230 : count == 3 ? 315 : 110;
         }
 
         private void ToolAutoStart()
@@ -166,6 +207,12 @@ namespace 倒计时
                 CreateTool();
         }
 
+
+        private void EnsureMainWindowChrome()
+        {
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(640, 480));
+        }
         public async void CreateTool()
         {
             //GetViewHeight();
@@ -175,41 +222,12 @@ namespace 倒计时
             //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();
             if (localSettings.Values["ItemCount"] == null)
                 localSettings.Values["ItemCount"] = 0;
-            int count = (int)localSettings.Values["ItemCount"];
-            List<CountdownRecord> datalist = new List<CountdownRecord>();
-            var allData = countdownRepository.GetAll();
-            switch (count)
-            {
-                case 1:
-                    string a1 = localSettings.Values["DesktopKey0"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == a1)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 2:
-                    string b1 = localSettings.Values["DesktopKey0"].ToString();
-                    string b2 = localSettings.Values["DesktopKey1"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 3:
-                    string c1 = localSettings.Values["DesktopKey0"].ToString();
-                    string c2 = localSettings.Values["DesktopKey1"].ToString();
-                    string c3 = localSettings.Values["DesktopKey2"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
-                            datalist.Add(item);
-                    }
-                    break;
-                default:
-                    return;
-            }
+            var allData = scheduleService.GetAll();
+            var selectedIds = scheduleSettings.GetDesktopScheduleIds(
+                allData.Select(item => new ScheduleIdentity(item.Id, item.Schedule_name)));
+            int count = selectedIds.Count;
+            if (count == 0) return;
+            List<CountdownRecord> datalist = allData.Where(item => selectedIds.Contains(item.Id)).ToList();
             //var num = CoreApplication.Views.Count();
             //coreWindow.Activate();
             //CoreApplication.GetCurrentView();
@@ -225,48 +243,116 @@ namespace 倒计时
                 localSettings.Values["newViewId"] = newViewId;
             });
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                try
+                {
+                    var view = ApplicationView.GetForCurrentView();
+                    var prop = typeof(ApplicationView).GetProperty("IsIconVisibleInTaskBar")
+                        ?? typeof(ApplicationView).GetProperty("IsIconVisibleOnTaskBar");
+                    if (prop != null && prop.CanWrite)
+                        prop.SetValue(view, false);
+                }
+                catch { }
+            });
             localSettings.Values["DesktopPin"] = false;
+            EnsureMainWindowChrome();
         }
 
         public void SetThemeColor()
         {
-            if (localSettings.Values["ThemeColor"] == null)
-                localSettings.Values["ThemeColor"] = "CornflowerBlue";
-            switch (localSettings.Values["ThemeColor"].ToString())
-            {
-                case "CornflowerBlue":
-                    TC.Color = Colors.CornflowerBlue;
-                    break;
-                case "DeepSkyBlue":
-                    TC.Color = Color.FromArgb(255, 2, 136, 235);
-                    break;
-                case "Orange":
-                    TC.Color = Color.FromArgb(255, 229, 103, 44);
-                    break;
-                case "Crimson":
-                    TC.Color = Colors.Crimson;
-                    break;
-                case "Gray":
-                    TC.Color = Color.FromArgb(255, 73, 92, 105);
-                    break;
-                case "Purple":
-                    TC.Color = Color.FromArgb(255, 119, 25, 171);
-                    break;
-                case "Pink":
-                    TC.Color = Color.FromArgb(255, 239, 130, 160);
-                    break;
-                case "Green":
-                    TC.Color = Color.FromArgb(255, 124, 178, 56);
-                    break;
-                case "DeepGreen":
-                    TC.Color = Color.FromArgb(255, 8, 128, 126);
-                    break;
-                case "Coffee":
-                    TC.Color = Color.FromArgb(255, 183, 133, 108);
-                    break;
-                default:
-                    break;
-            }
+            TC.Color = App.ApplySavedAccentColor();
+            ResetTitleBar();
+        }
+
+        public void ApplyImmersiveTitleBar(Brush pageBackground, Color captionColor)
+        {
+            // Let the content host fill under the system title bar so page background is continuous.
+            MyNav.IsTitleBarAutoPaddingEnabled = false;
+
+            var title = ApplicationView.GetForCurrentView().TitleBar;
+            title.BackgroundColor = Colors.Transparent;
+            title.InactiveBackgroundColor = Colors.Transparent;
+            title.ForegroundColor = Colors.White;
+            // Caption buttons sit on the immersive page color — keep them transparent.
+            title.ButtonBackgroundColor = Colors.Transparent;
+            title.ButtonInactiveBackgroundColor = Colors.Transparent;
+            title.ButtonHoverBackgroundColor = Color.FromArgb(40, 255, 255, 255);
+            title.ButtonPressedBackgroundColor = Color.FromArgb(70, 255, 255, 255);
+            title.ButtonForegroundColor = Colors.White;
+            title.ButtonHoverForegroundColor = Colors.White;
+            title.ButtonPressedForegroundColor = Colors.White;
+            title.ButtonInactiveForegroundColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        /// <summary>Official spacing: NavigationView sits below the dedicated title-bar row (expanded).</summary>
+        public void ApplyLightImmersiveTitleBar()
+        {
+            ApplyChromeForDisplayMode();
+
+            var title = ApplicationView.GetForCurrentView().TitleBar;
+            title.BackgroundColor = Colors.Transparent;
+            title.InactiveBackgroundColor = Colors.Transparent;
+            title.ForegroundColor = Colors.Transparent;
+            title.ButtonBackgroundColor = Colors.Transparent;
+            title.ButtonInactiveBackgroundColor = Colors.Transparent;
+            title.ButtonHoverBackgroundColor = Color.FromArgb(20, 0, 0, 0);
+            title.ButtonPressedBackgroundColor = Color.FromArgb(40, 0, 0, 0);
+            title.ButtonForegroundColor = null;
+            title.ButtonHoverForegroundColor = null;
+            title.ButtonPressedForegroundColor = null;
+            title.ButtonInactiveForegroundColor = null;
+        }
+
+        /// <summary>Kept for call sites; official spacing does not paint the title-bar strip.</summary>
+        public void ApplyTitleBarTint(Color color)
+        {
+            ApplyLightImmersiveTitleBar();
+        }
+
+        public void ResetTitleBar()
+        {
+            ApplyChromeForDisplayMode();
+            SetNavBackButtonTopOffset(0);
+
+            var title = ApplicationView.GetForCurrentView().TitleBar;
+            title.BackgroundColor = Colors.Transparent;
+            title.InactiveBackgroundColor = Colors.Transparent;
+            title.ForegroundColor = Colors.Transparent;
+            title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
+            title.ButtonHoverBackgroundColor = Color.FromArgb(26, 0, 0, 0);
+            title.ButtonPressedBackgroundColor = Color.FromArgb(51, 0, 0, 0);
+            title.ButtonForegroundColor = title.ButtonHoverForegroundColor = title.ButtonPressedForegroundColor = null;
+            title.ButtonInactiveForegroundColor = null;
+        }
+
+        private void MyNav_DisplayModeChanged(NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewDisplayModeChangedEventArgs args)
+        {
+            ApplyChromeForDisplayMode();
+        }
+
+        private void RootLayout_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ApplyChromeForDisplayMode();
+        }
+
+        /// <summary>
+        /// Always keep the dedicated title-bar row.
+        /// In compact/minimal mode, add top padding on ContentFrame so every page
+        /// keeps a safe area under the back/hamburger chrome.
+        /// </summary>
+        private void ApplyChromeForDisplayMode()
+        {
+            MyNav.IsTitleBarAutoPaddingEnabled = false;
+            MyNav.Margin = new Thickness(0);
+            SyncTitleBarSpacerHeight();
+
+            string mode = MyNav.DisplayMode.ToString();
+            bool compact = mode == "Minimal" || mode == "Compact" || mode == "LeftCompact"
+                || ActualWidth < MyNav.CompactModeThresholdWidth;
+            double safeTop = compact ? Math.Max(48, TitleBarChromeHeight()) : 0;
+            ContentFrame.Padding = new Thickness(0, safeTop, 0, 0);
+            ContentFrame.Margin = new Thickness(0);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -348,6 +434,9 @@ namespace 倒计时
             //ToolAutoStart();
             // Add handler for ContentFrame navigation.
             ContentFrame.Navigated += On_Navigated;
+
+            ExpandBackButtonHitTarget();
+            ApplyChromeForDisplayMode();
 
             // NavView doesn't load any page by default, so load home page.
             MyNav.SelectedItem = MyNav.MenuItems[0];
@@ -482,15 +571,60 @@ namespace 倒计时
 
         private async void On_Navigated(object sender, NavigationEventArgs e)
         {
-            //localSettings.Values["3.0.1.0"] = null;
             if (localSettings.Values["hasBeenOpened"] == null)
                 localSettings.Values["hasBeenOpened"] = "0";
             if (localSettings.Values["hasBeenOpened"].ToString() == "0")
                 ToolAutoStart();
-            if (localSettings.Values["3.0.1.0"] == null)
+            var version = Package.Current.Id.Version;
+            string versionKey = $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            if (localSettings.Values[versionKey]?.ToString() != "true")
             {
-                await MyCD.ShowAsync();
-                localSettings.Values["3.0.1.0"] = "false";
+                bool firstLaunch = localSettings.Values[versionKey] == null;
+                bool hasCurrentUpdate = false;
+                try
+                {
+                    using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(8) })
+                    {
+                        var xml = await client.GetStringAsync("https://www.monreeing.com/notice/monreedate_version_info.xml");
+                        var document = new XmlDocument();
+                        document.LoadXml(xml);
+                        var entries = document.GetElementsByTagName("content");
+                        var updates = new List<KeyValuePair<System.Version, string>>();
+                        for (uint i = 0; i < entries.Length; i++)
+                        {
+                            string text = entries.Item(i).InnerText.Trim();
+                            string heading = text.Split('\n')[0].Trim().TrimEnd('\r');
+                            if (heading.StartsWith("V", StringComparison.OrdinalIgnoreCase)
+                                && System.Version.TryParse(heading.Substring(1), out var entryVersion))
+                                updates.Add(new KeyValuePair<System.Version, string>(entryVersion, text));
+                        }
+                        var currentVersion = version.Revision == 0
+                            ? new System.Version(version.Major, version.Minor, version.Build)
+                            : new System.Version(version.Major, version.Minor, version.Build, version.Revision);
+                        string currentUpdate = updates.FirstOrDefault(item => item.Key.CompareTo(currentVersion) == 0).Value;
+                        hasCurrentUpdate = !string.IsNullOrEmpty(currentUpdate);
+                        if (hasCurrentUpdate)
+                        {
+                            int firstLineEnd = currentUpdate.IndexOf('\n');
+                            currentUpdate = firstLineEnd >= 0 ? currentUpdate.Substring(firstLineEnd + 1).Trim() : string.Empty;
+                        }
+                        var history = updates.Where(item => item.Key.CompareTo(currentVersion) < 0)
+                            .OrderByDescending(item => item.Key)
+                            .Take(3)
+                            .Select(item => "往期版本：" + item.Value);
+                        WelcomeVersionInfo.Text = string.Join("\n\n",
+                            new[] { currentUpdate ?? "当前版本暂无更新内容。" }.Concat(history));
+                    }
+                }
+                catch (Exception)
+                {
+                    WelcomeVersionInfo.Text = "暂时无法获取版本更新内容，请稍后重试。";
+                }
+                if (firstLaunch || hasCurrentUpdate)
+                {
+                    await MyCD.ShowAsync();
+                    localSettings.Values[versionKey] = hasCurrentUpdate ? "true" : "false";
+                }
             }
             //MyNav.IsBackEnabled = ContentFrame.CanGoBack;
 
@@ -520,11 +654,10 @@ namespace 倒计时
 
         private void GetAppVersion()
         {
-            string appVersion = string.Format("此版本： {0}.{1}.{2}.{3}",
+            string appVersion = string.Format("此版本： V{0}.{1}.{2}",
                     Package.Current.Id.Version.Major,
                     Package.Current.Id.Version.Minor,
-                    Package.Current.Id.Version.Build,
-                    Package.Current.Id.Version.Revision);
+                    Package.Current.Id.Version.Build);
             Version.Text = appVersion;
         }
 
@@ -554,7 +687,9 @@ namespace 倒计时
 
         private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
         {
-
+            if (ContentFrame.SourcePageType == typeof(Details))
+                return;
+            ResetTitleBar();
         }
     }
 }

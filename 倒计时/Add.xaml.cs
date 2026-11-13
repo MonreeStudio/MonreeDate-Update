@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
@@ -38,6 +39,7 @@ namespace 倒计时
         private string _Color { get; set; }
         private double _TintOpacity { get; set; }
         private string _Tip { get; set; }
+        private string _EndDate;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         public ThemeColorDataViewModel ViewModel = new ThemeColorDataViewModel();
 
@@ -54,7 +56,19 @@ namespace 倒计时
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Add";
             MyColorPicker.Color = Colors.CornflowerBlue;
+            End_Picker.CalendarViewStyle = Add_Picker.CalendarViewStyle;
+            UpdateScheduleDates();
 
+        }
+
+        private void ScheduleScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (ScheduleCard == null)
+                return;
+
+            // Size to the content area, including when the navigation pane opens or closes.
+            double availableWidth = Math.Max(0, e.NewSize.Width - ScheduleCard.Margin.Left - ScheduleCard.Margin.Right);
+            ScheduleCard.Width = Math.Min(ScheduleCard.MaxWidth, availableWidth);
         }
 
         private void SetThemeColor()
@@ -104,68 +118,61 @@ namespace 倒计时
             //DateTime todayFormat = Convert.ToDateTime(string.Format("{0}年{1}月{2}日", today.Year, today.Month, today.Day));
             TodayDate.Text = "今天是" + string.Format("{0}年{1}月{2}日", today.Year, today.Month, today.Day);
         }
-        private string Calculator(string s1)
+        private bool IsRange => ScheduleTypePicker.SelectedIndex == 1;
+
+        private void ScheduleTypePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            return CountdownDateCalculator.FormatDayCountdown(s1);
+            UpdateScheduleDates();
         }
 
-        private async void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        private void Add_Picker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
-            if (Add_Picker.Date == null)
+            UpdateScheduleDates();
+        }
+
+        private void UpdateScheduleDates()
+        {
+            if (Add_Picker == null || End_Picker == null || DateValidationText == null)
                 return;
-            string Picker = Add_Picker.Date.ToString();
-            string[] strs = Picker.Split(" ");
-            foreach(var str in strs)
-            {
-                if (str.Contains("/"))
-                {
-                    if (str.Contains("周") || str.Contains("星"))
-                    {
-                        int index = str.LastIndexOf("/");
-                        Picker = str.Substring(0, index - 1);
-                    }
-                    else
-                        Picker = str;
-                }
-            }
-            _PickDate = "";
-            try
-            {
-                DateTime s1 = Convert.ToDateTime(Picker);
-                _PickDate = s1.ToString("yyyy-MM-dd");
-                //_PickDate = string.Format("{0}/{1}/{2}", s1.Year, s1.Month, s1.Day);
-            }
-            catch(Exception e)
-            {
-                MessageDialog AboutDialog = new MessageDialog("日期选择发生错误。\n异常类型："+e.GetType(), "发生异常");
-                await AboutDialog.ShowAsync();
-            }
-            _Date = Calculator(_PickDate);
-        }
 
-        private void Add_Picker_Loaded(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            EndDatePanel.Visibility = IsRange ? Visibility.Visible : Visibility.Collapsed;
+            StartDateLabel.Text = IsRange ? "开始日期" : "日程日期";
+            Add_Picker.PlaceholderText = IsRange ? "选择开始日期" : "选择一个日期";
+            _PickDate = Add_Picker.Date?.DateTime.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            _EndDate = IsRange ? End_Picker.Date?.DateTime.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : null;
+            bool invalidRange = IsRange && Add_Picker.Date.HasValue && End_Picker.Date.HasValue
+                && End_Picker.Date.Value.DateTime.Date < Add_Picker.Date.Value.DateTime.Date;
+            DateValidationText.Text = invalidRange ? "结束日期不能早于开始日期。" : "";
+            DateValidationText.Visibility = invalidRange ? Visibility.Visible : Visibility.Collapsed;
+            _Date = _PickDate == null || (IsRange && (_EndDate == null || invalidRange))
+                ? null
+                : ScheduleDateCalculator.FormatCountdown(_PickDate, _EndDate, IsRange ? "Range" : "Point");
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             string _event = AddEvent.Text.Trim();
             _Event = _event;
+            UpdateScheduleDates();
+            if (IsRange && _Date == null && Add_Picker.Date.HasValue)
+            {
+                await new MessageDialog(End_Picker.Date.HasValue ? "结束日期不能早于开始日期。" : "请选择日程的结束日期。", "温馨提示").ShowAsync();
+                return;
+            }
             //All.Current.Model_event = _event;
             if (_Date != null&&_event!=""&&_Color!=""&&_TintOpacity>=0)
             {
                 try
                 {
-                    All.Current.CountdownRepository.Insert(CountdownRecord.Create(_event, _Date, _PickDate, _Color, _TintOpacity, "0", ""));
+                    var record = CountdownRecord.Create(_event, _Date, _PickDate, _Color, _TintOpacity, "0", "", _EndDate);
+                    All.Current.ScheduleService.CreateWithNote(record, _Tip);
                     //All.Current.ViewModel.CustomDatas.Add(new CustomData() { Str1 = _event, Str2 = _Date, Str3 = _PickDate, Str4 = All.Current.ColorfulBrush(GetColor(_Color),_TintOpacity) ,BackGroundColor = GetColor(_Color)});
-                    localSettings.Values[_event+_PickDate] = _Tip;
                     All.Current.NewTB.Visibility = Visibility.Collapsed;
                     All.Current.NewTB2.Visibility = Visibility.Collapsed;
                 }
                 catch
                 {
-                    MessageDialog AboutDialog = new MessageDialog("此日程已被添加，请勿重复添加~","提示");
+                    MessageDialog AboutDialog = new MessageDialog("日程保存失败，请重试。","提示");
                     await AboutDialog.ShowAsync();
                     return;
                 }

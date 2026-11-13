@@ -1,4 +1,4 @@
-using SQLite.Net.Platform.WinRT;
+﻿using SQLite.Net.Platform.WinRT;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace 倒计时
     /// </summary>
     public sealed partial class All : Page
     {
-        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
+        string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库
         public SQLite.Net.SQLiteConnection conn;
         public CustomDataViewModel ViewModel = new CustomDataViewModel();
         public string str1, str2, str3;
@@ -57,6 +57,9 @@ namespace 倒计时
         private double MinMyNav = MainPage.Current.MyNav.CompactModeThresholdWidth;
         public static All Current;
         public CountdownRepository CountdownRepository { get; private set; }
+        internal CountdownService ScheduleService { get; private set; }
+        internal CountdownSettingsService ScheduleSettings { get; private set; }
+        internal CountdownTileService TileService { get; private set; }
         public string Model_event;
         public string Model_Date;
         //public CustomData SelectedItem;
@@ -65,15 +68,42 @@ namespace 倒计时
         private double percentage;
         private bool TopTap;
         private DispatcherTimer timer;
+        private DateTime lastRefreshDate = DateTime.Today;
+        private Storyboard viewIndicatorAnimation;
+        private Storyboard viewContentAnimation;
+        private string activeHomeView;
+        private bool currentGroupExpanded = true;
+        private bool upcomingGroupExpanded = true;
+        private bool pastGroupExpanded = true;
+        private int currentRangeCount;
+        private int currentPointCount;
+        private int upcomingRangeCount;
+        private int upcomingPointCount;
+        private int pastRangeCount;
+        private int pastPointCount;
+        private Storyboard currentGroupAnimation;
+        private Storyboard upcomingGroupAnimation;
+        private Storyboard pastGroupAnimation;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public All()
         {
-            this.InitializeComponent();           
+            this.InitializeComponent();
             CountdownRepository = new CountdownRepository();
+            ScheduleSettings = new CountdownSettingsService(localSettings);
+            ScheduleService = new CountdownService(CountdownRepository, ScheduleSettings);
+            ScheduleSettings.MigrateLegacySettings(ScheduleService.GetAll()
+                .OrderBy(record => record.Id, StringComparer.Ordinal)
+                .Select(record => new ScheduleIdentity(record.Id, record.Schedule_name, record.Date)));
+            TileService = new CountdownTileService(ScheduleService, ScheduleSettings);
             conn = CountdownRepository.Connection;
             Current = this;
+            ScheduleList.ItemsSource = ViewModel.CustomDatas;
+            ScheduleList.ContextFlyout = CurrentSchedules.ContextFlyout = CurrentPointSchedules.ContextFlyout
+                = UpcomingSchedules.ContextFlyout = UpcomingPointSchedules.ContextFlyout
+                = PastSchedules.ContextFlyout = PastPointSchedules.ContextFlyout = MyMenuFlyout;
             LoadAllPage();
+            ApplyHomeView();
             MainPage.Current.MyNav.IsBackEnabled = false;
             MainPage.Current.SelectedPageItem = "All";
             NavigationCacheMode = NavigationCacheMode.Enabled;
@@ -89,18 +119,17 @@ namespace 倒计时
         private void Timer_Tick(object sender, object e)
         {
             //SetToptext();
-            
-            var timeNow = DateTime.Now;
-            if (Convert.ToInt32(timeNow.Hour) == 0
-                && Convert.ToInt32(timeNow.Minute) == 0
-                && Convert.ToInt32(timeNow.Second) == 0)
+
+            if (DateTime.Today != lastRefreshDate)
             {
+                lastRefreshDate = DateTime.Today;
                 LoadAllPage();
             }
         }
 
         public void LoadAllPage()
         {
+            lastRefreshDate = DateTime.Today;
             SetToptext();
             SetTitle();
             LoadSettings();
@@ -119,9 +148,7 @@ namespace 倒计时
                 {
                     try
                     {
-                        MemoryStream stream = new MemoryStream(item.picture);
-                        BitmapImage bitmap = new BitmapImage();
-                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                        var bitmap = await AvatarImage.LoadAsync(item.picture);
                         AllPicture.ProfilePicture = bitmap;
                     }
                     catch (ArgumentNullException ex)
@@ -135,81 +162,26 @@ namespace 倒计时
 
         public void SetThemeColor()
         {
-            if (localSettings.Values["ThemeColor"] == null)
-                localSettings.Values["ThemeColor"] = "CornflowerBlue";
-            switch (localSettings.Values["ThemeColor"].ToString())
-            {
-                case "CornflowerBlue":
-                    TC.Color = Colors.CornflowerBlue;
-                    MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
-                    break;
-                case "DeepSkyBlue":
-                    TC.Color = Color.FromArgb(255, 2, 136, 235);
-                    MyProgressBar.Background = new SolidColorBrush(Colors.CornflowerBlue);
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
-                    break;
-                case "Orange":
-                    TC.Color = Color.FromArgb(255, 229, 103, 44);
-                    MyProgressBar.Background = new SolidColorBrush(Colors.Gold);
-                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 229, 103, 44));
-                    break;
-                case "Crimson":
-                    TC.Color = Colors.Crimson;
-                    MyProgressBar.Background = new SolidColorBrush(Colors.DarkRed);
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Crimson);
-                    break;
-                case "Gray":
-                    TC.Color = Color.FromArgb(255, 73, 92, 105);
-                    MyProgressBar.Background = new SolidColorBrush(Colors.Black);
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Gray);
-                    break;
-                case "Purple":
-                    TC.Color = Color.FromArgb(255, 119, 25, 171);
-                    MyProgressBar.Background = new SolidColorBrush(Colors.MediumPurple);
-                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 119, 25, 171));
-                    break;
-                case "Pink":
-                    TC.Color = Color.FromArgb(255, 239, 130, 160);
-                    MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 239, 130, 160));
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.DeepPink);
-                    break;
-                case "Green":
-                    TC.Color = Color.FromArgb(255, 124, 178, 56);
-                    MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 124, 178, 56));
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.ForestGreen);
-                    break;
-                case "DeepGreen":
-                    TC.Color = Color.FromArgb(255, 8, 128, 126);
-                    MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 124, 178, 56));
-                    MyProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 8, 128, 126));
-                    break;
-                case "Coffee":
-                    TC.Color = Color.FromArgb(255, 183, 133, 108);
-                    MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(255, 183, 133, 108));
-                    MyProgressBar.Foreground = new SolidColorBrush(Colors.Brown);
-                    break;
-                default:
-                    break;
-            }
+            TC.Color = App.ApplySavedAccentColor();
+            MyProgressBar.Foreground = TC;
+            MyProgressBar.Background = new SolidColorBrush(Color.FromArgb(32, TC.Color.R, TC.Color.G, TC.Color.B));
         }
 
         private void SetToptext()
         {
             if (localSettings.Values["TopTap"] == null)
                 localSettings.Values["TopTap"] = "1";
-            Today.Text = DateTime.Now.ToString("yyyy/MM/dd");
+            Today.Text = DateTime.Now.ToString("yyyy年M月d日 · dddd");
+            percentage = 100.0 * DateTime.Today.DayOfYear / (DateTime.IsLeapYear(DateTime.Today.Year) ? 366 : 365);
             if (localSettings.Values["TopTap"].ToString() == "0")
             {
-                percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
-                percentage = (int)percentage;
-                TopText.Text = "今年你已经走过了" + percentage.ToString() + "%啦！";
+                TopText.Text = "今年已走过 " + ((int)percentage).ToString() + "%";
             }
             else
             {
-                TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
+                TopText.Text = "今年已走过 " + DateTime.Now.DayOfYear.ToString() + " 天";
             }
-            MyProgressBar.Value = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
+            MyProgressBar.Value = percentage;
         }
 
         private void SetTitle()
@@ -217,206 +189,38 @@ namespace 倒计时
             var applicationView = CoreApplication.GetCurrentView();
             applicationView.TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
-            title.BackgroundColor = Colors.SkyBlue;
+            title.BackgroundColor = Colors.Transparent;
+            title.InactiveBackgroundColor = Colors.Transparent;
             title.ForegroundColor = Colors.Transparent;
             title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
-            title.ButtonHoverBackgroundColor = Colors.White;
-            title.ButtonPressedBackgroundColor = Colors.White;
-            title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+            title.ButtonHoverBackgroundColor = Color.FromArgb(26, 0, 0, 0);
+            title.ButtonPressedBackgroundColor = Color.FromArgb(51, 0, 0, 0);
+            title.ButtonForegroundColor = title.ButtonHoverForegroundColor = title.ButtonPressedForegroundColor = null;
         }
 
         public async void LoadTile()
         {
-            CountdownRecord countdown = CountdownRepository.GetNextFuture(DateTime.Now.ToString("yyyy-MM-dd"));
-            string _ScheduleName = "";
-            string _CaculatedDate = "";
-            string _Date = "";
-
-            if (countdown != null)
-            {
-                _ScheduleName = countdown.Schedule_name;
-                _CaculatedDate = CustomData.Calculator(countdown.Date);
-                _Date = countdown.Date;
-            }
-
-            if (_ScheduleName != "" && _CaculatedDate != "" && _Date != "")
-            {
-                CreateTile(_ScheduleName, _CaculatedDate, _Date);
-            }
-            else
-            {
-                TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-                localSettings.Values["mainTile"] = "";
-            }
-
-            bool isPinned = SecondaryTile.Exists(_ScheduleName);
-            if(isPinned)            
-            {
-                SecondaryTile toBeDeleted = new SecondaryTile(_ScheduleName);
-                await toBeDeleted.RequestDeleteAsync();
-            }
+            try { await TileService.RefreshAllAsync(); }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex); }
         }
 
-        private void CreateTile(string _ScheduleName, string _CaculatedDate, string _Date)
+        /* TileContent construction moved to CountdownTileService so the
+           foreground and background task use one adaptive template. */
+        private void CreateTile(string scheduleName, string calculatedDate, string date,
+            string displayDates = null, string scheduleId = null)
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-            // 测试磁贴
-            string from = _ScheduleName;
-            string subject = _CaculatedDate;
-            string body = _Date;
-            string displayName;
-            if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
-            {
-                if (localSettings.Values[_ScheduleName + _Date] == null)
-                    displayName = "无备注";
-                else
-                    displayName = localSettings.Values[_ScheduleName + _Date].ToString();
-            }
-            else
-                displayName = "夏日";
-                TileContent content = new TileContent()
-            {
-                Visual = new TileVisual()
-                {
-                    
-                    DisplayName = displayName,
-                    TileMedium = new TileBinding()
-                    {
-                        Branding = TileBranding.Name,
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            TextStacking = TileTextStacking.Center,
-                            Children =
-                            {
-                                new AdaptiveText()
-                                {
-                                    Text = from,
-                                    HintStyle = AdaptiveTextStyle.Base,
-                                    HintAlign = AdaptiveTextAlign.Center
-                                },
-                                new AdaptiveText()
-                                {
-                                    Text = subject,
-                                    HintStyle = AdaptiveTextStyle.Body,
-                                    HintAlign = AdaptiveTextAlign.Center
-                                }
-                            }
-                        }
-                    },
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(
+                CountdownTileService.BuildTileContent(scheduleName, calculatedDate,
+                    displayDates ?? date, "夏日").GetXml()));
+        }
 
-                    TileWide = new TileBinding()
-                    {
-                        Branding = TileBranding.Name,
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            Children =
-                {
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveText()
-                                    {
-                                        Text = from,
-                                        HintStyle = AdaptiveTextStyle.Base
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = body
-                                    }
-                                },
-                                HintTextStacking = AdaptiveSubgroupTextStacking.Center
-                            }
-                        }
-                    }
-                }
-                        }
-                    },
-
-                    TileLarge = new TileBinding()
-                    {
-                        Branding = TileBranding.Name,
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            Children =
-                {
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveText()
-                                    {
-                                        Text = from,
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.Title
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = body,
-                                        HintStyle = AdaptiveTextStyle.BodySubtle
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    //new AdaptiveText()
-                    //{
-                    //    Text = ""
-                    //},
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveText()
-                                    {
-                                        Text = "不要因为繁忙而忘记\n生活",
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = "脚踏实地，仰望星空。\n永远相信美好的事情即将发生！",
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    }
-                                    //new AdaptiveText()
-                                    //{
-                                    //    Text = "永远相信美好的事情即将发生！",
-                                    //    HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    //}
-                                }
-                            }
-                        }
-                    }
-                }
-                        }
-                    }
-                }
-            };
-            var notification = new TileNotification(content.GetXml());
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
-            localSettings.Values["mainTile"] = _ScheduleName;
-            //var badge = new BadgeNotification(content.GetXml());
-            //BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badge);
+        /* Legacy call sites can request a secondary refresh without owning
+           SecondaryTile IDs or Windows prompts. */
+        public void CreateSecondaryTile(string scheduleName, string calculatedDate, string date,
+            string displayDates = null, string scheduleId = null)
+        {
+            if (string.IsNullOrWhiteSpace(scheduleId)) return;
+            _ = TileService.UpdateScheduleAsync(scheduleId);
         }
 
         public void LoadDateData()
@@ -426,6 +230,11 @@ namespace 倒计时
             if (localSettings.Values["DisplayMode"] == null)
                 localSettings.Values["DisplayMode"] = "All";
             var dm = localSettings.Values["DisplayMode"].ToString();
+            if (dm == "Upcoming")
+            {
+                dm = "Future";
+                localSettings.Values["DisplayMode"] = dm;
+            }
             switch (dm)
             {
                 case "All":
@@ -437,7 +246,13 @@ namespace 倒计时
                 case "Future":
                     LoadFuture();
                     break;
+                case "Current":
+                    ContentChoise.Label = "进行中 / 今天";
+                    PopulateSchedules(ScheduleService.GetPinnedOrderByAddTime(), ScheduleService.GetAll(), dm);
+                    break;
                 default:
+                    localSettings.Values["DisplayMode"] = "All";
+                    LoadAll();
                     break;
             }
             AllProgressRing.IsActive = false;
@@ -446,386 +261,90 @@ namespace 倒计时
         private void LoadAll()
         {
             ContentChoise.Label = "显示全部";
-            if (localSettings.Values["DateMode"] == null)
-                localSettings.Values["DateMode"] = "Day";
-            ViewModel.CustomDatas.Clear();
-            string today = DateTime.Now.ToString("yyyy-MM-dd");
-            List<CountdownRecord> datalist0 = CountdownRepository.GetPinnedOrderByAddTime();
-            List<CountdownRecord> datalist1 = CountdownRepository.GetFuture(today);
-            List<CountdownRecord> datalist2 = CountdownRepository.GetPast(today);
-            if ((datalist1.Count() + datalist2.Count()) == 0)
-            {
-                NewTB.Text = "创建你的第一个日程吧！";
-                NewTB2.Text = "（创建后可右键删除）";
-                NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                NewTB.Visibility = Visibility.Collapsed;
-                NewTB2.Visibility = Visibility.Collapsed;
-            }
-            var DateMode = localSettings.Values["DateMode"].ToString();
-            switch (DateMode)
-            {
-                case "Day":
-                    ChangeABB.Label = "天数模式";
-                    foreach (var item in datalist0)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist0.Count() == 0)
-                    {
-                        foreach (var item in datalist1)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist1)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-                case "Week":
-                    ChangeABB.Label = "周数模式";
-                    foreach (var item in datalist0)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist0.Count() == 0)
-                    {
-                        foreach (var item in datalist1)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist1)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-                case "Year":
-                    ChangeABB.Label = "年数模式";
-                    foreach (var item in datalist0)
-                    {
-
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist0.Count() == 0)
-                    {
-                        foreach (var item in datalist1)
-                        {
-                            if (item.CalculatedDate == "就在今天")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                            else
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist1)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-            }
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            PopulateSchedules(ScheduleService.GetPinnedOrderByAddTime(),
+                ScheduleService.GetFuture(today).Concat(ScheduleService.GetPast(today)), "All");
         }
-        
+
         private void LoadPast()
         {
             ContentChoise.Label = "显示已过日程";
-            if (localSettings.Values["DateMode"] == null)
-                localSettings.Values["DateMode"] = "Day";
-            ViewModel.CustomDatas.Clear();
-            string today = DateTime.Now.ToString("yyyy-MM-dd");
-            List<CountdownRecord> datalist1 = CountdownRepository.GetPinnedPast(today);
-            List<CountdownRecord> datalist2 = CountdownRepository.GetPast(today);
-            if (datalist2.Count() == 0)
-            {
-                NewTB.Text = "这里空空如也~";
-                NewTB2.Text = "（暂无已过日程）";
-                NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                NewTB.Visibility = Visibility.Collapsed;
-                NewTB2.Visibility = Visibility.Collapsed;
-            }
-            var DateMode = localSettings.Values["DateMode"].ToString();
-            switch (DateMode)
-            {
-                case "Day":
-                    ChangeABB.Label = "天数模式";
-                    foreach (var item in datalist1)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist1.Count() == 0)
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-                case "Week":
-                    ChangeABB.Label = "周数模式";
-                    foreach (var item in datalist1)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist1.Count() == 0)
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-                case "Year":
-                    ChangeABB.Label = "年数模式";
-                    foreach (var item in datalist1)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist1.Count() == 0)
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-            }
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            PopulateSchedules(ScheduleService.GetPinnedPast(today), ScheduleService.GetPast(today), "Past");
         }
 
         private void LoadFuture()
         {
             ContentChoise.Label = "显示未过日程";
-            if (localSettings.Values["DateMode"] == null)
-                localSettings.Values["DateMode"] = "Day";
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            PopulateSchedules(ScheduleService.GetPinnedFuture(today), ScheduleService.GetFuture(today), "Future");
+        }
+
+        private void PopulateSchedules(IEnumerable<CountdownRecord> pinned, IEnumerable<CountdownRecord> records, string displayMode)
+        {
+            string mode = localSettings.Values["DateMode"] as string ?? "Day";
+            localSettings.Values["DateMode"] = mode;
+            ChangeABB.Label = mode == "Week" ? "周数模式" : mode == "Year" ? "年数模式" : "天数模式";
             ViewModel.CustomDatas.Clear();
-            string today = DateTime.Now.ToString("yyyy-MM-dd");
-            List<CountdownRecord> datalist1 = CountdownRepository.GetPinnedFuture(today);
-            List<CountdownRecord> datalist2 = CountdownRepository.GetFuture(today);
-            if (datalist2.Count() == 0)
+            var addedIds = new HashSet<string>();
+            var items = new List<CustomData>();
+            foreach (var record in pinned.Concat(records))
             {
-                NewTB.Text = "这里空空如也~";
-                NewTB2.Text = "（暂无未过日程）";
-                NewTB.Visibility = Visibility.Visible;
-                NewTB2.Visibility = Visibility.Visible;
+                if (record != null && addedIds.Add(record.Id))
+                {
+                    var data = CreateDisplayData(record, mode);
+                    if ((displayMode == "Current" || displayMode == "Upcoming") && data.GroupKey != displayMode) continue;
+                    items.Add(data);
+                }
             }
-            else
+            bool byName = localSettings.Values["HomeSort"] as string == "Name";
+            SortButton.Label = byName ? "名称排序" : "日期排序";
+            var ordered = items.OrderByDescending(item => item.IsPinned);
+            IEnumerable<CustomData> sorted = byName ? ordered.ThenBy(item => item.Str1, StringComparer.CurrentCultureIgnoreCase)
+                : ordered.ThenBy(item => item.GroupKey == "Current" ? 0 : item.GroupKey == "Upcoming" ? 1 : 2)
+                    .ThenBy(item => item.GroupKey == "Past" ? -DateTime.Parse(item.Presentation.IsRange ? item.EndDate : item.Str3).Ticks
+                        : DateTime.Parse(item.Presentation.IsRange ? item.EndDate : item.Str3).Ticks);
+            foreach (var item in sorted) ViewModel.CustomDatas.Add(item);
+            RefreshHomeGroups();
+
+            bool isEmpty = ViewModel.CustomDatas.Count == 0;
+            NewTB.Text = displayMode == "All" ? "创建你的第一个日程吧！" : "这里空空如也~";
+            NewTB2.Text = displayMode == "All" ? "（创建后可右键删除）"
+                : displayMode == "Past" ? "（暂无已过日程）" : "（暂无未过日程）";
+            NewTB.Visibility = NewTB2.Visibility = isEmpty ? Visibility.Visible : Visibility.Collapsed;
+            EmptyStateIcon.Visibility = isEmpty ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public CustomData CreateDisplayData(CountdownRecord record, string mode = "Day")
+        {
+            Color color = GetColor(record.BgColor);
+            return new CustomData
             {
-                NewTB.Visibility = Visibility.Collapsed;
-                NewTB2.Visibility = Visibility.Collapsed;
-            }
-            var DateMode = localSettings.Values["DateMode"].ToString();
-            switch (DateMode)
-            {
-                case "Day":
-                    ChangeABB.Label = "天数模式";
-                    foreach (var item in datalist1)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist1.Count() == 0)
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-                case "Week":
-                    ChangeABB.Label = "周数模式";
-                    foreach (var item in datalist1)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist1.Count() == 0)
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToWeek(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-                case "Year":
-                    ChangeABB.Label = "年数模式";
-                    foreach (var item in datalist1)
-                    {
-                        if (item != null)
-                            ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                    }
-                    if (datalist1.Count() == 0)
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.CalculatedDate == "就在今天")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = CustomData.Calculator(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                            else
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in datalist2)
-                        {
-                            if (item.IsTop == "0")
-                                ViewModel.CustomDatas.Add(new CustomData() { Str1 = item.Schedule_name, Str2 = ConvertToYMD(item.Date), Str3 = item.Date, Str4 = ColorfulBrush(GetColor(item.BgColor), item.TintOpacity), BackGroundColor = GetColor(item.BgColor) });
-                        }
-                    }
-                    break;
-            }
+                RecordId = record.Id,
+                Str1 = record.Schedule_name,
+                Str2 = ScheduleDateCalculator.FormatCountdown(record.Date, record.EndDate, record.ScheduleType, mode),
+                Str3 = record.Date,
+                ScheduleType = record.ScheduleType,
+                EndDate = record.EndDate,
+                IsPinned = record.IsTop == "1",
+                Presentation = ScheduleService.Present(record, mode),
+                Str4 = ColorfulBrush(color, record.TintOpacity),
+                BackGroundColor = color
+            };
         }
         public void LoadSettings()
         {
-            UserName.Visibility = Visibility.Collapsed;
-            UserSign.Visibility = Visibility.Collapsed;
-            if(localSettings.Values["NickName"]!=null&&localSettings.Values["Sign"]!=null)
-            {
-                UserName.Text = localSettings.Values["NickName"].ToString();
-                UserSign.Text = localSettings.Values["Sign"].ToString();
-            }
-            else
-            {
-                UserName.Text = "游客";
-                UserSign.Text = "这个人好懒，什么也没写……";
-            }
-            if (localSettings.Values["SetAllPageAcrylic"] != null)
-            {
-                var theme = ApplicationTheme.Light;
-                var requestTheme = RequestedTheme;
-                //if (localSettings.Values["SetAllPageAcrylic"].Equals(true))
-                //{
-                //    AcrylicBrush myBrush = new AcrylicBrush();
-                //    myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
-                //    myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
-                //    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
-                //    myBrush.TintOpacity = 0.8;
-                //    AllPageStackPanel.Background = myBrush;
-                //}
-                //else
-                //{
-                //    AllPageStackPanel.Background = new SolidColorBrush(Colors.White);
-                //}
-            }
-            if (localSettings.Values["SetAllPersonPicture"] != null)
-            {
-                if (localSettings.Values["SetAllPersonPicture"].Equals(true))
-                {
-                    AllPicture.Visibility = Visibility.Visible;
-                    AllCommandBar.Margin = new Thickness(0, 50, 10, 2);
-                    MarginText.Height = 30;
-                    TopText.Margin = new Thickness(0);
-                    MyProgressBar.Margin = new Thickness(0, 0, 0, 10);
-                }
-                else
-                {
-                    AllPicture.Visibility = Visibility.Collapsed;
-                    All.Current.AllCommandBar.Margin = new Thickness(0, 50, 10, 25);
-                    MarginText.Height = 50;
-                    TopText.Margin = new Thickness(0, 25, 0, 0);
-                    MyProgressBar.Margin = new Thickness(0);
-                }
-            }
-            else
-                AllPicture.Visibility = Visibility.Visible;
-            List<CountdownRecord> datalist = CountdownRepository.GetAll();
-            foreach(var item in datalist)
-            {
-                if (SecondaryTile.Exists(item.Schedule_name))
-                {
-                    CreateSecondaryTile(item.Schedule_name, CustomData.Calculator(item.Date), item.Date);
-                }
-            }
+            UserName.Visibility = Visibility.Visible;
+            UserName.Text = localSettings.Values["NickName"] as string ?? "游客";
+            UserSign.Text = localSettings.Values["Sign"] as string ?? "";
+            UserSign.Visibility = string.IsNullOrWhiteSpace(UserSign.Text) ? Visibility.Collapsed : Visibility.Visible;
+            ToolTipService.SetToolTip(UserSign, UserSign.Text);
+            AllPicture.Visibility = localSettings.Values["SetAllPersonPicture"] is bool visible && !visible
+                ? Visibility.Collapsed : Visibility.Visible;
+            AllCommandBar.Margin = new Thickness(0);
+            MarginText.Height = 12;
+            TopText.Margin = MyProgressBar.Margin = new Thickness(0);
+            _ = TileService.RefreshSecondaryTilesAsync();
         }
 
         public AcrylicBrush ColorfulBrush(Color temp,double tintOpacity)
@@ -833,21 +352,21 @@ namespace 倒计时
             AcrylicBrush myBrush = new AcrylicBrush();
             myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
             myBrush.TintColor = temp;
-            myBrush.TintColor = temp;
             myBrush.FallbackColor = temp;
-            myBrush.TintOpacity = tintOpacity;
+            // Honor the opacity saved by the schedule's background slider.
+            myBrush.TintOpacity = Math.Max(0, Math.Min(1, tintOpacity));
             return myBrush;
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            ((Microsoft.UI.Xaml.Controls.NavigationViewItem)MainPage.Current.MyNav.MenuItems[4]).IsSelected = true;
-            MainPage.Current.MyNav.SelectedItem = MainPage.Current.MyNav.MenuItems[4];
+            // The add page is opened from the home page and has no visible navigation item.
+            // Keep the current navigation selection instead of forcing a tool item.
             Frame.Navigate(typeof(Add));
         }
 
         private void MyGirdView_ItemClick(object sender, ItemClickEventArgs e)
-        {   
+        {
             var _item = (CustomData)e.ClickedItem;
             AllItem = _item;
             str1 = _item.Str1;
@@ -864,7 +383,7 @@ namespace 倒计时
             if (e.AddedItems.Count > 0)
             {
                 string key = e.AddedItems[0].ToString();
-                
+
             }
         }
 
@@ -881,13 +400,27 @@ namespace 倒计时
         private void MyGirdView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var _item = (e.OriginalSource as FrameworkElement)?.DataContext as CustomData;
-            List<CountdownRecord> toplist = CountdownRepository.GetPinned();
+            PrepareScheduleMenu(_item);
+        }
+
+        private void Schedule_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            var source = args.OriginalSource as FrameworkElement;
+            Point position;
+            if (!args.TryGetPosition(sender, out position))
+                source = FocusManager.GetFocusedElement() as FrameworkElement;
+            PrepareScheduleMenu(source?.DataContext as CustomData);
+        }
+
+        private void PrepareScheduleMenu(CustomData _item)
+        {
+            List<CountdownRecord> toplist = ScheduleService.GetPinned();
             AllItem = _item;
             if (AllItem != null)
             {
-                if (localSettings.Values["mainTile"] == null)
-                    localSettings.Values["mainTile"] = "";
-                if (localSettings.Values["mainTile"].ToString().Equals(AllItem.Str1))
+                bool isMainTile = ScheduleSettings.GetMainTileId(ScheduleService.GetAll()
+                    .Select(item => new ScheduleIdentity(item.Id, item.Schedule_name))) == AllItem.RecordId;
+                if (isMainTile)
                 {
                     PinToSC.Visibility = Visibility.Collapsed;
                     unPinToSC.Visibility = Visibility.Collapsed;
@@ -897,17 +430,17 @@ namespace 倒计时
                 else
                 {
                     MainTile.Visibility = Visibility.Collapsed;
-                    bool isPinned = SecondaryTile.Exists(AllItem.Str1);
+                    bool isPinned = TileService.IsPinned(AllItem.RecordId);
                     if (!isPinned)
                     {
                         PinToSC.Visibility = Visibility.Visible;
                         FS2.Visibility = Visibility.Visible;
                         unPinToSC.Visibility = Visibility.Collapsed;
-                        localSettings.Values[AllItem.Str1] = "unpined";
+                        ScheduleSettings.SetTileState(AllItem.RecordId, AllItem.Str1, false);
                     }
                     else
                     {
-                        if (isPinned && localSettings.Values["mainTile"].ToString() != AllItem.Str1)
+                        if (isPinned && !isMainTile)
                         {
                             PinToSC.Visibility = Visibility.Collapsed;
                             unPinToSC.Visibility = Visibility.Visible;
@@ -934,7 +467,7 @@ namespace 倒计时
                     bool in_toplist = false;
                     foreach(var item in toplist)
                     {
-                        if (item.Schedule_name == AllItem.Str1)
+                        if (item.Id == AllItem.RecordId)
                             in_toplist = true;
                     }
                     if (in_toplist==true)
@@ -983,60 +516,39 @@ namespace 倒计时
 
         private void TopText_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (localSettings.Values["TopTap"].ToString() == "1")
-            {
-                localSettings.Values["TopTap"] = "0";
-                percentage = 100 * (DateTime.Now.DayOfYear / MyProgressBar.Width);
-                percentage = (int)percentage;
-                TopText.Text = "今年你已经走过了" + percentage.ToString() + "%啦！";
-            }
-            else
-            {
-                TopText.Text = "今年你已经走过了" + DateTime.Now.DayOfYear.ToString() + "天啦！";
-                localSettings.Values["TopTap"] = "1";
-            }
+            localSettings.Values["TopTap"] = localSettings.Values["TopTap"] as string == "1" ? "0" : "1";
+            SetToptext();
         }
 
         private void SetTop_Click(object sender, RoutedEventArgs e)
         {
-            CountdownRepository.SetPinned(AllItem.Str1, true);
+            if (AllItem == null) return;
+            ScheduleService.SetPinnedById(AllItem.RecordId, true);
             LoadDateData();
             LoadSettings();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            CountdownRepository.SetPinned(AllItem.Str1, false);
+            if (AllItem == null) return;
+            ScheduleService.SetPinnedById(AllItem.RecordId, false);
             LoadDateData();
             LoadSettings();
         }
 
         private void DeleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            
+
         }
 
         private async void PinToSC_Click(object sender, RoutedEventArgs e)
         {
-            string tileId = AllItem.Str1;
-            string displayName = "夏日：" + AllItem.Str1;
-            string arguments = "action=viewCity&zipCode=" + AllItem.Str1;
-            SecondaryTile tile = new SecondaryTile(
-                tileId,
-                displayName,
-                arguments,
-                new Uri("ms-appx:///Assets/Square150x150Logo.scale-150.png"),
-                Windows.UI.StartScreen.TileSize.Default);
-            tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.scale-400.png");
-            tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTIle.scale-400.png");
-            tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.scale-400.png");
-            bool isPinned = await tile.RequestCreateAsync();
-            CreateSecondaryTile(AllItem.Str1, CustomData.Calculator(AllItem.Str3), AllItem.Str3);
+            bool isPinned = await TileService.PinAsync(AllItem.RecordId);
             if (isPinned)
             {
                 PinToSC.Visibility = Visibility.Collapsed;
                 unPinToSC.Visibility = Visibility.Visible;
-                localSettings.Values[AllItem.Str1] = "pined";
+                ScheduleSettings.SetTileState(AllItem.RecordId, AllItem.Str1, true);
                 PopupNotice popupNotice = new PopupNotice("日程固定成功");
                 popupNotice.ShowAPopup();
             }
@@ -1047,11 +559,11 @@ namespace 倒计时
 
         private async void unPinToSC_Click(object sender, RoutedEventArgs e)
         {
-            SecondaryTile toBeDeleted = new SecondaryTile(AllItem.Str1);
-            await toBeDeleted.RequestDeleteAsync();
+            bool deleted = await TileService.UnpinAsync(AllItem.RecordId);
+            if (!deleted) return;
             PinToSC.Visibility = Visibility.Visible;
             unPinToSC.Visibility = Visibility.Collapsed;
-            localSettings.Values[AllItem.Str1] = "unpined";
+            ScheduleSettings.SetTileState(AllItem.RecordId, AllItem.Str1, false);
             PopupNotice popupNotice = new PopupNotice("日程已取消固定");
             popupNotice.ShowAPopup();
             LoadDateData();
@@ -1061,12 +573,40 @@ namespace 倒计时
 
         private void GridViewStackPanel_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            AnimateScheduleHover(sender as FrameworkElement, true);
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
         }
 
         private void GridViewStackPanel_PointerExited(object sender, PointerRoutedEventArgs e)
         {
+            AnimateScheduleHover(sender as FrameworkElement, false);
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private static void AnimateScheduleHover(FrameworkElement element, bool isHovered)
+        {
+            if (element == null) return;
+
+            var transform = element.RenderTransform as CompositeTransform;
+            if (transform == null)
+            {
+                transform = new CompositeTransform();
+                element.RenderTransform = transform;
+            }
+
+            var animation = new DoubleAnimation
+            {
+                To = isHovered ? -2 : 0,
+                Duration = new Duration(TimeSpan.FromMilliseconds(140)),
+                EnableDependentAnimation = true,
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+            };
+            Storyboard.SetTarget(animation, transform);
+            Storyboard.SetTargetProperty(animation, "TranslateY");
+
+            var storyboard = new Storyboard();
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
         }
 
         private void TopText_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -1101,6 +641,287 @@ namespace 倒计时
         {
             localSettings.Values["DisplayMode"] = "All";
             LoadDateData();
+        }
+
+        private void DisplayCurrent_Click(object sender, RoutedEventArgs e)
+        {
+            localSettings.Values["DisplayMode"] = "Current";
+            LoadDateData();
+        }
+
+        private void Sort_Click(object sender, RoutedEventArgs e)
+        {
+            localSettings.Values["HomeSort"] = (sender as FrameworkElement)?.Tag as string ?? "Date";
+            LoadDateData();
+        }
+
+        private void ViewMode_Click(object sender, RoutedEventArgs e)
+        {
+            string next = (sender as FrameworkElement)?.Tag as string ?? "Cards";
+            bool changed = next != activeHomeView;
+            localSettings.Values["HomeViewMode"] = next;
+            ApplyHomeView(changed);
+            if (changed) AllScrollViewer.ChangeView(null, 0, null, true);
+        }
+
+        private void ApplyHomeView(bool animate = false)
+        {
+            string view = localSettings.Values["HomeViewMode"] as string;
+            if (view != "List" && view != "Groups") view = "Cards";
+            localSettings.Values["HomeViewMode"] = view;
+            int direction = HomeViewIndex(view) >= HomeViewIndex(activeHomeView) ? 1 : -1;
+            activeHomeView = view;
+            CardsViewButton.IsChecked = view == "Cards";
+            ListViewButton.IsChecked = view == "List";
+            GroupsViewButton.IsChecked = view == "Groups";
+            MyGridView.Visibility = view == "Cards" ? Visibility.Visible : Visibility.Collapsed;
+            ScheduleList.Visibility = view == "List" ? Visibility.Visible : Visibility.Collapsed;
+            GroupedSchedules.Visibility = view == "Groups" ? Visibility.Visible : Visibility.Collapsed;
+            UpdateViewIndicator(animate);
+            if (animate) AnimateHomeContent(direction);
+        }
+
+        private static int HomeViewIndex(string view) => view == "List" ? 1 : view == "Groups" ? 2 : 0;
+
+        private void ViewTabs_Loaded(object sender, RoutedEventArgs e) => UpdateViewIndicator(false);
+        private void ViewTabs_SizeChanged(object sender, SizeChangedEventArgs e) => UpdateViewIndicator(false);
+
+        private void UpdateViewIndicator(bool animate)
+        {
+            if (ViewTabs == null || ViewIndicatorTransform == null) return;
+            var button = activeHomeView == "List" ? ListViewButton : activeHomeView == "Groups" ? GroupsViewButton : CardsViewButton;
+            if (button == null || button.ActualWidth <= 0) return;
+            double target = button.TransformToVisual(ViewTabs).TransformPoint(new Point()).X
+                + (button.ActualWidth - ViewIndicator.Width) / 2;
+            double previous = ViewIndicatorTransform.X;
+            viewIndicatorAnimation?.Stop();
+            ViewIndicatorTransform.X = target;
+            if (!animate || !new UISettings().AnimationsEnabled) return;
+
+            viewIndicatorAnimation = new Storyboard();
+            AddViewAnimation(viewIndicatorAnimation, ViewIndicatorTransform, "X", previous, target, 220);
+            viewIndicatorAnimation.Begin();
+        }
+
+        private void AnimateHomeContent(int direction)
+        {
+            viewContentAnimation?.Stop();
+            ScheduleViewHost.Opacity = 1;
+            ScheduleViewTransform.X = 0;
+            if (!new UISettings().AnimationsEnabled) return;
+            viewContentAnimation = new Storyboard();
+            AddViewAnimation(viewContentAnimation, ScheduleViewHost, "Opacity", 0, 1, 240);
+            AddViewAnimation(viewContentAnimation, ScheduleViewTransform, "X", direction * 18, 0, 240);
+            viewContentAnimation.Begin();
+        }
+
+        private static void AddViewAnimation(Storyboard storyboard, DependencyObject target, string property,
+            double from, double to, int milliseconds)
+        {
+            var animation = new DoubleAnimation
+            {
+                From = from, To = to, Duration = TimeSpan.FromMilliseconds(milliseconds),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+                FillBehavior = FillBehavior.Stop
+            };
+            Storyboard.SetTarget(animation, target);
+            Storyboard.SetTargetProperty(animation, property);
+            storyboard.Children.Add(animation);
+        }
+
+        private void ScheduleViewHost_Unloaded(object sender, RoutedEventArgs e)
+        {
+            viewIndicatorAnimation?.Stop();
+            viewContentAnimation?.Stop();
+            ScheduleViewHost.Opacity = 1;
+            ScheduleViewTransform.X = 0;
+        }
+
+        private void HomeSummary_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (YearSummary == null) return;
+            bool narrow = e.NewSize.Width < 660;
+            Grid.SetColumn(YearSummary, narrow ? 0 : 2);
+            Grid.SetColumnSpan(YearSummary, narrow ? 3 : 1);
+            Grid.SetRow(YearSummary, narrow ? 1 : 0);
+            YearSummary.Width = narrow ? double.NaN : Math.Min(360, Math.Max(280, e.NewSize.Width * 0.4));
+            YearSummary.Margin = narrow ? new Thickness(0, 12, 0, 0) : new Thickness(0);
+        }
+
+        private void RefreshHomeGroups()
+        {
+            var current = ViewModel.CustomDatas.Where(item => item.GroupKey == "Current" && item.Presentation.IsRange).ToList();
+            var currentPoints = ViewModel.CustomDatas.Where(item => item.GroupKey == "Current" && !item.Presentation.IsRange).ToList();
+            var upcoming = ViewModel.CustomDatas.Where(item => item.GroupKey == "Upcoming" && item.Presentation.IsRange).ToList();
+            var upcomingPoints = ViewModel.CustomDatas.Where(item => item.GroupKey == "Upcoming" && !item.Presentation.IsRange).ToList();
+            var past = ViewModel.CustomDatas.Where(item => item.GroupKey == "Past" && item.Presentation.IsRange).ToList();
+            var pastPoints = ViewModel.CustomDatas.Where(item => item.GroupKey == "Past" && !item.Presentation.IsRange).ToList();
+            CurrentSchedules.ItemsSource = current;
+            CurrentPointSchedules.ItemsSource = currentPoints;
+            UpcomingSchedules.ItemsSource = upcoming;
+            UpcomingPointSchedules.ItemsSource = upcomingPoints;
+            PastSchedules.ItemsSource = past;
+            PastPointSchedules.ItemsSource = pastPoints;
+            CurrentGroupTitle.Text = "进行中 / 今天 · " + (current.Count + currentPoints.Count);
+            UpcomingGroupTitle.Text = "未过的日程 · " + (upcoming.Count + upcomingPoints.Count);
+            PastGroupTitle.Text = "已过的日程 · " + (past.Count + pastPoints.Count);
+            currentRangeCount = current.Count;
+            currentPointCount = currentPoints.Count;
+            upcomingRangeCount = upcoming.Count;
+            upcomingPointCount = upcomingPoints.Count;
+            pastRangeCount = past.Count;
+            pastPointCount = pastPoints.Count;
+            UpdateGroupVisibility();
+            ScheduleCount.Text = ViewModel.CustomDatas.Count + " 个日程";
+        }
+
+        private void UpdateGroupVisibility(bool animateGroupChanges = false, FrameworkElement animatedGroup = null)
+        {
+            bool hasCurrent = currentRangeCount + currentPointCount > 0;
+            bool hasUpcoming = upcomingRangeCount + upcomingPointCount > 0;
+            bool hasPast = pastRangeCount + pastPointCount > 0;
+
+            CurrentGroupHeader.Visibility = hasCurrent ? Visibility.Visible : Visibility.Collapsed;
+            UpcomingGroupHeader.Visibility = hasUpcoming ? Visibility.Visible : Visibility.Collapsed;
+            PastGroupHeader.Visibility = hasPast ? Visibility.Visible : Visibility.Collapsed;
+
+            CurrentSchedules.Visibility = hasCurrent && currentRangeCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+            CurrentPointSchedules.Visibility = hasCurrent && currentPointCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+            UpcomingSchedules.Visibility = hasUpcoming && upcomingRangeCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+            UpcomingPointSchedules.Visibility = hasUpcoming && upcomingPointCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+            PastSchedules.Visibility = hasPast && pastRangeCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+            PastPointSchedules.Visibility = hasPast && pastPointCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+
+            if (!animateGroupChanges)
+            {
+                SetGroupContentVisibility(CurrentGroupContent, hasCurrent && currentGroupExpanded,
+                    false, ref currentGroupAnimation);
+                SetGroupContentVisibility(UpcomingGroupContent, hasUpcoming && upcomingGroupExpanded,
+                    false, ref upcomingGroupAnimation);
+                SetGroupContentVisibility(PastGroupContent, hasPast && pastGroupExpanded,
+                    false, ref pastGroupAnimation);
+            }
+            else if (ReferenceEquals(animatedGroup, CurrentGroupContent))
+            {
+                SetGroupContentVisibility(CurrentGroupContent, hasCurrent && currentGroupExpanded,
+                    true, ref currentGroupAnimation);
+            }
+            else if (ReferenceEquals(animatedGroup, UpcomingGroupContent))
+            {
+                SetGroupContentVisibility(UpcomingGroupContent, hasUpcoming && upcomingGroupExpanded,
+                    true, ref upcomingGroupAnimation);
+            }
+            else if (ReferenceEquals(animatedGroup, PastGroupContent))
+            {
+                SetGroupContentVisibility(PastGroupContent, hasPast && pastGroupExpanded,
+                    true, ref pastGroupAnimation);
+            }
+
+            CurrentGroupChevron.Glyph = currentGroupExpanded ? "\uE70D" : "\uE70E";
+            UpcomingGroupChevron.Glyph = upcomingGroupExpanded ? "\uE70D" : "\uE70E";
+            PastGroupChevron.Glyph = pastGroupExpanded ? "\uE70D" : "\uE70E";
+        }
+
+        private void CurrentGroupHeader_Click(object sender, RoutedEventArgs e)
+        {
+            currentGroupExpanded = !currentGroupExpanded;
+            UpdateGroupVisibility(true, CurrentGroupContent);
+        }
+
+        private void UpcomingGroupHeader_Click(object sender, RoutedEventArgs e)
+        {
+            upcomingGroupExpanded = !upcomingGroupExpanded;
+            UpdateGroupVisibility(true, UpcomingGroupContent);
+        }
+
+        private void PastGroupHeader_Click(object sender, RoutedEventArgs e)
+        {
+            pastGroupExpanded = !pastGroupExpanded;
+            UpdateGroupVisibility(true, PastGroupContent);
+        }
+
+        private void SetGroupContentVisibility(FrameworkElement content, bool isVisible, bool animate, ref Storyboard animation)
+        {
+            if (content == null) return;
+            animation?.Stop();
+
+            var transform = content.RenderTransform as CompositeTransform;
+            if (transform == null)
+            {
+                transform = new CompositeTransform();
+                content.RenderTransform = transform;
+                content.RenderTransformOrigin = new Point(0.5, 0);
+            }
+
+            bool animationsEnabled = animate && new UISettings().AnimationsEnabled;
+            if (!animationsEnabled)
+            {
+                content.Opacity = 1;
+                transform.TranslateY = 0;
+                content.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+                return;
+            }
+
+            content.Visibility = Visibility.Visible;
+            content.Opacity = isVisible ? 0 : 1;
+            transform.TranslateY = isVisible ? -12 : 0;
+            var storyboard = new Storyboard();
+            var fade = new DoubleAnimation
+            {
+                From = isVisible ? 0 : 1,
+                To = isVisible ? 1 : 0,
+                Duration = TimeSpan.FromMilliseconds(180),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            Storyboard.SetTarget(fade, content);
+            Storyboard.SetTargetProperty(fade, "Opacity");
+            storyboard.Children.Add(fade);
+            var slide = new DoubleAnimation
+            {
+                From = isVisible ? -12 : 0,
+                To = isVisible ? 0 : -12,
+                Duration = TimeSpan.FromMilliseconds(220),
+                EnableDependentAnimation = true,
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            Storyboard.SetTarget(slide, transform);
+            Storyboard.SetTargetProperty(slide, "TranslateY");
+            storyboard.Children.Add(slide);
+            if (!isVisible)
+            {
+                storyboard.Completed += (sender, args) =>
+                {
+                    content.Visibility = Visibility.Collapsed;
+                    content.Opacity = 1;
+                    transform.TranslateY = 0;
+                };
+            }
+            else
+            {
+                storyboard.Completed += (sender, args) => transform.TranslateY = 0;
+            }
+            animation = storyboard;
+            storyboard.Begin();
+        }
+
+        private void GroupedPoints_Loaded(object sender, RoutedEventArgs e) => SizeGroupedPoints(sender);
+        private void GroupedPoints_SizeChanged(object sender, SizeChangedEventArgs e) => SizeGroupedPoints(sender);
+
+        private static void SizeGroupedPoints(object sender)
+        {
+            if (sender is Microsoft.Toolkit.Uwp.UI.Controls.AdaptiveGridView grid && grid.ActualWidth > 0)
+                grid.DesiredWidth = grid.ActualWidth / (grid.ActualWidth >= 620 ? 2 : 1);
+        }
+
+        private void ScheduleList_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            MyGirdView_RightTapped(sender, e);
         }
 
         private void DisplatPast_Click(object sender, RoutedEventArgs e)
@@ -1168,15 +989,11 @@ namespace 倒计时
 
         private async void DeleteDialogPrimaryButton_Click(object sender, RoutedEventArgs e)
         {
-            bool isPinned = SecondaryTile.Exists(AllItem.Str1);
-            if (isPinned)
-            {
-                SecondaryTile toBeDeleted = new SecondaryTile(AllItem.Str1);
-                await toBeDeleted.RequestDeleteAsync();
-            }
+            if (TileService.IsPinned(AllItem.RecordId) && !await TileService.UnpinAsync(AllItem.RecordId))
+                return;
             int _start = ViewModel.CustomDatas.Count();
             ViewModel.CustomDatas.Remove(AllItem);
-            CountdownRepository.DeleteByName(AllItem.Str1);
+            ScheduleService.DeleteWithSettings(AllItem.RecordId);
             int _end = ViewModel.CustomDatas.Count();
             if (_start != _end)
             {
@@ -1188,7 +1005,7 @@ namespace 倒计时
             {
                 case "All":
                     {
-                        List<CountdownRecord> datalist = CountdownRepository.GetAll();
+                        List<CountdownRecord> datalist = ScheduleService.GetAll();
                         if (datalist.Count() == 0)
                         {
                             NewTB.Text = "创建你的第一个日程吧！";
@@ -1200,7 +1017,7 @@ namespace 倒计时
                     break;
                 case "Past":
                     {
-                        List<CountdownRecord> datalist = CountdownRepository.GetUnorderedPast(DateTime.Now.ToString("yyyy-MM-dd"));
+                        List<CountdownRecord> datalist = ScheduleService.GetUnorderedPast(DateTime.Now.ToString("yyyy-MM-dd"));
                         if (datalist.Count == 0)
                         {
                             NewTB.Text = "这里空空如也~";
@@ -1212,7 +1029,7 @@ namespace 倒计时
                     break;
                 case "Future":
                     {
-                        List<CountdownRecord> datalist = CountdownRepository.GetUnorderedFuture(DateTime.Now.ToString("yyyy-MM-dd"));
+                        List<CountdownRecord> datalist = ScheduleService.GetUnorderedFuture(DateTime.Now.ToString("yyyy-MM-dd"));
                         if (datalist.Count == 0)
                         {
                             NewTB.Text = "这里空空如也~";
@@ -1224,6 +1041,7 @@ namespace 倒计时
                     break;
             }
             DeleteDialog.Hide();
+            LoadDateData();
             LoadTile();
         }
 
@@ -1242,167 +1060,5 @@ namespace 倒计时
             return Color.FromArgb(a, r, g, b);
         }
 
-        public void CreateSecondaryTile(string _ScheduleName, string _CaculatedDate, string _Date)
-        {
-            // 测试磁贴
-            string from = _ScheduleName;
-            string subject = _CaculatedDate;
-            string body = _Date;
-            string displayName;
-            if (localSettings.Values["TileTip"] != null && localSettings.Values["TileTip"].ToString() == "1")
-            {
-                if (localSettings.Values[_ScheduleName + _Date] == null)
-                    displayName = "无备注";
-                else
-                    displayName = localSettings.Values[_ScheduleName + _Date].ToString();
-            }
-            else
-                displayName = "夏日";
-            TileContent content = new TileContent()
-            {
-                Visual = new TileVisual()
-                {
-                    DisplayName = displayName,
-                    TileMedium = new TileBinding()
-                    {
-                        Branding = TileBranding.Name,
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            TextStacking = TileTextStacking.Center,
-                            Children =
-                    {
-                    new AdaptiveText()
-                    {
-                        Text = from,
-                        HintStyle = AdaptiveTextStyle.Base,
-                        HintAlign = AdaptiveTextAlign.Center
-                    },
-                    new AdaptiveText()
-                    {
-                        Text = subject,
-                        HintStyle = AdaptiveTextStyle.Body,
-                        HintAlign = AdaptiveTextAlign.Center
-                    }
-                }
-                        }
-                    },
-
-                    TileWide = new TileBinding()
-                    {
-                        Branding = TileBranding.Name,
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            Children =
-                {
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveText()
-                                    {
-                                        Text = from,
-                                        HintStyle = AdaptiveTextStyle.Base
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = body
-                                    }
-                                },
-                                HintTextStacking = AdaptiveSubgroupTextStacking.Center
-                            }
-                        }
-                    }
-                }
-                        }
-                    },
-
-                    TileLarge = new TileBinding()
-                    {
-                        Branding = TileBranding.Name,
-                        Content = new TileBindingContentAdaptive()
-                        {
-                            Children =
-                {
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveText()
-                                    {
-                                        Text = from,
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = subject,
-                                        HintStyle = AdaptiveTextStyle.Title
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = body,
-                                        HintStyle = AdaptiveTextStyle.BodySubtle
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    //new AdaptiveText()
-                    //{
-                    //    Text = ""
-                    //},
-                    new AdaptiveGroup()
-                    {
-                        Children =
-                        {
-                            new AdaptiveSubgroup()
-                            {
-                                Children =
-                                {
-                                    new AdaptiveText()
-                                    {
-                                        Text = "不要因为繁忙而忘记\n生活",
-                                        HintStyle = AdaptiveTextStyle.Subtitle
-                                    },
-                                    new AdaptiveText()
-                                    {
-                                        Text = "脚踏实地，仰望星空。\n永远相信美好的事情即将发生！",
-                                        HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    }
-                                    //new AdaptiveText()
-                                    //{
-                                    //    Text = "永远相信美好的事情即将发生！",
-                                    //    HintStyle = AdaptiveTextStyle.CaptionSubtle
-                                    //}
-                                }
-                            }
-                        }
-                    }
-                }
-                        }
-                    }
-                }
-            };
-            var notification = new TileNotification(content.GetXml());
-            if (SecondaryTile.Exists(_ScheduleName))
-            {
-                var updater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(_ScheduleName);
-
-                updater.Update(notification);
-            }
-        }
     }
 }
-

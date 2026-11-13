@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="倒计时.DesktopTool"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,30 +22,30 @@
             <ListView x:Name="DesktopListView" SelectionMode ="None" HorizontalAlignment="Center" Margin="0,8,0,0" ItemsSource="{x:Bind ToolViewModel.ToolDatas}">
                 <ListView.Header>
                     <controls:ScrollHeader Mode="Sticky">
-                        <Grid x:Name="MyHeaderGrid" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                        <Grid x:Name="MyHeaderGrid" Background="{ThemeResource AppCardBackgroundBrush}">
 
                         </Grid>
                     </controls:ScrollHeader>
                 </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:ToolData">
-                        
+
                         <Grid>
                             <controls:DropShadowPanel BlurRadius="18"
-                                                  ShadowOpacity="0.1"
                                                   OffsetX="2"
                                                   OffsetY="3"
                                                   Color="Black"
                                                   Margin="7"
-                                                  IsMasked="True">
-                                <Grid CornerRadius="10">
-                                    <Grid x:Name="ListGrid" CornerRadius="15"/>
+                                                  IsMasked="True"
+                                                  ShadowOpacity="0.12">
+                                <Grid CornerRadius="12">
+                                    <Grid x:Name="ListGrid" CornerRadius="12" Background="#F5F5F5"/>
                                     <Grid Width="280" x:FieldModifier="public" CornerRadius="15" HorizontalAlignment="Center">
-                                    <StackPanel HorizontalAlignment="Left" Margin="8,10,8,10" VerticalAlignment="Center">
-                                        <TextBlock x:Name="DT_ScheduleName" Width="150" Text="{x:Bind ScheduleName}" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
-                                        <TextBlock x:Name="DT_Date" Text="{x:Bind Date}" FontSize="14" HorizontalAlignment="Left" Foreground="Black"/>
+                                    <StackPanel Margin="12,10,12,10" VerticalAlignment="Center" Spacing="3">
+                                        <TextBlock x:Name="DT_ScheduleName" Text="{x:Bind ScheduleName}" FontSize="20" TextTrimming="CharacterEllipsis" Foreground="Black"/>
+                                        <TextBlock x:Name="DT_Date" Text="{x:Bind Date}" FontSize="14" TextWrapping="Wrap" Foreground="Black"/>
+                                        <TextBlock x:Name="DT_CalDate" Text="{x:Bind CalDate}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" Foreground="Black"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="DT_CalDate" Text="{x:Bind CalDate}" Margin="10" HorizontalAlignment="Right" FontSize="25" FontWeight="Bold" Grid.Row="1"  VerticalAlignment="Center" Foreground="Black"/>
                                     </Grid>
                                 </Grid>
                             </controls:DropShadowPanel>
@@ -54,9 +54,9 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Grid>
-        <Button x:Name="SetTopBtn" Visibility="Visible" Style="{StaticResource ButtonRevealStyle}" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="Black" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE840;" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click"/>
-        <Button x:Name="DeSetTopBtn" Visibility="Collapsed" Style="{StaticResource ButtonRevealStyle}" Grid.Row="2" Margin="3,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="{x:Bind SetTopBtn.Foreground}" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE196;" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click"/>
-        <Button x:Name="RefreshBtn" Visibility="Collapsed" Style="{StaticResource ButtonRevealStyle}" Grid.Row="2" Margin="40,0,0,3" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="{x:Bind SetTopBtn.Foreground}" Background="Transparent" FontFamily="Segoe MDL2 Assets" Content="&#xE149;" ToolTipService.ToolTip="刷新" Click="RefreshBtn_Click"/>
-        <Button x:Name="DisplayMainViewBtn" Style="{StaticResource ButtonRevealStyle}"  Grid.Row="2" Margin="0,0,3,3" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{x:Bind SetTopBtn.Foreground}" Background="Transparent" Content="&#xE10F;" FontFamily="Segoe MDL2 Assets" ToolTipService.ToolTip="显示主界面" Click="DisplayMainViewBtn_Click"/>
+        <Button x:Name="SetTopBtn" Visibility="Visible" Grid.Row="2" Margin="3,0,0,3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="{ThemeResource AppAccentBrush}" FontFamily="Segoe MDL2 Assets" Content="&#xE840;" ToolTipService.ToolTip="始终置顶" Click="SetTopBtn_Click" Style="{StaticResource AppIconButtonStyle}"/>
+        <Button x:Name="DeSetTopBtn" Visibility="Collapsed" Grid.Row="2" Margin="3,0,0,3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="{x:Bind SetTopBtn.Foreground}" FontFamily="Segoe MDL2 Assets" Content="&#xE196;" ToolTipService.ToolTip="取消置顶" Click="DeSetTopBtn_Click" Style="{StaticResource AppIconButtonStyle}"/>
+        <Button x:Name="RefreshBtn" Visibility="Collapsed" Grid.Row="2" Margin="40,0,0,3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="{x:Bind SetTopBtn.Foreground}" FontFamily="Segoe MDL2 Assets" Content="&#xE149;" ToolTipService.ToolTip="刷新" Click="RefreshBtn_Click" Style="{StaticResource AppIconButtonStyle}"/>
+        <Button x:Name="DisplayMainViewBtn"  Grid.Row="2" Margin="0,0,3,3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{x:Bind SetTopBtn.Foreground}" Content="&#xE10F;" FontFamily="Segoe MDL2 Assets" ToolTipService.ToolTip="显示主界面" Click="DisplayMainViewBtn_Click" Style="{StaticResource AppIconButtonStyle}"/>
     </Grid>
 </Page>

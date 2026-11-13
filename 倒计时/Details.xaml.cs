@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +31,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using 倒计时.Models;
+using 倒计时.Manager;
 using 夏日;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -44,6 +46,7 @@ namespace 倒计时
         public static Details Current;
         private bool sp;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        private CountdownSettingsService scheduleSettings;
         string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "mydb.sqlite");    //建立数据库  
         public SQLite.Net.SQLiteConnection conn;
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -51,25 +54,325 @@ namespace 倒计时
         string DetailsDateMode;
         string FestivalDateMode;
         string dayNum;
+        string fullCountdownText = "";
+
+        private void SetCountdownHero(string full)
+        {
+            PopulateCountdownHero(full);
+            if (System.Text.RegularExpressions.Regex.IsMatch(DetailsDate.Text, @"^\d+$"))
+            {
+                DetailsDate.FontSize = 168;
+                string unit = CountdownUnit.Text.Replace("开始", "");
+                switch (CountdownPrefix.Text)
+                {
+                    case "还有": CountdownUnit.Text = unit + "后到来"; break;
+                    case "距离开始还有": CountdownUnit.Text = unit + "后开始"; break;
+                    case "距离结束还有": CountdownUnit.Text = unit + "后结束"; break;
+                    case "已经过去": CountdownUnit.Text = unit + "前"; break;
+                    case "已结束": CountdownUnit.Text = unit + "前结束"; break;
+                }
+                CountdownPrefix.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>Keep countdown parsing shared by day, week and mixed-unit modes.</summary>
+        private void PopulateCountdownHero(string full)
+        {
+            fullCountdownText = full ?? "";
+            dCalDate.Text = fullCountdownText;
+            DetailsDate.FontSize = 92;
+            CountdownPrefix.Text = "";
+            CountdownUnit.Text = "天";
+            DetailsDate.Text = fullCountdownText;
+            CountdownPrefix.Visibility = Visibility.Visible;
+            CountdownUnit.Visibility = Visibility.Visible;
+
+            if (string.IsNullOrEmpty(full))
+                return;
+
+            if (full == "就在今天")
+            {
+                CountdownPrefix.Text = "就在";
+                DetailsDate.Text = "今天";
+                CountdownUnit.Text = "";
+                DetailsDate.FontSize = 72;
+                return;
+            }
+
+            string caption = "";
+            string body = full;
+            string suffix = "";
+
+            if (body.StartsWith("进行中，还剩"))
+            {
+                caption = "距离结束还有";
+                body = body.Substring("进行中，还剩".Length);
+            }
+            else if (body.StartsWith("进行中，"))
+            {
+                // e.g. "进行中，今天结束"
+                var rest = body.Substring("进行中，".Length);
+                if (rest.Contains("今天"))
+                {
+                    CountdownPrefix.Text = "今天";
+                    DetailsDate.Text = "结束";
+                    CountdownUnit.Text = "";
+                    DetailsDate.FontSize = 64;
+                }
+                else
+                {
+                    CountdownPrefix.Text = "进行中";
+                    DetailsDate.Text = rest;
+                    CountdownUnit.Text = "";
+                    DetailsDate.FontSize = 48;
+                }
+                return;
+            }
+            else if (body.StartsWith("还有"))
+            {
+                caption = "还有";
+                body = body.Substring(2);
+                if (body.EndsWith("开始"))
+                {
+                    suffix = "开始";
+                    body = body.Substring(0, body.Length - 2);
+                    caption = "距离开始还有";
+                }
+            }
+            else if (body.StartsWith("已过"))
+            {
+                caption = "已经过去";
+                body = body.Substring(2);
+            }
+            else if (body.StartsWith("已结束"))
+            {
+                caption = "已结束";
+                body = body.Substring(3);
+            }
+
+            var match = System.Text.RegularExpressions.Regex.Match(body, @"^(\d+)([天周年月])$");
+            if (match.Success)
+            {
+                CountdownPrefix.Text = caption;
+                DetailsDate.Text = match.Groups[1].Value;
+                CountdownUnit.Text = match.Groups[2].Value + suffix;
+                CountdownPrefix.Visibility = string.IsNullOrEmpty(caption) ? Visibility.Collapsed : Visibility.Visible;
+                CountdownUnit.Visibility = string.IsNullOrEmpty(CountdownUnit.Text) ? Visibility.Collapsed : Visibility.Visible;
+                return;
+            }
+
+            CountdownPrefix.Text = caption;
+            DetailsDate.Text = body + suffix;
+            CountdownUnit.Text = "";
+            CountdownPrefix.Visibility = string.IsNullOrEmpty(caption) ? Visibility.Collapsed : Visibility.Visible;
+            CountdownUnit.Visibility = Visibility.Collapsed;
+            DetailsDate.FontSize = 48;
+        }
+
+        private static Color SoftTint(Color color, double strength)
+        {
+            strength = Math.Max(0, Math.Min(1, strength));
+            return Color.FromArgb(255,
+                (byte)(255 - (255 - color.R) * strength),
+                (byte)(255 - (255 - color.G) * strength),
+                (byte)(255 - (255 - color.B) * strength));
+        }
+
+        private static double LinearColorChannel(byte value)
+        {
+            double channel = value / 255.0;
+            return channel <= 0.04045 ? channel / 12.92 : Math.Pow((channel + 0.055) / 1.055, 2.4);
+        }
+
+        private static double RelativeLuminance(Color color)
+        {
+            return 0.2126 * LinearColorChannel(color.R)
+                + 0.7152 * LinearColorChannel(color.G)
+                + 0.0722 * LinearColorChannel(color.B);
+        }
+
+        private static Color GetDetailsForeground(LinearGradientBrush background)
+        {
+            // Prefer white as a visual style; reserve dark text for very pale backgrounds.
+            // This is a brightness threshold, not a minimum accessibility contrast ratio.
+            const double paleBackgroundThreshold = 0.6;
+            if (background.GradientStops.Count == 0) return Colors.White;
+            double totalLuminance = 0;
+            foreach (var stop in background.GradientStops)
+            {
+                totalLuminance += RelativeLuminance(stop.Color);
+            }
+            double averageLuminance = totalLuminance / background.GradientStops.Count;
+            return averageLuminance >= paleBackgroundThreshold
+                ? Color.FromArgb(255, 28, 35, 42)
+                : Colors.White;
+        }
+
+        private void ApplyHeroAccent(Color color)
+        {
+            bool dark = ActualTheme == ElementTheme.Dark;
+            // Restore the original theme-colored acrylic-style gradient behind the details page.
+            double s0 = dark ? 0.22 : 0.38;
+            double s1 = dark ? 0.28 : 0.48;
+            double s2 = dark ? 0.36 : 0.60;
+            var gradient = new LinearGradientBrush
+            {
+                StartPoint = new Point(0.1, 0),
+                EndPoint = new Point(0.9, 1)
+            };
+            gradient.GradientStops.Add(new GradientStop { Color = SoftTint(color, s0), Offset = 0.0 });
+            gradient.GradientStops.Add(new GradientStop { Color = SoftTint(color, s1), Offset = 0.45 });
+            gradient.GradientStops.Add(new GradientStop { Color = SoftTint(color, s2), Offset = 1.0 });
+            DetailsGrid.Background = gradient;
+
+            Color primaryColor = GetDetailsForeground(gradient);
+            Color secondaryColor = primaryColor;
+            var primary = new SolidColorBrush(primaryColor);
+            var secondary = new SolidColorBrush(secondaryColor);
+            DetailsEvent.Foreground = primary;
+            DetailsPickedDate.Foreground = secondary;
+            LunarDate.Foreground = secondary;
+            DurationText.Foreground = secondary;
+            CountdownPrefix.Foreground = secondary;
+            DetailsDate.Foreground = primary;
+            CountdownUnit.Foreground = secondary;
+            NotesTitle.Foreground = secondary;
+            TipText.Foreground = primary;
+            HeaderDate.Foreground = secondary;
+            DetailsCommandBar.Foreground = primary;
+            // Keep the status as a quiet text label; the divider lines provide the structure.
+            StatusChipText.Foreground = primary;
+            StatusChip.Background = new SolidColorBrush(Colors.Transparent);
+            ApplyRangeProgressCardSurface(color);
+            MainPage.Current?.ApplyLightImmersiveTitleBar();
+        }
+
+        // Match the schedule-list avatar card: opaque theme surface, not page-gradient wash.
+        private void ApplyRangeProgressCardSurface(Color progressColor)
+        {
+            var resources = Application.Current.Resources;
+            Brush cardBackground = resources["AppCardBackgroundBrush"] as Brush
+                ?? new SolidColorBrush(Colors.White);
+            Brush mediumText = resources["SystemControlForegroundBaseMediumBrush"] as Brush
+                ?? new SolidColorBrush(Colors.Gray);
+            Brush lowTrack = resources["SystemControlForegroundBaseLowBrush"] as Brush
+                ?? new SolidColorBrush(Colors.LightGray);
+
+            ProgressCardBorder.Background = cardBackground;
+            ProgressCardBorder.BorderThickness = new Thickness(0);
+            ProgressCardBorder.BorderBrush = null;
+            // Drop the accent wash so the solid card surface stays legible.
+            ProgressCardTint.Background = new SolidColorBrush(Colors.Transparent);
+            RangeStartLabel.Foreground = mediumText;
+            RangeEndLabel.Foreground = mediumText;
+            RangeTodayLabel.Foreground = mediumText;
+            RangeProgressTrack.Background = lowTrack;
+            RangeProgressFill.Background = new SolidColorBrush(progressColor);
+            RangeProgressThumb.Fill = new SolidColorBrush(progressColor);
+        }
+
+        private void DetailsGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ApplyResponsiveLayout(e.NewSize.Width);
+        }
+
+        private void DetailScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ApplyResponsiveLayout(DetailsGrid.ActualWidth);
+        }
+
+        private void ApplyResponsiveLayout(double width)
+        {
+            bool compact = width < 700;
+            double inset = compact ? 24 : 48;
+            DetailChrome.Margin = new Thickness(inset, 16, inset, 0);
+            DetailChrome.Width = Math.Min(DetailChrome.MaxWidth, Math.Max(0, width - 2 * inset));
+            DetailContent.Margin = new Thickness(inset, 12, inset, 40);
+            HeroTextColumn.Width = new GridLength(compact ? 1 : 3, GridUnitType.Star);
+            HeroCountColumn.Width = compact ? new GridLength(0) : new GridLength(2, GridUnitType.Star);
+            Grid.SetRow(CountdownPanel, compact ? 1 : 0);
+            Grid.SetColumn(CountdownPanel, compact ? 0 : 1);
+            HeroDivider.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
+            HeroInfo.Margin = new Thickness(0, 0, compact ? 0 : 32, 0);
+            StatusChip.HorizontalAlignment = compact ? HorizontalAlignment.Center : HorizontalAlignment.Left;
+            StatusChipText.TextAlignment = compact ? TextAlignment.Center : TextAlignment.Left;
+            DetailsEvent.TextAlignment = compact ? TextAlignment.Center : TextAlignment.Left;
+            DetailsPickedDate.TextAlignment = compact ? TextAlignment.Center : TextAlignment.Left;
+            LunarDate.TextAlignment = compact ? TextAlignment.Center : TextAlignment.Left;
+            DurationText.TextAlignment = compact ? TextAlignment.Center : TextAlignment.Left;
+            bool fillViewport = compact && !hasNotes && ProgressCard.Visibility != Visibility.Visible;
+            HeroInfoRow.Height = fillViewport ? new GridLength(1, GridUnitType.Star) : GridLength.Auto;
+            HeroCountdownRow.Height = fillViewport ? new GridLength(1, GridUnitType.Star) : GridLength.Auto;
+            HeroLayout.Height = fillViewport && DetailScrollViewer.ActualHeight > 0
+                ? Math.Max(300, DetailScrollViewer.ActualHeight - DetailContent.Margin.Top - DetailContent.Margin.Bottom - DetailTopDivider.Height)
+                : double.NaN;
+            CountdownPanel.Margin = compact && !fillViewport ? new Thickness(0, 28, 0, 0) : compact ? new Thickness(0) : new Thickness(32, 0, 0, 0);
+            // Range schedules need more room below the hero for the timeline and notes.
+            // Without notes, push the main body lower so the page does not hug the chrome.
+            bool isRange = sp && App.AllItem != null
+                && ScheduleDateCalculator.IsRange(App.AllItem.ScheduleType, App.AllItem.EndDate);
+            double heroTopMargin = isRange ? (compact ? 28 : 88) : (compact ? 52 : 152);
+            if (!hasNotes)
+                heroTopMargin += compact ? 32 : 64;
+            HeroLayout.Margin = fillViewport ? new Thickness(0) : new Thickness(0, heroTopMargin, 0, compact ? 32 : 0);
+            DetailsEvent.FontSize = compact ? 36 : 48;
+        }
+
+        private void ApplyRangeProgress(string start, string end)
+        {
+            DateTime startDate = Convert.ToDateTime(start);
+            DateTime endDate = Convert.ToDateTime(end);
+            DateTime today = DateTime.Today;
+            int total = Math.Max(1, (endDate.Date - startDate.Date).Days);
+            int elapsed = Math.Max(0, Math.Min(total, (today - startDate.Date).Days));
+            double ratio = (double)elapsed / total;
+            rangeProgressRatio = ratio;
+            RangeStartLabel.Text = startDate.ToString("M月d日") + " · 开始";
+            RangeEndLabel.Text = endDate.ToString("M月d日") + " · 结束";
+            RangeTodayLabel.Text = "今天 · " + today.ToString("M月d日");
+            ProgressCard.Visibility = Visibility.Visible;
+            UpdateRangeProgressLayout();
+        }
+
+        private double rangeProgressRatio;
+        private bool hasNotes;
+
+        private void UpdateRangeProgressLayout()
+        {
+            double width = RangeProgressHost.ActualWidth;
+            if (width <= 0)
+                return;
+            double fill = Math.Max(0, width * rangeProgressRatio);
+            RangeProgressFill.Width = fill;
+            RangeProgressThumb.Margin = new Thickness(Math.Max(0, Math.Min(width - 10, fill - 5)), 0, 0, 0);
+        }
+
+        private void RangeProgressHost_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateRangeProgressLayout();
+        }
+
         public Details()
         {
             this.InitializeComponent();
             Current = this;
+            scheduleSettings = new CountdownSettingsService(localSettings);
+            DetailsDateMode = localSettings.Values["DateMode"]?.ToString() ?? "Day";
+            FestivalDateMode = "Day";
             LoadData();
             SetBorderColor();
             SetThemeColor();
             SetAlertEnabled();
+            ActualThemeChanged += (sender, args) => ApplyHeroAccent(sp ? App.AllItem.BackGroundColor : App.FestivalItem.Str4);
             DataTransferManager.GetForCurrentView().DataRequested += DataTransferManager_DataRequested;
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Details";
-            DetailsDateMode = localSettings.Values["DateMode"].ToString();
-            FestivalDateMode = "Day";
             
         }
 
         private void SetAlertEnabled()
         {
-            var selectedDate = Convert.ToDateTime(DetailsPickedDate.Text);
+            var selectedDate = Convert.ToDateTime(sp ? App.AllItem.Str3 : App.FestivalItem.Str3);
             if (selectedDate > DateTime.Now)
                 AlertButton.IsEnabled = true;
             else
@@ -128,27 +431,63 @@ namespace 倒计时
         private void LoadData()
         {
             sp = MainPage.Current.SelectedPage;
+            ProgressCard.Visibility = Visibility.Collapsed;
+            DurationText.Visibility = Visibility.Collapsed;
+            RangeReminderHint.Visibility = Visibility.Collapsed;
+            DateTime headerDate = Convert.ToDateTime(sp ? App.AllItem.Str3 : App.FestivalItem.Str3);
+            HeaderDate.Text = headerDate.ToString("MM / dd");
+            NotesSection.Visibility = Visibility.Collapsed;
             if (sp == true)
             {
-                DetailsPickedDate.Text = App.AllItem.Str3;
+                bool isRange = ScheduleDateCalculator.IsRange(App.AllItem.ScheduleType, App.AllItem.EndDate);
+                DetailsPickedDate.Text = ScheduleDateCalculator.FormatDates(App.AllItem.Str3, App.AllItem.EndDate, App.AllItem.ScheduleType);
                 DetailsEvent.Text = App.AllItem.Str1;
-                DetailsDate.Text = App.AllItem.Str2;
-                LunarDate.Text = LunarCalendar.GetChineseDateTime(Convert.ToDateTime(App.AllItem.Str3));
-                DetailsGrid.Background = App.AllItem.Str4;
-                DetailsDate.Foreground = new SolidColorBrush(App.AllItem.BackGroundColor);
-                if (localSettings.Values[App.AllItem.Str1 + App.AllItem.Str3] != null)
-                    TipText.Text = localSettings.Values[App.AllItem.Str1 + App.AllItem.Str3].ToString();
+                SetCountdownHero(ScheduleDateCalculator.FormatCountdown(App.AllItem.Str3, App.AllItem.EndDate, App.AllItem.ScheduleType, DetailsDateMode));
+                ApplyHeroAccent(App.AllItem.BackGroundColor);
+                if (isRange)
+                {
+                    StatusChipText.Text = GetScheduleStatus(App.AllItem.Str3, App.AllItem.EndDate, true);
+                    ApplyRangeProgress(App.AllItem.Str3, App.AllItem.EndDate);
+                    DurationText.Text = ScheduleDateCalculator.FormatDuration(App.AllItem.Str3, App.AllItem.EndDate);
+                    DurationText.Visibility = Visibility.Visible;
+                    RangeReminderHint.Visibility = Visibility.Visible;
+                    ToolTipService.SetToolTip(AlertButton, "为范围日程的开始日期设置提醒");
+                }
+                else
+                {
+                    StatusChipText.Text = GetScheduleStatus(App.AllItem.Str3, App.AllItem.EndDate, false);
+                    LunarDate.Text = LunarCalendar.GetChineseDateTime(Convert.ToDateTime(App.AllItem.Str3));
+                }
+                string tip = string.Empty;
+                try
+                {
+                    tip = scheduleSettings.GetNote(
+                        App.AllItem?.RecordId,
+                        App.AllItem?.Str1,
+                        App.AllItem?.Str3) ?? string.Empty;
+                }
+                catch { tip = string.Empty; }
+                
+                TipText.Text = tip ?? string.Empty;
+                bool hasTip = !string.IsNullOrWhiteSpace(tip);
+                hasNotes = hasTip;
+                TipCard.Visibility = hasTip ? Visibility.Visible : Visibility.Collapsed;
+                NotesSection.Visibility = hasTip ? Visibility.Visible : Visibility.Collapsed;
+                NotesTitle.Visibility = hasTip ? Visibility.Visible : Visibility.Collapsed;
             }
             else
             {
                 EditButton.IsEnabled = false;
                 DetailsEvent.Text = App.FestivalItem.Str1;
-                DetailsDate.Text = App.FestivalItem.Str2;
+                SetCountdownHero(App.FestivalItem.Str2);
                 DetailsPickedDate.Text = App.FestivalItem.Str3;
                 LunarDate.Text = LunarCalendar.GetChineseDateTime(Convert.ToDateTime(App.FestivalItem.Str3));
-                DetailsGrid.Background = ColorfulBrush(App.FestivalItem.Str4);
-                DetailsDate.Foreground = new SolidColorBrush(App.FestivalItem.Str4);
+                ApplyHeroAccent(App.FestivalItem.Str4);
+                StatusChipText.Text = "节日";
                 TipText.Text = "节日";
+                hasNotes = false;
+                TipCard.Visibility = Visibility.Collapsed;
+                NotesSection.Visibility = Visibility.Collapsed;
             }
             if (localSettings.Values["Lunar"] != null)
             {
@@ -159,10 +498,15 @@ namespace 倒计时
             }
             else
                 LunarDate.Visibility = Visibility.Visible;
+            if (sp && ScheduleDateCalculator.IsRange(App.AllItem.ScheduleType, App.AllItem.EndDate))
+                LunarDate.Visibility = Visibility.Collapsed;
             dEvent.Text = DetailsEvent.Text;
-            dCalDate.Text = DetailsDate.Text;
+            dCalDate.Text = fullCountdownText;
             dDate.Text = DetailsPickedDate.Text;
+            if (DurationText.Visibility == Visibility.Visible)
+                dDate.Text += "\n" + DurationText.Text;
             RenderPicture.ProfilePicture = All.Current.AllPicture.ProfilePicture;
+            ApplyResponsiveLayout(ActualWidth > 0 ? ActualWidth : 1200);
         }
 
         public static AcrylicBrush ColorfulBrush(Color temp)
@@ -170,10 +514,30 @@ namespace 倒计时
             AcrylicBrush myBrush = new AcrylicBrush();
             myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
             myBrush.TintColor = temp;
-            myBrush.TintColor = temp;
             myBrush.FallbackColor = temp;
-            myBrush.TintOpacity = 0.8;
+            // Slightly denser tint keeps white type readable on light schedule colors.
+            myBrush.TintOpacity = 0.92;
             return myBrush;
+        }
+
+        private static string GetScheduleStatus(string startText, string endText, bool isRange)
+        {
+            DateTime start = Convert.ToDateTime(startText).Date;
+            DateTime today = DateTime.Today;
+            if (isRange)
+            {
+                DateTime end = Convert.ToDateTime(endText).Date;
+                if (today < start) return "倒数日";
+                if (today > end) return "已结束";
+                return "进行中";
+            }
+            return today > start ? "已结束" : "倒数日";
+        }
+
+        /// <summary>Light product chrome; accent follows the schedule color.</summary>
+        private void ApplyDetailsMaterial(Color themeColor)
+        {
+            ApplyHeroAccent(themeColor);
         }
 
 
@@ -181,38 +545,26 @@ namespace 倒计时
         {
             if (MainPage.Current.SelectedPage)
             {
-                DateTime d1 = Convert.ToDateTime(All.Current.str3);
-                DateTime d2 = DateTime.Now;
-                DateTime d3 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d1.Year, d1.Month, d1.Day));
-                DateTime d4 = Convert.ToDateTime(string.Format("{0}/{1}/{2}", d2.Year, d2.Month, d2.Day));
                 switch (DetailsDateMode)
                 {
                     case "Day":
-                        DetailsDate.Text = All.Current.ConvertToWeek(All.Current.str3);
                         DetailsDateMode = "Week";
                         PopupNotice popupNotice0 = new PopupNotice("周数模式");
                         popupNotice0.ShowAPopup();
                         break;
                     case "Week":
-                        if (d4 > d3)
-                            DetailsDate.Text = "已过" + App.Term(d3, d4);
-                        else
-                        {
-                            if (d4 < d3)
-                                DetailsDate.Text = "还有" + App.Term(d4, d3);
-                        }
                         DetailsDateMode = "Year";
                         PopupNotice popupNotice1 = new PopupNotice("年数模式");
                         popupNotice1.ShowAPopup();
                         break;
                     case "Year":
-                        DetailsDate.Text = CustomData.Calculator(All.Current.str3);
                         DetailsDateMode = "Day";
                         PopupNotice popupNotice2 = new PopupNotice("天数模式");
                         popupNotice2.ShowAPopup();
                         break;
                 }
-                dCalDate.Text = DetailsDate.Text;
+                SetCountdownHero(ScheduleDateCalculator.FormatCountdown(App.AllItem.Str3, App.AllItem.EndDate, App.AllItem.ScheduleType, DetailsDateMode));
+                dCalDate.Text = fullCountdownText;
             }
             else
             {
@@ -224,49 +576,37 @@ namespace 倒计时
                 switch (FestivalDateMode)
                 {
                     case "Day":
-                        DetailsDate.Text = All.Current.ConvertToWeek(Festival.Current.str3);
+                        SetCountdownHero(All.Current.ConvertToWeek(Festival.Current.str3));
                         FestivalDateMode = "Week";
                         PopupNotice popupNotice0 = new PopupNotice("周数模式");
                         popupNotice0.ShowAPopup();
                         break;
                     case "Week":
                         if (d4 > d3)
-                            DetailsDate.Text = "已过" + App.Term(d3, d4);
+                            SetCountdownHero("已过" + App.Term(d3, d4));
                         else
                         {
                             if (d4 < d3)
-                                DetailsDate.Text = "还有" + App.Term(d4, d3);
+                                SetCountdownHero("还有" + App.Term(d4, d3));
                         }
                         FestivalDateMode = "Year";
                         PopupNotice popupNotice1 = new PopupNotice("年数模式");
                         popupNotice1.ShowAPopup();
                         break;
                     case "Year":
-                        DetailsDate.Text = CustomData.Calculator(Festival.Current.str3);
+                        SetCountdownHero(CustomData.Calculator(Festival.Current.str3));
                         FestivalDateMode = "Day";
                         PopupNotice popupNotice2 = new PopupNotice("天数模式");
                         popupNotice2.ShowAPopup();
                         break;
                 }
-                dCalDate.Text = DetailsDate.Text;
+                dCalDate.Text = fullCountdownText;
             }
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(EditDetails),null,new DrillInNavigationTransitionInfo());
-        }
-
-        private void DetailsDate_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
-            DetailsDate.FontSize = 52;
-        }
-
-        private void DetailsDate_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
-            DetailsDate.FontSize = 48;
         }
 
         private async void ShareButton_Click(object sender, RoutedEventArgs e)
@@ -427,94 +767,40 @@ namespace 倒计时
 
         private void AlertToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            //ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            var AlertName = "Alert" + DetailsEvent.Text;
             if (AlertToggleSwitch!=null)
-            {
-                if (AlertToggleSwitch.IsOn == true)
-                {
-                    localSettings.Values[AlertName] = "1";
+                SetAlert("", AlertToggleSwitch.IsOn ? "1" : "0");
+        }
 
-                }
-                else
-                {
-                    localSettings.Values[AlertName] = "0";
-                }
-            }
-            //toggleSwitch.Toggled += AlertToggleSwitch_Toggled;
+        private string ScheduleId => sp && App.AllItem != null ? App.AllItem.RecordId : null;
+
+        private string GetAlert(string suffix)
+        {
+            return scheduleSettings.GetAlert(ScheduleId, DetailsEvent.Text, suffix);
+        }
+
+        private void SetAlert(string suffix, string value)
+        {
+            scheduleSettings.SetAlert(ScheduleId, DetailsEvent.Text, suffix, value);
         }
 
         private async void AlertButton_Click(object sender, RoutedEventArgs e)
         {
-            var AlertName = "Alert" + DetailsEvent.Text;
-            if (localSettings.Values[AlertName] != null)
+            AlertToggleSwitch.IsOn = GetAlert("") == "1";
+            AlertToggleSwitch2.IsOn = GetAlert("1") == "1";
+            AlertToggleSwitch3.IsOn = GetAlert("3") == "1";
+            string personal = GetAlert("Personal");
+            if (personal != "0")
             {
-                if (localSettings.Values[AlertName].ToString() == "1")
-                    AlertToggleSwitch.IsOn = true;
-                else
-                    AlertToggleSwitch.IsOn = false;
+                AlertToggleSwitch4.IsOn = true;
+                DayComboBox.IsEnabled = true;
+                DayComboBox.SelectedIndex = personal == "2" ? 0 : Math.Max(0, Convert.ToInt32(personal) - 3);
             }
             else
             {
-                AlertToggleSwitch.IsOn = false;
-                localSettings.Values[AlertName] = "0";
-            }
-            var AlertName2 = "Alert" + DetailsEvent.Text + 1;
-            if (localSettings.Values[AlertName2] != null)
-            {
-                if (localSettings.Values[AlertName2].ToString() == "1")
-                    AlertToggleSwitch2.IsOn = true;
-                else
-                    AlertToggleSwitch2.IsOn = false;
-            }
-            else
-            {
-                AlertToggleSwitch2.IsOn = false;
-                localSettings.Values[AlertName2] = "0";
-            }
-            var AlertName3 = "Alert" + DetailsEvent.Text + 3;
-            if (localSettings.Values[AlertName3] != null)
-            {
-                if (localSettings.Values[AlertName3].ToString() == "1")
-                    AlertToggleSwitch3.IsOn = true;
-                else
-                    AlertToggleSwitch3.IsOn = false;
-            }
-            else
-            {
-                AlertToggleSwitch3.IsOn = false;
-                localSettings.Values[AlertName3] = "0";
-            }
-            var AlertName4 = "Alert" + DetailsEvent.Text + "Personal";
-            if (localSettings.Values[AlertName4] != null)
-            {
-                if (localSettings.Values[AlertName4].ToString() != "0")
-                {
-                    AlertToggleSwitch4.IsOn = true;
-                    DayComboBox.IsEnabled = true;
-                    var indexValue = localSettings.Values[AlertName4].ToString();
-                    if (indexValue == "2")
-                        DayComboBox.SelectedIndex = 0;
-                    else
-                    {
-                        DayComboBox.SelectedIndex = Convert.ToInt32(indexValue) - 3;
-                    }
-                }
-
-                else
-                {
-                    AlertToggleSwitch4.IsOn = false;
-                    DayComboBox.IsEnabled = false;
-                }
-            }
-            else
+                AlertToggleSwitch4.IsOn = false;
                 DayComboBox.IsEnabled = false;
+            }
             await AlertContentDialog.ShowAsync();
-        }
-
-        private void CloseContentDialogBtn_Click(object sender, RoutedEventArgs e)
-        {
-            AlertContentDialog.Hide();
         }
 
         private void ToastTestButton_Click(object sender, RoutedEventArgs e)
@@ -565,51 +851,27 @@ namespace 倒计时
 
         private void AlertToggleSwitch2_Toggled(object sender, RoutedEventArgs e)
         {
-            var AlertName = "Alert" + DetailsEvent.Text + 1;
             if (AlertToggleSwitch2 != null)
-            {
-                if (AlertToggleSwitch2.IsOn == true)
-                {
-                    localSettings.Values[AlertName] = "1";
-                }
-                else
-                {
-                    localSettings.Values[AlertName] = "0";
-                }
-            }
+                SetAlert("1", AlertToggleSwitch2.IsOn ? "1" : "0");
         }
 
         private void AlertToggleSwitch3_Toggled(object sender, RoutedEventArgs e)
         {
-            var AlertName = "Alert" + DetailsEvent.Text + 3;
             if (AlertToggleSwitch3 != null)
-            {
-                if (AlertToggleSwitch3.IsOn == true)
-                {
-                    localSettings.Values[AlertName] = "1";
-
-                }
-                else
-                {
-                    localSettings.Values[AlertName] = "0";
-                }
-            }
+                SetAlert("3", AlertToggleSwitch3.IsOn ? "1" : "0");
         }
 
         private void AlertToggleSwitch4_Toggled(object sender, RoutedEventArgs e)
         {
-            
-            var AlertName = "Alert" + DetailsEvent.Text + "Personal";
             if (AlertToggleSwitch4 != null)
             {
                 if (AlertToggleSwitch4.IsOn == true)
                 {
-                    //localSettings.Values[AlertName] = dayNum;
                     DayComboBox.IsEnabled = true;
                 }
                 else
                 {
-                    localSettings.Values[AlertName] = "0";
+                    SetAlert("Personal", "0");
                     DayComboBox.IsEnabled = false;
                 }
             }
@@ -627,8 +889,7 @@ namespace 倒计时
             dayNum = e.AddedItems[0].ToString();
             if (AlertToggleSwitch4 != null && AlertToggleSwitch4.IsOn == true)
             {
-                var AlertName = "Alert" + DetailsEvent.Text + "Personal";
-                localSettings.Values[AlertName] = dayNum;
+                SetAlert("Personal", dayNum);
             }
         }
     }

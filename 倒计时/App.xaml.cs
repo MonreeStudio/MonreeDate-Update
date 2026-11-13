@@ -96,6 +96,132 @@ namespace 倒计时
             }
         }
         
+        /// <summary>Update the code-owned brush shared by app styles and control states.</summary>
+        public static Color ApplySavedAccentColor()
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            if (localSettings.Values["ThemeColor"] == null)
+                localSettings.Values["ThemeColor"] = "CornflowerBlue";
+            var color = Colors.CornflowerBlue;
+            switch (localSettings.Values["ThemeColor"].ToString())
+            {
+                case "CornflowerBlue":
+                    color = Colors.CornflowerBlue;
+                    break;
+                case "DeepSkyBlue":
+                    color = Color.FromArgb(255, 2, 136, 235);
+                    break;
+                case "Orange":
+                    color = Color.FromArgb(255, 229, 103, 44);
+                    break;
+                case "Crimson":
+                    color = Colors.Crimson;
+                    break;
+                case "Gray":
+                    color = Color.FromArgb(255, 73, 92, 105);
+                    break;
+                case "Purple":
+                    color = Color.FromArgb(255, 119, 25, 171);
+                    break;
+                case "Pink":
+                    color = Color.FromArgb(255, 239, 130, 160);
+                    break;
+                case "Green":
+                    color = Color.FromArgb(255, 124, 178, 56);
+                    break;
+                case "DeepGreen":
+                    color = Color.FromArgb(255, 8, 128, 126);
+                    break;
+                case "Coffee":
+                    color = Color.FromArgb(255, 183, 133, 108);
+                    break;
+                default:
+                    break;
+            }
+
+            // Keep a direct reference: do not resolve a deferred XAML resource here.
+            ((App)Current).accentBrush.Color = color;
+            return color;
+        }
+
+        private SolidColorBrush accentBrush = new SolidColorBrush(Colors.CornflowerBlue);
+        private bool accentResourcesRegistered;
+
+        private void InitializeAccentResources()
+        {
+            // UWP loads Application.Resources after the App constructor returns.
+            // Run from activation callbacks, before constructing any page, not
+            // immediately after the generated InitializeComponent() in App().
+            if (accentResourcesRegistered)
+            {
+                ApplySavedAccentColor();
+                return;
+            }
+
+            // Keep the original XAML brush: styles may already hold a reference
+            // to it. Replacing that entry leaves those buttons on the old color.
+            if (Resources["AppAccentBrush"] is SolidColorBrush xamlAccent)
+                accentBrush = xamlAccent;
+            ApplySavedAccentColor();
+
+            RegisterAccentResources();
+            accentResourcesRegistered = true;
+        }
+
+        private void RegisterAccentResources()
+        {
+            // All entries point to the same mutable, code-created instance. Existing
+            // controls update when Color changes, including hover and selected states.
+            var keys = new[]
+            {
+                "AppAccentBrush",
+                "ThemeColor",
+                "AccentButtonBackground",
+                "AccentButtonBackgroundPointerOver",
+                "AccentButtonBackgroundPressed",
+                "ButtonForeground",
+                "ButtonForegroundPointerOver",
+                "ButtonForegroundPressed",
+                "AppBarButtonForeground",
+                "AppBarButtonForegroundPointerOver",
+                "AppBarButtonForegroundPressed",
+                "MenuFlyoutItemForeground",
+                "MenuFlyoutItemForegroundPointerOver",
+                "MenuFlyoutItemForegroundPressed",
+                "NavigationViewItemForeground",
+                "NavigationViewItemForegroundPointerOver",
+                "NavigationViewItemForegroundPressed",
+                "NavigationViewItemForegroundSelected",
+                "NavigationViewItemForegroundSelectedPointerOver",
+                "NavigationViewItemForegroundSelectedPressed",
+                "NavigationViewItemHeaderForeground",
+                "NavigationViewSelectionIndicatorForeground",
+                "CalendarDatePickerForeground",
+                "CalendarDatePickerForegroundPointerOver",
+                "CalendarDatePickerForegroundPressed",
+                "CalendarDatePickerHeaderForeground",
+                "ComboBoxHeaderForeground",
+                "TextControlHeaderForeground",
+                "ToggleButtonBackgroundChecked",
+                "ToggleButtonBackgroundCheckedPointerOver",
+                "ToggleButtonBackgroundCheckedPressed",
+                "HyperlinkButtonForeground",
+                "HyperlinkButtonForegroundPointerOver",
+                "HyperlinkButtonForegroundPressed",
+                "ToggleSwitchFillOn",
+                "ToggleSwitchFillOnPointerOver",
+                "ToggleSwitchFillOnPressed",
+                "SystemControlHighlightAccentBrush",
+                "SystemControlForegroundAccentBrush",
+                "SystemControlBackgroundAccentBrush",
+                "AccentFillColorDefaultBrush",
+                "AccentFillColorSecondaryBrush",
+                "AccentFillColorTertiaryBrush",
+            };
+            foreach (var key in keys)
+                Resources[key] = accentBrush;
+        }
+
         public App()
         {
             this.InitializeComponent();
@@ -114,6 +240,7 @@ namespace 倒计时
 
         protected override void OnActivated(IActivatedEventArgs e)
         {
+            InitializeAccentResources();
             Frame root = Window.Current.Content as Frame;
             if (root == null)
             {
@@ -176,43 +303,11 @@ namespace 倒计时
             var num = CoreApplication.Views.Count();
             //if (localSettings.Values["newViewId"] != null)
             //    ApplicationViewSwitcher.SwitchAsync(Convert.ToInt32(localSettings.Values["newViewId"])).Close();
-            if (localSettings.Values["ItemCount"] == null)
-                localSettings.Values["ItemCount"] = 0;
-            int count = (int)localSettings.Values["ItemCount"];
-            List<CountdownRecord> datalist = new List<CountdownRecord>();
-            var allData = countdownRepository.GetAll();
-            switch (count)
-            {
-                case 1:
-                    string a1 = localSettings.Values["DesktopKey0"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == a1)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 2:
-                    string b1 = localSettings.Values["DesktopKey0"].ToString();
-                    string b2 = localSettings.Values["DesktopKey1"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 3:
-                    string c1 = localSettings.Values["DesktopKey0"].ToString();
-                    string c2 = localSettings.Values["DesktopKey1"].ToString();
-                    string c3 = localSettings.Values["DesktopKey2"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
-                            datalist.Add(item);
-                    }
-                    break;
-                default:
-                    return;
-            }
+            var scheduleService = new CountdownService(countdownRepository,
+                new CountdownSettingsService(localSettings));
+            List<CountdownRecord> datalist = scheduleService.GetDesktopSchedules();
+            if (datalist.Count == 0)
+                return;
             //var num = CoreApplication.Views.Count();
             //coreWindow.Activate();
             //CoreApplication.GetCurrentView();
@@ -228,7 +323,21 @@ namespace 倒计时
                 localSettings.Values["newViewId"] = newViewId;
             });
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                try
+                {
+                    var view = ApplicationView.GetForCurrentView();
+                    var prop = typeof(ApplicationView).GetProperty("IsIconVisibleInTaskBar")
+                        ?? typeof(ApplicationView).GetProperty("IsIconVisibleOnTaskBar");
+                    if (prop != null && prop.CanWrite)
+                        prop.SetValue(view, false);
+                }
+                catch { }
+            });
             localSettings.Values["DesktopPin"] = false;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(640, 480));
         }
 
         public static string Term(DateTime b, DateTime e)
@@ -253,6 +362,7 @@ namespace 倒计时
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            InitializeAccentResources();
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，

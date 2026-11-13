@@ -11,6 +11,8 @@ namespace BackgroundTasks
         public string Schedule_name { get; set; }
         public string CalculatedDate { get; set; }
         public string Date { get; set; }
+        public string ScheduleType { get; set; } = "Point";
+        public string EndDate { get; set; }
         public string BgColor { get; set; }
         public double TintOpacity { get; set; }
         public string IsTop { get; set; }
@@ -23,14 +25,20 @@ namespace BackgroundTasks
             string backgroundColor,
             double tintOpacity,
             string isTop,
-            string addTime)
+            string addTime,
+            string scheduleType = "Point",
+            string endDate = null)
         {
+            string normalizedType = string.Equals(scheduleType, "Range", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(endDate) ? "Range" : "Point";
             return new CountdownRecord
             {
                 Id = Guid.NewGuid().ToString(),
                 Schedule_name = scheduleName,
                 CalculatedDate = calculatedDate,
                 Date = date,
+                ScheduleType = normalizedType,
+                EndDate = normalizedType == "Point" || string.IsNullOrWhiteSpace(endDate) ? date : endDate,
                 BgColor = backgroundColor,
                 TintOpacity = tintOpacity,
                 IsTop = isTop,
@@ -46,6 +54,8 @@ namespace BackgroundTasks
         public string Schedule_name { get; set; }
         public string CalculatedDate { get; set; }
         public string Date { get; set; }
+        public string ScheduleType { get; set; }
+        public string EndDate { get; set; }
         public string BgColor { get; set; }
         public double TintOpacity { get; set; }
         public string IsTop { get; set; }
@@ -60,7 +70,9 @@ namespace BackgroundTasks
                 BgColor,
                 TintOpacity,
                 IsTop,
-                AddTime);
+                AddTime,
+                ScheduleType,
+                EndDate);
         }
     }
 
@@ -71,6 +83,8 @@ namespace BackgroundTasks
         public string Schedule_name { get; set; }
         public string CalculatedDate { get; set; }
         public string Date { get; set; }
+        public string ScheduleType { get; set; }
+        public string EndDate { get; set; }
         public string BgColor { get; set; }
         public double TintOpacity { get; set; }
         public string IsTop { get; set; }
@@ -85,7 +99,9 @@ namespace BackgroundTasks
                 BgColor,
                 TintOpacity,
                 IsTop,
-                AddTime);
+                AddTime,
+                ScheduleType,
+                EndDate);
         }
     }
 }

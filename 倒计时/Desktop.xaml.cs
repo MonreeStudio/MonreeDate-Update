@@ -40,6 +40,8 @@ namespace 倒计时
         public DesktopEventsViewModel DesViewModel = new DesktopEventsViewModel();
         public DesktopEventsViewModel DesViewModel2 = new DesktopEventsViewModel();
         public CountdownRepository CountdownRepository { get; private set; }
+        internal CountdownService ScheduleService { get; private set; }
+        private CountdownSettingsService ScheduleSettings { get; set; }
         public static Desktop Current;
         private string color;
         List<string> list;
@@ -48,6 +50,8 @@ namespace 倒计时
             this.InitializeComponent();
             Current = this;
             CountdownRepository = new CountdownRepository();
+            ScheduleSettings = new CountdownSettingsService(localSettings);
+            ScheduleService = new CountdownService(CountdownRepository, ScheduleSettings);
             list = new List<string>();
             MainPage.Current.MyNav.IsBackEnabled = true;
             MainPage.Current.SelectedPageItem = "Calculator";
@@ -98,7 +102,7 @@ namespace 倒计时
         
         private void InitialData()
         {
-            if (localSettings.Values["Colorful"] != null && localSettings.Values["Colorful"].ToString() == "1")
+            if (localSettings.Values["Colorful"] != null && localSettings.Values["Colorful"].ToString() == "0")
             {
                 ColorfulSwitch.IsOn = true;
                 ColorfulButton.IsEnabled = true;
@@ -114,10 +118,10 @@ namespace 倒计时
                     ColorfulEllipse.Visibility = Visibility.Collapsed;
                 }
             }
-            if (localSettings.Values["Transparent"] != null && localSettings.Values["Transparent"].ToString() == "1")
-                TransparentSwitch.IsOn = true;
-            else
+            if (localSettings.Values["Transparent"] != null && localSettings.Values["Transparent"].ToString() == "0")
                 TransparentSwitch.IsOn = false;
+            else
+                TransparentSwitch.IsOn = true;
             if (localSettings.Values["CornerName"] == null)
             {
                 CornerNameTextBox.Text = "夏日";
@@ -127,20 +131,21 @@ namespace 倒计时
                 CornerNameTextBox.Text = localSettings.Values["CornerName"].ToString();
             }
             int num = 0;
-            List<CountdownRecord> datalist0 = CountdownRepository.GetAll();
+            List<CountdownRecord> datalist0 = ScheduleService.GetAll();
+            var selectedIds = ScheduleSettings.GetDesktopScheduleIds(
+                datalist0.Select(item => new ScheduleIdentity(item.Id, item.Schedule_name)));
             foreach(var item in datalist0)
             {
-                var pinToDesktopFlag = "DesktopFlag" + item.Schedule_name;
-                if (localSettings.Values[pinToDesktopFlag] != null && localSettings.Values[pinToDesktopFlag].ToString() == "1")
+                if (selectedIds.Contains(item.Id))
                 {
-                    list.Add(item.Schedule_name);
-                    DesViewModel2.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name });
+                    list.Add(item.Id);
+                    DesViewModel2.DesktopDatas.Add(new DesktopEvents() { EventId = item.Id, EventName = item.Schedule_name });
                     num++;
                     SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + num.ToString() + "/3";
                 }
                 else
                 {
-                    DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.Schedule_name });
+                    DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventId = item.Id, EventName = item.Schedule_name });
                 }
             }
         }
@@ -158,41 +163,24 @@ namespace 倒计时
 
         private void TestButton2_Click(object sender, RoutedEventArgs e)
         {
-            List<CountdownRecord> datalist0 = CountdownRepository.GetAll();
-            foreach (var _item in datalist0)
-            {
-                var pinToDesktopFlag = "DesktopFlag" + _item.Schedule_name;
-                if (localSettings.Values[pinToDesktopFlag] != null && localSettings.Values[pinToDesktopFlag].ToString() == "1")
-                {
-                    localSettings.Values[pinToDesktopFlag] = "0";
-                }
-            }
             DesViewModel.DesktopDatas.Clear();
             DesViewModel2.DesktopDatas.Clear();
-            SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
+            SelectedCountTextBlock.Text = "最多选取三个日程 · " + DesktopList2.Items.Count + "/3";
             InitialData();
         }
 
         private async void TestButton1_Click(object sender, RoutedEventArgs e)
         {
             list.Clear();
-            List<CountdownRecord> datalist0 = CountdownRepository.GetAll();
-            foreach (var _item in datalist0)
+            // Use the "已选择列表" as the source of truth (DesktopFlag was inverted vs. this check).
+            foreach (var selected in DesViewModel2.DesktopDatas)
             {
-                var pinToDesktopFlag = "DesktopFlag" + _item.Schedule_name;
-                if (localSettings.Values[pinToDesktopFlag] != null && localSettings.Values[pinToDesktopFlag].ToString() == "1")
-                    list.Add(_item.Schedule_name);
+                if (!string.IsNullOrEmpty(selected.EventName))
+                    list.Add(selected.EventId);
             }
-            localSettings.Values["ItemCount"] = list.Count;
             if (list.Count > 0)
             {
-                for(int i = 0; i < list.Count; i++)
-                {
-                    var desktopItemKey = "DesktopKey" + i;
-                    var pinToDesktopFlag = "DesktopFlag" + list[i];
-                    localSettings.Values[desktopItemKey] = list[i];
-                    localSettings.Values[pinToDesktopFlag] = "1";
-                }
+                ScheduleSettings.SetDesktopScheduleIds(list);
                 MainPage.Current.CreateTool();
             }
             else
@@ -211,11 +199,9 @@ namespace 倒计时
             if (DesktopList2.Items.Count() < 3)
             {
                 //list.Add(item.EventName);
-                var pinToDesktopFlag = "DesktopFlag" + item.EventName;
-                localSettings.Values[pinToDesktopFlag] = "1";
-                DesViewModel2.DesktopDatas.Add(new DesktopEvents() { EventName = item.EventName });
+                DesViewModel2.DesktopDatas.Add(new DesktopEvents() { EventId = item.EventId, EventName = item.EventName });
                 DesViewModel.DesktopDatas.Remove(item);
-                SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
+                SelectedCountTextBlock.Text = "最多选取三个日程 · " + DesktopList2.Items.Count + "/3";
             }
             //var count = DesktopList.SelectedItems.Count;
             //var item = (DesktopEvents)e.ClickedItem;
@@ -238,11 +224,9 @@ namespace 倒计时
         {
             var item = (DesktopEvents)e.ClickedItem;
             //list.Remove(item.EventName);
-            var pinToDesktopFlag = "DesktopFlag" + item.EventName;
-            localSettings.Values[pinToDesktopFlag] = "0";
-            DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventName = item.EventName });
+            DesViewModel.DesktopDatas.Add(new DesktopEvents() { EventId = item.EventId, EventName = item.EventName });
             DesViewModel2.DesktopDatas.Remove(item);
-            SelectedCountTextBlock.Text = "Tip：最多选取三个日程  " + DesktopList2.Items.Count + "/3";
+            SelectedCountTextBlock.Text = "最多选取三个日程 · " + DesktopList2.Items.Count + "/3";
         }
 
         private void EditCornerNameButton_Click(object sender, RoutedEventArgs e)

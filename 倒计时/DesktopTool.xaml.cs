@@ -38,6 +38,8 @@ namespace 倒计时
     public sealed partial class DesktopTool : Page
     {
         private CountdownRepository countdownRepository;
+        private CountdownService scheduleService;
+        private CountdownSettingsService scheduleSettings;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         List<CountdownRecord> list;
         DispatcherTimer timer;
@@ -53,6 +55,8 @@ namespace 倒计时
             Current = this;
             list = new List<CountdownRecord>();
             countdownRepository = new CountdownRepository();
+            scheduleSettings = new CountdownSettingsService(localSettings);
+            scheduleService = new CountdownService(countdownRepository, scheduleSettings);
             timer = new DispatcherTimer();
             timer2 = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 10, 0);
@@ -64,26 +68,28 @@ namespace 倒计时
             //timer2.Start();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var title = ApplicationView.GetForCurrentView().TitleBar;
-            title.BackgroundColor = Colors.SkyBlue;
+            title.BackgroundColor = Colors.Transparent;
+            title.InactiveBackgroundColor = Colors.Transparent;
             title.ForegroundColor = Colors.Transparent;
             title.ButtonBackgroundColor = title.ButtonInactiveBackgroundColor = Colors.Transparent;
-            title.ButtonHoverBackgroundColor = Colors.Gray;
-            title.ButtonPressedBackgroundColor = Colors.Gray;
-            title.ButtonForegroundColor = title.ButtonHoverForegroundColor;
+            title.ButtonHoverBackgroundColor = Color.FromArgb(26, 0, 0, 0);
+            title.ButtonPressedBackgroundColor = Color.FromArgb(51, 0, 0, 0);
+            title.ButtonForegroundColor = title.ButtonHoverForegroundColor = title.ButtonPressedForegroundColor = null;
             InitializeFrostedGlass(rootGrid, 0);
+            HideFromTaskbar();
             localSettings.Values["FirstlyStart"] = "1";
             localSettings.Values["HasOpenTool"] = "1";
             LoadData();
             if (localSettings.Values["Pip"] == null)
                 localSettings.Values["Pip"] = "1";
-            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default 
-                && 
+            if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default
+                &&
                 localSettings.Values["Pip"].ToString() == "1")
             {
                 Pip();
             }
-            //Pip();
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            // Do not touch ApplicationView.PreferredLaunch* here — those are process-wide
+            // and would change the next main-window launch size.
         }
 
         private async void ToCompactOverlay()
@@ -91,8 +97,6 @@ namespace 倒计时
             var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
             preferences.CustomSize = new Size(330, viewHeight);
             await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences);
-            ApplicationView.PreferredLaunchViewSize = new Size(3000, 3000);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         private void Timer_Tick(object sender, object e)
@@ -151,89 +155,23 @@ namespace 倒计时
                 SetTopBtn.Visibility = Visibility.Visible;
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
-            int count = (int)localSettings.Values["ItemCount"];
-            List<CountdownRecord> datalist = new List<CountdownRecord>();
-            var allData = countdownRepository.GetAllOrderByDate();
-            switch (count)
+            int count = localSettings.Values["ItemCount"] is int
+                ? Math.Max(1, Math.Min(3, (int)localSettings.Values["ItemCount"]))
+                : 1;
+            viewHeight = 62 + count * 124;
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
+            ToolViewModel.ToolDatas.Clear();
+            var allData = scheduleService.GetAllOrderByDate();
+            var selectedIds = scheduleSettings.GetDesktopScheduleIds(
+                allData.Select(item => new ScheduleIdentity(item.Id, item.Schedule_name)));
+            foreach (var item in allData.Where(record => selectedIds.Contains(record.Id)).Take(count))
             {
-                case 1:
-                    viewHeight = 110;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    string a1 = localSettings.Values["DesktopKey0"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == a1)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 2:
-                    viewHeight = 230;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    string b1 = localSettings.Values["DesktopKey0"].ToString();
-                    string b2 = localSettings.Values["DesktopKey1"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == b1 || item.Schedule_name == b2)
-                            datalist.Add(item);
-                    }
-                    break;
-                case 3:
-                    viewHeight = 315;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    string c1 = localSettings.Values["DesktopKey0"].ToString();
-                    string c2 = localSettings.Values["DesktopKey1"].ToString();
-                    string c3 = localSettings.Values["DesktopKey2"].ToString();
-                    foreach (var item in allData)
-                    {
-                        if (item.Schedule_name == c1 || item.Schedule_name == c2 || item.Schedule_name == c3)
-                            datalist.Add(item);
-                    }
-                    break;
-                default:
-                    viewHeight = 110;
-                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(330, viewHeight));
-                    break;
-            }
-            switch (count)
-            {
-                case 1:
-                    List<CountdownRecord> a1 = countdownRepository.GetByName(datalist[0].Schedule_name);
-                    foreach (var item in a1)
-                    {
-                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                    }
-                    break;
-                case 2:
-                    List<CountdownRecord> b1 = countdownRepository.GetByName(datalist[0].Schedule_name);
-                    foreach (var item in b1)
-                    {
-                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                    }
-                    List<CountdownRecord> b2 = countdownRepository.GetByName(datalist[1].Schedule_name);
-                    foreach (var item in b2)
-                    {
-                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                    }
-                    break;
-                case 3:
-                    List<CountdownRecord> c1 = countdownRepository.GetByName(datalist[0].Schedule_name);
-                    foreach (var item in c1)
-                    {
-                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                    }
-                    List<CountdownRecord> c2 = countdownRepository.GetByName(datalist[1].Schedule_name);
-                    foreach (var item in c2)
-                    {
-                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                    }
-                    List<CountdownRecord> c3 = countdownRepository.GetByName(datalist[2].Schedule_name);
-                    foreach (var item in c3)
-                    {
-                        ToolViewModel.ToolDatas.Add(new ToolData { ScheduleName = item.Schedule_name, Date = item.Date, CalDate = Calculator(item.Date) });
-                    }
-                    break;
-                default:
-                    break;
+                ToolViewModel.ToolDatas.Add(new ToolData
+                {
+                    ScheduleName = item.Schedule_name,
+                    Date = ScheduleDateCalculator.FormatDates(item.Date, item.EndDate, item.ScheduleType),
+                    CalDate = ScheduleDateCalculator.FormatCountdown(item.Date, item.EndDate, item.ScheduleType)
+                });
             }
         }
 
@@ -438,12 +376,6 @@ namespace 倒计时
                 SetTopBtn.Visibility = Visibility.Visible;
                 DeSetTopBtn.Visibility = Visibility.Collapsed;
             }
-            //ApplicationView.PreferredLaunchViewSize = new Size(3000, 3000);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-
-            ////返回默认模式
-            //var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
-            //await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, preferences);
         }
 
         public async void Unpip()
@@ -456,7 +388,6 @@ namespace 倒计时
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             Frame.Navigate(typeof(DesktopTool), null, new SuppressNavigationTransitionInfo());
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             //timer = new DispatcherTimer();
             //timer.Interval = new TimeSpan(0, 0, 1);
@@ -496,8 +427,25 @@ namespace 倒计时
             await CoreApplication.RequestRestartAsync(string.Empty);
         }
 
+
+        private void HideFromTaskbar()
+        {
+            // WinRT only: hide this secondary view from the taskbar after the window exists.
+            try
+            {
+                var view = ApplicationView.GetForCurrentView();
+                var prop = typeof(ApplicationView).GetProperty("IsIconVisibleInTaskBar")
+                    ?? typeof(ApplicationView).GetProperty("IsIconVisibleOnTaskBar");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(view, false);
+                }
+            }
+            catch { }
+        }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            HideFromTaskbar();
             var gridList = MyFindListBoxChildOfType<Grid>(DesktopListView);
             foreach(var item in gridList)
             {

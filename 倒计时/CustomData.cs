@@ -17,10 +17,35 @@ namespace 倒计时
         public string Str1 { get; set; }
         public string Str2 { get; set; }
         public string Str3 { get; set; }
+        public string RecordId { get; set; }
+        public string ScheduleType { get; set; }
+        public string EndDate { get; set; }
+        public string DateText => ScheduleDateCalculator.FormatDates(Str3, EndDate, ScheduleType);
 
         public AcrylicBrush Str4 { get; set; }
         public int ItemWidth { get; set; }
         public Color BackGroundColor { get; set; }
+        internal SchedulePresentation Presentation { get; set; }
+        public bool IsPinned { get; set; }
+        public string GroupKey => Presentation?.GroupKey ?? "Upcoming";
+        public string StatusText => Presentation?.Status ?? "";
+        public string CountdownPrefix => Presentation?.Prefix ?? "";
+        public string CountdownValue => Presentation?.Value ?? Str2;
+        public string CountdownUnit => Presentation?.Unit ?? "";
+        public double CountdownFontSize => CountdownValue.Length > 6 ? 24 : CountdownValue.Length > 3 ? 30 : 52;
+        public double RangeProgress => Presentation?.Progress ?? 0;
+        public string StartLabel => Presentation?.StartLabel ?? "";
+        public string EndLabel => Presentation?.EndLabel ?? "";
+        public string TodayLabel => Presentation?.TodayLabel ?? "";
+        public Windows.UI.Xaml.Visibility RangeVisibility => Presentation?.IsRange == true
+            ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+        public Windows.UI.Xaml.Visibility PinVisibility => IsPinned
+            ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+        public Brush MarkerBrush => new SolidColorBrush(BackGroundColor);
+        // Colored schedule cards retain their own acrylic material, including
+        // when the surrounding application uses Mica.
+        public Brush CardBackground => Str4;
+        public Brush CardForeground => new SolidColorBrush(Colors.White);
 
         public CustomData()
         {

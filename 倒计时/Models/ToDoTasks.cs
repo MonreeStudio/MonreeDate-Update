@@ -1,7 +1,8 @@
-﻿using SQLite.Net.Attributes;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,10 @@ using Windows.UI.Xaml.Media;
 
 namespace 倒计时.Models
 {
-    public class ToDoTasks
+    public class ToDoTasks: INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [PrimaryKey]
         public string TaskId { get; set; }
         public string Name { get; set; }
@@ -30,6 +33,19 @@ namespace 倒计时.Models
         public Visibility DateVisibility { get; set; }
 
         public Visibility RemarkVisibility { get; set; }
+
+        private Visibility separatorVisibility = Visibility.Visible;
+        [Ignore]
+        public Visibility SeparatorVisibility
+        {
+            get => separatorVisibility;
+            set
+            {
+                if (separatorVisibility == value) return;
+                separatorVisibility = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SeparatorVisibility)));
+            }
+        }
     }
 
     public class ToDoTasksViewModel

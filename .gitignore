@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+# Project noise (local generated assets / design drafts)
+generated-*.png
+倒计时/output/
+倒计时/designs/
